@@ -155,25 +155,17 @@
         }
 
         function toggleMode() {
-            if (!isLogin) {
-                // Already in signup mode — flip back to login
-                isLogin = true;
-                updateAuthTexts();
-                return;
-            }
-            // Route each role to its dedicated signup page
             if (currentRole === 'customer') {
                 window.location.href = 'customersignup.html';
-                return;
-            }
-            if (currentRole === 'professional') {
-                window.location.href = 'professionalsetup.html';
                 return;
             }
             if (currentRole === 'studio') {
                 window.location.href = 'studiosignup.html';
                 return;
             }
+            // Professional: toggle login/signup in-place
+            isLogin = !isLogin;
+            updateAuthTexts();
         }
 
         function updateAuthTexts() {
