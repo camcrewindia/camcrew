@@ -627,28 +627,9 @@ void main() {
         });
     });
 
-    // Sticky Header scroll effect & Mobile Menu Toggle
     // Sticky Header scroll effect, Mobile Menu Toggle & Scroll Animations
+    // (Mobile menu toggle is handled by header-loader.js)
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Mobile Menu Logic ---
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileBtn.addEventListener('click', () => {
-            const isExpanded = mobileMenu.classList.contains('opacity-100');
-            if (isExpanded) {
-                // Close menu
-                mobileMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                mobileMenu.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
-                mobileBtn.textContent = 'menu';
-            } else {
-                // Open menu
-                mobileMenu.classList.remove('opacity-0', 'invisible', 'translate-y-[-10px]');
-                mobileMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
-                mobileBtn.textContent = 'close';
-            }
-        });
-
         // --- Scroll Reveal Animation Logic ---
         // 1. Auto-apply the 'reveal' class to all sections except the Hero (so the hero is visible immediately)
         const sections = document.querySelectorAll('section:not(:first-of-type)');
