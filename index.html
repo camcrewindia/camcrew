@@ -328,11 +328,23 @@ void main() {
             <!-- Desktop Profile & Cart & Sign In / Mobile Toggle Button -->
             <div class="flex items-center gap-4">
                 <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
-                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
-                <a href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+
+                <!-- Desktop: shown when logged in (hidden by default via style) -->
+                <div id="desktop-user-area" style="display:none" class="items-center gap-3">
+                    <div class="flex items-center gap-2 glass-panel px-3 py-2 rounded-full border border-glass-stroke">
+                        <span class="material-symbols-outlined text-primary text-[20px]">account_circle</span>
+                        <span id="desktop-user-email" class="font-label-caps text-[11px] text-on-surface max-w-[140px] truncate"></span>
+                        <span id="desktop-user-role" class="font-label-caps text-[9px] text-primary-fixed-dim uppercase bg-primary/10 px-2 py-0.5 rounded-full"></span>
+                    </div>
+                    <button onclick="signOut()" class="font-label-caps text-[11px] text-on-surface-variant hover:text-primary transition-colors">Sign out</button>
+                </div>
+
+                <!-- Desktop: shown when logged out (visible by default) -->
+                <button id="desktop-account-icon" class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+                <a id="desktop-signin-link" href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
                     Sign In
                 </a>
-                
+
                 <!-- Visible only on mobile -->
                 <button class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
                 <button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-3xl">menu</button>
@@ -362,7 +374,22 @@ void main() {
                 
                 <hr class="border-glass-stroke my-2">
                 
-                <div class="flex items-center justify-between pt-2">
+                <!-- Mobile: logged-in state (hidden by default via style) -->
+                <div id="mobile-user-area" style="display:none" class="flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">account_circle</span>
+                        <div class="flex flex-col">
+                            <span id="mobile-user-email" class="text-on-surface font-body-md text-sm truncate max-w-[200px]"></span>
+                            <span id="mobile-user-role" class="text-primary-fixed-dim font-label-caps text-[10px] uppercase"></span>
+                        </div>
+                    </div>
+                    <button onclick="signOut()" class="w-full text-center py-2 border border-glass-stroke rounded-full font-label-caps text-[11px] text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors">
+                        Sign Out
+                    </button>
+                </div>
+
+                <!-- Mobile: logged-out state -->
+                <div id="mobile-signout-area" class="flex items-center justify-between pt-2">
                     <button class="flex items-center gap-2 hover:text-primary transition-colors">
                         <span class="material-symbols-outlined">account_circle</span>
                         <span>Profile</span>
@@ -778,5 +805,43 @@ void main() {
             sectionObserver.observe(section);
         });
     });
+</script>
+<script>
+// ── Auth state: show profile or sign-in on page load ──────────────────────
+async function initAuth() {
+    try {
+        const res  = await fetch('/api/me');
+        const data = await res.json();
+        if (data.ok) {
+            showLoggedIn(data.user);
+        }
+        // if not ok, leave default logged-out UI as-is
+    } catch (_) { /* network error — leave logged-out UI */ }
+}
+
+function showLoggedIn(user) {
+    const emailDisplay = user.email.split('@')[0]; // show local part as "name"
+    const roleLabel    = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+    // Desktop — use inline style so Tailwind responsive classes don't interfere
+    document.getElementById('desktop-user-area').style.display  = 'flex';
+    document.getElementById('desktop-account-icon').style.display = 'none';
+    document.getElementById('desktop-signin-link').style.display  = 'none';
+    document.getElementById('desktop-user-email').textContent = emailDisplay;
+    document.getElementById('desktop-user-role').textContent  = roleLabel;
+
+    // Mobile
+    document.getElementById('mobile-user-area').style.display   = 'flex';
+    document.getElementById('mobile-signout-area').style.display = 'none';
+    document.getElementById('mobile-user-email').textContent = user.email;
+    document.getElementById('mobile-user-role').textContent  = roleLabel;
+}
+
+async function signOut() {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = 'signin.html';
+}
+
+initAuth();
 </script>
 </body></html>

@@ -159,6 +159,13 @@
 <div class="flex flex-col items-center gap-2">
 <img alt="Camcrew Studio" class="h-10 md:h-12 w-auto object-contain brightness-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
 <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-[0.2em]">Administrative Portal</span>
+<!-- Shown after successful login -->
+<div id="admin-user-badge" class="hidden items-center gap-2 mt-1 glass-panel px-4 py-2 rounded-full border border-primary/30">
+    <span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+    <span id="admin-user-email" class="font-label-caps text-[11px] text-primary"></span>
+    <span class="font-label-caps text-[9px] text-on-surface-variant">· STUDIO</span>
+    <button onclick="adminSignOut()" class="ml-2 font-label-caps text-[10px] text-on-surface-variant hover:text-primary transition-colors">Sign out</button>
+</div>
 </div>
 </header>
 <main class="relative z-10 flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-stack-xl">
@@ -183,7 +190,7 @@
 <h1 class="font-headline-md text-headline-md text-on-surface mb-2">Secure Access</h1>
 <p class="text-on-surface-variant text-body-md">Enter your credentials to manage studio assets.</p>
 </div>
-<form class="space-y-6" onsubmit="event.preventDefault(); showOtp();">
+<form class="space-y-6" id="admin-login-form" onsubmit="handleAdminLogin(event)">
 <div class="group/input relative">
 <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 group-focus-within/input:text-primary transition-colors">EMAIL ADDRESS</label>
 <div class="relative">
@@ -268,6 +275,83 @@
 </div>
 </footer>
 <script>
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const form     = document.getElementById('admin-login-form');
+            const email    = form.querySelector('input[type="email"]').value.trim();
+            const password = form.querySelector('input[type="password"]').value;
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            // Clear previous errors
+            let errEl = document.getElementById('admin-login-error');
+            if (errEl) errEl.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            try {
+                const res  = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role: 'studio' }),
+                });
+                const data = await res.json();
+
+                if (!data.ok) {
+                    if (!errEl) {
+                        errEl = document.createElement('p');
+                        errEl.id = 'admin-login-error';
+                        errEl.style.color = '#ffb4ab';
+                        errEl.className = 'text-center text-sm font-body-md';
+                        submitBtn.parentNode.insertBefore(errEl, submitBtn);
+                    }
+                    errEl.textContent = data.error || 'Login failed.';
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    return;
+                }
+
+                // Show user badge in header
+                const badge = document.getElementById('admin-user-badge');
+                document.getElementById('admin-user-email').textContent = data.user.email;
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+
+                // Show OTP stage as UI confirmation step
+                showOtp();
+
+            } catch (_) {
+                if (!errEl) {
+                    errEl = document.createElement('p');
+                    errEl.id = 'admin-login-error';
+                    errEl.style.color = '#ffb4ab';
+                    errEl.className = 'text-center text-sm font-body-md';
+                    submitBtn.parentNode.insertBefore(errEl, submitBtn);
+                }
+                errEl.textContent = 'Network error. Please try again.';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
+        }
+
+        async function adminSignOut() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = 'signin.html';
+        }
+
+        // Check if already logged in as studio on page load
+        (async () => {
+            try {
+                const res  = await fetch('/api/me');
+                const data = await res.json();
+                if (data.ok && data.user.role === 'studio') {
+                    const badge = document.getElementById('admin-user-badge');
+                    document.getElementById('admin-user-email').textContent = data.user.email;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                }
+            } catch (_) {}
+        })();
+
         function showOtp() {
             const loginStage = document.getElementById('form-stage-1');
             const otpStage = document.getElementById('form-stage-2');
