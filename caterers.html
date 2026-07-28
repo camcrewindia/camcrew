@@ -1,0 +1,459 @@
+<!DOCTYPE html><html class="dark" lang="en" ><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Caterers | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .neon-glow-blue {
+            box-shadow: 0px 10px 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .neon-glow-purple {
+            box-shadow: 0px 10px 30px rgba(188, 19, 254, 0.2);
+        }
+
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.05),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 6s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .active-filter {
+            background: #dbfcff;
+            color: #00363a;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "charcoal-surface": "#161618",
+                      "on-background": "#dce4e5",
+                      "surface-container": "#192122",
+                      "secondary-fixed": "#f8d8ff",
+                      "tertiary-fixed": "#e5e2e1",
+                      "surface": "#0d1515",
+                      "on-primary-fixed": "#002022",
+                      "surface-bright": "#333b3b",
+                      "primary": "#dbfcff",
+                      "inverse-primary": "#006970",
+                      "surface-variant": "#2e3637",
+                      "on-secondary": "#520072",
+                      "on-surface": "#dce4e5",
+                      "secondary": "#ebb2ff",
+                      "inverse-surface": "#dce4e5",
+                      "secondary-container": "#b600f8",
+                      "on-secondary-fixed-variant": "#74009f",
+                      "on-primary-container": "#006970",
+                      "surface-container-highest": "#2e3637",
+                      "surface-container-low": "#151d1e",
+                      "primary-fixed-dim": "#00dbe9",
+                      "on-secondary-container": "#fff6fc",
+                      "secondary-fixed-dim": "#ebb2ff",
+                      "background": "#0d1515",
+                      "on-tertiary-fixed": "#1c1b1b",
+                      "obsidian-base": "#0A0A0B",
+                      "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                      "inverse-on-surface": "#2a3233",
+                      "surface-tint": "#00dbe9",
+                      "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                      "outline-variant": "#3b494b",
+                      "on-tertiary": "#313030",
+                      "surface-container-high": "#232b2c",
+                      "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                      "on-primary-fixed-variant": "#004f54",
+                      "on-secondary-fixed": "#320047",
+                      "tertiary-fixed-dim": "#c8c6c5",
+                      "on-error": "#690005",
+                      "on-error-container": "#ffdad6",
+                      "outline": "#849495",
+                      "on-tertiary-fixed-variant": "#474646",
+                      "primary-container": "#00f0ff",
+                      "on-surface-variant": "#b9cacb",
+                      "error": "#ffb4ab",
+                      "on-primary": "#00363a",
+                      "error-container": "#93000a",
+                      "surface-dim": "#0d1515",
+                      "tertiary-container": "#dcd9d8",
+                      "primary-fixed": "#7df4ff",
+                      "surface-container-lowest": "#080f10",
+                      "tertiary": "#f9f5f5",
+                      "on-tertiary-container": "#605f5e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "stack-xs": "0.5rem",
+                      "stack-xl": "4rem",
+                      "stack-md": "1.5rem",
+                      "margin-desktop": "80px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-caps": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "display-lg-mobile": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-obsidian-base selection:bg-primary-container selection:text-on-primary">
+<!-- Global Background Shader -->
+<div class="fixed inset-0 pointer-events-none z-0">
+
+</div>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <button class=" text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </button>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-2 py-1 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md px-2 w-60 text-on-surface placeholder:text-outline" placeholder="Search professionals..." type="text">
+</div>
+<div>
+    <a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-8 rounded-full text-label-caps transition-transform hover:scale-105" style="font-size: 15px;">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<main class="relative z-10 pb-stack-xl pt-48"><section class="px-margin-desktop mb-stack-xl"><div class="max-w-4xl"><div class="glass-panel p-6 rounded-2xl flex flex-wrap gap-4 items-end shadow-neon-blue-glow"><div class="flex-1 min-w-[200px]"><label class="block font-label-caps text-label-caps text-primary mb-2">Location</label><div class="flex items-center bg-surface-container-low p-3 rounded-lg border border-glass-stroke"><span class="material-symbols-outlined text-primary mr-2">location_on</span><input class="bg-transparent border-none text-on-surface focus:ring-0 w-full" placeholder="Los Angeles, CA" type="text"></div></div><div class="flex-1 min-w-[200px]"><label class="block font-label-caps text-label-caps text-primary mb-2">Service Type</label><div class="flex items-center bg-surface-container-low p-3 rounded-lg border border-glass-stroke"><span class="material-symbols-outlined text-primary mr-2">restaurant</span><select class="bg-transparent border-none text-on-surface focus:ring-0 w-full appearance-none"><option class="bg-charcoal-surface">On-Set Craft Services</option><option class="bg-charcoal-surface">Event Catering</option><option class="bg-charcoal-surface">Hybrid Production</option></select></div></div><div class="flex-1 min-w-[150px]"><label class="block font-label-caps text-label-caps text-primary mb-2">Group Size</label><div class="flex items-center bg-surface-container-low p-3 rounded-lg border border-glass-stroke"><span class="material-symbols-outlined text-primary mr-2">groups</span><input class="bg-transparent border-none text-on-surface focus:ring-0 w-full" placeholder="50+" type="number"></div></div><button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all"><span class="material-symbols-outlined">explore</span>Find Talent</button></div><div class="mt-8 flex flex-wrap gap-4"><span class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center">Specializations:</span><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all active-filter">Vegan</button><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all">Halal</button><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all">Kosher</button><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all">Gluten-Free</button><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all">Paleo</button><button class="px-4 py-1.5 rounded-full border border-glass-stroke font-body-md text-on-surface-variant hover:border-primary transition-all">Organic-Only</button></div></div></section>
+<!-- Hero Section -->
+
+<!-- Bento Layout Profiles -->
+<section class="px-margin-desktop grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-gutter">
+<!-- Featured Card 1 -->
+<div class="lg:col-span-8 group">
+<div class="glass-panel h-full rounded-3xl overflow-hidden flex flex-col md:flex-row transition-all duration-500 hover:shadow-neon-blue-glow relative fade-in" style="animation-delay: 0.2s;">
+<div class="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A professional gourmet catering spread on a sleek obsidian kitchen counter, soft teal and purple neon lighting reflecting off stainless steel equipment. High-end plating with vibrant edible flowers and artistic sauces, cinematic depth of field, futuristic professional culinary environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCySAtzUQr-SFdz7thKAi_oOSd0PL_lMYc7a_LxlUEJKOhx8e5DRLPujekvNVqTBvk4z6uf0arKxFY_SuGvCux4psgaMmAGS4UZ2NSVicMjbDoYG2HtWECNnYLQv4uY2YOFoGiRw5GGN6BrKkvL1fM9g3bxXsMd7aOUl3mw1VoGcayjK9E5qXsTqU9h-poAn4xcRzcJqhpWdpgqMvrw-DIokkshttgM4_ISgRPp-PWyns5mjensYzLq">
+<div class="absolute top-4 left-4 bg-primary/20 backdrop-blur-md px-3 py-1 rounded-full border border-primary/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-primary font-bold text-sm">4.9</span>
+</div>
+</div>
+<div class="p-8 flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Velvet Spoon Kitchens</h3>
+<p class="text-on-surface-variant font-body-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span> Hollywood, CA
+                                    </p>
+</div>
+<div class="bg-surface-container-low p-2 rounded-lg border border-glass-stroke">
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+</div>
+<p class="text-on-surface-variant mb-6 line-clamp-2">Specializing in nutrient-dense craft services for long-duration film shoots. Our menus pivot daily to keep crews energized and inspired.</p>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="aspect-square rounded-xl overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="Close up of a vibrant vegan protein bowl with quinoa, avocado, and dragon fruit, beautifully presented in a minimalist dark ceramic bowl under cool studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwsfGY2HtREsm_zkfxcOKbB4sTKczdSI4JJBL7M12-ilS4VI5pLVWXRUBDAp3ujHRRICu0VjBmaHaDVSVOAZP2MEc5aE0MHv47a3-caUZKbdw_Yf3Ystx4VUKN8o0aAmhwziire9ySE7axCdndd3xQZk1JJkzuNWc_y9-xfAi7-q4fzClzXIQN80-Qt6RiQgBkJ-j9MDYUaYJEcUCeBbqSWGFtPprUXsfobZYIVYPXRr51jmq0fs6k">
+</div>
+<div class="aspect-square rounded-xl overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="Elegant presentation of small halal appetizers, featuring gold-leaf accents and intricate garnishes on a dark slate background, professional culinary photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARQaEtMoHHOh43tXM5uterO-UHdENgUERLuv-MKjFhia7LIR1wMmmC8KINHA_vVLJULoh9DtpJv5Ds3Pn6pDGQ4bRzNFE9N2Bk0ixXixW62MdsNOiH_VW2rvrYXLoqQb8vU01WpyPkiIgzwXg00B0fUnlQC0PO0MuFwM_NgQVVS2NrqNkeo00sgSmOBLyXq8VdKiKFwDSaItW7vm1OU_1yI_ltqFUSfa60bXPl_WJNVcg9StxDJuAY">
+</div>
+<div class="aspect-square rounded-xl overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="A gourmet coffee and artisan pastry station set up on a high-tech mobile cart with glowing blue accents, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhIKwyu-u-BpRIpzPHoWA1vK4AY9tJ7PYJfpsEHb2XY3elcKPzW4rd9g4KfmPO2ysAeIbe3ONn_O3uM5hbS13VzZ9pRRyvoM1AzOd9uzkVHSivP_uHK9Oe7OoqUfQdLC15jEl3C_5GwKXp-XKd5O2gyB7AXw8uzetnD6vWGvkMwbVv4PYYP_KcWXpuX1kdCCOUI2v68aRoRXg8kYDO2FXiX9mcoK4284-rL57fJLDjKNkdfhrPm08-">
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full border-2 border-charcoal-surface bg-primary/20 flex items-center justify-center text-[10px] font-bold">V</div>
+<div class="w-8 h-8 rounded-full border-2 border-charcoal-surface bg-secondary/20 flex items-center justify-center text-[10px] font-bold">H</div>
+<div class="w-8 h-8 rounded-full border-2 border-charcoal-surface bg-on-surface-variant/20 flex items-center justify-center text-[10px] font-bold">+2</div>
+</div>
+<button class="text-primary font-bold flex items-center gap-2 group/btn">
+                                View Profile
+                                <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Card 1 -->
+<div class="lg:col-span-4 group">
+<div class="glass-panel h-full rounded-3xl overflow-hidden p-6 flex flex-col transition-all duration-500 hover:shadow-neon-purple-glow relative fade-in" style="animation-delay: 0.4s;">
+<div class="mb-6 h-48 rounded-2xl overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Atmospheric shot of a high-capacity event catering kitchen with chefs in black uniforms working precisely under focused spotlighting, steam rising against a dark obsidian background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASrC20jV3Wg-SHQ0IbWJRzdJAYo1AcJdqv1SxDNlQNBB9s6VF3NNXx-06b7UrNxIg_ZkhCmn5ka5CxqbdgIlkoFJSxmp-dp6jjXq0dYsWyH2uDvhrQdQd9gh0fk4MEWQXhc8piKTifThLHp8qi-utarOi9j2Kpfpk_DfVcr1tB8VcqaQsHGKhsFN8u5Z7KYx5frlgkTYG4tso1oZe_-ydSTm1wdtZ3TGDl69cKIIjg03CcuE0ISqpp">
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-secondary mb-2">Prime Cuts Global</h3>
+<div class="flex gap-2 mb-4">
+<span class="bg-surface-container-low border border-glass-stroke px-2 py-1 rounded text-[10px] font-label-caps text-on-surface-variant uppercase">Event Service</span>
+<span class="bg-surface-container-low border border-glass-stroke px-2 py-1 rounded text-[10px] font-label-caps text-on-surface-variant uppercase">Kosher Available</span>
+</div>
+<p class="text-on-surface-variant mb-6 text-sm">Scalable solutions for wrap parties and corporate summits. Precision timing for groups up to 1000.</p>
+</div>
+<div class="border-t border-glass-stroke pt-4 flex justify-between items-center">
+<span class="text-primary font-bold">From $45/head</span>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Profile Grid Continued -->
+<div class="lg:col-span-4 group">
+<div class="glass-panel rounded-3xl overflow-hidden p-6 transition-all hover:shadow-neon-blue-glow fade-in" style="animation-delay: 0.6s;">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 rounded-full overflow-hidden border border-primary">
+<img class="w-full h-full object-cover" data-alt="Portrait of a head chef with a modern minimalist aesthetic, wearing a charcoal grey professional jacket, confident expression, soft dramatic lighting in a high-tech kitchen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJAgYviaEqZ4EYT2BJhk_5iXER_wBg13NgQdFCYp12QrS81OceVQ6Rkmp14GkfE7ppK41I2SgcaIYsUZWsqUXkqN1DggnguQ_PJfSc-O40SVVcJlDPQFDrqv9QxaekqJo1kIXtZfYyetSJ6bn6k-hIIKQRriW2wJy8zKxMVZsacg6cqfOHIC_Ge47jGWTRY15hUQTbX7gp_C2rXTJj6o5T1zkmCYbY0P1o5lH-9pA6B7l-OzctdzqS">
+</div>
+<div>
+<h4 class="font-headline-md text-primary text-lg">Chef Aris</h4>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-caps">Molecular Specialist</p>
+</div>
+</div>
+<div class="space-y-4 mb-6">
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-glass-stroke">
+<span class="text-sm">Signature Fusion</span>
+<span class="text-primary text-xs font-bold">Top Pick</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-glass-stroke opacity-70">
+<span class="text-sm">On-Set Craft (12h)</span>
+<span class="text-on-surface-variant text-xs">Standard</span>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border border-primary text-primary font-bold hover:bg-primary hover:text-on-primary transition-all">Request Quote</button>
+</div>
+</div>
+<div class="lg:col-span-8 group">
+<div class="glass-panel h-full rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 transition-all duration-500 hover:shadow-neon-blue-glow fade-in" style="animation-delay: 0.8s;">
+<div class="p-8">
+<h3 class="font-display-lg text-headline-md text-primary mb-4">The Nomad Palette</h3>
+<p class="text-on-surface-variant mb-8">Traveling culinary studio designed for remote locations and desert shoots. Off-grid capable with premium sustainable sourcing.</p>
+<div class="space-y-2 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Solar-Powered Mobile Kitchen</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Zero-Waste Logistics</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Ethically Sourced Halal Meat</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 bg-primary text-on-primary rounded-full font-bold">Book Studio</button>
+<button class="px-6 py-2 border border-glass-stroke rounded-full font-bold">View Gallery</button>
+</div>
+</div>
+<div class="relative min-h-[300px]">
+<img class="w-full h-full object-cover" data-alt="A sleek, futuristic black mobile kitchen trailer parked in a cinematic desert landscape at twilight, glowing internal lights illuminating a high-end chef's station, stars visible in the deep blue sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJidGzjSN5FC5ydfCqgpeFCR2tXprqFMfs_UxrydKvpzor1dTLEKF8y9-lzdyMdXw0BtDd3tMM8lsvgUzY8O2XHNwdZ6quOUJO5rGlMODRp47lnQpApDX1s_4NCJntPEcScm82HCJrQqTYD26bXfhWZZakg8B8tKDd5hbC3Jf-LQH0p-zpU8yUVaY9wj6rtYbwA4aCM2FLnK_ZYaCfxCvSoP_D-ERkMUcse1IFGkPfCwazIfXy0emq">
+<div class="absolute inset-0 bg-gradient-to-r from-charcoal-surface via-transparent to-transparent hidden md:block"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Location Discovery Map -->
+<section class="px-margin-desktop mt-stack-xl">
+<div class="glass-panel rounded-3xl overflow-hidden p-8 flex flex-col md:flex-row gap-12 border border-primary/20 fade-in" style="animation-delay: 1s;">
+<div class="flex-1">
+<h2 class="font-display-lg text-headline-md text-primary mb-4">Location Discovery</h2>
+<p class="text-on-surface-variant mb-8">Find professional catering crews near your specific production sites globally. Use our geospatial tool to calculate delivery times and logistics costs.</p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
+<span class="material-symbols-outlined text-primary">near_me</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Precision Geo-fencing</h4>
+<p class="text-sm text-on-surface-variant">Filter by exact radius from your set location.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 border border-secondary/30">
+<span class="material-symbols-outlined text-secondary">route</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Logistics Planner</h4>
+<p class="text-sm text-on-surface-variant">Calculate setup and breakdown times for multi-site shoots.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="flex-[1.5] min-h-[400px] rounded-2xl overflow-hidden border border-glass-stroke shadow-neon-blue-glow relative group">
+<!-- Map Placeholder -->
+<div class="w-full h-full bg-surface-container-low" data-location="Los Angeles, California">
+<div class="absolute inset-0 flex items-center justify-center flex-col opacity-50 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary mb-4">map</span>
+<span class="font-body-md">Interactive Map Interface</span>
+</div>
+<!-- UI Elements Over Map -->
+<div class="absolute bottom-6 right-6 flex flex-col gap-2">
+<button class="w-10 h-10 bg-surface-container backdrop-blur-md border border-glass-stroke flex items-center justify-center rounded-lg hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container backdrop-blur-md border border-glass-stroke flex items-center justify-center rounded-lg hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-xl px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-obsidian-base border-t border-glass-stroke">
+<div class="mb-8 md:mb-0">
+<span class="font-display-lg text-display-lg text-primary block mb-2">Camcrew Studio</span>
+<p class="text-on-surface-variant font-body-md opacity-60">© 2024 Camcrew Studio. Cinematic Excellence.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-8 text-on-surface-variant font-body-md">
+<a class="hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-secondary transition-colors" href="#">Contact Us</a>
+<a class="hover:text-secondary transition-colors" href="#">Careers</a>
+<a class="hover:text-secondary transition-colors" href="#">Press Kit</a>
+</nav>
+</footer>
+<!-- Scripts for Micro-interactions -->
+<script>
+        // Floating animation for glass panels
+        document.querySelectorAll('.glass-panel').forEach((panel, i) => {
+            panel.style.animationDelay = `${i * 0.2}s`;
+            panel.classList.add('fade-in');
+        });
+
+        // Filter button toggle logic
+        const filters = document.querySelectorAll('.mt-8 button');
+        filters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filters.forEach(f => f.classList.remove('active-filter'));
+                btn.classList.add('active-filter');
+            });
+        });
+
+        // Sticky Nav logic
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('py-2');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.add('py-4');
+                header.classList.remove('py-2');
+            }
+        });
+    </script>
+
+
+</body></html>

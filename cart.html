@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cart | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#dce4e5",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "surface-container-highest": "#2e3637",
+                        "surface-container-lowest": "#080f10",
+                        "obsidian-base": "#0A0A0B",
+                        "on-tertiary": "#313030",
+                        "primary-fixed-dim": "#00dbe9",
+                        "inverse-on-surface": "#2a3233",
+                        "on-primary-fixed": "#002022",
+                        "background": "#0d1515",
+                        "on-primary-container": "#006970",
+                        "on-secondary-fixed": "#320047",
+                        "on-surface-variant": "#b9cacb",
+                        "on-background": "#dce4e5",
+                        "secondary-fixed-dim": "#ebb2ff",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "charcoal-surface": "#161618",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "on-error": "#690005",
+                        "tertiary-container": "#dcd9d8",
+                        "on-secondary": "#520072",
+                        "surface-container-low": "#151d1e",
+                        "secondary-container": "#b600f8",
+                        "surface-dim": "#0d1515",
+                        "surface-bright": "#333b3b",
+                        "primary-container": "#00f0ff",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "surface-tint": "#00dbe9",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#7df4ff",
+                        "on-primary-fixed-variant": "#004f54",
+                        "inverse-primary": "#006970",
+                        "surface-container-high": "#232b2c",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "outline-variant": "#3b494b",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#e5e2e1",
+                        "secondary-fixed": "#f8d8ff",
+                        "on-surface": "#dce4e5",
+                        "outline": "#849495",
+                        "surface-variant": "#2e3637",
+                        "on-secondary-container": "#fff6fc",
+                        "primary": "#dbfcff",
+                        "secondary": "#ebb2ff",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "surface": "#0d1515",
+                        "on-primary": "#00363a",
+                        "surface-container": "#192122",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "on-tertiary-container": "#605f5e",
+                        "tertiary": "#f9f5f5",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-xs": "0.5rem",
+                        "margin-desktop": "80px",
+                        "margin-mobile": "20px",
+                        "stack-xl": "4rem",
+                        "stack-md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #00f0ff;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+        }
+
+        .neon-text-blue {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        .neon-border-focus:focus-within {
+            border-bottom-color: #00dbe9;
+            box-shadow: 0 4px 12px -2px rgba(0, 240, 255, 0.3);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .shimmer-btn:hover::after {
+            animation: shimmer 0.8s forwards;
+        }
+    	/* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .neon-glow-hover:hover {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+<body class="font-body-md antialiased">
+<!-- Animated Background -->
+<div class="fixed inset-0 z-[-1] overflow-hidden h-screen">
+<!-- STITCH_SHADER_START:ANIMATION_6 class="absolute inset-0 w-full h-full opacity-40" -->
+<div class="absolute inset-0 w-full h-full opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_6" style="display:block;width:100%;height:100%" width="1300" height="5870"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_6');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec3 color1 = vec3(0.05, 0.08, 0.1); // Deep Obsidian
+    vec3 color2 = vec3(0.0, 0.94, 1.0);  // Electric Blue
+    vec3 color3 = vec3(0.74, 0.0, 1.0);  // Vibrant Purple
+    
+    float noise = sin(uv.x * 10.0 + u_time * 0.5) * cos(uv.y * 10.0 + u_time * 0.5);
+    float glow = smoothstep(0.4, 0.6, sin(u_time * 0.2 + length(uv - 0.5) * 5.0) * 0.5 + 0.5);
+    
+    vec3 finalColor = mix(color1, color2, glow * 0.1);
+    finalColor = mix(finalColor, color3, noise * 0.05);
+    
+    // Add floating particle "dust"
+    float particles = pow(fract(sin(dot(uv + u_time * 0.01, vec2(12.9898, 78.233))) * 43758.5453), 20.0);
+    finalColor += particles * 0.2;
+
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_6 -->
+</div>
+<!-- Navigation Header -->
+<header class="fixed top-0 w-full z-[100] px-margin-mobile md:px-margin-desktop py-2 md:py-4">
+    <div class="relative max-w-screen-2xl mx-auto">
+        <!-- Reduced mobile padding (px-4 py-2 mt-2) and kept desktop padding (md:px-8 md:py-3 md:mt-4) -->
+        <nav class="relative z-50 flex justify-between items-center rounded-full mt-2 md:mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-4 md:px-8 py-2 md:py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+            <div class="flex items-center gap-2">
+                <img alt="Camcrew Studio Logo" class="h-8 md:h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+            </div>
+            
+            <!-- Desktop Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+                <a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+                <div class="relative group">
+                    <a href="services.html" class=" hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+                        Services
+                        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+                    </a>
+                   <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+    						<div class="glass-panel bg-obsidian-base/75 rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+                            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                                <span class="font-body-md">Photographers</span>
+                            </a>
+                            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">videocam</span>
+                                <span class="font-body-md">Videographers</span>
+                            </a>
+                            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">palette</span>
+                                <span class="font-body-md">Designers</span>
+                            </a>
+                            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">code</span>
+                                <span class="font-body-md">Developers</span>
+                            </a>
+                            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">event</span>
+                                <span class="font-body-md">Organizers</span>
+                            </a>
+                            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">restaurant</span>
+                                <span class="font-body-md">Caterers</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+                <a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+                <a class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 hover:scale-105">Cart</a>
+                <a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+            </div>
+
+            <!-- Desktop Profile & Cart & Sign In / Mobile Toggle Button -->
+            <div class="flex items-center gap-4">
+                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+                <a href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+                    Sign In
+                </a>
+                
+                <!-- Visible only on mobile -->
+                <button class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+                <button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-3xl">menu</button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="absolute top-full left-0 w-full mt-2 rounded-2xl bg-obsidian-base/65 backdrop-blur-xl border border-glass-stroke p-6 opacity-0 invisible translate-y-[-10px] transition-all duration-300 md:hidden z-[100] shadow-2xl">
+            <div class="flex flex-col gap-4 font-body-md text-on-surface-variant">
+                <a href="index.html" class="text-primary font-bold border-l-2 border-primary pl-3 py-2">Home</a>
+                
+                <div class="flex flex-col">
+                    <span class="font-bold text-on-surface py-2">Services</span>
+                    <div class="flex flex-col pl-4 border-l-2 border-glass-stroke mt-1 space-y-3 py-2">
+                        <a href="photographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">photo_camera</span> Photographers</a>
+                        <a href="videographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">videocam</span> Videographers</a>
+                        <a href="designers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">palette</span> Designers</a>
+                        <a href="developers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">code</span> Developers</a>
+                        <a href="organizers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">event</span> Organizers</a>
+                        <a href="caterers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">restaurant</span> Caterers</a>
+                    </div>
+                </div>
+
+                <a href="rentals.html" class="hover:text-primary transition-colors py-2">Rentals</a>
+                <a href="sales.html" class="hover:text-primary transition-colors py-2">Sales</a>
+                <a class="font-bold hover:text-primary transition-colors py-2">Cart</a>
+                <a href="About.html" class="hover:text-primary transition-colors py-2">About us</a>
+                
+                <hr class="border-glass-stroke my-2">
+                
+                <div class="flex items-center justify-between pt-2">
+                    <button class="flex items-center gap-2 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <span>Profile</span>
+                    </button>
+                    <a href="signin.html" class="bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps hover:scale-105 transition-transform">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="pt-32 pb-stack-xl px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto">
+<!-- Page Title -->
+<header class="mb-stack-md flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">Your Production Rig</h1>
+<p class="text-on-surface-variant mt-2 max-w-xl">Review your selected professional equipment. Your session-saved items are listed below.</p>
+</div>
+<div class="flex items-center gap-2 text-primary-fixed-dim bg-primary/5 px-4 py-2 rounded-xl border border-primary/20">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+<span class="font-label-caps text-label-caps">PRO GEAR PROTECTION INCLUDED</span>
+</div>
+</header>
+<!-- Auth Alert -->
+<div class="glass-panel rounded-xl p-4 mb-stack-md flex items-center justify-between border-l-4 border-l-primary-container animate-pulse">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">cloud_sync</span>
+<p class="text-body-md font-body-md">Sign in to sync your cart across devices and secure your reservation.</p>
+</div>
+<a class="text-primary-container font-bold hover:underline transition-all" href="#">Sign In →</a>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Cart Items List -->
+<div class="lg:col-span-8 space-y-gutter">
+<!-- Item 1: RED Komodo -->
+<div class="glass-panel rounded-xl p-6 flex flex-col md:flex-row gap-6 hover:scale-[1.01] transition-transform duration-300 group neon-glow-hover">
+<div class="w-full md:w-48 h-48 bg-obsidian-base rounded-lg overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A professional RED Komodo 6K cinema camera body sitting on a dark marble surface, illuminated by a single cyan neon light from the side. The shot is high-contrast, cinematic, and emphasizes the rugged metallic texture and precision engineering of the device in a dark studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMwW_Oc3UocM69zHjqAOgJt5gv_7uL7_kmFtk5RXKgwl5Il1S6hIeWustrHFv_xszOwDYBv3l2tCv-9PsgZgAcbrKftQ-zHp4g2uaJl0yziiKW0VcNkcYFB7c7Cl3fegTMN5gk-4OPA6yH3XhNy6f8yfUl7Mu5cuEKctT1b7CxSOkZ76cjgHzzifWBfJC4dVIoFKNPzLhs5yJOKL7_QIRDRHP2TlS5HbyZuXkTjudvhQXM5PCv4Omp"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">RED Komodo 6K Digital Cinema Camera</h3>
+<p class="text-on-surface-variant text-body-md">Body Only - Stormtrooper Edition</p>
+<div class="flex items-center gap-4 mt-4 text-primary-fixed-dim">
+<span class="flex items-center gap-1 text-label-caps font-label-caps"><span class="material-symbols-outlined text-[16px]">check_circle</span> In Stock</span>
+<span class="flex items-center gap-1 text-label-caps font-label-caps"><span class="material-symbols-outlined text-[16px]">local_shipping</span> Ships in 24h</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-display-lg text-display-lg-mobile text-primary tracking-tight">$5,995.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6">
+<div class="flex items-center border border-glass-stroke rounded-full bg-obsidian-base/50 p-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">remove</span></button>
+<input class="w-12 bg-transparent border-none text-center focus:ring-0 font-bold text-primary" type="number" value="1"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+<span class="font-label-caps text-label-caps">REMOVE</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2: Sony Alpha -->
+<div class="glass-panel rounded-xl p-6 flex flex-col md:flex-row gap-6 hover:scale-[1.01] transition-transform duration-300 group neon-glow-hover">
+<div class="w-full md:w-48 h-48 bg-obsidian-base rounded-lg overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A Sony Alpha a7 IV camera equipped with a professional GM lens, floating in a dark obsidian space with subtle volumetric smoke. Cyberpunk blue lighting rim-lights the camera body, showcasing its ergonomic design and high-tech dials. Minimalist and premium aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5IGlVh7bWgraPbvypakmJWIz_8PXFg6fZvDHEl4uD264Vpc-JBcK2vnINwUFSnCUxLToVjR9GvzfmsvUmWajD8MmoS5HN8oTuymD0UG1k7EICThBFEjeO_CbsJsNPbz40aHJsPhHBEHEPfEdlGLaFneinUXI--2mho3HI5UPcQ-I7dadMuer91iR-jFLTiXLwTwzvydkIWOKzMp4XiNdYlE94uOj9i8ekWld_bjY8yAdFF3oavsw_"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Sony Alpha a7 IV Mirrorless Camera</h3>
+<p class="text-on-surface-variant text-body-md">w/ 24-70mm f/2.8 GM II Lens</p>
+<div class="flex items-center gap-4 mt-4 text-primary-fixed-dim">
+<span class="flex items-center gap-1 text-label-caps font-label-caps"><span class="material-symbols-outlined text-[16px]">check_circle</span> In Stock</span>
+<span class="flex items-center gap-1 text-label-caps font-label-caps"><span class="material-symbols-outlined text-[16px]">verified_user</span> 3-Year Warranty</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-display-lg text-display-lg-mobile text-primary tracking-tight">$4,798.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6">
+<div class="flex items-center border border-glass-stroke rounded-full bg-obsidian-base/50 p-1">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">remove</span></button>
+<input class="w-12 bg-transparent border-none text-center focus:ring-0 font-bold text-primary" type="number" value="2"/>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+<span class="font-label-caps text-label-caps">REMOVE</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Summary -->
+<aside class="lg:col-span-4 space-y-gutter sticky top-28">
+<div class="glass-panel rounded-xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-t-primary-fixed-dim/80">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">Order Summary</h2>
+<div class="space-y-4 border-b border-glass-stroke pb-6 mb-6">
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Subtotal (3 items)</span>
+<span class="font-body-md text-primary">$15,591.00</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Expedited Shipping</span>
+<span class="font-body-md text-primary-fixed-dim">FREE</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Estimated Tax (NYC)</span>
+<span class="font-body-md text-primary">$1,383.70</span>
+</div>
+</div>
+<div class="flex justify-between items-end mb-8">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">TOTAL</span>
+<span class="font-display-lg text-display-lg-mobile text-primary tracking-tighter">$16,974.70</span>
+</div>
+</div>
+<a href="checkout.html" class="shimmer-effect w-full py-5 bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-fixed font-bold text-body-lg rounded-xl flex items-center justify-center gap-3 hover:scale-105 transition-transform duration-300 shadow-[0_10px_30px_rgba(0,240,255,0.3)]">
+                        Proceed to Checkout
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+<div class="mt-6 flex flex-col gap-3">
+<p class="text-on-surface-variant text-[14px] text-center">Flexible payment options available</p>
+<div class="flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all cursor-pointer">
+<span class="material-symbols-outlined">payments</span>
+<span class="material-symbols-outlined">credit_card</span>
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+</div>
+</div>
+<!-- Assistance Card -->
+<div class="glass-panel rounded-xl p-6 border-l-2 border-l-secondary">
+<h4 class="font-label-caps text-label-caps text-secondary mb-2">NEED HELP?</h4>
+<p class="text-on-surface-variant text-body-md mb-4">Our production experts are available for live consultation.</p>
+<button class="flex items-center gap-2 text-primary hover:text-primary-container transition-colors font-bold">
+<span class="material-symbols-outlined">headset_mic</span>
+                        Chat with an Expert
+                    </button>
+</div>
+</aside>
+</div>
+<!-- Recommended Section -->
+<section class="mt-stack-xl">
+<h3 class="font-headline-md text-headline-md text-primary mb-stack-md">Frequently Bundled Tools</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Rec Item 1 -->
+<div class="glass-panel p-4 rounded-xl group cursor-pointer neon-glow-hover transition-all">
+<div class="h-40 bg-obsidian-base rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A premium camera tripod made of carbon fiber, shot in a high-tech obsidian environment. The legs have glowing cyan accents near the joints. Atmospheric background with a thin layer of floor fog. Minimalist, sharp, and futuristic design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm1jj4Aw3pikiDEwLQwQlY4IesRMP3sXP6GKSNCQ6mNSmTk8-JXt-zRA1wM5SpDlqQWKrEaphWG4G9NHLoI03OCMntdj0X8DpHA-z1kCzH178xusVsyMJzNNZsaCsbMWLHdl6nSZPtgTVPMWL3dVO48QuCVj7cGxGqA98tH6xw52ZBE0pFEwDlgy3GgGLTsjgStwp4tHewDuYi_mABidcu1xfHOeimle48flPkgVpZOP7JylaTcePn"/>
+</div>
+<h4 class="text-primary font-bold mb-1">Carbon Fiber Pro Tripod</h4>
+<p class="text-primary-fixed-dim font-bold">$450.00</p>
+<button class="mt-4 w-full py-2 border border-primary/30 rounded-lg text-primary text-label-caps font-label-caps hover:bg-primary/10 transition-colors">ADD TO CART</button>
+</div>
+<!-- Rec Item 2 -->
+<div class="glass-panel p-4 rounded-xl group cursor-pointer neon-glow-hover transition-all">
+<div class="h-40 bg-obsidian-base rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A 2TB high-speed CFexpress Type B memory card sitting on a sleek metallic surface. Cyan laser lines reflect off the card's surface. Dark, tech-focused studio lighting with a deep blue color palette and sharp shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0P6uk3vH5U4jNspTK-VUYC58DYrna8LKeGn3d5UfL8wFoQZ_5cbl3kX6cxAGofNf47PJvB7UqApXemjXQJn4_uCxKhYMPPlI4pgjhBYUnnrSvaA02-zb8EUZn4Lo-L4q5n6_ww0sgwQNzyW4yTbbDxpMGr7bvFUSVweUCoQmvn6Z8xX3oBRIrQgvopkWVUXXqroNz4VupIkFO541GjFY1Y6OeaM_vPYzBOt9aynZVBD6SJEBOl23q"/>
+</div>
+<h4 class="text-primary font-bold mb-1">2TB CFexpress Pro Card</h4>
+<p class="text-primary-fixed-dim font-bold">$399.00</p>
+<button class="mt-4 w-full py-2 border border-primary/30 rounded-lg text-primary text-label-caps font-label-caps hover:bg-primary/10 transition-colors">ADD TO CART</button>
+</div>
+<!-- Rec Item 3 -->
+<div class="glass-panel p-4 rounded-xl group cursor-pointer neon-glow-hover transition-all">
+<div class="h-40 bg-obsidian-base rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="High-end studio monitor headphones resting on a glass table. The earcups feature glowing circular lights in neon cyan. Dark, cinematic studio atmosphere with bokeh lights in the deep background. Professional audio equipment aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhPKpJPHqtlGZK-JFbmINz_tw3EpT55zKcFZ6lngXXv-FSTDFjNpHCj1l7iPO3Tm4aqy85Kfx2xSypN6_u49-WnWfMhHU_xTQEPgLQ1m3Ihdm4jDhPx6aDxs6CHHCXobOvi-4ZOto8JCO9JLORaaSREbzJmtmTWdwIg3V9ORROOU14fwbq58oZoWfADczQBDTI3BqSCDlRlNMGb0fdrpt5_oQIpLXFqHgPjT4ZrasQsQhDXU4BvAJS"/>
+</div>
+<h4 class="text-primary font-bold mb-1">C-100 Studio Headphones</h4>
+<p class="text-primary-fixed-dim font-bold">$299.00</p>
+<button class="mt-4 w-full py-2 border border-primary/30 rounded-lg text-primary text-label-caps font-label-caps hover:bg-primary/10 transition-colors">ADD TO CART</button>
+</div>
+<!-- Rec Item 4 -->
+<div class="glass-panel p-4 rounded-xl group cursor-pointer neon-glow-hover transition-all">
+<div class="h-40 bg-obsidian-base rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A handheld 3-axis camera gimbal stabilizer, displayed in a futuristic weapons-rack style setting. Glowing cyan energy lines pulse along the grip. High-contrast lighting, dark metallic textures, and a feeling of advanced technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsxap6dxCNkO4Ofn-ee-x3XDdN7ETiVCixEls4zt-or11FojALzMOBlIQT5e5SNCCwAayHi3w3fM6mEkxn4MrrfJrL5SsgUqDrai3Hwj5IWM4dEMbXoNTOn53OzKCw9jWZZNQdB03QnyeXqnIOsrLbqkypWk-1G8TnciuQFJb5ve_HE4h8eNCPcH4nWTmX3PVUIQJ-ahVo0v3J6wPVyXwhm59tcJQt6OjpdSUq4CKiF-TqKDg-w54C"/>
+</div>
+<h4 class="text-primary font-bold mb-1">Ronin RS 4 Pro Gimbal</h4>
+<p class="text-primary-fixed-dim font-bold">$869.00</p>
+<button class="mt-4 w-full py-2 border border-primary/30 rounded-lg text-primary text-label-caps font-label-caps hover:bg-primary/10 transition-colors">ADD TO CART</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-xl px-margin-desktop bg-obsidian-base border-t border-glass-stroke">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter max-w-screen-2xl mx-auto">
+<div class="md:col-span-4">
+<div class="font-display-lg text-display-lg-mobile text-primary mb-6">Camcrew Studio</div>
+<p class="text-on-surface-variant max-w-xs mb-8">Empowering filmmakers with the world's most precise cinematic instruments. Engineered for the future of storytelling.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">movie</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">camera</span>
+</a>
+</div>
+</div>
+<div class="md:col-span-2">
+<h5 class="text-primary font-bold mb-6">Platform</h5>
+<ul class="space-y-4 text-on-surface-variant">
+<li><a class="hover:text-primary transition-all" href="#">Sales</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Rentals</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Studio Hire</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Post-Production</a></li>
+</ul>
+</div>
+<div class="md:col-span-2">
+<h5 class="text-primary font-bold mb-6">Support</h5>
+<ul class="space-y-4 text-on-surface-variant">
+<li><a class="hover:text-primary transition-all" href="#">Equipment Care</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Rental Agreement</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Contact Support</a></li>
+</ul>
+</div>
+<div class="md:col-span-4">
+<h5 class="text-primary font-bold mb-6">Join the Dispatch</h5>
+<p class="text-on-surface-variant mb-6">Get early access to restocks and professional masterclasses.</p>
+<div class="flex border-b border-glass-stroke pb-2">
+<input class="bg-transparent border-none focus:ring-0 text-primary flex-grow" placeholder="production.house@studio.com" type="email"/>
+<button class="text-primary font-bold text-label-caps">SUBSCRIBE</button>
+</div>
+</div>
+<div class="md:col-span-12 pt-12 mt-12 border-t border-glass-stroke flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-on-surface-variant text-[14px]">© 2024 Camcrew Studio. Precision Cinematic Tools.</p>
+<div class="flex gap-8 text-[14px] text-on-surface-variant">
+<a class="hover:text-primary transition-all" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-all" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-all" href="#">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = '';
+            });
+        });
+
+        // Add an atmospheric canvas effect behind the page
+        const createAtmosphere = () => {
+            const bg = document.createElement('div');
+            bg.className = 'fixed inset-0 pointer-events-none -z-10 opacity-30';
+            bg.innerHTML = `
+                <div class="absolute top-[10%] left-[20%] w-96 h-96 bg-primary-container/10 blur-[120px] rounded-full"></div>
+                <div class="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-secondary-container/5 blur-[150px] rounded-full"></div>
+            `;
+            document.body.appendChild(bg);
+        };
+        createAtmosphere();
+    </script>
+</body></html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Services | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .neon-border-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            border-color: rgba(0, 240, 255, 0.5);
+        }
+
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .shimmer-btn:hover::after {
+            left: 120%;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#0d1515",
+                        "outline-variant": "#3b494b",
+                        "secondary-container": "#b600f8",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "inverse-on-surface": "#2a3233",
+                        "tertiary-container": "#dcd9d8",
+                        "error-container": "#93000a",
+                        "on-surface-variant": "#b9cacb",
+                        "on-primary-container": "#006970",
+                        "tertiary": "#f9f5f5",
+                        "on-secondary-fixed": "#320047",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "obsidian-base": "#0A0A0B",
+                        "surface-variant": "#2e3637",
+                        "on-tertiary-container": "#605f5e",
+                        "on-primary": "#00363a",
+                        "secondary-fixed": "#f8d8ff",
+                        "primary-container": "#00f0ff",
+                        "on-error": "#690005",
+                        "surface-tint": "#00dbe9",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "surface-container-high": "#232b2c",
+                        "error": "#ffb4ab",
+                        "charcoal-surface": "#161618",
+                        "surface-container-lowest": "#080f10",
+                        "primary-fixed-dim": "#00dbe9",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "on-primary-fixed": "#002022",
+                        "on-background": "#dce4e5",
+                        "surface-container-low": "#151d1e",
+                        "on-tertiary": "#313030",
+                        "on-secondary": "#520072",
+                        "inverse-primary": "#006970",
+                        "surface-container-highest": "#2e3637",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#e5e2e1",
+                        "surface-bright": "#333b3b",
+                        "primary": "#dbfcff",
+                        "inverse-surface": "#dce4e5",
+                        "surface-dim": "#0d1515",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "on-primary-fixed-variant": "#004f54",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-container": "#192122",
+                        "secondary": "#ebb2ff",
+                        "on-surface": "#dce4e5",
+                        "background": "#0d1515",
+                        "on-secondary-container": "#fff6fc",
+                        "primary-fixed": "#7df4ff",
+                        "outline": "#849495",
+                        "secondary-fixed-dim": "#ebb2ff"
+                    },
+                    "spacing": {
+                        "margin-desktop": "80px",
+                        "gutter": "24px",
+                        "stack-xs": "0.5rem",
+                        "stack-xl": "4rem",
+                        "stack-md": "1.5rem",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-obsidian-base">
+<!-- Global WebGL Background -->
+
+<!-- Header Navigation -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <button class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </button>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+<a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 pt-32">
+<!-- Section 1: Featured Services Carousel -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0">
+<div class="flex flex-col gap-2 mb-stack-md">
+<span class="font-label-caps text-label-caps text-primary-container uppercase tracking-widest">Premium Selection</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary">Featured Cinematic Arts</h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Featured Card 1 -->
+<div class="group relative h-[500px] rounded-3xl overflow-hidden glass-panel border-glass-stroke">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A cinematic low-angle shot of a high-end film production set with heavy atmosphere, blue and purple neon lighting, and professional camera rigs. The mood is sophisticated and technologically advanced, echoing an obsidian minimalism style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCqJRyfR4R5oRQL7GWTzrtrXNoKGv5kCQjEKjx8onHZ9ajXY9JY7oLC2l1xRq5f14xAUeJ_yaT095c1HAZvqwbAINVKR9ctIhCoGqMVsnAYpFw_PudH3rqV77tIHvCK8pwei49H108dnRmh28aPmveo1YPYrNHL9Fc3ko48qEXX09DAheOx3MPSnt1GrOIIuOvdPxAZ-C7vrzpcc-Xkt41w-JuW1MtUdVx9gEH317kZBWOV1UM5AqzT')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-obsidian-base via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm">stars</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Top Rated</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">Epic Narrative Films</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">World-class short film production for creators who demand cinematic excellence.</p>
+<button class="w-full py-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Explore Service</button>
+</div>
+</div>
+<!-- Featured Card 2 -->
+<div class="group relative h-[500px] rounded-3xl overflow-hidden glass-panel border-glass-stroke md:mt-12">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A futuristic digital workspace featuring a high-end professional UI/UX designer working on a sleek terminal with neon cyan glowing interfaces. The room is dark, obsidian-toned, with soft reflections of cyan and purple light on polished surfaces." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuABiFJb0I75yzoXK-2el4SND5fvJ3NMxgqVCa5FT88I80tINLJ3JmfiQAXuIe40vv1iuhypCMWpvdsmnJqIxER1MJxcR7Dtu8FpuOL2JqL5bg8J4NsdSYP2yanKlnSC8mYDxpWu9ih5e-sn0jC7D0WQJYaZJPcQHgXnxxnHl8k60SkQ4-SY6-hhwX_Ljy8bIIm0pPs_klRjxWpRySLPDVrfv1kCcylG4SE1I1MScGmumJT2TkdKiOKK')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-obsidian-base via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-sm">bolt</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">New Release</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">Next-Gen App UI</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Designing digital experiences that bridge the gap between human and machine.</p>
+<button class="w-full py-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold hover:bg-secondary-container hover:text-white transition-all">View Designs</button>
+</div>
+</div>
+<!-- Featured Card 3 -->
+<div class="group relative h-[500px] rounded-3xl overflow-hidden glass-panel border-glass-stroke">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="An ethereal wedding ceremony captured in a slow-shutter cinematic style with soft glowing lanterns and cool blue night tones. Professional photography gear is visible in the foreground, creating a feeling of premium service and artistry." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3YEoTSl_sQQhg1e1j05Bo_sa8eAc-zPPqHb6drPomKPeq9eg1Fpqvnqv4R5X0f-0tUhc38hjLCdkyaLeE8ximBcc64aY7PAb2qVoGs0qkvV3rCqkRUGywP6SrpVECPor5vcyKeKSKEkbXO2fr1zGXqy92f2FCyPo6BawkXbJQ4U432LFM0PQzJ3oV7Y4C-ngaT10S_UXC4W7s7Q0R0BeTDhuPwQI5wlZbjXNFlsr-yDjaCX2DFLF9')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-obsidian-base via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm">favorite</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">User Favorite</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">Celestial Weddings</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Preserving your most precious moments in high-fidelity obsidian elegance.</p>
+<button class="w-full py-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book Artist</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Category Navigation Hub -->
+<div class="sticky top-40 z-40 max-w-4xl mx-auto px-4 mb-stack-xl">
+<div class="glass-panel p-2 rounded-full border-glass-stroke shadow-2xl flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar">
+<a class="flex items-center gap-2 px-6 py-3 rounded-full bg-primary-container/20 text-primary-container font-bold whitespace-nowrap transition-all" href="#photographers">
+<span class="material-symbols-outlined">photo_camera</span>
+<span class="">Photographers</span>
+</a>
+<a class="flex items-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 text-on-surface-variant whitespace-nowrap transition-all" href="#videographers">
+<span class="material-symbols-outlined">videocam</span>
+<span class="">Videographers</span>
+</a>
+<a class="flex items-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 text-on-surface-variant whitespace-nowrap transition-all" href="#designers">
+<span class="material-symbols-outlined">palette</span>
+<span class="">Designers</span>
+</a>
+<a class="flex items-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 text-on-surface-variant whitespace-nowrap transition-all" href="#organizers">
+<span class="material-symbols-outlined">event</span>
+<span class="">Organizers</span>
+</a>
+<a class="flex items-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 text-on-surface-variant whitespace-nowrap transition-all" href="#developers">
+<span class="material-symbols-outlined">code</span>
+<span class="">Developers</span>
+</a>
+<a class="flex items-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 text-on-surface-variant whitespace-nowrap transition-all" href="#caterers">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="">Caterers</span>
+</a>
+</div>
+</div>
+<!-- Section 3: Photographers Category -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="photographers" style="scroll-margin-top: 320px;">
+<div class="flex items-end justify-between mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white">Photographers</h2>
+<p class="font-body-md text-on-surface-variant">Masters of light and composition.</p>
+</div>
+<a class="text-primary-container font-bold flex items-center gap-2 hover:translate-x-2 transition-transform" href="photographers.html">
+                    View All <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Profile Card 1 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A professional cinematic portrait of a photographer holding a high-end camera. The lighting is dramatic, with a cyan backlight and deep charcoal shadows, set in a modern minimalist studio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA9g8V753gt4aUgyKeBawtfWOx0b_n4_ziYBl8T6UAnUOAilHFIf_bGaGmhTQLMTbOTLkQYMUA18P5sjEil2HpcoKOjEXCZZcHuYqZ3OWN3V24OucUIEfP_X-SiNW6ssywADKtBCL0kH4N1mMSk0ar3GqNFkTal6VH80ouxQ63kbMgYWN1xI2PCbrpQ1EBim-_aua3YqPonCcLXvL1MF_GhnTHosOWH1Gh4Qfql3k2I8JAVO1VLjbl">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-primary-container text-[10px]">VERIFIED</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Aura Visuals</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Wedding &amp; Cinema</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Los Angeles, CA</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$150<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Repeat Card (Specialties: Party, Official, Drone, Funeral, Short Film, Podcast) -->
+<!-- Profile Card 2 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="A sleek action shot of a professional drone pilot operating a futuristic controller with a tablet. The background is a dusk sky over a modern skyline with cyan and violet light trails." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjSloMhwpREpZKh3ARZRd2fs8OTG0UIl6Am0MzZ3SFIMndOWzILeWqbDqwiCRWAs3FOKv7nSSgOLykRweQMumggD65RettjYx2QbXpDif2go2VESfptW1xF8i9CzGlYrixAYhM-uvkYRHNRNJUOSOvjxLXpi6P5rSZrjAtjO1dXq_FNSPdAWdi4A4ruFdVyF40-1xoIVG5irOShKEHaX1ZwsbX58dd5VCkelgdP-HZZK_7-W87kK-C">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-secondary text-[10px]">EXPERT</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">SkyHigh Optics</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Drone Photography</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Chicago, IL</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$220<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Profile Card 3 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="A professional studio setup for a podcast, featuring high-end microphones, acoustic panels, and a sleek modern aesthetic with neon purple glow. A photographer is adjusting a lens in the frame." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVp6gMTcmlLOrDCH3mcxxMbL8gNdoAqAnWpl7L185FRAInG8N8u0AHKijr-_4AAn_CtY0n4JVb8hr9H_EGifmXQFC3Uvd7K_qGLV1HhofdziQiogxKYoxsmijnVGRoQqq8AV5RQSlyOwT7AKcJU18It2l3b2JXgo5Wvqo2tCLqwmw26EY6xj22xo0YxRTyLpdZfFef3FAu6iE2YBar91uDzB3MSlxL2X7ZY23vSmvKFMz4wPxj5H07">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Echo Studio</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Podcast &amp; Voice</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Austin, TX</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$125<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Profile Card 4 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="A moody, respectful shot of a memorial service being photographed with high artistry. Soft, warm candle lighting against dark velvet backgrounds, creating a dignified and cinematic feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTm9wIDzoh_vOyrl7Zs7f_UifleqOabgcSCdh891kvl6XfyFouG3Rnn5-R8ivFZRxliDzKE5ZSEndrDcq0to9MGo--qoCGnZSRfXsp8d6byAAUpSv18v773k0T36RSJ5zqrSwjYcfIqjD1k55Hq7bkasLq8pmR48r7c-x2uNz2ANgpcmuG0OwcD_NlH1oliKNugL8MtU8VHUJ-NTgTN3ezKS69oIB9Y4pLENE7NE7fV5tJNA3Aslxw">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Legacy Captures</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Funeral Photography</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">New York, NY</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$180<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+</div>
+</section><!-- Section: Videographers -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="videographers" style="scroll-margin-top: 320px;">
+<div class="flex items-end justify-between mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white">Videographers</h2>
+<p class="font-body-md text-on-surface-variant">Masters of motion and light.</p>
+</div>
+<button class="text-primary-container font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+      View All <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Cinematic Videographer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqJRyfR4R5oRQL7GWTzrtrXNoKGv5kCQjEKjx8onHZ9ajXY9JY7oLC2l1xRq5f14xAUeJ_yaT095c1HAZvqwbAINVKR9ctIhCoGqMVsnAYpFw_PudH3rqV77tIHvCK8pwei49H108dnRmh28aPmveo1YPYrNHL9Fc3ko48qEXX09DAheOx3MPSnt1GrOIIuOvdPxAZ-C7vrzpcc-Xkt41w-JuW1MtUdVx9gEH317kZBWOV1UM5AqzT">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-primary-container text-[10px]">VERIFIED</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Luna Motion</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Cinematic Film</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Los Angeles, CA</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$200<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Drone Videographer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjSloMhwpREpZKh3ARZRd2fs8OTG0UIl6Am0MzZ3SFIMndOWzILeWqbDqwiCRWAs3FOKv7nSSgOLykRweQMumggD65RettjYx2QbXpDif2go2VESfptW1xF8i9CzGlYrixAYhM-uvkYRHNRNJUOSOvjxLXpi6P5rSZrjAtjO1dXq_FNSPdAWdi4A4ruFdVyF40-1xoIVG5irOShKEHaX1ZwsbX58dd5VCkelgdP-HZZK_7-W87kK-C">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-secondary text-[10px]">EXPERT</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Aero Frame</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Aerial Cinematography</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Miami, FL</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$250<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Event Videographer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVp6gMTcmlLOrDCH3mcxxMbL8gNdoAqAnWpl7L185FRAInG8N8u0AHKijr-_4AAn_CtY0n4JVb8hr9H_EGifmXQFC3Uvd7K_qGLV1HhofdziQiogxKYoxsmijnVGRoQqq8AV5RQSlyOwT7AKcJU18It2l3b2JXgo5Wvqo2tCLqwmw26EY6xj22xo0YxRTyLpdZfFef3FAu6iE2YBar91uDzB3MSlxL2X7ZY23vSmvKFMz4wPxj5H07">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Vivid Reels</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Event Coverage</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Austin, TX</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$175<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Wedding Videographer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3YEoTSl_sQQhg1e1j05Bo_sa8eAc-zPPqHb6drPomKPeq9eg1Fpqvnqv4R5X0f-0tUhc38hjLCdkyaLeE8ximBcc64aY7PAb2qVoGs0qkvV3rCqkRUGywP6SrpVECPor5vcyKeKSKEkbXO2fr1zGXqy92f2FCyPo6BawkXbJQ4U432LFM0PQzJ3oV7Y4C-ngaT10S_UXC4W7s7Q0R0BeTDhuPwQI5wlZbjXNFlsr-yDjaCX2DFLF9">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Eternal Frames</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Wedding Cinema</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">New York, NY</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$300<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Designers -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="designers" style="scroll-margin-top: 320px;">
+<div class="flex items-end justify-between mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white">Designers</h2>
+<p class="font-body-md text-on-surface-variant">Architects of visual identity.</p>
+</div>
+<button class="text-primary-container font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+      View All <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="UI Designer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABiFJb0I75yzoXK-2el4SND5fvJ3NMxgqVCa5FT88I80tINLJ3JmfiQAXuIe40vv1iuhypCMWpvdsmnJqIxER1MJxcR7Dtu8FpuOL2JqL5bg8J4NsdSYP2yanKlnSC8mYDxpWu9ih5e-sn0jC7D0WQJYaZJPcQHgXnxxnHl8k60SkQ4-SY6-hhwX_Ljy8bIIm0pPs_klRjxWpRySLPDVrfv1kCcylG4SE1I1MScGmumJT2TkdKiOKK">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-primary-container text-[10px]">VERIFIED</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Pixel Perfect</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">UI/UX Design</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">San Francisco, CA</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$120<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Brand Designer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA9g8V753gt4aUgyKeBawtfWOx0b_n4_ziYBl8T6UAnUOAilHFIf_bGaGmhTQLMTbOTLkQYMUA18P5sjEil2HpcoKOjEXCZZcHuYqZ3OWN3V24OucUIEfP_X-SiNW6ssywADKtBCL0kH4N1mMSk0ar3GqNFkTal6VH80ouxQ63kbMgYWN1xI2PCbrpQ1EBim-_aua3YqPonCcLXvL1MF_GhnTHosOWH1Gh4Qfql3k2I8JAVO1VLjbl">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-secondary text-[10px]">EXPERT</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Studio Noir</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Branding &amp; Identity</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Brooklyn, NY</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$140<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Motion Designer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPzypcV7zI5CQ9RFtFQo8t8aWs4WKDG8vShNN3B0vLR0Z61q-nrSHtUIbra-l3XEtG0frgqcv-M6UQELO7P6nFHtEiN5CzExeORDQEooVkaf6gujYR9F6gHrNVJjZ6Eojyl4kIcTFwmslOSGE_XBja0_7yJQPg9bj833f67hUJrc8T4UM3w4V97q2YLejOTLMzVoCAYDD-HTeTy4-69YGEsjt3dB56Zfmf5PHuMr1Japl5J4mXkkBj">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Kinetic Arts</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Motion Graphics</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">London, UK</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$160<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="3D Artist" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgBsUHwK40SDWwX0D37QERJ7X_bQ7hLfi8ccZRCDNTKCmLA6tbTUMFtW3lqMOIVIrcbKYL6PbFJS4dVIg5_UIU65yv0RK817Y3TwPvyCe17g8YclyDvCvVeSv38fLOk-KhjQoh-CFmWT6XoDSCgjHHu5kKF1ORPpk_DuG-o4aashrXrMOmTLOP06Gf8F612D3quJkEp4B2eVf3hRbzBTrH1fJ7JZkoRnBeeVbRkaj6TRor-OHo2Co2">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Vertex Studio</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">3D Visualization</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Berlin, DE</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$180<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Organizers -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="organizers" style="scroll-margin-top: 320px;">
+<div class="flex items-end justify-between mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white">Organizers</h2>
+<p class="font-body-md text-on-surface-variant">Curators of unforgettable experiences.</p>
+</div>
+<button class="text-primary-container font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+      View All <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Event Planner" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTm9wIDzoh_vOyrl7Zs7f_UifleqOabgcSCdh891kvl6XfyFouG3Rnn5-R8ivFZRxliDzKE5ZSEndrDcq0to9MGo--qoCGnZSRfXsp8d6byAAUpSv18v773k0T36RSJ5zqrSwjYcfIqjD1k55Hq7bkasLq8pmR48r7c-x2uNz2ANgpcmuG0OwcD_NlH1oliKNugL8MtU8VHUJ-NTgTN3ezKS69oIB9Y4pLENE7NE7fV5tJNA3Aslxw">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-primary-container text-[10px]">VERIFIED</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Elite Events</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Corporate Planning</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Chicago, IL</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$150<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Wedding Planner" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAevCaKt6qOCaD_h3a_ClXfv1R3wC4Qb9BCWoRTB14IO-fl2NVOfxsz9aI3rWzzT_V0OJYlrBKrLpwqbMU8hyLyDHx3d8_YVt6IjKCSYcJIVVrprYUfwAa0VsNFetD6P_NJpCLMwNjr4Lb-1rOOdAwv4GLIqFd-sgdJZNiaSBfw1RTey_DUcybfCUTzhpvhFdaASXe2mdBZyobhZ4zWb_Ojh7ZxvaovVNgKEZ1hLNCebji2cGzIf-W4">
+<div class="absolute top-3 right-3 bg-obsidian-base/80 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke">
+<span class="font-label-caps text-secondary text-[10px]">EXPERT</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Velvet Gala</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Wedding Coordination</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Paris, FR</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$220<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Production Manager" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXtH3W7Ysx8teb-DpTB5Ui2kBo9lla4xjP57HQnBIhXaEFfSk2GMjLeQ9OAU3fSvaKHSA83224Sr2VTDYcb-oFb9E3cjA0d3Y8xNsoCfZL4XzeikxUx1WwTYGS6fdzE1d0qC5HozsGyugzVAv_I3GUdcHnvvKhzWHraLle8FBaqEYUNmO44ETQ3uQNWPEvXaRcPd9PenW6fulTqAO31dhwsM9aJ8kvrzjDGT_7HaohA6481HueOdI9">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Set Masters</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Film Production</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Atlanta, GA</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$190<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-4 rounded-3xl border-glass-stroke neon-border-glow transition-all duration-300 group">
+<div class="relative h-64 rounded-2xl overflow-hidden mb-4">
+<img alt="Logistics Expert" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBznXNnR-wZZjRdqdAtbmozFn-WmCusaWorTQN0kXd7-Jire002zT6dJ7zXCOFUG3K6UHtQhGenS63LE9lk0Nv3Kj1Vv7zDL3QTcS2sBldxvm_-whf_kk7D1lxE9Z-mhmvDmkXg7jbxg_zeVH5A-wzA8XHbCxoYwApw2IrklafRkMP0A1hG_k48MNz_YO2CojXoFnCxRVKM0T7tkGlBVvc9cey2amuXS93Ihq7u_RRpHFj0M9qZmJr-">
+</div>
+<h4 class="font-headline-md text-headline-md text-white">Nexus Ops</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-2">Logistics &amp; Ops</p>
+<div class="flex items-center gap-2 text-on-surface-variant/60 text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Seattle, WA</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-glass-stroke">
+<span class="text-white font-bold">$130<span class="text-[10px] text-on-surface-variant font-normal">/hr</span></span>
+<button class="bg-primary-container/10 text-primary-container px-4 py-2 rounded-xl font-bold hover:bg-primary-container hover:text-obsidian-base transition-all">Book</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Developers (Bento Style) -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="developers" style="scroll-margin-top: 320px;">
+<div class="flex items-end justify-between mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white">Developers</h2>
+<p class="font-body-md text-on-surface-variant">Architects of the digital frontier.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Large Feature Card -->
+<div class="md:col-span-8 glass-panel rounded-3xl p-8 border-glass-stroke relative overflow-hidden group">
+<div class="relative z-10">
+<span class="px-4 py-1 rounded-full bg-primary-container text-obsidian-base font-bold text-xs">TOP SERVICE</span>
+<h3 class="text-3xl font-bold text-white mt-4 mb-2">Enterprise Website Architecture</h3>
+<p class="text-on-surface-variant max-w-md mb-8">Building scalable, secure, and futuristic web platforms for the next generation of industry leaders.</p>
+<div class="flex items-center gap-6">
+<div class="flex -space-x-3">
+<div class="w-12 h-12 rounded-full border-2 border-obsidian-base bg-cover" data-alt="A close-up professional profile headshot of a diverse male developer in a dark hoodie, illuminated by screen light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAET1ESsIBU_6SbZmig1HRlBLk64WakILEURhYuLaHCvKKy_cNwHgJmYs2an4WxEwwmPaL--jYwGjZ4RPjHP6TPC_WwEhNoI4ULL0qxgQMZ2o3xzidm0Z_lDX5b59rPqelPlXyJ-Dly61ntv0CAmMeGn5d_a4o3PPsj9nrTxPpcPAq81ENwxW0gccIrGdp6THiOo_hLrNFIWrdjUpC16Sxta9wBgXKG-NbOfzf9yrznXYQXJxKTjyt8')"></div>
+<div class="w-12 h-12 rounded-full border-2 border-obsidian-base bg-cover" data-alt="A professional headshot of a female tech lead with glasses, sharp lighting, obsidian-themed background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBPzypcV7zI5CQ9RFtFQo8t8aWs4WKDG8vShNN3B0vLR0Z61q-nrSHtUIbra-l3XEtG0frgqcv-M6UQELO7P6nFHtEiN5CzExeORDQEooVkaf6gujYR9F6gHrNVJjZ6Eojyl4kIcTFwmslOSGE_XBja0_7yJQPg9bj833f67hUJrc8T4UM3w4V97q2YLejOTLMzVoCAYDD-HTeTy4-69YGEsjt3dB56Zfmf5PHuMr1Japl5J4mXkkBj')"></div>
+<div class="w-12 h-12 rounded-full border-2 border-obsidian-base bg-cover" data-alt="A headshot of a senior software architect with a minimalist futuristic studio background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgBsUHwK40SDWwX0D37QERJ7X_bQ7hLfi8ccZRCDNTKCmLA6tbTUMFtW3lqMOIVIrcbKYL6PbFJS4dVIg5_UIU65yv0RK817Y3TwPvyCe17g8YclyDvCvVeSv38fLOk-KhjQoh-CFmWT6XoDSCgjHHu5kKF1ORPpk_DuG-o4aashrXrMOmTLOP06Gf8F612D3quJkEp4B2eVf3hRbzBTrH1fJ7JZkoRnBeeVbRkaj6TRor-OHo2Co2')"></div>
+</div>
+<span class="text-on-surface-variant text-sm">124 Pro Developers Available</span>
+</div>
+</div>
+<div class="absolute right-0 bottom-0 w-1/2 h-full opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-[200px] text-primary-container" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+</div>
+<!-- Small Detail Cards -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="glass-panel p-6 rounded-3xl border-glass-stroke flex-1 group hover:bg-white/5 transition-all">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-secondary mb-4">
+<span class="material-symbols-outlined">sports_esports</span>
+</div>
+<h4 class="font-bold text-white mb-1">Game Devs</h4>
+<p class="text-on-surface-variant text-sm">Unreal Engine &amp; Unity Experts.</p>
+<div class="mt-4 text-primary-container font-bold text-sm">Starting at $45/hr</div>
+</div>
+<div class="glass-panel p-6 rounded-3xl border-glass-stroke flex-1 group hover:bg-white/5 transition-all">
+<div class="w-12 h-12 rounded-2xl bg-primary-container/20 flex items-center justify-center text-primary-container mb-4">
+<span class="material-symbols-outlined">smartphone</span>
+</div>
+<h4 class="font-bold text-white mb-1">App Developers</h4>
+<p class="text-on-surface-variant text-sm">iOS, Android &amp; Hybrid builds.</p>
+<div class="mt-4 text-primary-container font-bold text-sm">Starting at $60/hr</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Caterers -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl transition-all duration-1000 opacity-100 translate-y-0" id="caterers" style="scroll-margin-top: 320px;">
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-white mb-stack-md">Caterers</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Caterer Card 1 -->
+<div class="glass-panel overflow-hidden rounded-3xl border-glass-stroke group">
+<div class="h-48 bg-cover bg-center" data-alt="A high-end gourmet plating of vegetarian cuisine, with minimalist presentation, vibrant microgreens, and dramatic spotlighting in an obsidian studio environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBznXNnR-wZZjRdqdAtbmozFn-WmCusaWorTQN0kXd7-Jire002zT6dJ7zXCOFUG3K6UHtQhGenS63LE9lk0Nv3Kj1Vv7zDL3QTcS2sBldxvm_-whf_kk7D1lxE9Z-mhmvDmkXg7jbxg_zeVH5A-wzA8XHbCxoYwApw2IrklafRkMP0A1hG_k48MNz_YO2CojXoFnCxRVKM0T7tkGlBVvc9cey2amuXS93Ihq7u_RRpHFj0M9qZmJr-')"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-white font-bold text-xl">Pure Green Gastronomy</h4>
+<p class="text-on-surface-variant text-sm">Pure Vegetarian Specialty</p>
+</div>
+<span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-[10px] font-bold">VEG</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6">Elevating plant-based dining to a cinematic art form.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary-container font-bold">From $35/pp</span>
+<button class="shimmer-btn px-6 py-2 rounded-full bg-gradient-to-r from-primary-container/20 to-secondary-container/20 border border-white/10 text-white hover:scale-105 transition-all">View Menu</button>
+</div>
+</div>
+</div>
+<!-- Caterer Card 2 -->
+<div class="glass-panel overflow-hidden rounded-3xl border-glass-stroke group">
+<div class="h-48 bg-cover bg-center" data-alt="A professional chef carving prime wagyu beef with smoke effects and warm golden lighting in a high-tech kitchen environment with dark granite surfaces." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXtH3W7Ysx8teb-DpTB5Ui2kBo9lla4xjP57HQnBIhXaEFfSk2GMjLeQ9OAU3fSvaKHSA83224Sr2VTDYcb-oFb9E3cjA0d3Y8xNsoCfZL4XzeikxUx1WwTYGS6fdzE1d0qC5HozsGyugzVAv_I3GUdcHnvvKhzWHraLle8FBaqEYUNmO44ETQ3uQNWPEvXaRcPd9PenW6fulTqAO31dhwsM9aJ8kvrzjDGT_7HaohA6481HueOdI9')"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-white font-bold text-xl">Prime Cuts Cinema</h4>
+<p class="text-on-surface-variant text-sm">Non-Vegetarian Specialists</p>
+</div>
+<span class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-[10px] font-bold">NON-VEG</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6">Expertly crafted proteins for high-impact corporate events.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary-container font-bold">From $55/pp</span>
+<button class="shimmer-btn px-6 py-2 rounded-full bg-gradient-to-r from-primary-container/20 to-secondary-container/20 border border-white/10 text-white hover:scale-105 transition-all">View Menu</button>
+</div>
+</div>
+</div>
+<!-- Caterer Card 3 -->
+<div class="glass-panel overflow-hidden rounded-3xl border-glass-stroke group">
+<div class="h-48 bg-cover bg-center" data-alt="A diverse spread of authentic Halal certified gourmet dishes including saffron rice and spiced meats, served on ornate silver platters under moody, atmospheric lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAevCaKt6qOCaD_h3a_ClXfv1R3wC4Qb9BCWoRTB14IO-fl2NVOfxsz9aI3rWzzT_V0OJYlrBKrLpwqbMU8hyLyDHx3d8_YVt6IjKCSYcJIVVrprYUfwAa0VsNFetD6P_NJpCLMwNjr4Lb-1rOOdAwv4GLIqFd-sgdJZNiaSBfw1RTey_DUcybfCUTzhpvhFdaASXe2mdBZyobhZ4zWb_Ojh7ZxvaovVNgKEZ1hLNCebji2cGzIf-W4')"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-white font-bold text-xl">Saffron &amp; Silk</h4>
+<p class="text-on-surface-variant text-sm">Halal Certified Gourmet</p>
+</div>
+<span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold">HALAL</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6">Authentic flavors meeting the highest standards of culinary prep.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary-container font-bold">From $45/pp</span>
+<button class="shimmer-btn px-6 py-2 rounded-full bg-gradient-to-r from-primary-container/20 to-secondary-container/20 border border-white/10 text-white hover:scale-105 transition-all">View Menu</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-obsidian-base dark:bg-obsidian-base w-full px-margin-desktop max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-gutter full-width pt-stack-xl pb-stack-md border-t border-glass-stroke mt-stack-xl">
+<div class="md:col-span-1">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary mb-4 block">Camcrew Studio</span>
+<p class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant">© 2024 Camcrew Studio. Crafted for the Cinematic Future.</p>
+</div>
+<div>
+<h5 class="text-white font-bold mb-4">Services</h5>
+<ul class="flex flex-col gap-2">
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Photographers</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Videographers</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Designers</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Developers</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-4">Support</h5>
+<ul class="flex flex-col gap-2">
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Help Center</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Community Guidelines</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Press Kit</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-4">Legal</h5>
+<ul class="flex flex-col gap-2">
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Privacy Policy</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-secondary-container transition-colors duration-200" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</footer>
+<script>
+        // Smooth reveal on scroll
+        // Floating Hub highlight on scroll
+window.addEventListener('scroll', () => {
+    // FIX 1: Array order now matches your HTML DOM exactly
+    const sections = ['photographers', 'videographers', 'designers', 'organizers', 'developers', 'caterers'];
+    let current = '';
+
+    sections.forEach(section => {
+        const element = document.getElementById(section);
+        if (element) {
+            const rect = element.getBoundingClientRect();
+            // FIX 2: Increased threshold to 350 to account for your 320px scroll-margin-top
+            if (rect.top <= 350) { 
+                current = section;
+            }
+        }
+    });
+
+    const navLinks = document.querySelectorAll('.sticky a');
+    navLinks.forEach(link => {
+        // Reset all links to inactive state
+        link.classList.remove('bg-primary-container/20', 'text-primary-container', 'font-bold');
+        link.classList.add('text-on-surface-variant');
+        
+        // FIX 3: Make sure 'current' isn't empty before applying the active class
+        if (current && link.getAttribute('href').includes(current)) {
+            link.classList.add('bg-primary-container/20', 'text-primary-container', 'font-bold');
+            link.classList.remove('text-on-surface-variant');
+        }
+    });
+});
+    </script>
+
+
+</body></html>

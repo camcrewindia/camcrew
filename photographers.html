@@ -1,0 +1,465 @@
+<!DOCTYPE html><html class="dark" lang="en" ><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Camcrew Studio | Professional Photographers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .neon-glow-blue {
+            box-shadow: 0px 10px 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .neon-glow-blue-hover:hover {
+            box-shadow: 0px 10px 40px rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(219, 252, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .filter-chip {
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip:hover {
+            border-color: #00dbe9;
+            background: rgba(0, 219, 233, 0.05);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "charcoal-surface": "#161618",
+                        "on-background": "#dce4e5",
+                        "surface-container": "#192122",
+                        "secondary-fixed": "#f8d8ff",
+                        "tertiary-fixed": "#e5e2e1",
+                        "surface": "#0d1515",
+                        "on-primary-fixed": "#002022",
+                        "surface-bright": "#333b3b",
+                        "primary": "#dbfcff",
+                        "inverse-primary": "#006970",
+                        "surface-variant": "#2e3637",
+                        "on-secondary": "#520072",
+                        "on-surface": "#dce4e5",
+                        "secondary": "#ebb2ff",
+                        "inverse-surface": "#dce4e5",
+                        "secondary-container": "#b600f8",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "on-primary-container": "#006970",
+                        "surface-container-highest": "#2e3637",
+                        "surface-container-low": "#151d1e",
+                        "primary-fixed-dim": "#00dbe9",
+                        "on-secondary-container": "#fff6fc",
+                        "secondary-fixed-dim": "#ebb2ff",
+                        "background": "#0d1515",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "obsidian-base": "#0A0A0B",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "inverse-on-surface": "#2a3233",
+                        "surface-tint": "#00dbe9",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "outline-variant": "#3b494b",
+                        "on-tertiary": "#313030",
+                        "surface-container-high": "#232b2c",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "on-primary-fixed-variant": "#004f54",
+                        "on-secondary-fixed": "#320047",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#849495",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "primary-container": "#00f0ff",
+                        "on-surface-variant": "#b9cacb",
+                        "error": "#ffb4ab",
+                        "on-primary": "#00363a",
+                        "error-container": "#93000a",
+                        "surface-dim": "#0d1515",
+                        "tertiary-container": "#dcd9d8",
+                        "primary-fixed": "#7df4ff",
+                        "surface-container-lowest": "#080f10",
+                        "tertiary": "#f9f5f5",
+                        "on-tertiary-container": "#605f5e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "stack-xs": "0.5rem",
+                        "stack-xl": "4rem",
+                        "stack-md": "1.5rem",
+                        "margin-desktop": "80px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-obsidian-base selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <button class=" text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </button>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-2 py-1 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md px-2 w-60 text-on-surface placeholder:text-outline" placeholder="Search professionals..." type="text">
+</div>
+<div>
+    <a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-8 rounded-full text-label-caps transition-transform hover:scale-105" style="font-size: 15px;">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<main class="pb-stack-xl py-4 pt-40"><section class="px-margin-desktop mb-8 relative overflow-hidden">
+<!-- Advanced Filter Bar -->
+<div class="glass-panel p-6 rounded-2xl neon-glow-blue grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6 items-end">
+<div class="space-y-2">
+<label class="font-label-caps text-primary text-[10px] block">LOCATION</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">location_on</span>
+<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-10 py-2.5 text-body-md outline-none transition-colors" placeholder="City or Region" type="text">
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-primary text-[10px] block">STYLE</label>
+<select class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none appearance-none cursor-pointer">
+<option>All Styles</option>
+<option>Cinematic</option>
+<option>Portrait</option>
+<option>Drone / Aerial</option>
+<option>Commercial</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-primary text-[10px] block">EXPERIENCE</label>
+<select class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none appearance-none cursor-pointer">
+<option>Any Level</option>
+<option>Pro (5+ Years)</option>
+<option>Elite (10+ Years)</option>
+<option>Emerging</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-primary text-[10px] block">PRICE RANGE</label>
+<div class="flex items-center gap-2">
+<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none" placeholder="Min" type="number">
+<span class="text-outline">-</span>
+<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none" placeholder="Max" type="number">
+</div>
+</div>
+<div>
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-lg font-label-caps flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Search Pro
+                    </button>
+</div>
+</div>
+</section>
+<!-- Results Grid -->
+<section class="px-margin-desktop">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline-md text-headline-md text-on-background">Found 124 Elite Professionals</h2>
+<div class="flex gap-3">
+<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer bg-primary-container/10 text-primary border-primary">TOP RATED</span>
+<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer">CINEMATIC</span>
+<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer">AVAILABLE NOW</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Photographer Card 1 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://media.istockphoto.com/id/2190079061/photo/handsome-teen-boy-with-curly-hairstyle-wearing-green-t-shirt-posing-isolated-on-blue.jpg?s=612x612&w=0&k=20&c=PS54cA3ozt4stBfvfar4g7CXmfBuZpBh3ua25hGLJ7E=">
+<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
+<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-caps text-[12px]">4.9</span>
+</div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-primary/20 backdrop-blur-md text-primary text-label-caps text-[10px] px-2 py-1 rounded border border-primary/30">PREMIUM PRO</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-on-background text-[20px] mb-1">Marcus Thorne</h3>
+<p class="text-on-surface-variant text-body-md text-sm">Cinematic &amp; Fashion Specialist</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-4 text-outline text-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="">London, UK</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="">$150/hr</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">PORTRAIT</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">URBAN</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">STREET</span>
+</div>
+<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
+</div>
+</div>
+<!-- Photographer Card 2 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF02ybuPDIhfUP6k2irxiv5RcsIKy3YO2wvjSC0UQ3rOKrS8B_QqJdTggYQ4seZYMlj0NNf7sS5C-GXUV-GjrCHG88QxrbPU3dqGjxezOTgp0M8C_Gl4ShKZAWPn3abG-tc0lLv1b1yJz-ZpmmdkE-dqQvJx7lOr8K9IgSw7f4WRDMSYsQNQezQdeuZjAB5D0UYjYxrLzKU6M7ALC1DJxZ2Oi3rzcgfzscN1xqGj7WIPsV5Qqgb-GG">
+<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
+<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-caps text-[12px]">5.0</span>
+</div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-secondary/20 backdrop-blur-md text-secondary text-label-caps text-[10px] px-2 py-1 rounded border border-secondary/30">ELITE ARTIST</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-on-background text-[20px] mb-1">Elena Volkov</h3>
+<p class="text-on-surface-variant text-body-md text-sm">Drone &amp; Architectural Visuals</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-4 text-outline text-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="">Dubai, UAE</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="">$280/hr</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">DRONE</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">AERIAL</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">ESTATE</span>
+</div>
+<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
+</div>
+</div>
+<!-- Photographer Card 3 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT1UjYVjZFoLpCa8nTHsOaTRhMd_LhkmOpvNI2JUupzgQEposXO-n2DOxhD8OaFOW-Q3O14OFHQwSfioCrKUDoEBD0r4pwGOptApq7-9fxZKZJ7Ww3zMJpGj6R4mNX_u3ZIpn0gTj3E38q5tYX-4kIeknbNsx7WTAOePgP7mUr6b2_uvrCwa1tyqbHCAm1RrJdW3BKlGBOcftk2v1Qu6zmTPHSMt0stRPRkNkY-TAW1wO6GyaTGA34">
+<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
+<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-caps text-[12px]">4.8</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-on-background text-[20px] mb-1">Satoshi Nara</h3>
+<p class="text-on-surface-variant text-body-md text-sm">Product &amp; Tech Commercials</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-4 text-outline text-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="">Tokyo, JP</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="">$190/hr</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">PRODUCT</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">MACRO</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">CLEAN</span>
+</div>
+<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
+</div>
+</div>
+<div class="glass-panel rounded-2xl border-dashed border-glass-stroke flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[48px] mb-4">add_circle</span>
+<h3 class="font-headline-md text-on-background">Explore More Pros</h3>
+<p class="text-on-surface-variant text-body-md">Load 50+ more professionals matching your criteria</p>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="px-margin-desktop mt-stack-xl">
+<div class="glass-panel p-12 rounded-[32px] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px]"></div>
+<div class="relative z-10 max-w-xl">
+<h2 class="font-display-lg text-display-lg-mobile md:text-[36px] text-on-background mb-4">Are you a Professional Visual Creator?</h2>
+<p class="text-body-lg text-on-surface-variant mb-8">Join the elite network of Camcrew Studio and showcase your cinematic excellence to high-tier clients worldwide.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-caps shimmer-effect hover:shadow-neon-blue-glow transition-all">List Your Studio</button>
+<button class="border border-primary text-primary px-8 py-3 rounded-full font-label-caps hover:bg-primary/10 transition-all">Learn More</button>
+</div>
+</div>
+<div class="relative z-10 hidden lg:block w-96 h-64 glass-panel rounded-2xl p-6 border-primary/20">
+<div class="space-y-4">
+<div class="h-4 w-3/4 bg-primary/10 rounded"></div>
+<div class="h-4 w-1/2 bg-primary/10 rounded"></div>
+<div class="h-32 w-full bg-surface-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary/40 text-[48px]">insights</span>
+</div>
+<p class="text-label-caps text-[10px] text-primary">LIVE MARKET ANALYTICS</p>
+</div>
+</div>
+</div>
+</section></main>
+<!-- Footer -->
+<footer class="w-full py-stack-xl px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-obsidian-base border-t border-glass-stroke">
+<div class="mb-8 md:mb-0 text-center md:text-left">
+<span class="font-display-lg text-display-lg text-primary block mb-2">Camcrew Studio</span>
+<p class="text-on-surface-variant text-body-md">© 2024 Camcrew Studio. Cinematic Excellence.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-body-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-body-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-body-md" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-body-md" href="#">Careers</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-body-md" href="#">Press Kit</a>
+</div>
+</footer>
+<!-- Interactive Layer for cursor effect -->
+<div class="fixed pointer-events-none w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 transition-opacity duration-300 opacity-0" id="glow-cursor" style="opacity: 1; left: 393px; top: -195px;"></div>
+<script>
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.getElementById('glow-cursor');
+            cursor.style.opacity = '1';
+            cursor.style.left = (e.clientX - 200) + 'px';
+            cursor.style.top = (e.clientY - 200) + 'px';
+        });
+
+        // Simple scroll reveal for cards
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+
+
+</body></html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html><html class="dark" lang="en" ><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Camcrew Studio | Cinematic Technology for Creators</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#dce4e5",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "surface-container-highest": "#2e3637",
+                        "surface-container-lowest": "#080f10",
+                        "obsidian-base": "#0A0A0B",
+                        "on-tertiary": "#313030",
+                        "primary-fixed-dim": "#00dbe9",
+                        "inverse-on-surface": "#2a3233",
+                        "on-primary-fixed": "#002022",
+                        "background": "#0d1515",
+                        "on-primary-container": "#006970",
+                        "on-secondary-fixed": "#320047",
+                        "on-surface-variant": "#b9cacb",
+                        "on-background": "#dce4e5",
+                        "secondary-fixed-dim": "#ebb2ff",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "charcoal-surface": "#161618",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "on-error": "#690005",
+                        "tertiary-container": "#dcd9d8",
+                        "on-secondary": "#520072",
+                        "surface-container-low": "#151d1e",
+                        "secondary-container": "#b600f8",
+                        "surface-dim": "#0d1515",
+                        "surface-bright": "#333b3b",
+                        "primary-container": "#00f0ff",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "surface-tint": "#00dbe9",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#7df4ff",
+                        "on-primary-fixed-variant": "#004f54",
+                        "inverse-primary": "#006970",
+                        "surface-container-high": "#232b2c",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "outline-variant": "#3b494b",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#e5e2e1",
+                        "secondary-fixed": "#f8d8ff",
+                        "on-surface": "#dce4e5",
+                        "outline": "#849495",
+                        "surface-variant": "#2e3637",
+                        "on-secondary-container": "#fff6fc",
+                        "primary": "#dbfcff",
+                        "secondary": "#ebb2ff",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "surface": "#0d1515",
+                        "on-primary": "#00363a",
+                        "surface-container": "#192122",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "on-tertiary-container": "#605f5e",
+                        "tertiary": "#f9f5f5",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-xs": "0.5rem",
+                        "margin-desktop": "80px",
+                        "margin-mobile": "20px",
+                        "stack-xl": "4rem",
+                        "stack-md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #00f0ff;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+        }
+
+        .neon-text-blue {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        .neon-border-focus:focus-within {
+            border-bottom-color: #00dbe9;
+            box-shadow: 0 4px 12px -2px rgba(0, 240, 255, 0.3);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .shimmer-btn:hover::after {
+            animation: shimmer 0.8s forwards;
+        }
+    	/* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-body-md antialiased">
+<!-- Animated Background -->
+<div class="fixed inset-0 z-[-1] overflow-hidden h-screen">
+<!-- STITCH_SHADER_START:ANIMATION_6 class="absolute inset-0 w-full h-full opacity-40" -->
+<div class="absolute inset-0 w-full h-full opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_6" style="display:block;width:100%;height:100%" width="1300" height="5870"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_6');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec3 color1 = vec3(0.05, 0.08, 0.1); // Deep Obsidian
+    vec3 color2 = vec3(0.0, 0.94, 1.0);  // Electric Blue
+    vec3 color3 = vec3(0.74, 0.0, 1.0);  // Vibrant Purple
+    
+    float noise = sin(uv.x * 10.0 + u_time * 0.5) * cos(uv.y * 10.0 + u_time * 0.5);
+    float glow = smoothstep(0.4, 0.6, sin(u_time * 0.2 + length(uv - 0.5) * 5.0) * 0.5 + 0.5);
+    
+    vec3 finalColor = mix(color1, color2, glow * 0.1);
+    finalColor = mix(finalColor, color3, noise * 0.05);
+    
+    // Add floating particle "dust"
+    float particles = pow(fract(sin(dot(uv + u_time * 0.01, vec2(12.9898, 78.233))) * 43758.5453), 20.0);
+    finalColor += particles * 0.2;
+
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_6 -->
+</div>
+<!-- Navigation Header -->
+<header class="fixed top-0 w-full z-[100] px-margin-mobile md:px-margin-desktop py-2 md:py-4">
+    <div class="relative max-w-screen-2xl mx-auto">
+        <!-- Reduced mobile padding (px-4 py-2 mt-2) and kept desktop padding (md:px-8 md:py-3 md:mt-4) -->
+        <nav class="relative z-50 flex justify-between items-center rounded-full mt-2 md:mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-4 md:px-8 py-2 md:py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+            <div class="flex items-center gap-2">
+                <img alt="Camcrew Studio Logo" class="h-8 md:h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+            </div>
+            
+            <!-- Desktop Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+                <a href="index.html" class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+                <div class="relative group">
+                    <a href="services.html" class=" hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+                        Services
+                        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+                    </a>
+                   <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+    						<div class="glass-panel bg-obsidian-base/75 rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+                            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                                <span class="font-body-md">Photographers</span>
+                            </a>
+                            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">videocam</span>
+                                <span class="font-body-md">Videographers</span>
+                            </a>
+                            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">palette</span>
+                                <span class="font-body-md">Designers</span>
+                            </a>
+                            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">code</span>
+                                <span class="font-body-md">Developers</span>
+                            </a>
+                            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">event</span>
+                                <span class="font-body-md">Organizers</span>
+                            </a>
+                            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                                <span class="material-symbols-outlined text-sm">restaurant</span>
+                                <span class="font-body-md">Caterers</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+                <a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+                <a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+            </div>
+
+            <!-- Desktop Profile & Cart & Sign In / Mobile Toggle Button -->
+            <div class="flex items-center gap-4">
+                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+                <a href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+                    Sign In
+                </a>
+                
+                <!-- Visible only on mobile -->
+                <button class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+                <button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-3xl">menu</button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="absolute top-full left-0 w-full mt-2 rounded-2xl bg-obsidian-base/65 backdrop-blur-xl border border-glass-stroke p-6 opacity-0 invisible translate-y-[-10px] transition-all duration-300 md:hidden z-[100] shadow-2xl">
+            <div class="flex flex-col gap-4 font-body-md text-on-surface-variant">
+                <a href="index.html" class="text-primary font-bold border-l-2 border-primary pl-3 py-2">Home</a>
+                
+                <div class="flex flex-col">
+                    <span class="font-bold text-on-surface py-2">Services</span>
+                    <div class="flex flex-col pl-4 border-l-2 border-glass-stroke mt-1 space-y-3 py-2">
+                        <a href="photographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">photo_camera</span> Photographers</a>
+                        <a href="videographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">videocam</span> Videographers</a>
+                        <a href="designers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">palette</span> Designers</a>
+                        <a href="developers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">code</span> Developers</a>
+                        <a href="organizers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">event</span> Organizers</a>
+                        <a href="caterers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">restaurant</span> Caterers</a>
+                    </div>
+                </div>
+
+                <a href="rentals.html" class="hover:text-primary transition-colors py-2">Rentals</a>
+                <a href="sales.html" class="hover:text-primary transition-colors py-2">Sales</a>
+                <a href="About.html" class="hover:text-primary transition-colors py-2">About us</a>
+                
+                <hr class="border-glass-stroke my-2">
+                
+                <div class="flex items-center justify-between pt-2">
+                    <button class="flex items-center gap-2 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <span>Profile</span>
+                    </button>
+                    <a href="signin.html" class="bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps hover:scale-105 transition-transform">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="relative z-10">
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-margin-mobile pt-32 pb-stack-xl min-h-[100vh] py-stack-xl">
+<div class="max-w-4xl space-y-stack-md">
+<div class="inline-block px-4 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-label-caps mb-4 animate-pulse">
+                    The Future of Creative Production
+                </div>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface leading-tight">
+                    Digital Services at your <br>
+<span class="text-primary neon-text-blue">fingertip</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Experience precision technology and high-end cinematic services designed for elite creators and visionary brands. From gear rentals to post-production.
+                </p>
+<div class="flex flex-col sm:flex-row gap-gutter justify-center pt-8">
+<a class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-10 rounded-xl text-body-md hover:shadow-neon-blue-glow transition-all" href="services.html">
+                        Explore Services
+                    </a>
+<a class="glass-card py-4 px-10 rounded-xl text-body-md font-bold text-on-surface hover:bg-white/5 transition-all" href="rentals.html">
+                        Rent Equipment
+                    </a>
+</div>
+</div>
+</section>
+<!-- Section 1: Featured Services -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl">
+<div class="max-w-screen-2xl mx-auto">
+<div class="flex justify-between items-end mb-stack-md">
+<div>
+<h2 class="font-display-lg text-headline-md text-on-surface">Featured Services</h2>
+<p class="text-on-surface-variant font-body-md">Elite production standards for your most important moments.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="h-64 relative overflow-hidden aspect-video">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A cinematic, high-contrast wedding photograph of a couple standing in a foggy forest at sunset, illuminated by warm orange backlighting. The aesthetic is sophisticated and professional with deep blacks and vibrant warm highlights, captured with a high-end cine lens for a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCzDpAPP1bB_QwCK4ldXGMz1qpIlostwFdulhOJqdrNWFgTy9VmBfQIB_-u0FNhWFrDzmcaCwm3h8KAXzBJDFX6m_RBFTm1pijimVBf7qqa-yZjnkjOMzVikdHRWJiTHERnMzQ3wpsBud7Vyj1CQ2mM703xELE_oxrdDyuPtIjMASYxAqfdURAmGGB11fXVIiIUNZZ5OeTiG40lPq5aDp9wPBfK_zSFjESVrPpKyoMebfPTnOQbd_k">
+<div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface via-transparent to-transparent"></div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-on-surface mb-2">Wedding Photography</h3>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-body-md">Starting Price</span>
+<span class="text-primary font-bold text-headline-md">$1,200</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-2xl overflow-hidden group border-secondary/20">
+<div class="h-64 relative overflow-hidden aspect-video">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Professional videography production set with a high-end cinema camera on a gimbal, glowing blue LED lighting strips in the background, and a director's monitor showing a sharp, vibrant scene. The mood is high-tech and industrial with an obsidian and electric blue color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzfqBVdw3GW6HakvGisiIDK9lTIwzR9A06_cNYIRvMYekhe5RcBDUvtr_HkEXmF0rt0XL2Km_Hzgz_UXy4YKhgJOyr5IbumJDqAGAcB-ETEqs7FfqIxzb4pX9Ie3GjKDJz2O3dKgnzJLZbYs_Z6xdrx4mGtgidOtphEGG3nFjboroBLtZ-d_tlNew2fc598ljSO9Iq4uTGxwfHiTBKUDIgYw-BFdgeM6xgMjfugH57LKppg3dPDM60">
+<div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface via-transparent to-transparent"></div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-on-surface mb-2">Videography</h3>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-body-md">Starting Price</span>
+<span class="text-secondary font-bold text-headline-md">$2,500</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="h-64 relative overflow-hidden aspect-video">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A minimalist and sleek workspace of a graphic designer featuring a large 5K monitor displaying abstract geometric neon purple and blue patterns. High-end peripheral hardware sits on a dark matte desk under subtle atmospheric purple lighting, creating a futuristic professional vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIEy-aTRHMYOrEd-4m9RuhOgAD3ZLyWT3gvoZW1fOHlBLwztzZE6Ni0f7-jvjfM1mLNXKy5qNAOWcw6g8jaA0BQEl_l3QDlY-ptLoPHoEGYKWFD2ct9AOSSuNMQvoa25ypBkeuNg4yFI2DwkEbqiQyKDqOiUfBSYUgyp4AVLhZeQd6ZZO8HSHoTwS5wKB74Eunz356XC7liB3p9cnCOCiUyOPIxjQ32cRZpHFATo3R2BTH0DHiGx1K">
+<div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface via-transparent to-transparent"></div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-on-surface mb-2">Graphic Designing</h3>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-body-md">Starting Price</span>
+<span class="text-primary font-bold text-headline-md">$450</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Category wise Services -->
+<section class="py-stack-xl overflow-hidden">
+<div class="px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto mb-stack-md">
+<h2 class="font-display-lg text-headline-md text-on-surface">Browse by Category</h2>
+</div>
+<div class="flex gap-gutter overflow-x-auto px-margin-mobile md:px-margin-desktop pb-8 hide-scrollbar cursor-grab active:cursor-grabbing">
+<!-- Categories -->
+<div class="flex-none w-72 glass-card p-8 rounded-2xl text-center flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">photo_camera</span>
+</div>
+<h4 class="font-headline-md text-on-surface">Studio Portraits</h4>
+<p class="text-on-surface-variant text-body-md">Professional lighting setups.</p>
+</div>
+<div class="flex-none w-72 glass-card p-8 rounded-2xl text-center flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">movie</span>
+</div>
+<h4 class="font-headline-md text-on-surface">Drone Cinematography</h4>
+<p class="text-on-surface-variant text-body-md">Stunning aerial perspectives.</p>
+</div>
+<div class="flex-none w-72 glass-card p-8 rounded-2xl text-center flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">brush</span>
+</div>
+<h4 class="font-headline-md text-on-surface">Brand Identity</h4>
+<p class="text-on-surface-variant text-body-md">Visual storytelling for brands.</p>
+</div>
+<div class="flex-none w-72 glass-card p-8 rounded-2xl text-center flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">event</span>
+</div>
+<h4 class="font-headline-md text-on-surface">Corporate Events</h4>
+<p class="text-on-surface-variant text-body-md">Full-scale event coverage.</p>
+</div>
+<div class="flex-none w-72 glass-card p-8 rounded-2xl text-center flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">music_note</span>
+</div>
+<h4 class="font-headline-md text-on-surface">Music Videos</h4>
+<p class="text-on-surface-variant text-body-md">Creative visual production.</p>
+</div>
+</div>
+</section>
+<!-- Section 3 & 4: New Arrivals & Most Booked (Combined Bento) -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- New Services -->
+<div class="lg:col-span-7">
+<h2 class="font-display-lg text-headline-md text-on-surface mb-stack-md">New Arrivals</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="glass-card rounded-2xl p-6 group">
+<div class="flex items-center gap-4 mb-4">
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-widest">New</span>
+</div>
+<h4 class="font-headline-md text-on-surface">360° Virtual Tours</h4>
+<p class="text-on-surface-variant text-body-md mt-2">Immersive real estate and business walkthroughs using latest 8K scanning tech.</p>
+<button class="mt-6 text-primary flex items-center gap-2 font-bold hover:gap-4 transition-all">Learn More <span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+<div class="glass-card rounded-2xl p-6 group">
+<div class="flex items-center gap-4 mb-4">
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-widest">New</span>
+</div>
+<h4 class="font-headline-md text-on-surface">AI Color Grading</h4>
+<p class="text-on-surface-variant text-body-md mt-2">Lightning fast cinematic color matching powered by advanced neural engines.</p>
+<button class="mt-6 text-primary flex items-center gap-2 font-bold hover:gap-4 transition-all">Learn More <span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+</div>
+<!-- Most Booked -->
+<div class="lg:col-span-5">
+<h2 class="font-display-lg text-headline-md text-on-surface mb-stack-md">Most Booked</h2>
+<div class="space-y-gutter">
+<div class="glass-card p-4 rounded-2xl flex gap-4 items-center group">
+<div class="w-24 h-24 flex-none rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover aspect-square" data-alt="A professional podcast recording setup in a dark studio with neon acoustic panels. Two high-end microphones are mounted on boom arms with pop filters, creating a modern, high-tech broadcasting aesthetic with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByVo7zJHfPyxt3gbOoCxO0I4V4fD-D_0qs2yL4FvHB6g16aB3RSMPPBr4_fC5C_vCmsRoLKG-1VlND133w499PMxpGJl4YdTGzjW4GcYWxZsEsIHU4ZfSVytpj9MfBczN5kLaAVIt5pzTmJfwNL3aEZ_Vmin4IJSl3POQJDUsvUrfOEInnGpWNpiNIkQAfuQDWUYlbuEhNRJVzFa65dIIvKYYgu4fnPM7ufgcnx7lSBjcrOwUiIlZN">
+</div>
+<div>
+<h4 class="font-headline-md text-on-surface">Podcast Studio</h4>
+<div class="flex items-center gap-1 text-primary-fixed-dim">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="text-body-md font-bold">4.9 (120+ Bookings)</span>
+</div>
+</div>
+</div>
+<div class="glass-card p-4 rounded-2xl flex gap-4 items-center group">
+<div class="w-24 h-24 flex-none rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover aspect-square" data-alt="A stunning outdoor fashion photoshoot at night under bright neon city lights. The model is wearing a metallic silver outfit, illuminated by off-camera flashes that create dramatic shadows and sharp, crisp cinematic detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4LIkEk85MQYlHUzoEvs_SlNGPJVNfLtNujIxde6wh_BH2iMxO4RxvUC2rlFOj8OtymAxroY8SZcZK9wm5PZGCJoGLy1_8IFjFLtDTpJZ94pzuPbdbAO9MwaLd9QV2uvq2bcF1C87OAJseHKX3v4aMemfzauPGms-QlXbujUiYqv8NPEWqBNRjoc2XxU4FzEf_qT2gM7SQ3oemwrHkUAlSRWq-vU3gTN4CNLMxWbr72Mi0bs2WQ1M5">
+</div>
+<div>
+<h4 class="font-headline-md text-on-surface">Fashion Lookbooks</h4>
+<div class="flex items-center gap-1 text-primary-fixed-dim">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="text-body-md font-bold">5.0 (85+ Bookings)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5 & 6: Equipment & Products -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl bg-surface-container-low/30">
+<div class="max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-stack-md gap-4">
+<div>
+<h2 class="font-display-lg text-headline-md text-on-surface">Rent &amp; Buy Equipment</h2>
+<p class="text-on-surface-variant font-body-md">Precision hardware for demanding professionals.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-charcoal-surface border border-glass-stroke p-2 rounded-full hover:border-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="bg-charcoal-surface border border-glass-stroke p-2 rounded-full hover:border-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product 1 -->
+<div class="glass-card p-4 rounded-3xl flex flex-col group">
+<div class="h-48 rounded-2xl overflow-hidden mb-4 bg-obsidian-base relative aspect-square">
+<img class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform" data-alt="A high-end RED V-Raptor digital cinema camera body shot against a clean dark background with electric blue edge lighting that highlights its mechanical precision and premium build quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeMdiokAUD8pj2r7un2TSGllJ5q_BGGFpUB7udNLMnnRXwKpDmu9lhLOBdLvV_K1OQcC43CxBYICmwB_uTDdO8FpA3JkPHD_om3_DPkiCiqMTEIV2OaJFU_XwMZ8sUJwa80vHrWdt2iirx47dUVtCY-BBDrOlY1WREu80HO-nwOCuEPqoC2Xljn-GiqUz55MC6Zu3OWHXy9X-Kpm3kjk9WWOg6RVwzFd9JDDtulla_VTWOkZIeifll">
+<div class="absolute top-2 right-2 bg-secondary text-on-secondary text-[10px] px-2 py-1 rounded-full font-bold">RENTAL</div>
+</div>
+<h4 class="text-body-lg font-bold text-on-surface">RED V-RAPTOR 8K</h4>
+<p class="text-on-surface-variant text-body-md mb-4">Daily Rate</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-primary font-bold text-headline-md">$299</span>
+<button class="material-symbols-outlined bg-primary-container text-on-primary-container p-2 rounded-xl">add_shopping_cart</button>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="glass-card p-4 rounded-3xl flex flex-col group">
+<div class="h-48 rounded-2xl overflow-hidden mb-4 bg-obsidian-base relative aspect-square">
+<img class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform" data-alt="A professional carbon fiber camera tripod with a fluid head, illuminated by soft purple lighting. The sleek, durable design is captured in a minimalist style that emphasizes its high-tech structural integrity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3mTHuRyC8eoDn1s1V_T8eQphf4ciHFd1EU7-JlHjYR2OlNjfAfNKOxh78MUEFHSrzoqoKEvVRp_00wtL1ymhNWYFochrNsuBd1VsLSRbuK_mf_6SPR2UHuP724jr-6WWoEBReFY_ZQwmrQUV3LqNQg3eJCTbWlyXcyZH6xYGDAPIkOniUcRSb9ZaYfnIBlNTqZ4iy20sP71KiPEunQVwWt58VpogxZd-Q8M1qMzIRDqbP22gc82IO">
+<div class="absolute top-2 right-2 bg-primary-container text-on-primary-container text-[10px] px-2 py-1 rounded-full font-bold">FOR SALE</div>
+</div>
+<h4 class="text-body-lg font-bold text-on-surface">Carbon Fiber Pro Stand</h4>
+<p class="text-on-surface-variant text-body-md mb-4">New Item</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-primary font-bold text-headline-md">$850</span>
+<button class="material-symbols-outlined bg-primary-container text-on-primary-container p-2 rounded-xl">add_shopping_cart</button>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="glass-card p-4 rounded-3xl flex flex-col group">
+<div class="h-48 rounded-2xl overflow-hidden mb-4 bg-obsidian-base relative aspect-square">
+<img class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform" data-alt="Professional LED lighting panel with barn doors, glowing with a bright white light. The panel has a sleek industrial design, with visible cooling vents and digital control dials, set against a dark obsidian background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk-gv6vveE8kR4WkzNRjKugHW3o8l4ON8cM3i-8cyjNZdFFyX-tkO8L77lXLK9U1QBvYsAefgm-yLTvXGq0Yz0_JCft6Wy9qEGT8IdW7FgITkMJIVvc2J2_Y0KYI7jc2vsFm_RZED2rXzBwWlqCDgVqWsqqeCbGZwr_1PvgnhMTgdPFcpUz-kbjZepLmTUfDH0taPPFwJX_aLpASyIbxTB12ANSiaDWb2KAV9KHurFq_rmjrqY-Ysm">
+<div class="absolute top-2 right-2 bg-secondary text-on-secondary text-[10px] px-2 py-1 rounded-full font-bold">RENTAL</div>
+</div>
+<h4 class="text-body-lg font-bold text-on-surface">Aputure 600d Pro</h4>
+<p class="text-on-surface-variant text-body-md mb-4">Daily Rate</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-primary font-bold text-headline-md">$120</span>
+<button class="material-symbols-outlined bg-primary-container text-on-primary-container p-2 rounded-xl">add_shopping_cart</button>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="glass-card p-4 rounded-3xl flex flex-col group">
+<div class="h-48 rounded-2xl overflow-hidden mb-4 bg-obsidian-base relative aspect-square">
+<img class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform" data-alt="A Sony Alpha a7S III mirrorless camera body with a 24-70mm lens attached. The camera is shown in profile, highlighting the high-resolution sensor and magnesium alloy body under clean, neutral white studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCt_3gNYbj8VIaj-URxsZeMISynJrFGCnrNuAkPuGkaXomPavkrOXDeTFc3idRnE0j9QGnysaJQe4fL5IdNtixjJZNjvZ6df89ONm2FR7EgJdndY8hBLdEf7SpS5stjHSXO2mtUh4gkgTSf7u2ClsK9uizmjE9G0hb0XzQQu_HSLmPiSGFChHYpjNpCjnGn7yEseBGXH2Dcr4J6kfHCyDZND5c-tCtUej4UGukMv6rPudMXeMKobfS">
+<div class="absolute top-2 right-2 bg-primary-container text-on-primary-container text-[10px] px-2 py-1 rounded-full font-bold">FOR SALE</div>
+</div>
+<h4 class="text-body-lg font-bold text-on-surface">Sony a7S III</h4>
+<p class="text-on-surface-variant text-body-md mb-4">Refurbished</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-primary font-bold text-headline-md">$3,100</span>
+<button class="material-symbols-outlined bg-primary-container text-on-primary-container p-2 rounded-xl">add_shopping_cart</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-obsidian-base border-t border-glass-stroke w-full py-stack-xl px-margin-mobile md:px-margin-desktop">
+<div class="max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-gutter mb-stack-xl">
+<div class="col-span-2 space-y-6">
+<img alt="Camcrew Studio Logo" class="h-12 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe2biJINU9mNhuNIDjE2V9LYSqoZPgL_vAF0nsE3bhEQjOvUVRNRgnvkkAvJw1ZxE5CdiBQix3_yAUvQ_fUZedyR3tGw17-J5PyKj5R4Ql1O_-wdSufaPFvUJmZ7tdBf_YGJavZXXcISJAapOoGUKT1TXnW5H8WPlEHyT0TbFx8hmTxWcpWIKllWm8ym5cRG6x0JwhLXniyEMn4aVMjiGRdn1h44cRL6nXqqj4ag78WjIEyaYk-20NJtnJuAkkwRZMtw">
+<p class="text-on-surface-variant text-body-md pr-12">
+                        Precision technology for creators. We provide world-class digital services and high-end cinematic gear to elevate your vision.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center hover:text-primary hover:border-primary transition-all" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center hover:text-primary hover:border-primary transition-all" href="#"><span class="material-symbols-outlined">podcasts</span></a>
+<a class="w-10 h-10 rounded-full border border-glass-stroke flex items-center justify-center hover:text-primary hover:border-primary transition-all" href="#"><span class="material-symbols-outlined">videocam</span></a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="text-on-surface font-bold text-body-lg">Company</h5>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">About us</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Careers</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Press Kit</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="text-on-surface font-bold text-body-lg">For Customers</h5>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Rentals</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Sales</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">FAQ</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="text-on-surface font-bold text-body-lg">For Professionals</h5>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Registration</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Studio Hire</a>
+<a class="text-on-surface-variant hover:text-neon-blue-glow transition-colors text-body-md" href="#">Post Production</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="text-on-surface font-bold text-body-lg">Download App</h5>
+<div class="space-y-3">
+<button class="flex items-center gap-2 bg-charcoal-surface border border-glass-stroke px-4 py-2 rounded-xl w-full hover:border-primary transition-all">
+<span class="material-symbols-outlined">file_download</span>
+<div class="text-left">
+<p class="text-[10px] text-on-surface-variant">Available on the</p>
+<p class="text-sm font-bold">App Store</p>
+</div>
+</button>
+<button class="flex items-center gap-2 bg-charcoal-surface border border-glass-stroke px-4 py-2 rounded-xl w-full hover:border-primary transition-all">
+<span class="material-symbols-outlined">shop</span>
+<div class="text-left">
+<p class="text-[10px] text-on-surface-variant">Get it on</p>
+<p class="text-sm font-bold">Google Play</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+<div class="border-t border-glass-stroke pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-on-surface-variant text-body-md text-center md:text-left">
+                    © 2024 Camcrew Studio. All rights reserved. Precision technology for creators.
+                </p>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-md" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    // Micro-interactions for horizontal scroll
+    const scrollContainers = document.querySelectorAll('.hide-scrollbar');
+    scrollContainers.forEach(container => {
+        let isDown = false;
+        let startX; // FIX: Changed from 'let开始X;' to 'let startX;'
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.classList.add('active');
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.classList.remove('active');
+        });
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.classList.remove('active');
+        });
+        container.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2;
+            container.scrollLeft = scrollLeft - walk;
+        });
+    });
+
+    // Sticky Header scroll effect & Mobile Menu Toggle
+    // Sticky Header scroll effect, Mobile Menu Toggle & Scroll Animations
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Mobile Menu Logic ---
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileBtn.addEventListener('click', () => {
+            const isExpanded = mobileMenu.classList.contains('opacity-100');
+            if (isExpanded) {
+                // Close menu
+                mobileMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                mobileMenu.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+                mobileBtn.textContent = 'menu';
+            } else {
+                // Open menu
+                mobileMenu.classList.remove('opacity-0', 'invisible', 'translate-y-[-10px]');
+                mobileMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+                mobileBtn.textContent = 'close';
+            }
+        });
+
+        // --- Scroll Reveal Animation Logic ---
+        // 1. Auto-apply the 'reveal' class to all sections except the Hero (so the hero is visible immediately)
+        const sections = document.querySelectorAll('section:not(:first-of-type)');
+        sections.forEach(section => {
+            section.classList.add('reveal');
+        });
+
+        // 2. Configure the Observer
+        const observerOptions = {
+            root: null,
+            threshold: 0.15, // Triggers when 15% of the section enters the screen
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        // 3. Create the Observer
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Stop observing once it has appeared so it doesn't repeat every scroll
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        // 4. Start observing the sections
+        document.querySelectorAll('.reveal').forEach(section => {
+            sectionObserver.observe(section);
+        });
+    });
+</script>
+</body></html>

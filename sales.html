@@ -1,0 +1,660 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Camcrew Studio | Obsidian Orbit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#313030",
+                        "on-secondary": "#520072",
+                        "inverse-on-surface": "#2a3233",
+                        "surface-variant": "#2e3637",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "on-surface": "#dce4e5",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "inverse-surface": "#dce4e5",
+                        "on-primary-container": "#006970",
+                        "charcoal-surface": "#161618",
+                        "primary": "#dbfcff",
+                        "primary-container": "#00f0ff",
+                        "surface-container-lowest": "#080f10",
+                        "outline": "#849495",
+                        "inverse-primary": "#006970",
+                        "on-surface-variant": "#b9cacb",
+                        "tertiary": "#f9f5f5",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "surface": "#0d1515",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "on-secondary-fixed": "#320047",
+                        "secondary": "#ebb2ff",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container": "#192122",
+                        "surface-container-high": "#232b2c",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#00363a",
+                        "on-tertiary-container": "#605f5e",
+                        "on-secondary-container": "#fff6fc",
+                        "surface-container-highest": "#2e3637",
+                        "secondary-container": "#b600f8",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "tertiary-container": "#dcd9d8",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "on-primary-fixed": "#002022",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-dim": "#0d1515",
+                        "on-background": "#dce4e5",
+                        "surface-tint": "#00dbe9",
+                        "on-error": "#690005",
+                        "surface-container-low": "#151d1e",
+                        "background": "#0d1515",
+                        "secondary-fixed": "#f8d8ff",
+                        "tertiary-fixed": "#e5e2e1",
+                        "surface-bright": "#333b3b",
+                        "secondary-fixed-dim": "#ebb2ff",
+                        "primary-fixed-dim": "#00dbe9",
+                        "obsidian-base": "#0A0A0B",
+                        "primary-fixed": "#7df4ff",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "outline-variant": "#3b494b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "0.5rem",
+                        "stack-xl": "4rem",
+                        "margin-desktop": "80px",
+                        "stack-md": "1.5rem",
+                        "gutter": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s ease-out;
+        }
+        .glass-panel:hover {
+            border-color: #00f0ff;
+            box-shadow: 0px 10px 30px rgba(0, 240, 255, 0.2);
+        }
+        .neon-text-glow {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <button class=" hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </button>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+<a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<main class="relative">
+<!-- Hero Section -->
+
+<!-- Shop by Category -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl pt-32">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Curated Categories</h2>
+<p class="text-on-surface-variant">Streamline your workflow with high-end hardware and software.</p>
+</div>
+<button class="hidden md:flex items-center text-primary-container font-label-caps text-label-caps gap-2 hover:translate-x-2 transition-transform">
+                    View All Categories <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<!-- Cat 1 -->
+<div class="glass-panel p-8 rounded-xl group cursor-pointer relative overflow-hidden h-[320px] flex flex-col justify-end">
+<div class="absolute top-6 left-6 w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center border border-glass-stroke group-hover:bg-primary-container/20 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary-container">camera</span>
+</div>
+<div class="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
+<div class="w-full h-full bg-cover bg-center" data-alt="Close up of a professional mirrorless camera body and high-end prime lens with a sleek obsidian finish, set against a dark cinematic studio background with neon blue rim lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTSz00tC8vfmUosja3vZJvZkhZ1Q0eaxxMv2o9k5CkbRaoCKZFj5PUEV5q59UU5ifXhh_RuFKPsN4PYWz1nsTpWS0WqQOoXmo3rQLKED7BlEkpFW2NpqIC-V4q7gVaJ0LkXxdfDUluGsD6ogWUeFGa3vhoxLLgmRenpNbmgRpuRyOqond_HMJV_PTU5gODSvdyB1ghTFxSNLn0qjBaNmtYktMEnA1Z7mgspZPM3AhCyMlTQ-yzQDay')"></div>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Camera Bodies &amp; Lenses</h3>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">Industry-leading optics and sensors.</p>
+</div>
+</div>
+<!-- Cat 2 -->
+<div class="glass-panel p-8 rounded-xl group cursor-pointer relative overflow-hidden h-[320px] flex flex-col justify-end">
+<div class="absolute top-6 left-6 w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center border border-glass-stroke group-hover:bg-primary-container/20 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary-container">mic</span>
+</div>
+<div class="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
+<div class="w-full h-full bg-cover bg-center" data-alt="A professional studio lighting setup featuring softboxes and high-end XLR microphones mounted on matte black boom arms, illuminated by soft atmospheric blue and purple lights." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCse0MueJwutTcBI0wZOwjlBny5ZIAiuip2_7xZsKhc8ohzO6FZfTmer-1L5x4zBjJJeqqQppNerRBLolIpZNil6Eny0V5Cfk0hPMP8HIj19xf48S6ameW8pP-B5COcby7YbHqJ8NwJ7u0RT4ajAy68N0e-xrVcPm72w1zvADCF2jOkNlqCJ40rGbn3QbuXoBkHTKxX1OrybHygreDih0_G2ulq-HkPD7f3u6g-WZcIaheCWCHP08sV')"></div>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Lighting &amp; Audio Rigs</h3>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">Crystal clear capture and illumination.</p>
+</div>
+</div>
+<!-- Cat 3 -->
+<div class="glass-panel p-8 rounded-xl group cursor-pointer relative overflow-hidden h-[320px] flex flex-col justify-end">
+<div class="absolute top-6 left-6 w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center border border-glass-stroke group-hover:bg-primary-container/20 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary-container">code</span>
+</div>
+<div class="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
+<div class="w-full h-full bg-cover bg-center" data-alt="Abstract 3D glass blocks and floating UI components with glowing cyan syntax highlighting, representing high-end developer assets and user interface kits in a futuristic aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCeHYZPdrmNCv5tZ8uqhc3O13mm56AWEUyuEV7ufWs61C_Mnc5P3ln4DcLqX8ORn8naXsWX9cbVhRQTnrhV1J2eXWUW-LZfrGGLxwjOSmW83_vlHUuyQqpq_xgdbDkd7nIiqGKxOQoalIYmdtncCeKJT_biSoxbc42WOruEIrUTib9DCdsZjfe8M5WaEeYbKaMfDZAYov4tiDmsvDw4wyAA7E5iJBJilol2FHrotYA2bAbHrmzdujj5')"></div>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Developer Assets &amp; UI Kits</h3>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">Clean code for premium experiences.</p>
+</div>
+</div>
+<!-- Cat 4 -->
+<div class="glass-panel p-8 rounded-xl group cursor-pointer relative overflow-hidden h-[320px] flex flex-col justify-end">
+<div class="absolute top-6 left-6 w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center border border-glass-stroke group-hover:bg-primary-container/20 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary-container">desk</span>
+</div>
+<div class="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
+<div class="w-full h-full bg-cover bg-center" data-alt="A minimalist professional workspace featuring a sleek obsidian desk, ergonomic chair, and vertical server storage units, lit with cool white and electric blue accent lights." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA0Rf4a8ZAf3w3NPokG5jwcWZoqFPSY-KqwgOLS9YAgUxWVtN6YaCuo4UbCflIqB9MNECqmn2VDPfzRmpoXdMWCFWBsI09JGRC5hm64a454NS9arqjAcSV-Sb9_w06faEuOBV4X7LEUqigivEU7zta7QYes5M80vdkbLK8mw0oftqyN5pJT8r3cgMGbkKPztJoP5MxEOQg9wWY8dE9lNnJaXf8U-GfuZKhsgaBO69G-3CuW066KvpDH')"></div>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Workspace &amp; Storage</h3>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">Foundation for your creative flow.</p>
+</div>
+</div>
+</div>
+</section><section class="px-margin-mobile md:px-margin-desktop py-stack-xl relative" id="product-listings">
+<div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Browse Professional Gear</h2>
+<p class="text-on-surface-variant">Precision-engineered tools for the modern creator.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer hover:border-primary-container transition-colors">
+<span class="text-body-md">Category: All</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+<div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer hover:border-primary-container transition-colors">
+<span class="text-body-md">Price: High to Low</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+<div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer hover:border-primary-container transition-colors">
+<span class="text-body-md">Popularity</span>
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<!-- Product 1 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3-kfTbLQM15yRU1j9Ovs6H3Sy2oUCax_GUfOO8G3DLe7Qe5VMRsMO-FlL-87_pAlDLjeen0ZghmHvpq9GTIsUKDky4Um2Z12faLVxFlFXyVtR8WwddC3EWQd2IOl8Nktydbpa88kUtZGWQo7LScDMFlyhWBwxT5SMDePQTM0dJExdPrxvzmcAh74NhqXeCgIveF-hRPd1wrwW1NEURjhUyUSZLHWHf8r4W0O01y6hYn4PxzYEUMVw')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Camera Body</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(128)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Sony Alpha a7 IV</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$2,499</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCx67TQvTD5TJFd9PFspNJi9c1RZQpFE_zQMtRDL07RiTC-5gm4ArUaUUp3HKz48f_jbYo0zO5ibDxd3rxvUp630I1cTYnMY4pnIqIxycBXshBwZdCxrGZ3GPPN3P_f_wPuQdUJ_lTavA6s6cnS5mRBrXS-upnFaoQ3XPEdn4kqql6YaXwZmLZWgHoUO9bffOlneDqNSw9-QXtNSHfO81Ou0VzzVw9yAwXsbdfHl4SfNqqhFktfZsMq')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Cinema</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(84)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">RED Komodo 6K</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$5,995</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGn0S5Z9jp0PBI8rqbUfI75Ji4CjPERjb2Lb6uYPe5XNoqcKscGIUK2GGtrpuMDQr3FEk5RsFLuelY8Tndv0M-UnViEtQ17nUTcMVm7SRzvsKfuzpDgurQt72yHsIsRgAUSBbNn3l3ZPs--Y0LkxREGdZjOoEUeGZjCFX95nTX2_BpQ1s8PoSx0GI8Qw8VapioyPOEV5I6Bb_4cxPSZyzyaJuBLasHJz5JX_dJoer3ytOffW-GadOV')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Lighting</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(215)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Aputure 600d Pro</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$1,890</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDxRQenfImmM-V1eG3MyKDOW6Sgfk2MsF1Hpx27GVwg8gWrs_aeo3mu-CZiQHSUtVmGsHuqg_pqzFGCQemfx9nAHr-qydznqDhTNqSRIGwyWZGFqG6FS4VbzGtgh-xUgohn7_loK9EL0V01uqQ8KIRHCXo_my0PLFu1cl9gZ7kwS3iNeCuIDWP9iXSbu1OqnVbgP-lLip6SLvncs7pe6q7hBAhn5HL56OAqMg1fiFmES4j0r6YMWyYh')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Lenses</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 0.5;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(56)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Canon RF 50mm f/1.2</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$2,299</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 5 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGTLeIpGiPJoQfJNj3VzzLp6awvqHCNLdfZKzbz9PF3lzx6WXHjId0Gr9SJ4JzpgTRwCeM2KciOPivdcf4pm4Q-Wu-8GeqLJqaD9OJ3JAlIrwJbNfg0Wi44kv0GC2e4Qjd3K9ESShsIVkiyrLfXm1nN5-SGiqiu7cTKYB4Dwur69cgg3HlHjTu-L_BA25R2OTDs1QXvtaLFhxdHmFniDz4muuZtGg1RDq7fS60-0fMsQsFHIUuZWC5')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Audio</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(342)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Shure SM7B</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$399</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 6 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBq9vMKit-pM_MuuUtlmtnEyuwCr1OI0kyIxIp9hAAB-Khzebw9uvKwLH-4I8a1ZOr1DDmSQ-18MlrN2PITPaRhv7AI3tUNUp0thBIHTZWChkTr-Xt5m8HiaZ4xiL9dt1r-FTR_c5gcL59cnrkw9cYTIBMBzH_3PYGyWIuGHXFD20GeFtDDnst5Wq3su7QcwW1KHrSGcVHViYXAs7HbTmlscnEcQMLDGyMJOlVaH7m2Jdx7xBlWpg_5')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Workspace</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(19)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Pro Studio Desk v2</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$1,250</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 7 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeOXLNYaxm0dcKD-vkjXwPrKOLT7JV_OP4Tt69wYEP6q1wAfnlC0_5Qw3kh2zejKerdQ8tV2unEtUiUrty4P5w_LU7cI23-HbhnoYCxSSGDJZGVKLi-_dETX_w_YFx51t4X5hH6Q1CLqWh2jE_KXr97-7JNGYxf4Tic7JdA2ye1hNT9_n0jKLUGXpypdUBawgXi7T0XFRIZouHh18TQlsTzRPQ3EvgV9MTFFLS_awjxpjFRiVU095O')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Accessories</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(412)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Orbit Peak Design Strap</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$85</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 8 -->
+<div class="glass-panel rounded-xl overflow-hidden group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZWYTk0GpbueiDAOsKylTDeZhjDL4Ffy5ZFfnzJ5Q2-L1y3FO79fpQWeZmCYdtQOOKrRWkA4CxNLaDPuKBHrmMCh4AxykRnZkb9nqBmNwUUw4cQ_Ur-j-JLaIBsLRdnbeYuG02X-jouCD9wgFJObO-XI5Ft0qI01_li85i3H8aeoMm50lWXNZ2qBn-wdMOQPj8_P5LnQXVWmSdVFgP4nYTkcyBT9nH-4G7bn4LSfKgI160eUz_L-HZ')"></div>
+<div class="absolute top-4 left-4 bg-primary-container/20 backdrop-blur-md border border-primary-container/30 px-3 py-1 rounded-full">
+<span class="text-[10px] font-label-caps text-primary-container uppercase tracking-widest">Storage</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 0.5;">star</span>
+<span class="text-[10px] text-on-surface-variant ml-1">(92)</span>
+</div>
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">SanDisk 2TB Extreme Pro</h3>
+<div class="flex items-center justify-between">
+<span class="text-headline-md text-on-surface">$249</span>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-neon-blue-glow">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center">
+<button class="glass-panel px-12 py-4 rounded-full font-label-caps text-label-caps hover:bg-surface-variant transition-colors">
+            Load More Products
+        </button>
+</div>
+</section>
+<!-- Featured Product Spotlight -->
+<section class="py-stack-xl">
+<div class="max-w-[1440px] mx-auto md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-2 bg-charcoal-surface rounded-3xl overflow-hidden border border-glass-stroke">
+<!-- Image Side -->
+<div class="relative h-[400px] md:h-auto overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110" data-alt="A split-screen composition showing on one side a high-end 85mm prime lens with multi-coated glass elements reflecting blue light, and on the other side a razor-sharp commercial portrait of a person with perfect skin texture and blurred bokeh background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3bdHBph9rAAvlnWiCWbixLPo6maBiB9klEWvikdX5cxzWhSC5GfTpNRWtxRnTjO_R7M5SoWHJTkoXhPDG5CVD3lj5cmKyJZgroNxVnJTEfZu0icrvAeU52qViYGAfGB2qHecNPQUUMLBS-wls7WfckP6uOltIoH88Q0nsej4qMUChayA8z8H1ijW4uVsBQpi2vZW8GJNmMsCg8rN6-EbkFiqWFvmzutjJkqh8PINqobocoaU0eD4C')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-obsidian-base/40 to-transparent"></div>
+</div>
+<!-- Content Side -->
+<div class="p-8 md:p-16 flex flex-col justify-center">
+<span class="font-label-caps text-label-caps text-primary-container mb-4">Limited Availability</span>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-6">The Ultimate Prime Setup.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                            We stock industry-leading optics. Grab an 85mm f/1.4 lens, step into the studio, and dial in at f/1.6, ISO 100, and 1/200s for flawless, razor-sharp commercial portraits. Precision is guaranteed.
+                        </p>
+<div class="space-y-4 mb-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Weather-sealed Magnesium Alloy</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Ultra-fast Linear Motor AF</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Nano Crystal Coating</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="shimmer-btn bg-primary-container text-on-primary-fixed font-label-caps text-label-caps px-8 py-4 rounded-full">View Specs &amp; Pricing</button>
+<span class="font-headline-md text-headline-md text-on-surface">$1,899.00</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Professional Guarantee -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl relative">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-glass-stroke to-transparent"></div>
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="text-center p-8">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary-container text-3xl">verified</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-4">Rigorous Inspection</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Every physical item is rigorously inspected, and every digital asset is clean-coded for peak performance.</p>
+</div>
+<div class="text-center p-8">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary-container text-3xl">gavel</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-4">Professional Warranty</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">1-year warranty on all professional gear. We stand behind the tools that power your creativity.</p>
+</div>
+<div class="text-center p-8">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary-container text-3xl">local_shipping</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-4">Insured Shipping</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Fast, insured shipping directly to your studio. Global logistics handled with white-glove care.</p>
+</div>
+</div>
+</section>
+<!-- Newsletter CTA -->
+<section class="px-margin-mobile md:px-margin-desktop py-stack-xl">
+<div class="glass-panel p-12 md:p-20 rounded-[40px] relative overflow-hidden text-center">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-secondary-container/20 rounded-full blur-[80px]"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-container/20 rounded-full blur-[80px]"></div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-6">Join the Orbit.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto">Get exclusive access to new hardware drops and premium UI kits before they hit the public market.</p>
+<form class="flex flex-col md:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
+<input class="w-full bg-surface-container-high border border-glass-stroke rounded-full px-6 py-4 focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none transition-all text-on-surface" placeholder="Enter your studio email" type="email">
+<button class="w-full md:w-auto bg-primary-container text-on-primary-fixed px-8 py-4 rounded-full font-label-caps text-label-caps whitespace-nowrap hover:scale-105 transition-transform active:scale-95" type="submit">Subscribe Now</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-obsidian-base w-full pt-stack-xl pb-stack-md px-margin-desktop border-t border-glass-stroke">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-stack-xl">
+<div class="md:col-span-4">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto mb-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8-DBjYUa2pKZkZLNKqJ9di18CF0P3Y_7G-I6Pu41TfE01PGGz38E7dbVplL6gtQVFSXSOl4wZxO5q17dgGMekcPKYG1B95lEHwhARB8vl7ztTapHFGt50ycfxC6qprctoQMGYn8pttfBcvWLegv3kDwTvwIrcf8qxnFSSuGdk07GozYycocrkoLoOrIaIGUXmv0Dwadi1XbIhVVC86zYmZn_GMrchGmLlePOeBSE_NKjjR9o2BYJFDDei4mFd1_o_-Z4KtSRpqrvs_A">
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm">
+                    Cinematic Excellence. Elevating professional workflows since 2012. Trusted by top-tier creators worldwide.
+                </p>
+<div class="flex items-center gap-4 mt-8">
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">camera_indoor</span></a>
+</div>
+</div>
+<div class="md:col-span-2">
+<h5 class="font-label-caps text-label-caps text-on-surface mb-6">Shop</h5>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Cameras</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Lenses</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">UI Kits</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Digital Assets</a></li>
+</ul>
+</div>
+<div class="md:col-span-2">
+<h5 class="font-label-caps text-label-caps text-on-surface mb-6">Resources</h5>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">API Documentation</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Guides</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div class="md:col-span-4">
+<h5 class="font-label-caps text-label-caps text-on-surface mb-6">Legal</h5>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Privacy Policy</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Terms of Service</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Contact Support</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-glass-stroke/50 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-body-md text-body-md text-on-surface-variant opacity-60">© 2024 Obsidian Orbit. Cinematic Excellence.</span>
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-2 font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span> Systems Active
+                </span>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for navbar blur adjustment on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-neon-blue-glow');
+                nav.style.background = "rgba(22, 22, 24, 0.95)";
+            } else {
+                nav.style.background = "rgba(22, 22, 24, 0.8)";
+            }
+        });
+
+        // Parallax effect for hero shapes
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) - 0.5;
+            const y = (e.clientY / window.innerHeight) - 0.5;
+            document.querySelectorAll('.blur-bg-shape').forEach(shape => {
+                shape.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+            });
+        });
+    </script>
+
+
+
+
+
+
+</body></html>

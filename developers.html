@@ -1,0 +1,459 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Camcrew Studio | Developer Network</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "charcoal-surface": "#161618",
+                    "on-background": "#dce4e5",
+                    "surface-container": "#192122",
+                    "secondary-fixed": "#f8d8ff",
+                    "tertiary-fixed": "#e5e2e1",
+                    "surface": "#0d1515",
+                    "on-primary-fixed": "#002022",
+                    "surface-bright": "#333b3b",
+                    "primary": "#dbfcff",
+                    "inverse-primary": "#006970",
+                    "surface-variant": "#2e3637",
+                    "on-secondary": "#520072",
+                    "on-surface": "#dce4e5",
+                    "secondary": "#ebb2ff",
+                    "inverse-surface": "#dce4e5",
+                    "secondary-container": "#b600f8",
+                    "on-secondary-fixed-variant": "#74009f",
+                    "on-primary-container": "#006970",
+                    "surface-container-highest": "#2e3637",
+                    "surface-container-low": "#151d1e",
+                    "primary-fixed-dim": "#00dbe9",
+                    "on-secondary-container": "#fff6fc",
+                    "secondary-fixed-dim": "#ebb2ff",
+                    "background": "#0d1515",
+                    "on-tertiary-fixed": "#1c1b1b",
+                    "obsidian-base": "#0A0A0B",
+                    "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                    "inverse-on-surface": "#2a3233",
+                    "surface-tint": "#00dbe9",
+                    "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                    "outline-variant": "#3b494b",
+                    "on-tertiary": "#313030",
+                    "surface-container-high": "#232b2c",
+                    "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                    "on-primary-fixed-variant": "#004f54",
+                    "on-secondary-fixed": "#320047",
+                    "tertiary-fixed-dim": "#c8c6c5",
+                    "on-error": "#690005",
+                    "on-error-container": "#ffdad6",
+                    "outline": "#849495",
+                    "on-tertiary-fixed-variant": "#474646",
+                    "primary-container": "#00f0ff",
+                    "on-surface-variant": "#b9cacb",
+                    "error": "#ffb4ab",
+                    "on-primary": "#00363a",
+                    "error-container": "#93000a",
+                    "surface-dim": "#0d1515",
+                    "tertiary-container": "#dcd9d8",
+                    "primary-fixed": "#7df4ff",
+                    "surface-container-lowest": "#080f10",
+                    "tertiary": "#f9f5f5",
+                    "on-tertiary-container": "#605f5e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "stack-xs": "0.5rem",
+                    "stack-xl": "4rem",
+                    "stack-md": "1.5rem",
+                    "margin-desktop": "80px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-caps": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .neon-glow-hover:hover {
+            box-shadow: 0px 0px 30px rgba(0, 240, 255, 0.3);
+            border-color: rgba(0, 240, 255, 0.5);
+        }
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-effect::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.05),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 4s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .orbit-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(0, 219, 233, 0.05) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <button class=" text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </button>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-2 py-1 border border-glass-stroke">
+<span class="material-symbols-outlined text-primary text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md px-2 w-60 text-on-surface placeholder:text-outline" placeholder="Search professionals..." type="text">
+</div>
+<div>
+    <a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-8 rounded-full text-label-caps transition-transform hover:scale-105" style="font-size: 15px;">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<!-- Hero / Header Section -->
+
+<!-- Content Area: Bento Filters & Grid -->
+<main class="px-margin-mobile md:px-margin-desktop py-stack-xl relative z-10 pt-32">
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Filter Sidebar -->
+<aside class="w-full lg:w-72 flex-shrink-0">
+<div class="glass-panel p-6 rounded-xl sticky top-24">
+<h3 class="font-headline-md text-headline-md text-primary mb-6">Filters</h3>
+<div class="space-y-8">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-3 uppercase">Specialization</span>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-glass-stroke bg-obsidian-base text-primary focus:ring-primary-container" type="checkbox">
+<span class="text-body-md group-hover:text-primary transition-colors">Web Development</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-glass-stroke bg-obsidian-base text-primary focus:ring-primary-container" type="checkbox">
+<span class="text-body-md group-hover:text-primary transition-colors">Mobile (iOS/Android)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-glass-stroke bg-obsidian-base text-primary focus:ring-primary-container" type="checkbox">
+<span class="text-body-md group-hover:text-primary transition-colors">Shader &amp; Graphics</span>
+</label>
+</div>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-3 uppercase">Availability</span>
+<select class="w-full bg-obsidian-base border border-glass-stroke rounded-lg px-3 py-2 text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none">
+<option>Immediately Available</option>
+<option>Next 2 Weeks</option>
+<option>Next Month</option>
+<option>Flexible</option>
+</select>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-3 uppercase">Tech Stack</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container border border-glass-stroke rounded-full text-[12px] text-primary hover:bg-primary/10 cursor-pointer transition-colors">React</span>
+<span class="px-3 py-1 bg-surface-container border border-glass-stroke rounded-full text-[12px] text-primary hover:bg-primary/10 cursor-pointer transition-colors">Three.js</span>
+<span class="px-3 py-1 bg-surface-container border border-glass-stroke rounded-full text-[12px] text-primary hover:bg-primary/10 cursor-pointer transition-colors">C++</span>
+<span class="px-3 py-1 bg-surface-container border border-glass-stroke rounded-full text-[12px] text-primary hover:bg-primary/10 cursor-pointer transition-colors">Rust</span>
+<span class="px-3 py-1 bg-surface-container border border-glass-stroke rounded-full text-[12px] text-primary hover:bg-primary/10 cursor-pointer transition-colors">GLSL</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 border border-primary/30 text-primary rounded-lg font-bold hover:bg-primary/5 transition-all">
+                        Reset Filters
+                    </button>
+</div>
+</aside>
+<!-- Results Grid -->
+<section class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Developer Card 1 -->
+<div class="glass-panel p-6 rounded-xl group hover:scale-[1.02] transition-all duration-500 neon-glow-hover flex flex-col h-full">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional male developer in his late 20s, wearing high-tech glasses, sitting in a dimly lit studio with neon blue and purple ambient lighting. The background features blurred code monitors and high-end hardware, creating a futuristic professional atmosphere consistent with an obsidian minimalism style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ0zqjY_OYv7KuCmdZtb2DN8-9m1xw5xf38kDAcXF1lJT6-kRYnMoJTBt6sZsX7FGJJKpIqS3P3S5fpbsmy8jMSRWyG9MWOfTuHFJrpAjsCP4a99DdYlLpx_lQHkgZZrDCnz-BVt9_v2xiFI7IFj8yw1ATWy_AeOhla2M8mJ923Yiyxz7saIQcHL7EfuReR5WIEmM3LyM2fJOJkE_VPV7FsAzramb6LyLD0OwrWPqA4BW4U3_aPT46">
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Alex Rivera</h4>
+<p class="text-primary font-label-caps text-label-caps">Senior Shader Architect</p>
+</div>
+</div>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary/20">Available</span>
+</div>
+<p class="text-on-surface-variant font-body-md mb-6 line-clamp-2">
+                        Specializing in real-time GLSL/HLSL rendering pipelines for immersive web experiences. Lead dev for the 'Nova' engine.
+                    </p>
+<div class="space-y-4 mb-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">Three.js</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">WebGL</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">C++</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant text-[14px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">location_on</span> Berlin, DE</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">work_history</span> 8+ Years</span>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-glass-stroke flex justify-between items-center">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">A</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">B</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">+12</div>
+</div>
+<button class="bg-primary-container/10 text-primary border border-primary/30 px-6 py-2 rounded-full font-bold group-hover:bg-primary-container group-hover:text-on-primary transition-all">
+                            View Portfolio
+                        </button>
+</div>
+</div>
+<!-- Developer Card 2 -->
+<div class="glass-panel p-6 rounded-xl group hover:scale-[1.02] transition-all duration-500 neon-glow-hover flex flex-col h-full">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional female developer with a sleek, futuristic aesthetic. She is wearing a minimal dark turtleneck, illuminated by a soft cyan rim light. The setting is a high-tech minimalist workstation with glass surfaces and subtle light refraction, evoking a cinematic and professional tech atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIKYNtbxciFEQ5pVAGx7dH9UfLiH3NAPPcVytF_G9CIxYL_D-lgjlCE1kqY09jBeak6T8C1AA8LvFDxSdkYxbqcX0yMhbiFxJPq0502zHTglIxXa_Vw90ITpWZMHS16DAepIovrhOSWEjE04x8kmCNE69EpjedZIh9G0gObCr5FubyUdQlh8c9zER_sZdxpSZVUebUhW394vC1KOVCa91BeRebEhZck6mYVEEQI3L_swfe8AH6DwE_">
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Elena Chen</h4>
+<p class="text-primary font-label-caps text-label-caps">Full-Stack Mobile Engineer</p>
+</div>
+</div>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-secondary/20">Booked</span>
+</div>
+<p class="text-on-surface-variant font-body-md mb-6 line-clamp-2">
+                        Crafting high-performance React Native applications with a focus on fluid animations and secure cinematic playback.
+                    </p>
+<div class="space-y-4 mb-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">React Native</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">Node.js</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">Swift</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant text-[14px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">location_on</span> San Francisco, US</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">work_history</span> 5+ Years</span>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-glass-stroke flex justify-between items-center">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">X</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">Y</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">+24</div>
+</div>
+<button class="bg-primary-container/10 text-primary border border-primary/30 px-6 py-2 rounded-full font-bold group-hover:bg-primary-container group-hover:text-on-primary transition-all">
+                            View Portfolio
+                        </button>
+</div>
+</div>
+<!-- Developer Card 3 -->
+<div class="glass-panel p-6 rounded-xl group hover:scale-[1.02] transition-all duration-500 neon-glow-hover flex flex-col h-full">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-glass-stroke">
+<img class="w-full h-full object-cover" data-alt="A portrait of a senior male developer with salt-and-pepper hair, wearing a high-end black hoodie. The background is an ultra-modern workspace with glowing blue led accents and large architectural glass panels. The mood is calm, expert, and highly professional, utilizing the obsidian minimalism design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD8-p4u2TTLC4nNm2J9NqecMFD3JyvJMOw_qlxlZPxj5lb_D9q4X8Zr2nYib94ff_GfXs5fsIecoK0qWgPccRvuJzP0qxc0UJeFh9cy5NlNNZxT0NuQmPtLrzBnwDkF0OWwG1Rlzs2_jIo44wfjbCCSkR5GFNWtx9Z4jXmW8PpM4cUnHBZMqY6ZycQWhmeGcklB0Q62TlnH2dJYppuD2qJYinQ_Su5CcoqlEF7iZHpjty1RacIjMIx">
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Marcus Thorne</h4>
+<p class="text-primary font-label-caps text-label-caps">Systems Engineer</p>
+</div>
+</div>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary/20">Available</span>
+</div>
+<p class="text-on-surface-variant font-body-md mb-6 line-clamp-2">
+                        Low-level optimization expert. Building the backbones of rendering engines and cloud streaming platforms.
+                    </p>
+<div class="space-y-4 mb-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">Rust</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">Go</span>
+<span class="px-2 py-1 bg-obsidian-base border border-glass-stroke rounded-md text-[11px] text-on-surface">C++</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant text-[14px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">location_on</span> London, UK</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">work_history</span> 12+ Years</span>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-glass-stroke flex justify-between items-center">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">L</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">S</div>
+<div class="w-8 h-8 rounded-full border-2 border-obsidian-base bg-surface-container flex items-center justify-center text-[10px] font-bold">+40</div>
+</div>
+<button class="bg-primary-container/10 text-primary border border-primary/30 px-6 py-2 rounded-full font-bold group-hover:bg-primary-container group-hover:text-on-primary transition-all">
+                            View Portfolio
+                        </button>
+</div>
+</div>
+<!-- Featured Project Card (Asymmetric Bento Element) -->
+<div class="glass-panel p-6 rounded-xl md:col-span-1 overflow-hidden relative group">
+<div class="absolute inset-0 z-0 opacity-20 transition-transform duration-700 group-hover:scale-110">
+<img class="w-full h-full object-cover" data-alt="A cinematic top-down view of a complex city-scale 3D wireframe mesh glowing in neon blue and teal against a pitch-black background. Fine details of skyscrapers and data flows are visible, representing high-end shader development and 3D visualization expertise in a futuristic obsidian style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQjo5cLNHwRppyE6u1zjE2yerAHaSihY6xiruivtKXCLdWBePip455-Bywnm_WhI9qeDUC8tkiaISVru8GSsya4esZpjWhDYKXicXQIyJ2NMoRDe5CqiQNjMno-yOMgmRSCgLPwFzxDSfOXdjzUW6dcjU5J1DGFWt-g3dRqLHWm-xpxKI_-ue9l1tbBniAUQuvX1wR5hLnqyzfdSSI_eSjqNwRCH2r8ZS9eJf_-MoNEJX6QDhq-bIp">
+</div>
+<div class="relative z-10">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Featured: Project Aether</h4>
+<p class="text-primary font-label-caps text-label-caps mb-4">Open-Source Graphics Tool</p>
+<p class="text-on-surface-variant font-body-md mb-6 max-w-xs">
+                            Discover the projects our community is building. Aether is a new standard for web-based raymarching.
+                        </p>
+<button class="text-primary flex items-center gap-2 font-bold hover:gap-4 transition-all">
+                            Explore Repository <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Stats Section -->
+<section class="py-stack-xl px-margin-mobile md:px-margin-desktop bg-obsidian-base relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center relative z-10">
+<div>
+<span class="block text-[40px] font-bold text-primary mb-2">1.2k+</span>
+<span class="text-on-surface-variant font-label-caps uppercase tracking-widest">Active Developers</span>
+</div>
+<div>
+<span class="block text-[40px] font-bold text-primary mb-2">450+</span>
+<span class="text-on-surface-variant font-label-caps uppercase tracking-widest">Studios Hiring</span>
+</div>
+<div>
+<span class="block text-[40px] font-bold text-primary mb-2">85+</span>
+<span class="text-on-surface-variant font-label-caps uppercase tracking-widest">Global Cities</span>
+</div>
+<div>
+<span class="block text-[40px] font-bold text-primary mb-2">98%</span>
+<span class="text-on-surface-variant font-label-caps uppercase tracking-widest">Match Accuracy</span>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-stack-xl px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-obsidian-base border-t border-glass-stroke">
+<div class="mb-8 md:mb-0">
+<span class="font-display-lg text-[24px] text-primary block mb-2 font-bold">Camcrew Studio</span>
+<p class="text-on-surface-variant font-body-md max-w-xs">© 2024 Camcrew Studio. Cinematic Excellence.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Careers</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Press Kit</a>
+</div>
+</footer>
+<!-- Interactive Layer -->
+<script>
+        document.addEventListener('mousemove', (e) => {
+            const orbit = document.querySelector('.orbit-bg');
+            if (orbit) {
+                const x = (e.clientX / window.innerWidth) * 100;
+                const y = (e.clientY / window.innerHeight) * 100;
+                orbit.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0, 219, 233, 0.08) 0%, transparent 70%)`;
+            }
+        });
+
+        // Simple filtering micro-interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) {
+            searchInput.addEventListener('focus', () => {
+                searchInput.closest('.glass-panel').style.boxShadow = '0px 0px 40px rgba(0, 240, 255, 0.5)';
+            });
+            searchInput.addEventListener('blur', () => {
+                searchInput.closest('.glass-panel').style.boxShadow = '0px 10px 30px rgba(0, 240, 255, 0.2)';
+            });
+        }
+    </script>
+
+
+</body></html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>About Us | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .neon-glow-hover:hover {
+            box-shadow: 0px 0px 20px rgba(0, 240, 255, 0.3);
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+        .shimmer:hover::after {
+            left: 120%;
+        }
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#313030",
+                        "on-secondary": "#520072",
+                        "inverse-on-surface": "#2a3233",
+                        "surface-variant": "#2e3637",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "on-surface": "#dce4e5",
+                        "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                        "inverse-surface": "#dce4e5",
+                        "on-primary-container": "#006970",
+                        "charcoal-surface": "#161618",
+                        "primary": "#dbfcff",
+                        "primary-container": "#00f0ff",
+                        "surface-container-lowest": "#080f10",
+                        "outline": "#849495",
+                        "inverse-primary": "#006970",
+                        "on-surface-variant": "#b9cacb",
+                        "tertiary": "#f9f5f5",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "surface": "#0d1515",
+                        "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                        "on-secondary-fixed": "#320047",
+                        "secondary": "#ebb2ff",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container": "#192122",
+                        "surface-container-high": "#232b2c",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#00363a",
+                        "on-tertiary-container": "#605f5e",
+                        "on-secondary-container": "#fff6fc",
+                        "surface-container-highest": "#2e3637",
+                        "secondary-container": "#b600f8",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "tertiary-container": "#dcd9d8",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "on-primary-fixed": "#002022",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-dim": "#0d1515",
+                        "on-background": "#dce4e5",
+                        "surface-tint": "#00dbe9",
+                        "on-error": "#690005",
+                        "surface-container-low": "#151d1e",
+                        "background": "#0d1515",
+                        "secondary-fixed": "#f8d8ff",
+                        "tertiary-fixed": "#e5e2e1",
+                        "surface-bright": "#333b3b",
+                        "secondary-fixed-dim": "#ebb2ff",
+                        "primary-fixed-dim": "#00dbe9",
+                        "obsidian-base": "#0A0A0B",
+                        "primary-fixed": "#7df4ff",
+                        "on-secondary-fixed-variant": "#74009f",
+                        "outline-variant": "#3b494b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "0.5rem",
+                        "stack-xl": "4rem",
+                        "margin-desktop": "80px",
+                        "stack-md": "1.5rem",
+                        "gutter": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 px-margin-mobile md:px-margin-desktop py-4">
+<nav class="flex justify-between items-center max-w-screen-2xl mx-auto rounded-full mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-8 py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
+<div class="flex items-center gap-2">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+</div>
+<div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
+<a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
+<div class="relative group">
+    <a href="services.html" class=" hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
+        Services
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
+    </a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="glass-panel rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
+            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span class="font-body-md">Photographers</span>
+            </a>
+            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">videocam</span>
+                <span class="font-body-md">Videographers</span>
+            </a>
+            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">palette</span>
+                <span class="font-body-md">Designers</span>
+            </a>
+            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span class="font-body-md">Developers</span>
+            </a>
+            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">event</span>
+                <span class="font-body-md">Organizers</span>
+            </a>
+            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-sm">restaurant</span>
+                <span class="font-body-md">Caterers</span>
+            </a>
+        </div>
+    </div>
+</div>
+<a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
+<a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
+<a href="About.html" class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+<a href="signin.html" class="shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
+    Sign In
+</a>
+</div>
+</nav>
+</header>
+<!-- Main Content -->
+<main class="relative pt-32">
+<!-- Hero Decoration -->
+<div class="absolute top-0 right-0 w-1/2 h-screen opacity-20 pointer-events-none overflow-hidden">
+<div class="w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-container via-transparent to-transparent blur-3xl"></div>
+</div>
+<!-- Section 1: The Mission -->
+<section class="px-margin-desktop py-stack-xl relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-7" data-aos="fade-up">
+<span class="font-label-caps text-label-caps text-primary-container tracking-widest uppercase mb-4 block">Our Purpose</span>
+<h1 class="font-display-lg text-display-lg mb-stack-md text-primary">Built for Creators, by Creators.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                        We understand the pressure of a tight deadline, the necessity of a flawless focal plane, and the frustration of a broken workflow. Our mission is to remove the friction from your creative process by providing access to the best tools in the industry.
+                    </p>
+</div>
+<div class="md:col-span-5 relative mt-12 md:mt-0">
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden glass-panel border border-glass-stroke shadow-neon-blue-glow group" style="transform: translate(1.42188px, -4.9262px);">
+    
+    <!-- Image -->
+    <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A professional high-tech film production studio with anamorphic lenses on high-end cinema cameras. The lighting is moody with deep charcoal shadows and electric cyan glowing accents. A cinematographer is focused on a floating holographic monitor. The atmosphere is professional, sleek, and cinematic, embodying a futuristic creative workspace." src="C:\Users\mohammad  hussain\Downloads\Thaha.png">
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-obsidian-base/60 to-transparent"></div>
+    
+    <!-- Text Overlay -->
+    <div class="absolute bottom-6 inset-x-0 z-10 text-center text-white">
+        <p class="text-sm tracking-wider opacity-90 m-0">Founder</p>
+        <p class="text-2xl font-bold mt-1 mb-0">Mohammad Thaha Hussain</p>
+        <p class="text-base text-cyan-400 mt-1 mb-0">-Camcrew India</p>
+    </div>
+
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Our Story -->
+<section class="bg-surface-container-low/50 py-stack-xl border-y border-glass-stroke">
+<div class="px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 order-2 md:order-1">
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-[3/4] rounded-xl overflow-hidden glass-panel border border-glass-stroke translate-y-8" style="transform: translate(1.42188px, -4.9262px);">
+<img class="w-full h-full object-cover" data-alt="A macro shot of professional camera dials and high-quality mechanical hardware. Deep black metal textures with luminous blue backlighting on the buttons. The shot is crisp, detailed, and exudes premium quality craftsmanship. Cinematic obsidian minimalism style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKhFg6IIb1zYnnofP5iR77rJLOnW9p55Ek0gfUS4JAfRW3C3OW_8h4gfmMOQ9b8hJtI30Jlvtj2l5w2EeF4CqmwIId8nbCNRd-uCJc9UOa_c5zCD_q6b-HgvtbMfjW8qxkl2atn20G7kvPTOqnKjqGY2yoa4VdgeCKtSDSshEjNeS092rQ1xkM0ZH2URysoYHbZQFF7fVaZkn0onjx31l7M71Fckv1hxxHvXSg-bD5rgMNRE2CKzzM">
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden glass-panel border border-glass-stroke" style="transform: translate(1.42188px, -4.9262px);">
+<img class="w-full h-full object-cover" data-alt="Behind the scenes photo of a creative designer working on a complex digital interface. Multiple glowing monitors illuminate a dark, minimalist studio space. The lighting is atmospheric with cool blue tones and sharp highlights on high-end gear. Tech-focused professional environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRg9sG7VqjYNC6H2jgBX2TPrUEJOktQKtmlR-BpahFcf_x078EH0poZI_8QOD3O6D6Bo2zYMC2Rllq2c6OOpgnTdbWmotTLhFwYCqcxwLVw9IHB4UguPeQNIV-LY38hj-8xu0tiTJLhMCf15T_5qJGj2tTvoaCGEnIreSizT1GA3Qz8AYBzRy1ptEcXTVdzeyjzotUyb8PN0dzq5DPaKb640w8bUTN3n_yISmSUEl9LscXXbzip43J">
+</div>
+</div>
+</div>
+<div class="md:col-span-7 md:pl-16 order-1 md:order-2 mb-12 md:mb-0">
+<span class="font-label-caps text-label-caps text-secondary tracking-widest uppercase mb-4 block">The Origin</span>
+<h2 class="font-display-lg text-display-lg mb-stack-md text-secondary">From the Studio to the Storefront.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                        This platform was born out of firsthand experience in the creative trenches. We know what it takes to design, shoot, and build single-handedly. We realized the freelance community needed a unified hub where uncompromising quality met total flexibility. So, we built it.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Section 3: Our Core Values -->
+<section class="px-margin-desktop py-stack-xl">
+<div class="text-center mb-16">
+<h2 class="font-display-lg text-display-lg text-primary mb-4">Our Core Values</h2>
+<div class="h-1 w-24 bg-primary-container mx-auto rounded-full shadow-neon-blue-glow"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Value 1 -->
+<div class="glass-panel p-8 rounded-2xl border border-glass-stroke hover:scale-105 hover:shadow-neon-blue-glow transition-all duration-300 group" style="transform: translate(1.42188px, -4.9262px);">
+<div class="w-16 h-16 bg-primary-container/10 rounded-xl flex items-center justify-center mb-6 border border-primary-container/20 group-hover:bg-primary-container/20 transition-all">
+<span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Quality Over Everything</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">We hand-pick every asset and piece of gear. If it doesn't meet our rigorous cinematic standards, it doesn't make the cut.</p>
+</div>
+<!-- Value 2 -->
+<div class="glass-panel p-8 rounded-2xl border border-glass-stroke hover:scale-105 hover:shadow-neon-purple-glow transition-all duration-300 group" style="transform: translate(1.42188px, -4.9262px);">
+<div class="w-16 h-16 bg-secondary/10 rounded-xl flex items-center justify-center mb-6 border border-secondary/20 group-hover:bg-secondary/20 transition-all">
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-secondary mb-4">Community Driven</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">We are built by creators for creators. Your feedback drives our roadmap and helps us build the tools you actually need.</p>
+</div>
+<!-- Value 3 -->
+<div class="glass-panel p-8 rounded-2xl border border-glass-stroke hover:scale-105 hover:shadow-neon-blue-glow transition-all duration-300 group" style="transform: translate(1.42188px, -4.9262px);">
+<div class="w-16 h-16 bg-primary-container/10 rounded-xl flex items-center justify-center mb-6 border border-primary-container/20 group-hover:bg-primary-container/20 transition-all">
+<span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Unrelenting Support</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Our mission doesn't end at the checkout. We're here to troubleshoot, advise, and support your creative journey 24/7.</p>
+</div>
+</div>
+</section>
+<!-- Section 4: Join the Network -->
+<section class="px-margin-desktop pb-stack-xl pt-stack-md">
+<div class="glass-panel rounded-3xl p-12 md:p-20 relative overflow-hidden border border-glass-stroke shadow-[0px_20px_50px_rgba(0,0,0,0.5)]" style="transform: translate(1.42188px, -4.9262px);">
+<!-- Background Decoration -->
+<div class="absolute -right-20 -bottom-20 w-96 h-96 bg-secondary/10 blur-[100px] rounded-full"></div>
+<div class="absolute -left-20 -top-20 w-96 h-96 bg-primary-container/10 blur-[100px] rounded-full"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-xl text-center md:text-left">
+<h2 class="font-display-lg text-display-lg mb-4 text-primary">Ready to Elevate Your Workflow?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Subscribe to our newsletter for exclusive early access to new gear, digital asset drops, and industry insights.</p>
+</div>
+<form class="w-full md:w-auto flex flex-col sm:flex-row gap-4">
+<input class="bg-charcoal-surface border-0 border-b border-outline-variant focus:border-primary-container focus:ring-0 text-primary-container py-4 px-6 min-w-[300px] transition-all duration-300 outline-none placeholder:text-outline" placeholder="Enter your email" type="email">
+<button class="bg-gradient-to-r from-primary-container to-secondary text-on-primary font-label-caps text-label-caps px-10 py-4 rounded-full shimmer shadow-neon-blue-glow hover:scale-105 active:scale-95 transition-all" type="submit">
+                            Subscribe
+                        </button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-stack-xl pb-stack-md bg-obsidian-base border-t border-glass-stroke px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4 mb-8 md:mb-0">
+<img alt="Camcrew Studio Logo" class="h-10 mb-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-H5H1o6Y10QVxNtMOG_POwBN5apnZHSpatC3EhsokCC4QcTK0YE1DUdmu0tcf0mxhYG_RcxsxE9TZ_E_cGrt0XDFKJdnrEK7XHFd9gJeSV9K7Xy3Fqw0w4PYcRZKEyGqnj55P6BPNanm8MJXdHHmIczuwmjIiTG8DHRRAc-imblAxA2moO5o6GGwERri6w5HfFT1pAKpP1pnoYS2j7cD98KfWDatFd0LUSH4szHwCyCxF6cih3AUDXXJmNl6f0BmFkNkOQ4ujcTt0Dg">
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">
+                Empowering the next generation of visual storytellers with elite tools and a seamless digital ecosystem.
+            </p>
+</div>
+<div class="md:col-span-2">
+<h4 class="font-label-caps text-label-caps text-primary mb-6 uppercase">Company</h4>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">About Us</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Careers</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Press</a></li>
+</ul>
+</div>
+<div class="md:col-span-2">
+<h4 class="font-label-caps text-label-caps text-primary mb-6 uppercase">Resources</h4>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">API Documentation</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Contact Support</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Asset Library</a></li>
+</ul>
+</div>
+<div class="md:col-span-4">
+<h4 class="font-label-caps text-label-caps text-primary mb-6 uppercase">Legal</h4>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Privacy Policy</a></li>
+<li class=""><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary-container transition-colors" href="#">Terms of Service</a></li>
+</ul>
+<div class="mt-8 pt-8 border-t border-glass-stroke">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    © 2024 Obsidian Orbit. Cinematic Excellence.
+                </p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple parallax effect for glass panels
+        document.addEventListener('mousemove', (e) => {
+            const panels = document.querySelectorAll('.glass-panel');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            panels.forEach(panel => {
+                const speed = 10;
+                const x = (0.5 - mouseX) * speed;
+                const y = (0.5 - mouseY) * speed;
+                panel.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+
+
+
+
+</body></html>
