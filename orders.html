@@ -157,46 +157,8 @@
   </script>
 </head>
 <body class="bg-obsidian-base font-body-md text-on-surface">
-<!-- SideNavBar -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-charcoal-surface/80 backdrop-blur-xl border-r border-glass-stroke shadow-[0px_10px_30px_rgba(0,240,255,0.1)] flex flex-col p-stack-md z-50">
-<div class="mb-10">
-<h1 class="font-display-lg text-[32px] font-bold bg-gradient-to-r from-primary-container to-secondary-container bg-clip-text text-transparent">Obsidian Orbit</h1>
-<p class="text-on-surface-variant text-xs uppercase tracking-widest mt-1">Cinema Logistics Suite</p>
-</div>
-<nav class="flex-1 space-y-2">
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-<span class="font-body-md">Inventory</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-primary-container font-bold border-r-2 border-primary-container bg-primary-container/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-<span class="font-body-md">Purchase Orders</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
-<span class="font-body-md">Partner Verification</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="loyalty">loyalty</span>
-<span class="font-body-md">Subscriptions</span>
-</a>
-</nav>
-<div class="mt-auto space-y-4 pt-6 border-t border-glass-stroke">
-<button class="w-full bg-gradient-to-r from-primary-container to-secondary-container text-obsidian-base font-bold py-3 rounded-xl hover:scale-105 transition-transform active:scale-95 shimmer-effect">
-        New Entry
-      </button>
-<div class="space-y-1">
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="font-body-md">Settings</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
-<span class="font-body-md">Support</span>
-</a>
-</div>
-</div>
-</aside>
+<!-- Shared Sidebar -->
+<div id="sidebar-container"></div>
 <!-- Main Content Wrapper -->
 <main class="ml-64 min-h-screen relative">
 <!-- TopAppBar -->
@@ -232,7 +194,7 @@
 <h3 class="font-display-lg text-[40px] text-on-surface font-bold">Purchase Orders</h3>
 <p class="text-on-surface-variant">Real-time marketplace transaction stream and management.</p>
 </div>
-<button class="flex items-center gap-2 px-6 py-3 bg-glass-stroke/10 border border-glass-stroke rounded-xl text-primary-container hover:bg-glass-stroke/20 transition-all font-bold">
+<button data-action="export" class="flex items-center gap-2 px-6 py-3 bg-glass-stroke/10 border border-glass-stroke rounded-xl text-primary-container hover:bg-glass-stroke/20 transition-all font-bold">
 <span class="material-symbols-outlined" data-icon="file_download">file_download</span>
           Export Data
         </button>
@@ -243,7 +205,7 @@
 <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Date Range</label>
 <div class="flex items-center gap-2 text-on-surface">
 <span class="material-symbols-outlined text-primary-container text-lg" data-icon="calendar_today">calendar_today</span>
-<select class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
+<select data-date-filter class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
 <option>Last 30 Days</option>
 <option>This Quarter</option>
 <option>Custom Range</option>
@@ -254,7 +216,7 @@
 <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order Status</label>
 <div class="flex items-center gap-2 text-on-surface">
 <span class="material-symbols-outlined text-secondary-container text-lg" data-icon="filter_list">filter_list</span>
-<select class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
+<select data-status-filter class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
 <option>All Statuses</option>
 <option>Pending</option>
 <option>Processing</option>
@@ -292,90 +254,60 @@
 </tr>
 </thead>
 <tbody class="divide-y divide-glass-stroke">
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
-<td class="px-6 py-5 font-bold text-primary-container">#OO-92841</td>
+<tr data-order-row data-order-status="delivered" class="hover:bg-glass-stroke/5 transition-colors group">
+<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92841</td>
 <td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke">
-<span class="text-[10px] font-bold">AL</span>
-</div>
-<span>Aether Labs</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">AL</span></div>
+<span data-customer-name>Aether Labs</span>
 </td>
-<td class="px-6 py-5 text-on-surface-variant">Oct 24, 2023</td>
-<td class="px-6 py-5 font-bold">$12,450.00</td>
-<td class="px-6 py-5">
-<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span>
-</td>
-<td class="px-6 py-5 text-right">
-<button class="text-primary-container hover:underline font-bold text-sm">View Details</button>
-</td>
+<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 24, 2023</td>
+<td data-order-amount class="px-6 py-5 font-bold">$12,450.00</td>
+<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span></td>
+<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
 </tr>
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
-<td class="px-6 py-5 font-bold text-primary-container">#OO-92842</td>
+<tr data-order-row data-order-status="processing" class="hover:bg-glass-stroke/5 transition-colors group">
+<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92842</td>
 <td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke">
-<span class="text-[10px] font-bold">NV</span>
-</div>
-<span>Nova Visuals</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">NV</span></div>
+<span data-customer-name>Nova Visuals</span>
 </td>
-<td class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
-<td class="px-6 py-5 font-bold">$4,120.50</td>
-<td class="px-6 py-5">
-<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-secondary-container/10 text-secondary-container border border-secondary-container/20">Processing</span>
-</td>
-<td class="px-6 py-5 text-right">
-<button class="text-primary-container hover:underline font-bold text-sm">View Details</button>
-</td>
+<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
+<td data-order-amount class="px-6 py-5 font-bold">$4,120.50</td>
+<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-secondary-container/10 text-secondary-container border border-secondary-container/20">Processing</span></td>
+<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
 </tr>
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
-<td class="px-6 py-5 font-bold text-primary-container">#OO-92843</td>
+<tr data-order-row data-order-status="pending" class="hover:bg-glass-stroke/5 transition-colors group">
+<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92843</td>
 <td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke">
-<span class="text-[10px] font-bold">SM</span>
-</div>
-<span>Solar Media</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">SM</span></div>
+<span data-customer-name>Solar Media</span>
 </td>
-<td class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
-<td class="px-6 py-5 font-bold">$2,800.00</td>
-<td class="px-6 py-5">
-<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-400/10 text-amber-400 border border-amber-400/20">Pending</span>
-</td>
-<td class="px-6 py-5 text-right">
-<button class="text-primary-container hover:underline font-bold text-sm">View Details</button>
-</td>
+<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
+<td data-order-amount class="px-6 py-5 font-bold">$2,800.00</td>
+<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-400/10 text-amber-400 border border-amber-400/20">Pending</span></td>
+<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
 </tr>
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
-<td class="px-6 py-5 font-bold text-primary-container">#OO-92844</td>
+<tr data-order-row data-order-status="shipped" class="hover:bg-glass-stroke/5 transition-colors group">
+<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92844</td>
 <td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke">
-<span class="text-[10px] font-bold">CH</span>
-</div>
-<span>CineHype</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">CH</span></div>
+<span data-customer-name>CineHype</span>
 </td>
-<td class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
-<td class="px-6 py-5 font-bold">$8,900.00</td>
-<td class="px-6 py-5">
-<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">Shipped</span>
-</td>
-<td class="px-6 py-5 text-right">
-<button class="text-primary-container hover:underline font-bold text-sm">View Details</button>
-</td>
+<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
+<td data-order-amount class="px-6 py-5 font-bold">$8,900.00</td>
+<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">Shipped</span></td>
+<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
 </tr>
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
-<td class="px-6 py-5 font-bold text-primary-container">#OO-92845</td>
+<tr data-order-row data-order-status="delivered" class="hover:bg-glass-stroke/5 transition-colors group">
+<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92845</td>
 <td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke">
-<span class="text-[10px] font-bold">OX</span>
-</div>
-<span>Onyx Studio</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">OX</span></div>
+<span data-customer-name>Onyx Studio</span>
 </td>
-<td class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
-<td class="px-6 py-5 font-bold">$1,200.00</td>
-<td class="px-6 py-5">
-<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span>
-</td>
-<td class="px-6 py-5 text-right">
-<button class="text-primary-container hover:underline font-bold text-sm">View Details</button>
-</td>
+<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
+<td data-order-amount class="px-6 py-5 font-bold">$1,200.00</td>
+<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span></td>
+<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
 </tr>
 </tbody>
 </table>
@@ -400,27 +332,8 @@
 <div class="w-[600px] h-[600px] bg-primary-container/20 rounded-full blur-[120px] absolute -bottom-40 -right-40"></div>
 <div class="w-[400px] h-[400px] bg-secondary-container/10 rounded-full blur-[100px] absolute -bottom-20 right-40"></div>
 </div>
+<div id="footer-container"></div>
 </div>
 </main>
-<script>
-    // Micro-interactions for table rows and buttons
-    document.querySelectorAll('tr').forEach(row => {
-      row.addEventListener('mousedown', () => {
-        row.classList.add('scale-[0.995]');
-      });
-      row.addEventListener('mouseup', () => {
-        row.classList.remove('scale-[0.995]');
-      });
-    });
-
-    // Custom animation simulation for shimmer load
-    window.addEventListener('load', () => {
-      const header = document.querySelector('header');
-      header.classList.add('opacity-0', 'translate-y-[-20px]');
-      setTimeout(() => {
-        header.classList.remove('opacity-0', 'translate-y-[-20px]');
-        header.classList.add('transition-all', 'duration-700', 'ease-out');
-      }, 100);
-    });
-  </script>
+<script src="dashboard-components.js"></script>
 </body></html>

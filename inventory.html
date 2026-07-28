@@ -93,48 +93,8 @@
 <!-- Background Atmospheric Effect -->
 
 <div class="flex h-screen overflow-hidden">
-<!-- SideNavBar -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-charcoal-surface/80 backdrop-blur-xl flex flex-col h-full p-stack-md border-r border-glass-stroke shadow-[0px_10px_30px_rgba(0,240,255,0.1)] z-50">
-<div class="mb-10">
-<h1 class="font-display-lg text-display-lg font-bold bg-gradient-to-r from-primary-container to-secondary-container bg-clip-text text-transparent">Obsidian Orbit</h1>
-<p class="text-xs tracking-widest text-on-surface-variant uppercase mt-1">Cinema Logistics Suite</p>
-</div>
-<nav class="flex-1 space-y-2">
-<!-- Active Tab: Inventory -->
-<a class="flex items-center gap-3 p-3 rounded-lg text-primary-container font-bold border-r-2 border-primary-container bg-primary-container/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-<span>Inventory</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-<span>Purchase Orders</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
-<span>Partner Verification</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="loyalty">loyalty</span>
-<span>Subscriptions</span>
-</a>
-</nav>
-<div class="pt-6 mt-6 border-t border-glass-stroke space-y-2">
-<button class="w-full bg-gradient-to-r from-primary-container to-secondary-container text-obsidian-base font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.05] transition-transform active:scale-95 shimmer">
-<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
-                    New Entry
-                </button>
-<div class="mt-8 space-y-2">
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span>Settings</span>
-</a>
-<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
-<span>Support</span>
-</a>
-</div>
-</div>
-</aside>
+<!-- Shared Sidebar -->
+<div id="sidebar-container"></div>
 <!-- Main Content -->
 <main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden relative">
 <!-- TopAppBar -->
@@ -150,7 +110,7 @@
 <div class="flex items-center gap-6">
 <div class="relative hidden lg:block">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
-<input class="bg-obsidian-base/50 border border-glass-stroke rounded-full pl-10 pr-4 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary-container text-sm w-64 transition-all focus:w-80" placeholder="Search system..." type="text"/>
+<input data-inv-search class="bg-obsidian-base/50 border border-glass-stroke rounded-full pl-10 pr-4 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary-container text-sm w-64 transition-all focus:w-80" placeholder="Search system..." type="text"/>
 </div>
 <div class="flex items-center gap-3">
 <button class="text-on-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
@@ -174,7 +134,7 @@
 <span class="material-symbols-outlined" data-icon="file_download">file_download</span>
                             Export CSV
                         </button>
-<button class="px-6 py-3 bg-primary-container text-on-primary font-bold rounded-xl flex items-center gap-2 hover:scale-[1.05] transition-all shimmer">
+<button data-action="add-item" class="px-6 py-3 bg-primary-container text-on-primary font-bold rounded-xl flex items-center gap-2 hover:scale-[1.05] transition-all shimmer">
 <span class="material-symbols-outlined" data-icon="add_box">add_box</span>
                             Add New Item
                         </button>
@@ -222,14 +182,14 @@
 <!-- Table Header/Filter Bar -->
 <div class="p-6 border-b border-glass-stroke flex flex-wrap gap-4 items-center justify-between bg-white/5">
 <div class="flex gap-4">
-<select class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
+<select data-cat-filter class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
 <option>All Categories</option>
 <option>Cameras</option>
 <option>Lenses</option>
 <option>Lighting</option>
 <option>Audio</option>
 </select>
-<select class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
+<select data-inv-status-filter class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
 <option>Status: Any</option>
 <option>In Stock</option>
 <option>Low Stock</option>
@@ -255,19 +215,19 @@
 </thead>
 <tbody class="divide-y divide-glass-stroke">
 <!-- Row 1 -->
-<tr class="hover:bg-primary-container/5 transition-colors group">
+<tr data-inv-row data-inv-cat="cameras" data-inv-status="in stock" class="hover:bg-primary-container/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
 <img class="w-full h-full object-cover" data-alt="Close up of a professional high-end cinema camera with a large lens, matte black finish, illuminated by sharp blue highlights, industrial futuristic equipment aesthetic, obsidian minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJPuZVP3tr064y_OpjAgJxsyilw_aSpMLY0Rwz6YeJAPdUxftTlhN2kDs5O_24jTpLQJYCp9mja_tzymkfm8t0M9gahtWfryG2HeLzGXrhA70J0-WUIU6POkWVcXbZcb788JUd6jp6r_kzb3jrI4GPYGobrehou2BcfyX7TjAP1GdWRUmLgdvXHoXRNZQy9CNfYVoDfT1r1gvRF16l20ydQ9NT71stxoXySwHg_7su1LCeHuns3Iuy"/>
 </div>
 <div>
-<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Arri Alexa Mini LF</div>
+<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Arri Alexa Mini LF</div>
 <div class="text-xs text-on-surface-variant">Full-frame Digital Cinema</div>
 </div>
 </div>
 </td>
-<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">CAM-AR-LF-01</td>
+<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">CAM-AR-LF-01</td>
 <td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Cameras</span></td>
 <td class="px-6 py-5">
 <div class="flex items-center gap-2">
@@ -275,32 +235,28 @@
 <span class="text-sm font-medium">In Stock (12)</span>
 </div>
 </td>
-<td class="px-6 py-5 font-bold text-primary-container">$58,000</td>
+<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$58,000</td>
 <td class="px-6 py-5 text-right">
 <div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
-</button>
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
-</button>
+<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
 </div>
 </td>
 </tr>
 <!-- Row 2 -->
-<tr class="hover:bg-primary-container/5 transition-colors group">
+<tr data-inv-row data-inv-cat="lenses" data-inv-status="low stock" class="hover:bg-primary-container/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
 <img class="w-full h-full object-cover" data-alt="A set of premium cinema prime lenses standing on a dark reflective surface, metallic and glass textures catching neon light, high tech cinema equipment, dark mood lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy3XS3WPO08lI7Cn3meGAJJxGgSYRZHuVVpXSX8X1StJW0pZBH3jMAG0DeOdw-g5jrJHQjQtINFjl2280wcorHb8dDnMamHRfPlFD2gehWxNYR2g0rRleFEgZ-9f2lhdwwaYI6R0e7lcnioDj6TqUMqQnQQcRWo_C2qF09skER_WNhYm-qmmnqrKmJA3OvX4YMuZHuJ6NHGJRpeaxTwB2O8N_toGJhWrLarEvgcMbUqQm2W9J1mF9e"/>
 </div>
 <div>
-<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Cooke S7/i Full Frame</div>
+<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Cooke S7/i Full Frame</div>
 <div class="text-xs text-on-surface-variant">T2.0 50mm Prime</div>
 </div>
 </div>
 </td>
-<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">LNS-CK-50-02</td>
+<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">LNS-CK-50-02</td>
 <td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lenses</span></td>
 <td class="px-6 py-5">
 <div class="flex items-center gap-2 text-yellow-500">
@@ -308,32 +264,28 @@
 <span class="text-sm font-medium">Low Stock (2)</span>
 </div>
 </td>
-<td class="px-6 py-5 font-bold text-primary-container">$24,500</td>
+<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$24,500</td>
 <td class="px-6 py-5 text-right">
 <div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
-</button>
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
-</button>
+<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
 </div>
 </td>
 </tr>
 <!-- Row 3 -->
-<tr class="hover:bg-primary-container/5 transition-colors group">
+<tr data-inv-row data-inv-cat="lighting" data-inv-status="out of stock" class="hover:bg-primary-container/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
 <img class="w-full h-full object-cover" data-alt="Futuristic LED lighting panel for movie production, honeycomb grid texture, emitting a soft cyan glow in a smoky studio, technical cinema lighting gear, high-end photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQslMGatplwksSSQXLjtr4WY4yIvvA8zT8FeDxh-Y0T6WJTTjieHoQpnTOw6j4Tk6aJzS6HLqggCXCEo-r_O12BxJ0ezQxVJBBbhqW0I26814ndQFbxQ5GJd_F8wJLar8KYHklvG8k6s5BHmYSD091QxdygfseyB-lNGklFY9gyM_kLZjwwiGd3LmEe6Er0e2UuhWybGZDe3HH5TFPLybFXxrlD6t3GP-lU9jscr6NbiXN3ofwt-1"/>
 </div>
 <div>
-<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Aputure Nova P600c</div>
+<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Aputure Nova P600c</div>
 <div class="text-xs text-on-surface-variant">RGBWW LED Panel</div>
 </div>
 </div>
 </td>
-<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">LGT-AP-600-08</td>
+<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">LGT-AP-600-08</td>
 <td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lighting</span></td>
 <td class="px-6 py-5">
 <div class="flex items-center gap-2 text-red-500">
@@ -341,32 +293,28 @@
 <span class="text-sm font-medium">Out of Stock</span>
 </div>
 </td>
-<td class="px-6 py-5 font-bold text-primary-container">$3,290</td>
+<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$3,290</td>
 <td class="px-6 py-5 text-right">
 <div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
-</button>
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
-</button>
+<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
 </div>
 </td>
 </tr>
 <!-- Row 4 -->
-<tr class="hover:bg-primary-container/5 transition-colors group">
+<tr data-inv-row data-inv-cat="audio" data-inv-status="in stock" class="hover:bg-primary-container/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
 <img class="w-full h-full object-cover" data-alt="A sleek black professional audio field recorder with glowing OLED screen and silver dials, premium sound recording equipment, studio atmosphere, dark minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAXeZM77jKsHN56V9Qdm10cMF3t1wKo3TFg5Dp0i2vZl0EoM00QGv0ymVEI3OAKg_AH0rM-YX6EP7rrVjPOoTOPCquE827atmsUobHnXbY8OZjIBVUHavqbDlxHpPckx-1ulCJ776_lsV1eqF_Wo7ou5T8MzNLZbtQ3q53OZ9AbR8eEEOHpwnMD6_3YKGk3VVxgAWUE3Z3qtu71dID39DYU_Bg0KKG05rTdbb6YVaOBNJxxT7s0FbG"/>
 </div>
 <div>
-<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Sound Devices 833</div>
+<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Sound Devices 833</div>
 <div class="text-xs text-on-surface-variant">12-Track Field Recorder</div>
 </div>
 </div>
 </td>
-<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">AUD-SD-833-04</td>
+<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">AUD-SD-833-04</td>
 <td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Audio</span></td>
 <td class="px-6 py-5">
 <div class="flex items-center gap-2">
@@ -374,15 +322,11 @@
 <span class="text-sm font-medium">In Stock (5)</span>
 </div>
 </td>
-<td class="px-6 py-5 font-bold text-primary-container">$4,275</td>
+<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$4,275</td>
 <td class="px-6 py-5 text-right">
 <div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
-</button>
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
-<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
-</button>
+<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
 </div>
 </td>
 </tr>
@@ -436,30 +380,11 @@
 </div>
 </div>
 <!-- FAB (Contextual) -->
-<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary-container text-on-primary shadow-[0px_0px_30px_rgba(0,240,255,0.4)] flex items-center justify-center hover:scale-[1.15] active:scale-95 transition-all z-50 group">
-<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform" data-icon="add">add</span>
+<button data-fab="add-item" class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary-container text-on-primary shadow-[0px_0px_30px_rgba(0,240,255,0.4)] flex items-center justify-center hover:scale-[1.15] active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
 </button>
+<div id="footer-container"></div>
 </main>
 </div>
-<!-- Micro-interactions Script -->
-<script>
-        // Interactive table hover effect simulation
-        document.querySelectorAll('tr').forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                row.style.transform = 'translateX(4px)';
-            });
-            row.addEventListener('mouseleave', () => {
-                row.style.transform = 'translateX(0px)';
-            });
-        });
-
-        // Search focus visual feedback
-        const searchInput = document.querySelector('input[type="text"]');
-        searchInput.addEventListener('focus', () => {
-            searchInput.parentElement.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.2)';
-        });
-        searchInput.addEventListener('blur', () => {
-            searchInput.parentElement.style.boxShadow = 'none';
-        });
-    </script>
+<script src="dashboard-components.js"></script>
 </body></html>

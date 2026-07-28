@@ -1,0 +1,90 @@
+<!-- Mobile Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden hidden" onclick="closeSidebar()"></div>
+
+<!-- Mobile Toggle -->
+<button id="sidebar-toggle" onclick="openSidebar()" class="fixed top-4 left-4 z-[60] lg:hidden glass-panel p-2.5 rounded-xl text-on-surface-variant hover:text-primary-container transition-colors shadow-lg">
+  <span class="material-symbols-outlined">menu</span>
+</button>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-charcoal-surface/95 backdrop-blur-xl border-r border-glass-stroke flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-[4px_0_30px_rgba(0,240,255,0.05)]">
+
+  <!-- Logo -->
+  <div class="p-5 border-b border-glass-stroke flex items-center justify-between">
+    <div>
+      <img alt="Camcrew Studio" class="h-8 w-auto object-contain brightness-110"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
+      <p class="font-label-caps text-[10px] text-on-surface-variant tracking-[0.25em] mt-1">ADMIN PANEL</p>
+    </div>
+    <button onclick="closeSidebar()" class="lg:hidden text-on-surface-variant hover:text-primary-container transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <!-- Admin Badge -->
+  <div class="px-4 py-3 border-b border-glass-stroke">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-primary-container text-[18px]">admin_panel_settings</span>
+      </div>
+      <div class="min-w-0">
+        <p id="sidebar-admin-name" class="text-on-surface text-sm font-semibold truncate">Admin</p>
+        <p class="text-on-surface-variant text-[10px] font-label-caps tracking-widest">ADMINISTRATOR</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="flex-1 p-3 overflow-y-auto custom-scrollbar space-y-0.5">
+
+    <p class="px-3 pt-3 pb-1.5 font-label-caps text-[10px] text-on-surface-variant/50 tracking-widest">OVERVIEW</p>
+    <a href="admindashboard.html" data-nav="dashboard"
+       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">grid_view</span>
+      <span class="font-body-md text-sm">Dashboard</span>
+    </a>
+
+    <p class="px-3 pt-4 pb-1.5 font-label-caps text-[10px] text-on-surface-variant/50 tracking-widest">OPERATIONS</p>
+    <a href="inventory.html" data-nav="inventory"
+       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+      <span class="font-body-md text-sm">Inventory</span>
+    </a>
+    <a href="orders.html" data-nav="orders"
+       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+      <span class="font-body-md text-sm">Orders</span>
+    </a>
+
+    <p class="px-3 pt-4 pb-1.5 font-label-caps text-[10px] text-on-surface-variant/50 tracking-widest">MANAGEMENT</p>
+    <a href="verificationrequest.html" data-nav="verification"
+       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200 justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-[20px]">verified_user</span>
+        <span class="font-body-md text-sm">Verification</span>
+      </div>
+      <span id="sidebar-verification-badge" class="hidden text-[10px] font-bold bg-primary-container/20 text-primary-container px-2 py-0.5 rounded-full">0</span>
+    </a>
+    <a href="subscriptionmanagement.html" data-nav="subscriptions"
+       class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">loyalty</span>
+      <span class="font-body-md text-sm">Subscriptions</span>
+    </a>
+
+  </nav>
+
+  <!-- Bottom -->
+  <div class="p-3 border-t border-glass-stroke space-y-0.5">
+    <a href="index.html"
+       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">public</span>
+      <span class="font-body-md text-sm">View Site</span>
+    </a>
+    <button onclick="adminSignOut()"
+       class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/5 transition-all duration-200">
+      <span class="material-symbols-outlined text-[20px]">logout</span>
+      <span class="font-body-md text-sm">Sign Out</span>
+    </button>
+  </div>
+
+</aside>

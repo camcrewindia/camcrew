@@ -156,41 +156,8 @@
 <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-container/5 blur-[120px]"></div>
 <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary-container/5 blur-[120px]"></div>
 </div>
-<!-- Side Navigation Shell -->
-<nav class="hidden md:flex h-screen w-64 fixed left-0 top-0 z-50 flex-col p-stack-md bg-charcoal-surface/80 backdrop-blur-xl border-r border-glass-stroke shadow-[0px_10px_30px_rgba(0,240,255,0.1)]">
-<div class="mb-stack-xl">
-<h1 class="font-display-lg text-display-lg font-bold bg-gradient-to-r from-primary-container to-secondary-container bg-clip-text text-transparent">Obsidian</h1>
-<p class="text-on-surface-variant text-xs tracking-widest uppercase mt-1">Cinema Logistics Suite</p>
-</div>
-<div class="space-y-2 flex-grow">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors hover:bg-glass-stroke/10 hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-<span class="font-body-md">Inventory</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors hover:bg-glass-stroke/10 hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-<span class="font-body-md">Purchase Orders</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors hover:bg-glass-stroke/10 hover:scale-[1.02]" href="#">
-<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
-<span class="font-body-md">Partner Verification</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary-container font-bold border-r-2 border-primary-container bg-primary-container/10 transition-all active-nav-glow" href="#">
-<span class="material-symbols-outlined" data-icon="loyalty">loyalty</span>
-<span class="font-body-md">Subscriptions</span>
-</a>
-</div>
-<div class="mt-auto space-y-2 border-t border-glass-stroke pt-stack-md">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors hover:bg-glass-stroke/10" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="font-body-md">Settings</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors hover:bg-glass-stroke/10" href="#">
-<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
-<span class="font-body-md">Support</span>
-</a>
-</div>
-</nav>
+<!-- Shared Sidebar -->
+<div id="sidebar-container"></div>
 <!-- Main Content Area -->
 <main class="md:ml-64 min-h-screen relative z-10">
 <!-- Top App Bar Shell -->
@@ -292,7 +259,7 @@
 <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-glass-stroke/10 border border-glass-stroke hover:bg-glass-stroke/20 transition-all text-sm font-bold">
 <span class="material-symbols-outlined text-sm">filter_list</span> Filter
                         </button>
-<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-glass-stroke/10 border border-glass-stroke hover:bg-glass-stroke/20 transition-all text-sm font-bold">
+<button data-action="export-csv" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-glass-stroke/10 border border-glass-stroke hover:bg-glass-stroke/20 transition-all text-sm font-bold">
 <span class="material-symbols-outlined text-sm">file_download</span> Export CSV
                         </button>
 </div>
@@ -312,14 +279,12 @@
 </thead>
 <tbody class="divide-y divide-glass-stroke">
 <!-- Row 1 -->
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
+<tr data-sub-row data-sub-tier="studio enterprise" class="hover:bg-glass-stroke/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container font-bold border border-primary-container/20">
-                                                NP
-                                            </div>
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container font-bold border border-primary-container/20">NP</div>
 <div>
-<div class="font-bold text-on-surface">Neon Pulse Studios</div>
+<div data-sub-name class="font-bold text-on-surface">Neon Pulse Studios</div>
 <div class="text-xs text-on-surface-variant">billing@neonpulse.io</div>
 </div>
 </div>
@@ -336,20 +301,20 @@
 </div>
 </td>
 <td class="px-6 py-5 text-right">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
+<button data-sub-menu class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
 </button>
 </td>
 </tr>
 <!-- Row 2 -->
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
+<tr data-sub-row data-sub-tier="elite" class="hover:bg-glass-stroke/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-glass-stroke overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="Close-up headshot of a creative director with colorful glasses and trendy attire. The background is a blurred digital workspace with soft neon accents of magenta and electric blue, creating a vibrant yet professional creative vibe aligned with the studio enterprise aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoQyQuUIIl_jcLCJIuKha65DD6Gl3ptqFfuw-Sjq9O9rGXE7WGqvaH7yeYVnnjsqBW_PNTnxoVe9dSfDvVPkYryjQlWtnUvOwU4QyMme2zN2_EgY9egy6oka0bPibQLf9uO-Yd9LNnEaMb1vo0L6vwY8FegfjbA4dVXOx1cjWzTsQ3swoUxd2F7BJsIK51MVhn5_82MK-WImIlTwqPAqucQ-U3j8uR2mUt0BNM7TARN4D3hlOmDGqn"/>
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoQyQuUIIl_jcLCJIuKha65DD6Gl3ptqFfuw-Sjq9O9rGXE7WGqvaH7yeYVnnjsqBW_PNTnxoVe9dSfDvVPkYryjQlWtnUvOwU4QyMme2zN2_EgY9egy6oka0bPibQLf9uO-Yd9LNnEaMb1vo0L6vwY8FegfjbA4dVXOx1cjWzTsQ3swoUxd2F7BJsIK51MVhn5_82MK-WImIlTwqPAqucQ-U3j8uR2mUt0BNM7TARN4D3hlOmDGqn"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Elena Rodriguez</div>
+<div data-sub-name class="font-bold text-on-surface">Elena Rodriguez</div>
 <div class="text-xs text-on-surface-variant">elena.creative@gmail.com</div>
 </div>
 </div>
@@ -366,20 +331,20 @@
 </div>
 </td>
 <td class="px-6 py-5 text-right">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
+<button data-sub-menu class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
 </button>
 </td>
 </tr>
 <!-- Row 3 -->
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
+<tr data-sub-row data-sub-tier="professional" class="hover:bg-glass-stroke/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-glass-stroke text-on-surface-variant">
 <span class="material-symbols-outlined">person</span>
 </div>
 <div>
-<div class="font-bold text-on-surface">Marcus Thorne</div>
+<div data-sub-name class="font-bold text-on-surface">Marcus Thorne</div>
 <div class="text-xs text-on-surface-variant">m.thorne@vfxpro.net</div>
 </div>
 </div>
@@ -396,20 +361,20 @@
 </div>
 </td>
 <td class="px-6 py-5 text-right">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
+<button data-sub-menu class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
 </button>
 </td>
 </tr>
 <!-- Row 4 -->
-<tr class="hover:bg-glass-stroke/5 transition-colors group">
+<tr data-sub-row data-sub-tier="studio enterprise" class="hover:bg-glass-stroke/5 transition-colors group">
 <td class="px-6 py-5">
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-glass-stroke">
-<img class="w-full h-full object-cover opacity-80" data-alt="Architectural studio office interior at night, featuring clean lines, glass walls, and sophisticated accent lighting that matches the charcoal and obsidian surface tones. The workspace is equipped with high-end monitors showing complex 3D logistics models, reflecting the professional level of the Obsidian Orbit platform's users." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXyjffPL844_lLCTK2kg46DOT9mOnatK-UImbrJktf793HJEInkaSpNxDgqTkewHz3Nrv3rVBo5HJZsXiHeMc0dbo5pYMcl4FLdShmIOa31B4Mv6SKChbR1tu4-OVbOYyLhdh17p2EBSmPJUcN6TG9_ZOmFRODwKma3kNIdC4PsXBPlQvCtPnvbpLN7JLqF349uaeoQOzFunwDUeh5mDL_MfWUY3fjCgxqSXc94kT_1CD0aDeM2M78"/>
+<img class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXyjffPL844_lLCTK2kg46DOT9mOnatK-UImbrJktf793HJEInkaSpNxDgqTkewHz3Nrv3rVBo5HJZsXiHeMc0dbo5pYMcl4FLdShmIOa31B4Mv6SKChbR1tu4-OVbOYyLhdh17p2EBSmPJUcN6TG9_ZOmFRODwKma3kNIdC4PsXBPlQvCtPnvbpLN7JLqF349uaeoQOzFunwDUeh5mDL_MfWUY3fjCgxqSXc94kT_1CD0aDeM2M78"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Void Arc Design</div>
+<div data-sub-name class="font-bold text-on-surface">Void Arc Design</div>
 <div class="text-xs text-on-surface-variant">admin@voidarc.design</div>
 </div>
 </div>
@@ -426,7 +391,7 @@
 </div>
 </td>
 <td class="px-6 py-5 text-right">
-<button class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors text-error">
+<button data-sub-menu class="p-2 hover:bg-glass-stroke/20 rounded-lg transition-colors text-error">
 <span class="material-symbols-outlined">warning</span>
 </button>
 </td>
@@ -438,19 +403,20 @@
 <span>Showing 1-10 of 3,942 entries</span>
 <div class="flex gap-2">
 <button class="px-3 py-1.5 rounded bg-glass-stroke/10 hover:bg-glass-stroke/20 transition-all border border-glass-stroke disabled:opacity-30" disabled="">Previous</button>
-<button class="px-3 py-1.5 rounded bg-primary-container/10 text-primary-container border border-primary-container/30">1</button>
-<button class="px-3 py-1.5 rounded bg-glass-stroke/10 hover:bg-glass-stroke/20 transition-all border border-glass-stroke">2</button>
-<button class="px-3 py-1.5 rounded bg-glass-stroke/10 hover:bg-glass-stroke/20 transition-all border border-glass-stroke">Next</button>
+<button data-sub-page class="px-3 py-1.5 rounded bg-primary-container/10 text-primary-container border border-primary-container/30">1</button>
+<button data-sub-page class="px-3 py-1.5 rounded bg-glass-stroke/10 hover:bg-glass-stroke/20 transition-all border border-glass-stroke">2</button>
+<button data-sub-page class="px-3 py-1.5 rounded bg-glass-stroke/10 hover:bg-glass-stroke/20 transition-all border border-glass-stroke">Next</button>
 </div>
 </div>
 </div>
 </section>
 <!-- Bottom Floating Action -->
 <div class="fixed bottom-8 right-8 z-50">
-<button class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-container to-secondary-container shadow-[0_10px_30px_rgba(0,240,255,0.4)] flex items-center justify-center text-on-primary hover:scale-110 transition-transform active:scale-95 shimmer-effect group">
+<button data-fab="new-subscription" class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-container to-secondary-container shadow-[0_10px_30px_rgba(0,240,255,0.4)] flex items-center justify-center text-on-primary hover:scale-110 transition-transform active:scale-95 shimmer-effect group">
 <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
 </button>
 </div>
+<div id="footer-container"></div>
 </div>
 </main>
 <!-- Mobile Bottom Navigation (Visible only on mobile) -->
@@ -472,6 +438,7 @@
 <span class="text-[10px] font-label-caps">Set</span>
 </button>
 </nav>
+<script src="dashboard-components.js"></script>
 <script>
         // Simple micro-interactions for the cards
         document.querySelectorAll('.glass-panel').forEach(card => {

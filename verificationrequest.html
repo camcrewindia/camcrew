@@ -141,50 +141,8 @@
     </script>
 </head>
 <body class="bg-obsidian-base">
-<!-- Global Background Animation -->
-
-<!-- Side Navigation Shell -->
-<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col p-stack-md bg-charcoal-surface/80 backdrop-blur-xl border-r border-glass-stroke shadow-[0px_10px_30px_rgba(0,240,255,0.1)] z-50">
-<div class="mb-10">
-<h1 class="font-display-lg text-display-lg font-bold bg-gradient-to-r from-primary-container to-secondary-container bg-clip-text text-transparent">
-                Obsidian Orbit
-            </h1>
-<p class="text-on-surface-variant text-sm tracking-wider uppercase opacity-60">Cinema Logistics Suite</p>
-</div>
-<nav class="flex-1 space-y-2">
-<!-- Navigation Items -->
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 hover:scale-[1.02] transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary-container">inventory_2</span>
-<span class="font-body-md">Inventory</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 hover:scale-[1.02] transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary-container">receipt_long</span>
-<span class="font-body-md">Purchase Orders</span>
-</a>
-<!-- Active Tab: Partner Verification -->
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary-container font-bold border-r-2 border-primary-container bg-primary-container/10 transition-all" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-<span class="font-body-md">Partner Verification</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 hover:scale-[1.02] transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary-container">loyalty</span>
-<span class="font-body-md">Subscriptions</span>
-</a>
-</nav>
-<div class="pt-6 border-t border-glass-stroke space-y-2">
-<button class="w-full mb-4 px-6 py-3 bg-gradient-to-r from-primary-container to-secondary-container text-obsidian-base font-bold rounded-xl shimmer hover:scale-105 transition-transform">
-                New Entry
-            </button>
-<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
-<span class="material-symbols-outlined">settings</span>
-<span class="text-sm">Settings</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
-<span class="material-symbols-outlined">help_outline</span>
-<span class="text-sm">Support</span>
-</a>
-</div>
-</aside>
+<!-- Shared Sidebar -->
+<div id="sidebar-container"></div>
 <!-- Top App Bar Shell -->
 <header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-charcoal-surface/80 backdrop-blur-xl border-b border-glass-stroke shadow-md z-40 flex justify-between items-center px-margin-desktop">
 <div class="flex items-center gap-4">
@@ -259,7 +217,7 @@
 <img class="w-full h-full object-cover" data-alt="A minimalist and futuristic logo for 'Neon Horizon Studios' featuring a stylized glowing horizon line and a geometric sun, rendered in electric cyan and deep violet against a dark obsidian background, embodying high-end cinematic technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJLRYn54Sb26D3ykdd4iN4SsqhK5T_teq5d4CjTjwK0E7o-p7tEswDXW6oYlvvEcy_rwZL6q3eVJ1IpYfWo10h1D6BfEUFqUdfsAjKAV368BVEua_co-DVOpvG5dRJd7PyJfB3Y_0Fx5s2WkPQwFSZsqyN2LXFv5dpkV-1491jrTjwAS4vRCHBEg-STn9yvCNdPJZyP6Lc0gz9MNUWoWVf8TN0dzNxHsLUBG9ioSkzHPjlgeqMZ68N"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Neon Horizon Studios</div>
+<div data-studio-name class="font-bold text-on-surface">Neon Horizon Studios</div>
 <div class="text-xs text-on-surface-variant opacity-70">Production &amp; VFX</div>
 </div>
 </div>
@@ -280,9 +238,9 @@
 </td>
 <td class="px-8 py-6 text-right">
 <div class="flex items-center justify-end gap-3">
-<a class="text-primary-container text-sm font-semibold hover:underline mr-4" href="#">View Profile</a>
-<button class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
-<button class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
+<a data-view-profile class="text-primary-container text-sm font-semibold hover:underline mr-4 cursor-pointer" href="#">View Profile</a>
+<button data-verify-approve class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
+<button data-verify-reject class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
 </div>
 </td>
 </tr>
@@ -294,7 +252,7 @@
 <img class="w-full h-full object-cover" data-alt="A sleek corporate logo for 'Aetheric Frames' showing an abstract 3D frame constructed from light beams, using a palette of chrome, silver, and soft neon blue, presented in a clean futuristic glassmorphism style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr5u6Hp-dEa2lr_w9eEUWqW2yhUtW-foVI3xg-XydGCN8Deosrx5kxe4sAkTItt8r3kGtuPxhoLlGIy6_rUuY5wvZqAHpzqqOImxfz-ZH9pL5St_EKLhv-Hx0KyHzk5SSsWUAWC9LC32rPwzw8xmVkRTeeu1WjUWl8rDR-D9pJ3Z77RFLz2SWdcaGI0zlyuJ7tC4aQ2Sju2giEsiz5BvPWphhB8u_vlaCqpU9N83LQs3EdFzgRHcLb"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Aetheric Frames</div>
+<div data-studio-name class="font-bold text-on-surface">Aetheric Frames</div>
 <div class="text-xs text-on-surface-variant opacity-70">Cinematography Collective</div>
 </div>
 </div>
@@ -315,9 +273,9 @@
 </td>
 <td class="px-8 py-6 text-right">
 <div class="flex items-center justify-end gap-3">
-<a class="text-primary-container text-sm font-semibold hover:underline mr-4" href="#">View Profile</a>
-<button class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
-<button class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
+<a data-view-profile class="text-primary-container text-sm font-semibold hover:underline mr-4 cursor-pointer" href="#">View Profile</a>
+<button data-verify-approve class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
+<button data-verify-reject class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
 </div>
 </td>
 </tr>
@@ -329,7 +287,7 @@
 <img class="w-full h-full object-cover" data-alt="A futuristic and sharp logo for 'Obsidian Core Media' showcasing a stylized crystal shard emerging from a dark pool, with vibrant magenta and electric cyan highlights, emphasizing a nocturnal and immersive cinematic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcWNQ7MTHlMx73eJqi00qOFzJCOxnKvibjO80UxuKxXI93RLCYHjp8xxW_gaCC3K5riF2I5i5yc_SFMqbOEEigtYt9s6uDydsllHhLrEeK7ykZH9qothOm-UyrPER0MU2Gfj9seQi0MIVudXhCZyNw1SbWdhnY_lbnwQBihQtihCAapeULQftoAPOYLAojr-QEfDcUqz4xTPDNOwG2hXB35pbnr7wj0frnWriPxjDuq1MvcY7HpQsM"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Obsidian Core Media</div>
+<div data-studio-name class="font-bold text-on-surface">Obsidian Core Media</div>
 <div class="text-xs text-on-surface-variant opacity-70">Post-Production House</div>
 </div>
 </div>
@@ -350,9 +308,9 @@
 </td>
 <td class="px-8 py-6 text-right">
 <div class="flex items-center justify-end gap-3">
-<a class="text-primary-container text-sm font-semibold hover:underline mr-4" href="#">View Profile</a>
-<button class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
-<button class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
+<a data-view-profile class="text-primary-container text-sm font-semibold hover:underline mr-4 cursor-pointer" href="#">View Profile</a>
+<button data-verify-approve class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
+<button data-verify-reject class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
 </div>
 </td>
 </tr>
@@ -364,7 +322,7 @@
 <img class="w-full h-full object-cover" data-alt="A modern and airy logo for 'Lunar Scape Films' featuring a minimalist crescent moon that transforms into a camera lens, rendered in soft glowing white and cool charcoal tones, suitable for a professional cinematic tech suite." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZaeaZ4qJL6wybpS9uanXqFB2CQrDnK6WeozqeHFWJl088nZtbfodVCJ-L4FI7vwlGiPHDBLhAXCaly7jNzXISNmfRkZuOvATYpYScH5eaKYhVaZpshWu4Hz5B9V5TLQGIZ_W8HNNx-3dHLbwv7DE3ugzVlP5YYB2xiWYC_Uma78qZXIo60lg09L8awuTFdcesTDFQMc0iYdwS7LiGG_4O_IWor_zzAFaJJisNPner6DUrQ6x7XRI2"/>
 </div>
 <div>
-<div class="font-bold text-on-surface">Lunar Scape Films</div>
+<div data-studio-name class="font-bold text-on-surface">Lunar Scape Films</div>
 <div class="text-xs text-on-surface-variant opacity-70">Documentary Studio</div>
 </div>
 </div>
@@ -385,9 +343,9 @@
 </td>
 <td class="px-8 py-6 text-right">
 <div class="flex items-center justify-end gap-3">
-<a class="text-primary-container text-sm font-semibold hover:underline mr-4" href="#">View Profile</a>
-<button class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
-<button class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
+<a data-view-profile class="text-primary-container text-sm font-semibold hover:underline mr-4 cursor-pointer" href="#">View Profile</a>
+<button data-verify-approve class="px-4 py-2 rounded-lg border border-primary-container/30 text-primary-container hover:bg-primary-container hover:text-obsidian-base transition-all font-bold text-sm">Approve</button>
+<button data-verify-reject class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error hover:text-white transition-all font-bold text-sm">Reject</button>
 </div>
 </td>
 </tr>
@@ -397,15 +355,15 @@
 <!-- Footer Pagination -->
 <div class="px-8 py-6 bg-charcoal-surface/40 flex justify-between items-center border-t border-glass-stroke">
 <div class="text-sm text-on-surface-variant">
-                    Showing <span class="text-on-surface font-semibold">1-4</span> of <span class="text-on-surface font-semibold">24</span> pending requests
+                    Showing <span data-showing-count class="text-on-surface font-semibold">1-4 of 24 pending requests</span>
                 </div>
 <div class="flex items-center gap-2">
 <button class="p-2 rounded-lg border border-glass-stroke hover:bg-glass-stroke/10 transition-colors disabled:opacity-30" disabled="">
 <span class="material-symbols-outlined">chevron_left</span>
 </button>
-<button class="w-8 h-8 rounded-lg bg-primary-container text-obsidian-base font-bold text-sm">1</button>
-<button class="w-8 h-8 rounded-lg border border-glass-stroke text-on-surface-variant text-sm hover:bg-glass-stroke/10 transition-colors">2</button>
-<button class="w-8 h-8 rounded-lg border border-glass-stroke text-on-surface-variant text-sm hover:bg-glass-stroke/10 transition-colors">3</button>
+<button data-page-btn class="w-8 h-8 rounded-lg bg-primary-container text-obsidian-base font-bold text-sm">1</button>
+<button data-page-btn class="w-8 h-8 rounded-lg border border-glass-stroke text-on-surface-variant text-sm hover:bg-glass-stroke/10 transition-colors">2</button>
+<button data-page-btn class="w-8 h-8 rounded-lg border border-glass-stroke text-on-surface-variant text-sm hover:bg-glass-stroke/10 transition-colors">3</button>
 <button class="p-2 rounded-lg border border-glass-stroke hover:bg-glass-stroke/10 transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>
 </button>
@@ -439,29 +397,7 @@
 </div>
 </div>
 </div>
+<div id="footer-container"></div>
 </main>
-<!-- Floating Tooltip / Micro-interaction script -->
-<script>
-        // Simple hover lift for all buttons and interactive cards
-        document.querySelectorAll('button, .glass-panel').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                el.style.transform = 'translateY(-2px) scale(1.02)';
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Search bar focus effect
-        const searchInput = document.querySelector('input[type="text"]');
-        const searchContainer = searchInput.parentElement;
-        searchInput.addEventListener('focus', () => {
-            searchContainer.classList.add('border-primary-container');
-            searchContainer.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.2)';
-        });
-        searchInput.addEventListener('blur', () => {
-            searchContainer.classList.remove('border-primary-container');
-            searchContainer.style.boxShadow = 'none';
-        });
-    </script>
+<script src="dashboard-components.js"></script>
 </body></html>

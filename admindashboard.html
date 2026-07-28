@@ -158,47 +158,8 @@
     </style>
 </head>
 <body class="antialiased">
-<!-- WebGL Background Overlay -->
-
-<!-- SideNavBar Anchor -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-obsidian-base hidden lg:flex flex-col border-r border-glass-stroke z-40">
-<div class="p-8">
-<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
-<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">STUDIO ADMIN</p>
-</div>
-<nav class="flex-1 px-4 space-y-2">
-<!-- Active Tab: Home (Dashboard) -->
-<a class="bg-secondary-container/20 text-secondary border-r-4 border-secondary p-4 flex items-center gap-3 transition-all duration-300" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest">Home</span>
-</a>
-<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Inventory</span>
-</a>
-<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary">shopping_bag</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Orders</span>
-</a>
-<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary">verified_user</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Verification</span>
-</a>
-<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary">credit_card</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Subscriptions</span>
-</a>
-<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
-<span class="material-symbols-outlined group-hover:text-primary">settings</span>
-<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Settings</span>
-</a>
-</nav>
-<div class="p-6">
-<button class="w-full bg-gradient-to-r from-primary-container to-secondary py-3 rounded-xl text-on-primary font-bold shadow-neon-blue-glow hover:scale-105 transition-all duration-300 shimmer-effect">
-                New Booking
-            </button>
-</div>
-</aside>
+<!-- Shared Sidebar (loaded by dashboard-components.js) -->
+<div id="sidebar-container"></div>
 <!-- Main Content Area -->
 <main class="lg:ml-64 min-h-screen relative z-10 flex flex-col">
 <!-- Top Summary Bar -->
@@ -323,7 +284,7 @@
 </div>
 </div>
 <div class="mt-auto pt-6 border-t border-glass-stroke">
-<button class="w-full text-center text-xs font-label-caps text-on-surface-variant hover:text-primary transition-colors">VIEW REVENUE REPORT</button>
+<button data-link="subscriptionmanagement" class="w-full text-center text-xs font-label-caps text-on-surface-variant hover:text-primary transition-colors cursor-pointer">VIEW REVENUE REPORT</button>
 </div>
 </div>
 </div>
@@ -334,13 +295,13 @@
 <div class="space-y-stack-md">
 <div class="flex items-center justify-between">
 <h3 class="font-headline-md text-primary">Commerce Hub</h3>
-<a class="text-secondary text-sm font-bold hover:underline" href="#">Manage All</a>
+<a class="text-secondary text-sm font-bold hover:underline" href="inventory.html">Manage All →</a>
 </div>
 <!-- Tabs for Inventory / Orders -->
 <div class="glass-panel rounded-3xl overflow-hidden">
 <div class="p-6 border-b border-glass-stroke flex gap-8">
-<button class="text-primary font-bold border-b-2 border-primary-container pb-1">Sales Inventory</button>
-<button class="text-on-surface-variant hover:text-primary transition-colors pb-1">Purchase Orders</button>
+<button data-tab-btn="inventory" class="text-primary font-bold border-b-2 border-primary-container pb-1">Sales Inventory</button>
+<button data-tab-btn="orders" class="text-on-surface-variant hover:text-primary transition-colors pb-1" onclick="window.location.href='orders.html'">Purchase Orders</button>
 </div>
 <div class="p-0 overflow-x-auto">
 <table class="w-full text-left">
@@ -401,11 +362,11 @@
 <div class="space-y-stack-md">
 <div class="flex items-center justify-between">
 <h3 class="font-headline-md text-primary">Verification Queue</h3>
-<span class="bg-error-container text-error text-[10px] font-bold px-2 py-1 rounded-full">5 PENDING</span>
+<span data-pending-badge class="bg-error-container text-error text-[10px] font-bold px-2 py-1 rounded-full">5 PENDING</span>
 </div>
 <div class="space-y-4">
 <!-- Request Card 1 -->
-<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div data-studio-card="Nebula Cine-Labs" class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
 <div class="flex items-center gap-4">
 <div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
 <span class="material-symbols-outlined text-secondary">movie</span>
@@ -416,12 +377,12 @@
 </div>
 </div>
 <div class="flex items-center gap-2">
-<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
-<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+<button data-action="approve" class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button data-action="deny" class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
 </div>
 </div>
 <!-- Request Card 2 -->
-<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div data-studio-card="Velvet Frame Productions" class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
 <div class="flex items-center gap-4">
 <div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
 <span class="material-symbols-outlined text-secondary">camera_roll</span>
@@ -432,12 +393,12 @@
 </div>
 </div>
 <div class="flex items-center gap-2">
-<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
-<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+<button data-action="approve" class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button data-action="deny" class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
 </div>
 </div>
 <!-- Request Card 3 -->
-<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div data-studio-card="Oasis Media House" class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
 <div class="flex items-center gap-4">
 <div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
 <span class="material-symbols-outlined text-secondary">video_stable</span>
@@ -448,11 +409,11 @@
 </div>
 </div>
 <div class="flex items-center gap-2">
-<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
-<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+<button data-action="approve" class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button data-action="deny" class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
 </div>
 </div>
-<button class="w-full py-4 glass-panel border-dashed border-2 border-glass-stroke rounded-2xl text-on-surface-variant text-xs font-bold hover:text-primary hover:border-primary-container transition-all">
+<button data-link="verificationrequest" class="w-full py-4 glass-panel border-dashed border-2 border-glass-stroke rounded-2xl text-on-surface-variant text-xs font-bold hover:text-primary hover:border-primary-container transition-all cursor-pointer">
                             VIEW ALL PENDING REQUESTS
                         </button>
 </div>
@@ -546,34 +507,12 @@
 </div>
 </section>
 </div>
-<!-- Footer Anchor -->
-<footer class="mt-stack-xl border-t border-glass-stroke px-margin-desktop py-8 bg-obsidian-base/80 flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="flex flex-col items-center md:items-start">
-<h4 class="font-display-lg text-headline-md text-primary-fixed tracking-tighter">Camcrew Studio</h4>
-<p class="text-on-surface-variant text-xs mt-1">© 2024 Camcrew Studio. Precision in Every Frame.</p>
-</div>
-<div class="flex gap-8 text-xs font-label-caps text-on-surface-variant">
-<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
-<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
-<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
-<a class="hover:text-primary transition-colors" href="#">Careers</a>
-</div>
-</footer>
+<!-- Footer Anchor (shared component) -->
+<div id="footer-container"></div>
 </main>
 <!-- Floating Action Button (Admin Helper) -->
 <button class="fixed bottom-10 right-10 w-14 h-14 bg-gradient-to-tr from-secondary to-primary-container rounded-full flex items-center justify-center text-on-secondary shadow-2xl hover:scale-110 transition-transform z-50 shimmer-effect">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
 </button>
-<script>
-        // Micro-interaction: Subtle parallax on mouse move
-        document.addEventListener('mousemove', (e) => {
-            const panels = document.querySelectorAll('.glass-panel');
-            const x = (window.innerWidth / 2 - e.pageX) / 50;
-            const y = (window.innerHeight / 2 - e.pageY) / 50;
-            
-            panels.forEach(panel => {
-                panel.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            });
-        });
-    </script>
+<script src="dashboard-components.js"></script>
 </body></html>
