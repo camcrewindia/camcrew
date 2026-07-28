@@ -1,390 +1,469 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en"><head>
+<html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Inventory Management | Obsidian Orbit</title>
+<title>Inventory Management | Camcrew Studio</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-        .glass-panel {
-            background: rgba(22, 22, 24, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-        .neon-glow-hover:hover {
-            box-shadow: 0px 0px 20px rgba(0, 240, 255, 0.2);
-            border-color: rgba(0, 240, 255, 0.4);
-        }
-        .shimmer {
-            position: relative;
-            overflow: hidden;
-        }
-        .shimmer::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.05) 45%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0.05) 55%,
-                transparent 100%
-            );
-            transform: rotate(45deg);
-            animation: shimmer-effect 4s infinite;
-        }
-        @keyframes shimmer-effect {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0A0B; }
-        ::-webkit-scrollbar-thumb { background: #2e3637; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-primary-container": "#006970",
-                        "secondary-container": "#b600f8",
-                        "obsidian-base": "#0A0A0B",
-                        "tertiary-container": "#dcd9d8",
-                        "on-primary": "#00363a",
-                        "background": "#0d1515",
-                        "outline": "#849495",
-                        "surface-container-highest": "#2e3637",
-                        "charcoal-surface": "#161618",
-                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
-                        "primary-container": "#00f0ff",
-                        "on-surface": "#dce4e5",
-                        "on-surface-variant": "#b9cacb"
-                    },
-                    "spacing": {
-                        "margin-mobile": "20px",
-                        "margin-desktop": "80px",
-                        "stack-xl": "4rem",
-                        "stack-md": "1.5rem"
-                    },
-                    "fontFamily": {
-                        "display-lg": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "body-md": ["Plus Jakarta Sans"]
-                    }
-                }
-            }
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#006970","primary-container": "#00858f","primary-fixed": "#004f54","primary-fixed-dim": "#006970",
+          "secondary": "#7b1fa2","secondary-container": "#9c27b0","on-secondary": "#ffffff",
+          "surface": "#e0e5ec","background": "#e0e5ec","obsidian-base": "#e0e5ec","charcoal-surface": "#e8edf4",
+          "surface-container": "#dde3eb","surface-container-low": "#d8dfe8","surface-container-high": "#cdd5e0",
+          "surface-container-highest": "#c8d0de","surface-bright": "#eef1f6",
+          "on-surface": "#0f172a","on-surface-variant": "#475569","on-background": "#0f172a","on-primary": "#ffffff",
+          "on-primary-container": "#ffffff",
+          "error": "#c62828","error-container": "#ffcdd2","on-error": "#ffffff","on-error-container": "#7f0000",
+          "glass-stroke": "rgba(0,0,0,0.08)","outline": "#b0bec5","outline-variant": "#cfd8dc"
+        },
+        "spacing": {
+          "margin-desktop": "80px","margin-mobile": "20px","stack-xl": "4rem","stack-md": "1.5rem","gutter": "24px","stack-xs": "0.5rem"
+        },
+        "fontFamily": {
+          "label-caps": ["Plus Jakarta Sans"],"display-lg": ["Plus Jakarta Sans"],"headline-md": ["Plus Jakarta Sans"],"body-md": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "label-caps": ["13px",{"lineHeight":"1.1","letterSpacing":"0.1em","fontWeight":"700"}],
+          "display-lg": ["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],
+          "headline-md": ["26px",{"lineHeight":"1.3","fontWeight":"700"}],
+          "body-md": ["17px",{"lineHeight":"1.6","fontWeight":"400"}]
         }
-    </script>
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --neu-bg: #e0e5ec;
+    --neu-shadow-dark: #b8bec7;
+    --neu-shadow-light: #ffffff;
+    --neu-accent: #006970;
+    --neu-text: #0f172a;
+    --neu-text-muted: #334155;
+  }
+  body {
+    background-color: var(--neu-bg);
+    color: var(--neu-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h2,h3,h4,h5,h6 { color: #0f172a; font-weight: 800; }
+  .glass-panel {
+    background: var(--neu-bg);
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    border: none !important;
+  }
+  .neu-header {
+    background: var(--neu-bg);
+    box-shadow: 0 4px 10px var(--neu-shadow-dark), 0 -2px 6px var(--neu-shadow-light);
+  }
+  .neu-btn {
+    background: var(--neu-bg);
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+    border: none; color: var(--neu-text-muted); transition: all 0.15s ease; cursor: pointer;
+  }
+  .neu-btn:hover { box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light); color: var(--neu-accent); }
+  .neu-btn:active { box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light); }
+  .neu-inset {
+    background: var(--neu-bg);
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
+    border: none !important;
+  }
+  .neu-inset:focus-within {
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light), 0 0 0 2px rgba(0,133,143,0.35);
+    outline: none;
+  }
+  .neu-icon-badge {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 7px var(--neu-shadow-dark), -3px -3px 7px var(--neu-shadow-light);
+    border-radius: 0.75rem; padding: 0.65rem; display: inline-flex;
+  }
+  .stat-card {
+    background: var(--neu-bg);
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    border-radius: 1rem; padding: 1.4rem;
+    transition: all 0.25s ease;
+  }
+  .stat-card:hover { box-shadow: 10px 10px 20px var(--neu-shadow-dark), -10px -10px 20px var(--neu-shadow-light); }
+  .action-btn {
+    background: var(--neu-bg);
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+    border: none; border-radius: 0.65rem; padding: 0.6rem 1.4rem;
+    font-size: 0.88rem; font-weight: 700; color: #334155;
+    display: inline-flex; align-items: center; gap: 7px; cursor: pointer; transition: all 0.15s;
+  }
+  .action-btn:hover { color: var(--neu-accent); box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light); }
+  .action-btn:active { box-shadow: inset 3px 3px 7px var(--neu-shadow-dark), inset -3px -3px 7px var(--neu-shadow-light); }
+  .action-btn-primary {
+    background: var(--neu-accent); color: #fff;
+    box-shadow: 4px 4px 10px rgba(0,105,112,0.35);
+    border: none; border-radius: 0.65rem; padding: 0.6rem 1.4rem;
+    font-size: 0.88rem; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 7px; cursor: pointer; transition: all 0.15s;
+  }
+  .action-btn-primary:hover { box-shadow: 6px 6px 14px rgba(0,105,112,0.45); transform: translateY(-1px); }
+  .action-btn-primary:active { transform: translateY(0); box-shadow: 2px 2px 6px rgba(0,105,112,0.3); }
+  select.neu-select {
+    background: var(--neu-bg);
+    box-shadow: inset 3px 3px 7px var(--neu-shadow-dark), inset -3px -3px 7px var(--neu-shadow-light);
+    border: none; color: #0f172a; border-radius: 0.5rem; padding: 0.45rem 1rem;
+    font-size: 0.88rem; font-weight: 600; appearance: auto;
+  }
+  tr.neu-row:hover { background: #d8dfe8; }
+  .icon-btn {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+    border: none; border-radius: 0.5rem; padding: 0.4rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #475569; transition: all 0.15s;
+  }
+  .icon-btn:hover { color: var(--neu-accent); }
+  .icon-btn.danger:hover { color: #b71c1c; }
+  .icon-btn:active { box-shadow: inset 2px 2px 5px var(--neu-shadow-dark), inset -2px -2px 5px var(--neu-shadow-light); }
+  .page-btn-active {
+    background: var(--neu-accent); color: #fff; font-weight: 800;
+    width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 0.88rem;
+  }
+  .page-btn {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+    color: #334155; font-weight: 700;
+    width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; font-size: 0.88rem;
+  }
+  .page-btn:hover { color: var(--neu-accent); }
+  .neu-track {
+    background: var(--neu-bg);
+    box-shadow: inset 2px 2px 5px var(--neu-shadow-dark), inset -2px -2px 5px var(--neu-shadow-light);
+  }
+  .bar-segment {
+    background: rgba(0,133,143,0.25);
+    border-radius: 0.4rem 0.4rem 0 0;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .bar-segment:hover { background: rgba(0,133,143,0.45); }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--neu-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--neu-shadow-dark); border-radius: 10px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+</style>
 </head>
-<body class="bg-obsidian-base text-on-surface font-body-md overflow-hidden">
-<!-- Background Atmospheric Effect -->
-
-<div class="flex h-screen overflow-hidden">
-<!-- Shared Sidebar -->
+<body>
 <div id="sidebar-container"></div>
-<!-- Main Content -->
-<main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden relative">
-<!-- TopAppBar -->
-<header class="h-16 flex justify-between items-center px-margin-desktop bg-charcoal-surface/80 backdrop-blur-xl border-b border-glass-stroke shadow-md z-40">
-<div class="flex items-center gap-8">
-<span class="font-headline-md text-headline-md font-bold text-on-surface">Admin Console</span>
-<nav class="hidden md:flex gap-6">
-<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Analytics</a>
-<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Reports</a>
-<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Logs</a>
-</nav>
-</div>
-<div class="flex items-center gap-6">
-<div class="relative hidden lg:block">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
-<input data-inv-search class="bg-obsidian-base/50 border border-glass-stroke rounded-full pl-10 pr-4 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary-container text-sm w-64 transition-all focus:w-80" placeholder="Search system..." type="text"/>
-</div>
-<div class="flex items-center gap-3">
-<button class="text-on-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
-<button class="text-on-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span></button>
-<div class="h-8 w-8 rounded-full overflow-hidden border border-primary-container/30">
-<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior technologist with short grey hair and modern glasses, lit with cinematic cyan and purple neon rim lighting against a dark studio background, high resolution, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFrpe-6Tl7hIkrbh_SCKKL69GJCRdnMiBjv5cTRpkc-oBL7TjH1vCk3rfdC6nJq9W-1SwFx2N9xhtruULAuU85YS2a-1_RMvhI_J6Z2-Uq2K7i1QmJOCXSotcTK36tcvGQ_3TzsJ69-rrsYYXzSqN6FT9uYzUEOMbBu1SvCCxM8evUvbEs_qb0RfxZ14GRHv9YtihofvmMVNVGHJlJqcKw2Qn4Z7DTLQ_VSZoFXNDDN-VwlfYiiz09"/>
-</div>
-</div>
-</div>
-</header>
-<!-- Scrollable Content Canvas -->
-<div class="flex-1 overflow-y-auto p-margin-desktop space-y-8 pb-32">
-<!-- Page Header & Actions -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-<div>
-<h2 class="text-display-lg font-bold text-on-surface">Equipment Inventory</h2>
-<p class="text-on-surface-variant mt-2 max-w-xl">Centralized control for high-fidelity cinematic assets. Monitor stock levels, SKUs, and equipment status in real-time.</p>
-</div>
-<div class="flex gap-4">
-<button class="px-6 py-3 glass-panel rounded-xl text-on-surface hover:text-primary-container flex items-center gap-2 hover:scale-[1.02] transition-all">
-<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
-                            Export CSV
-                        </button>
-<button data-action="add-item" class="px-6 py-3 bg-primary-container text-on-primary font-bold rounded-xl flex items-center gap-2 hover:scale-[1.05] transition-all shimmer">
-<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
-                            Add New Item
-                        </button>
-</div>
-</div>
-<!-- Stats Overview Bento -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
-<div class="flex justify-between items-start mb-4">
-<span class="text-on-surface-variant font-label-caps">Total Assets</span>
-<span class="material-symbols-outlined text-primary-container" data-icon="precision_manufacturing">precision_manufacturing</span>
-</div>
-<div class="text-3xl font-bold">1,284</div>
-<div class="text-sm text-green-400 mt-2 flex items-center gap-1">
-<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span> 12% from last month
-                        </div>
-</div>
-<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
-<div class="flex justify-between items-start mb-4">
-<span class="text-on-surface-variant font-label-caps">Active Rentals</span>
-<span class="material-symbols-outlined text-secondary-container" data-icon="videocam">videocam</span>
-</div>
-<div class="text-3xl font-bold">452</div>
-<div class="text-sm text-on-surface-variant mt-2">Currently on location</div>
-</div>
-<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
-<div class="flex justify-between items-start mb-4">
-<span class="text-on-surface-variant font-label-caps">Low Stock Alerts</span>
-<span class="material-symbols-outlined text-yellow-500" data-icon="warning">warning</span>
-</div>
-<div class="text-3xl font-bold">18</div>
-<div class="text-sm text-yellow-500 mt-2 flex items-center gap-1">Requires urgent restock</div>
-</div>
-<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
-<div class="flex justify-between items-start mb-4">
-<span class="text-on-surface-variant font-label-caps">Valuation</span>
-<span class="material-symbols-outlined text-primary-container" data-icon="payments">payments</span>
-</div>
-<div class="text-3xl font-bold">$2.4M</div>
-<div class="text-sm text-on-surface-variant mt-2 flex items-center gap-1">Estimated asset value</div>
-</div>
-</div>
-<!-- Main Data Table Container -->
-<div class="glass-panel rounded-2xl overflow-hidden shadow-2xl relative">
-<!-- Table Header/Filter Bar -->
-<div class="p-6 border-b border-glass-stroke flex flex-wrap gap-4 items-center justify-between bg-white/5">
-<div class="flex gap-4">
-<select data-cat-filter class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
-<option>All Categories</option>
-<option>Cameras</option>
-<option>Lenses</option>
-<option>Lighting</option>
-<option>Audio</option>
-</select>
-<select data-inv-status-filter class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
-<option>Status: Any</option>
-<option>In Stock</option>
-<option>Low Stock</option>
-<option>Out of Stock</option>
-</select>
-</div>
-<div class="text-sm text-on-surface-variant">
-                            Showing <span class="text-on-surface font-bold">1-10</span> of <span class="text-on-surface font-bold">128</span> entries
-                        </div>
-</div>
-<!-- Data Table -->
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-white/2 text-on-surface-variant font-label-caps text-[11px] tracking-wider uppercase">
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Item Name</th>
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke">SKU</th>
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Category</th>
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Stock Level</th>
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Unit Price</th>
-<th class="px-6 py-4 font-semibold border-b border-glass-stroke text-right">Actions</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-glass-stroke">
-<!-- Row 1 -->
-<tr data-inv-row data-inv-cat="cameras" data-inv-status="in stock" class="hover:bg-primary-container/5 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="Close up of a professional high-end cinema camera with a large lens, matte black finish, illuminated by sharp blue highlights, industrial futuristic equipment aesthetic, obsidian minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJPuZVP3tr064y_OpjAgJxsyilw_aSpMLY0Rwz6YeJAPdUxftTlhN2kDs5O_24jTpLQJYCp9mja_tzymkfm8t0M9gahtWfryG2HeLzGXrhA70J0-WUIU6POkWVcXbZcb788JUd6jp6r_kzb3jrI4GPYGobrehou2BcfyX7TjAP1GdWRUmLgdvXHoXRNZQy9CNfYVoDfT1r1gvRF16l20ydQ9NT71stxoXySwHg_7su1LCeHuns3Iuy"/>
-</div>
-<div>
-<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Arri Alexa Mini LF</div>
-<div class="text-xs text-on-surface-variant">Full-frame Digital Cinema</div>
-</div>
-</div>
-</td>
-<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">CAM-AR-LF-01</td>
-<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Cameras</span></td>
-<td class="px-6 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-<span class="text-sm font-medium">In Stock (12)</span>
-</div>
-</td>
-<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$58,000</td>
-<td class="px-6 py-5 text-right">
-<div class="flex justify-end gap-2">
-<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
-<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
-</div>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr data-inv-row data-inv-cat="lenses" data-inv-status="low stock" class="hover:bg-primary-container/5 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="A set of premium cinema prime lenses standing on a dark reflective surface, metallic and glass textures catching neon light, high tech cinema equipment, dark mood lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy3XS3WPO08lI7Cn3meGAJJxGgSYRZHuVVpXSX8X1StJW0pZBH3jMAG0DeOdw-g5jrJHQjQtINFjl2280wcorHb8dDnMamHRfPlFD2gehWxNYR2g0rRleFEgZ-9f2lhdwwaYI6R0e7lcnioDj6TqUMqQnQQcRWo_C2qF09skER_WNhYm-qmmnqrKmJA3OvX4YMuZHuJ6NHGJRpeaxTwB2O8N_toGJhWrLarEvgcMbUqQm2W9J1mF9e"/>
-</div>
-<div>
-<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Cooke S7/i Full Frame</div>
-<div class="text-xs text-on-surface-variant">T2.0 50mm Prime</div>
-</div>
-</div>
-</td>
-<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">LNS-CK-50-02</td>
-<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lenses</span></td>
-<td class="px-6 py-5">
-<div class="flex items-center gap-2 text-yellow-500">
-<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-<span class="text-sm font-medium">Low Stock (2)</span>
-</div>
-</td>
-<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$24,500</td>
-<td class="px-6 py-5 text-right">
-<div class="flex justify-end gap-2">
-<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
-<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
-</div>
-</td>
-</tr>
-<!-- Row 3 -->
-<tr data-inv-row data-inv-cat="lighting" data-inv-status="out of stock" class="hover:bg-primary-container/5 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="Futuristic LED lighting panel for movie production, honeycomb grid texture, emitting a soft cyan glow in a smoky studio, technical cinema lighting gear, high-end photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQslMGatplwksSSQXLjtr4WY4yIvvA8zT8FeDxh-Y0T6WJTTjieHoQpnTOw6j4Tk6aJzS6HLqggCXCEo-r_O12BxJ0ezQxVJBBbhqW0I26814ndQFbxQ5GJd_F8wJLar8KYHklvG8k6s5BHmYSD091QxdygfseyB-lNGklFY9gyM_kLZjwwiGd3LmEe6Er0e2UuhWybGZDe3HH5TFPLybFXxrlD6t3GP-lU9jscr6NbiXN3ofwt-1"/>
-</div>
-<div>
-<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Aputure Nova P600c</div>
-<div class="text-xs text-on-surface-variant">RGBWW LED Panel</div>
-</div>
-</div>
-</td>
-<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">LGT-AP-600-08</td>
-<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lighting</span></td>
-<td class="px-6 py-5">
-<div class="flex items-center gap-2 text-red-500">
-<span class="w-2 h-2 rounded-full bg-red-500"></span>
-<span class="text-sm font-medium">Out of Stock</span>
-</div>
-</td>
-<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$3,290</td>
-<td class="px-6 py-5 text-right">
-<div class="flex justify-end gap-2">
-<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
-<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
-</div>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr data-inv-row data-inv-cat="audio" data-inv-status="in stock" class="hover:bg-primary-container/5 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="A sleek black professional audio field recorder with glowing OLED screen and silver dials, premium sound recording equipment, studio atmosphere, dark minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAXeZM77jKsHN56V9Qdm10cMF3t1wKo3TFg5Dp0i2vZl0EoM00QGv0ymVEI3OAKg_AH0rM-YX6EP7rrVjPOoTOPCquE827atmsUobHnXbY8OZjIBVUHavqbDlxHpPckx-1ulCJ776_lsV1eqF_Wo7ou5T8MzNLZbtQ3q53OZ9AbR8eEEOHpwnMD6_3YKGk3VVxgAWUE3Z3qtu71dID39DYU_Bg0KKG05rTdbb6YVaOBNJxxT7s0FbG"/>
-</div>
-<div>
-<div data-inv-name class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Sound Devices 833</div>
-<div class="text-xs text-on-surface-variant">12-Track Field Recorder</div>
-</div>
-</div>
-</td>
-<td data-inv-sku class="px-6 py-5 font-mono text-sm text-on-surface-variant">AUD-SD-833-04</td>
-<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Audio</span></td>
-<td class="px-6 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-green-500"></span>
-<span class="text-sm font-medium">In Stock (5)</span>
-</div>
-</td>
-<td data-inv-price class="px-6 py-5 font-bold text-primary-container">$4,275</td>
-<td class="px-6 py-5 text-right">
-<div class="flex justify-end gap-2">
-<button data-inv-edit class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
-<button data-inv-delete class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Pagination -->
-<div class="p-6 border-t border-glass-stroke flex justify-center">
-<div class="flex gap-2">
-<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:bg-primary-container hover:text-on-primary transition-all"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary-container text-on-primary font-bold">1</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">2</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">3</button>
-<span class="w-10 h-10 flex items-center justify-center text-on-surface-variant">...</span>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">12</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:bg-primary-container hover:text-on-primary transition-all"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
-</div>
-</div>
-</div>
-<!-- Footer Section Info -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
-<div class="glass-panel p-8 rounded-3xl relative overflow-hidden">
-<div class="relative z-10">
-<h3 class="text-xl font-bold mb-4">Stock Utilization Trend</h3>
-<div class="h-48 flex items-end gap-2">
-<div class="w-full bg-primary-container/20 h-[60%] rounded-t-lg relative group transition-all hover:bg-primary-container/40">
-<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">78%</div>
-</div>
-<div class="w-full bg-primary-container/20 h-[45%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-<div class="w-full bg-primary-container/20 h-[85%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-<div class="w-full bg-primary-container/20 h-[70%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-<div class="w-full bg-primary-container/20 h-[95%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-<div class="w-full bg-primary-container/20 h-[50%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-<div class="w-full bg-primary-container/20 h-[30%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
-</div>
-<div class="flex justify-between mt-4 text-[10px] text-on-surface-variant font-label-caps">
-<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-</div>
-</div>
-</div>
-<div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center">
-<div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container mb-4">
-<span class="material-symbols-outlined text-4xl" data-icon="quick_reference_all">quick_reference_all</span>
-</div>
-<h3 class="text-xl font-bold">Maintenance Schedule</h3>
-<p class="text-on-surface-variant mt-2 text-sm">Next system-wide equipment calibration is scheduled in <span class="text-primary-container font-bold underline">4 days</span>. Ensure all returned assets are checked.</p>
-<button class="mt-6 text-primary-container font-bold hover:underline flex items-center gap-2">
-                            View Schedule <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
-<!-- FAB (Contextual) -->
-<button data-fab="add-item" class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary-container text-on-primary shadow-[0px_0px_30px_rgba(0,240,255,0.4)] flex items-center justify-center hover:scale-[1.15] active:scale-95 transition-all z-50 group">
-<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
-</button>
-<div id="footer-container"></div>
+<main class="lg:ml-64 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 neu-header px-margin-desktop py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#006970;">Equipment Inventory</h2>
+      <span class="neu-inset rounded-full px-3 py-1" style="font-size:0.78rem;font-weight:600;color:#334155;">Real-time</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="relative w-64 neu-inset rounded-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2" style="color:#475569;">search</span>
+        <input class="bg-transparent border-none focus:ring-0 w-full pl-10 pr-4 py-2" style="font-size:0.92rem;color:#0f172a;" placeholder="Search inventory..." type="text" data-inv-search/>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+        </div>
+        <div class="hidden md:block">
+          <p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="p-margin-desktop space-y-8 pb-32">
+
+    <!-- Page Title + Actions -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h3 style="font-size:1.75rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;">Equipment Inventory</h3>
+        <p style="font-size:0.95rem;color:#334155;margin-top:4px;max-width:500px;">Centralized control for high-fidelity cinematic assets. Monitor stock levels, SKUs, and equipment status in real-time.</p>
+      </div>
+      <div class="flex gap-3">
+        <button class="action-btn">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;">file_download</span> Export CSV
+        </button>
+        <button class="action-btn-primary" data-action="add-item">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;">add_box</span> Add New Item
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Bento -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+      <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Total Assets</p>
+          <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;font-size:1.2rem;">precision_manufacturing</span>
+        </div>
+        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">1,284</div>
+        <div class="flex items-center gap-1 mt-2" style="font-size:0.82rem;font-weight:600;color:#1b5e20;">
+          <span class="material-symbols-outlined" style="font-size:0.95rem;">trending_up</span> 12% from last month
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Active Rentals</p>
+          <span class="neu-icon-badge material-symbols-outlined" style="color:#7b1fa2;font-size:1.2rem;">videocam</span>
+        </div>
+        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">452</div>
+        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Currently on location</div>
+      </div>
+      <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Low Stock Alerts</p>
+          <span class="neu-icon-badge material-symbols-outlined" style="color:#b45309;font-size:1.2rem;">warning</span>
+        </div>
+        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">18</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#b45309;margin-top:6px;">Requires urgent restock</div>
+      </div>
+      <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Valuation</p>
+          <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;font-size:1.2rem;">payments</span>
+        </div>
+        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">$2.4M</div>
+        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Estimated asset value</div>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="glass-panel rounded-2xl overflow-hidden">
+      <!-- Filter Bar -->
+      <div class="p-5 flex flex-wrap gap-4 items-center justify-between" style="border-bottom:1px solid rgba(0,0,0,0.08);background:#d8dfe8;">
+        <div class="flex gap-4">
+          <select class="neu-select" data-cat-filter>
+            <option>All Categories</option>
+            <option>Cameras</option>
+            <option>Lenses</option>
+            <option>Lighting</option>
+            <option>Audio</option>
+          </select>
+          <select class="neu-select" data-inv-status-filter>
+            <option>Status: Any</option>
+            <option>In Stock</option>
+            <option>Low Stock</option>
+            <option>Out of Stock</option>
+          </select>
+        </div>
+        <div style="font-size:0.88rem;color:#334155;">
+          Showing <strong style="color:#0f172a;">1–10</strong> of <strong style="color:#0f172a;">128</strong> entries
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead style="background:#d8dfe8;">
+            <tr>
+              <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">Item Name</th>
+              <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">SKU</th>
+              <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">Category</th>
+              <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">Stock Level</th>
+              <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">Unit Price</th>
+              <th class="px-6 py-4 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJPuZVP3tr064y_OpjAgJxsyilw_aSpMLY0Rwz6YeJAPdUxftTlhN2kDs5O_24jTpLQJYCp9mja_tzymkfm8t0M9gahtWfryG2HeLzGXrhA70J0-WUIU6POkWVcXbZcb788JUd6jp6r_kzb3jrI4GPYGobrehou2BcfyX7TjAP1GdWRUmLgdvXHoXRNZQy9CNfYVoDfT1r1gvRF16l20ydQ9NT71stxoXySwHg_7su1LCeHuns3Iuy"/>
+                  </div>
+                  <div>
+                    <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Arri Alexa Mini LF</div>
+                    <div style="font-size:0.8rem;color:#475569;margin-top:1px;">Full-frame Digital Cinema</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-5 font-mono" style="font-size:0.88rem;color:#334155;">CAM-AR-LF-01</td>
+              <td class="px-6 py-5">
+                <span class="px-2 py-1 rounded" style="font-size:0.75rem;font-weight:700;text-transform:uppercase;background:rgba(123,31,162,0.1);color:#6a1070;">Cameras</span>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full animate-pulse" style="background:#16a34a;"></span>
+                  <span style="font-size:0.9rem;font-weight:600;color:#0f172a;">In Stock (12)</span>
+                </div>
+              </td>
+              <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#006970;">$58,000</td>
+              <td class="px-6 py-5 text-right">
+                <div class="flex justify-end gap-2">
+                  <button class="icon-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span></button>
+                  <button class="icon-btn danger"><span class="material-symbols-outlined" style="font-size:1.1rem;">delete</span></button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 2 -->
+            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy3XS3WPO08lI7Cn3meGAJJxGgSYRZHuVVpXSX8X1StJW0pZBH3jMAG0DeOdw-g5jrJHQjQtINFjl2280wcorHb8dDnMamHRfPlFD2gehWxNYR2g0rRleFEgZ-9f2lhdwwaYI6R0e7lcnioDj6TqUMqQnQQcRWo_C2qF09skER_WNhYm-qmmnqrKmJA3OvX4YMuZHuJ6NHGJRpeaxTwB2O8N_toGJhWrLarEvgcMbUqQm2W9J1mF9e"/>
+                  </div>
+                  <div>
+                    <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Cooke S7/i Full Frame</div>
+                    <div style="font-size:0.8rem;color:#475569;margin-top:1px;">T2.0 50mm Prime</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-5 font-mono" style="font-size:0.88rem;color:#334155;">LNS-CK-50-02</td>
+              <td class="px-6 py-5">
+                <span class="px-2 py-1 rounded" style="font-size:0.75rem;font-weight:700;text-transform:uppercase;background:rgba(123,31,162,0.1);color:#6a1070;">Lenses</span>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full" style="background:#b45309;"></span>
+                  <span style="font-size:0.9rem;font-weight:600;color:#b45309;">Low Stock (2)</span>
+                </div>
+              </td>
+              <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#006970;">$24,500</td>
+              <td class="px-6 py-5 text-right">
+                <div class="flex justify-end gap-2">
+                  <button class="icon-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span></button>
+                  <button class="icon-btn danger"><span class="material-symbols-outlined" style="font-size:1.1rem;">delete</span></button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 3 -->
+            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQslMGatplwksSSQXLjtr4WY4yIvvA8zT8FeDxh-Y0T6WJTTjieHoQpnTOw6j4Tk6aJzS6HLqggCXCEo-r_O12BxJ0ezQxVJBBbhqW0I26814ndQFbxQ5GJd_F8wJLar8KYHklvG8k6s5BHmYSD091QxdygfseyB-lNGklFY9gyM_kLZjwwiGd3LmEe6Er0e2UuhWybGZDe3HH5TFPLybFXxrlD6t3GP-lU9jscr6NbiXN3ofwt-1"/>
+                  </div>
+                  <div>
+                    <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Aputure Nova P600c</div>
+                    <div style="font-size:0.8rem;color:#475569;margin-top:1px;">RGBWW LED Panel</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-5 font-mono" style="font-size:0.88rem;color:#334155;">LGT-AP-600-08</td>
+              <td class="px-6 py-5">
+                <span class="px-2 py-1 rounded" style="font-size:0.75rem;font-weight:700;text-transform:uppercase;background:rgba(123,31,162,0.1);color:#6a1070;">Lighting</span>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full" style="background:#b71c1c;"></span>
+                  <span style="font-size:0.9rem;font-weight:600;color:#b71c1c;">Out of Stock</span>
+                </div>
+              </td>
+              <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#006970;">$3,290</td>
+              <td class="px-6 py-5 text-right">
+                <div class="flex justify-end gap-2">
+                  <button class="icon-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span></button>
+                  <button class="icon-btn danger"><span class="material-symbols-outlined" style="font-size:1.1rem;">delete</span></button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 4 -->
+            <tr class="neu-row transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAXeZM77jKsHN56V9Qdm10cMF3t1wKo3TFg5Dp0i2vZl0EoM00QGv0ymVEI3OAKg_AH0rM-YX6EP7rrVjPOoTOPCquE827atmsUobHnXbY8OZjIBVUHavqbDlxHpPckx-1ulCJ776_lsV1eqF_Wo7ou5T8MzNLZbtQ3q53OZ9AbR8eEEOHpwnMD6_3YKGk3VVxgAWUE3Z3qtu71dID39DYU_Bg0KKG05rTdbb6YVaOBNJxxT7s0FbG"/>
+                  </div>
+                  <div>
+                    <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Sound Devices 833</div>
+                    <div style="font-size:0.8rem;color:#475569;margin-top:1px;">12-Track Field Recorder</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-5 font-mono" style="font-size:0.88rem;color:#334155;">AUD-SD-833-04</td>
+              <td class="px-6 py-5">
+                <span class="px-2 py-1 rounded" style="font-size:0.75rem;font-weight:700;text-transform:uppercase;background:rgba(123,31,162,0.1);color:#6a1070;">Audio</span>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full" style="background:#16a34a;"></span>
+                  <span style="font-size:0.9rem;font-weight:600;color:#0f172a;">In Stock (5)</span>
+                </div>
+              </td>
+              <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#006970;">$4,275</td>
+              <td class="px-6 py-5 text-right">
+                <div class="flex justify-end gap-2">
+                  <button class="icon-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span></button>
+                  <button class="icon-btn danger"><span class="material-symbols-outlined" style="font-size:1.1rem;">delete</span></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="p-5 flex justify-center gap-2" style="border-top:1px solid rgba(0,0,0,0.08);">
+        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_left</span></button>
+        <button class="page-btn-active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <span class="page-btn" style="cursor:default;box-shadow:none;background:transparent;color:#475569;">…</span>
+        <button class="page-btn">12</button>
+        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_right</span></button>
+      </div>
+    </div>
+
+    <!-- Bottom Widgets -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <!-- Stock Utilization Chart -->
+      <div class="glass-panel p-8 rounded-3xl">
+        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin-bottom:1.25rem;">Stock Utilization Trend</h4>
+        <div class="flex items-end gap-2" style="height:10rem;">
+          <div class="bar-segment w-full" style="height:60%;"></div>
+          <div class="bar-segment w-full" style="height:45%;"></div>
+          <div class="bar-segment w-full" style="height:85%;"></div>
+          <div class="bar-segment w-full" style="height:70%;"></div>
+          <div class="bar-segment w-full" style="height:95%;"></div>
+          <div class="bar-segment w-full" style="height:50%;"></div>
+          <div class="bar-segment w-full" style="height:30%;"></div>
+        </div>
+        <!-- Bar track base -->
+        <div class="neu-track rounded-sm" style="height:3px;margin-top:2px;"></div>
+        <div class="flex justify-between mt-3" style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+      </div>
+
+      <!-- Maintenance Card -->
+      <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center">
+        <div class="neu-icon-badge mb-4" style="padding:1rem;">
+          <span class="material-symbols-outlined" style="font-size:2rem;color:#006970;">quick_reference_all</span>
+        </div>
+        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;">Maintenance Schedule</h4>
+        <p style="font-size:0.9rem;color:#334155;margin-top:8px;max-width:280px;">Next system-wide equipment calibration is scheduled in <strong style="color:#006970;">4 days</strong>. Ensure all returned assets are checked.</p>
+        <button style="margin-top:1.25rem;background:none;border:none;cursor:pointer;font-size:0.9rem;font-weight:700;color:#006970;display:flex;align-items:center;gap:6px;">
+          View Schedule <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+  <div id="footer-container"></div>
 </main>
-</div>
+
+<!-- FAB -->
+<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full flex items-center justify-center z-50" style="background:var(--neu-accent);color:#fff;box-shadow:0 8px 24px rgba(0,105,112,0.4);transition:all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  <span class="material-symbols-outlined" style="font-size:1.6rem;">add</span>
+</button>
+
 <script src="dashboard-components.js"></script>
 </body></html>

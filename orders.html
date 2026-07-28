@@ -1,339 +1,344 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en"><head>
+<html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Purchase Orders | Obsidian Orbit</title>
+<title>Purchase Orders | Camcrew Studio</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-<style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    .glass-panel {
-      background: rgba(22, 22, 24, 0.8);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-    .neon-glow-primary {
-      box-shadow: 0px 10px 30px rgba(0, 240, 255, 0.15);
-    }
-    .shimmer-effect {
-      position: relative;
-      overflow: hidden;
-    }
-    .shimmer-effect::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent 25%,
-        rgba(255, 255, 255, 0.05) 50%,
-        transparent 75%
-      );
-      animation: shimmer 4s infinite linear;
-    }
-    @keyframes shimmer {
-      0% { transform: translate(-30%, -30%); }
-      100% { transform: translate(30%, 30%); }
-    }
-    body {
-      background-color: #0A0A0B;
-      color: #dce4e5;
-      overflow-x: hidden;
-    }
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0A0A0B;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #2e3637;
-      border-radius: 10px;
-    }
-    .active-nav-border {
-      border-right: 2px solid #00f0ff;
-    }
-  </style>
 <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          "colors": {
-                  "on-primary-container": "#006970",
-                  "secondary-container": "#b600f8",
-                  "obsidian-base": "#0A0A0B",
-                  "tertiary-container": "#dcd9d8",
-                  "secondary-fixed-dim": "#ebb2ff",
-                  "on-primary": "#00363a",
-                  "background": "#0d1515",
-                  "outline": "#849495",
-                  "surface-container-highest": "#2e3637",
-                  "error-container": "#93000a",
-                  "inverse-surface": "#dce4e5",
-                  "on-tertiary-fixed-variant": "#474646",
-                  "on-primary-fixed": "#002022",
-                  "secondary": "#ebb2ff",
-                  "on-error-container": "#ffdad6",
-                  "primary-fixed-dim": "#00dbe9",
-                  "on-tertiary-container": "#605f5e",
-                  "primary-fixed": "#7df4ff",
-                  "surface-container": "#192122",
-                  "on-primary-fixed-variant": "#004f54",
-                  "charcoal-surface": "#161618",
-                  "surface-container-low": "#151d1e",
-                  "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
-                  "surface-variant": "#2e3637",
-                  "on-surface": "#dce4e5",
-                  "tertiary": "#f9f5f5",
-                  "on-secondary-fixed": "#320047",
-                  "on-background": "#dce4e5",
-                  "on-tertiary": "#313030",
-                  "on-surface-variant": "#b9cacb",
-                  "on-secondary-container": "#fff6fc",
-                  "on-error": "#690005",
-                  "inverse-on-surface": "#2a3233",
-                  "surface-dim": "#0d1515",
-                  "surface-tint": "#00dbe9",
-                  "on-tertiary-fixed": "#1c1b1b",
-                  "secondary-fixed": "#f8d8ff",
-                  "surface-container-high": "#232b2c",
-                  "surface": "#0d1515",
-                  "glass-stroke": "rgba(255, 255, 255, 0.12)",
-                  "surface-bright": "#333b3b",
-                  "on-secondary": "#520072",
-                  "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
-                  "error": "#ffb4ab",
-                  "tertiary-fixed": "#e5e2e1",
-                  "primary": "#dbfcff",
-                  "inverse-primary": "#006970",
-                  "primary-container": "#00f0ff",
-                  "outline-variant": "#3b494b",
-                  "tertiary-fixed-dim": "#c8c6c5",
-                  "surface-container-lowest": "#080f10",
-                  "on-secondary-fixed-variant": "#74009f"
-          },
-          "borderRadius": {
-                  "DEFAULT": "0.25rem",
-                  "lg": "0.5rem",
-                  "xl": "0.75rem",
-                  "full": "9999px"
-          },
-          "spacing": {
-                  "margin-mobile": "20px",
-                  "margin-desktop": "80px",
-                  "stack-xl": "4rem",
-                  "gutter": "24px",
-                  "stack-xs": "0.5rem",
-                  "stack-md": "1.5rem"
-          },
-          "fontFamily": {
-                  "display-lg": ["Plus Jakarta Sans"],
-                  "display-lg-mobile": ["Plus Jakarta Sans"],
-                  "body-lg": ["Plus Jakarta Sans"],
-                  "label-caps": ["Plus Jakarta Sans"],
-                  "headline-md": ["Plus Jakarta Sans"],
-                  "body-md": ["Plus Jakarta Sans"]
-          },
-          "fontSize": {
-                  "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                  "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                  "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                  "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
-                  "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                  "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
-          }
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#006970","primary-container": "#00858f","primary-fixed": "#004f54","primary-fixed-dim": "#006970",
+          "secondary": "#7b1fa2","secondary-container": "#9c27b0","on-secondary": "#ffffff",
+          "surface": "#e0e5ec","background": "#e0e5ec","obsidian-base": "#e0e5ec","charcoal-surface": "#e8edf4",
+          "surface-container": "#dde3eb","surface-container-low": "#d8dfe8","surface-container-high": "#cdd5e0",
+          "surface-container-highest": "#c8d0de","surface-bright": "#eef1f6",
+          "on-surface": "#0f172a","on-surface-variant": "#475569","on-background": "#0f172a","on-primary": "#ffffff",
+          "on-primary-container": "#ffffff",
+          "error": "#c62828","error-container": "#ffcdd2","on-error": "#ffffff","on-error-container": "#7f0000",
+          "glass-stroke": "rgba(0,0,0,0.08)","outline": "#b0bec5","outline-variant": "#cfd8dc"
         },
-      },
+        "spacing": {
+          "margin-desktop": "80px","margin-mobile": "20px","stack-xl": "4rem","stack-md": "1.5rem","gutter": "24px","stack-xs": "0.5rem"
+        },
+        "fontFamily": {
+          "label-caps": ["Plus Jakarta Sans"],"display-lg": ["Plus Jakarta Sans"],"headline-md": ["Plus Jakarta Sans"],"body-md": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "label-caps": ["13px",{"lineHeight":"1.1","letterSpacing":"0.1em","fontWeight":"700"}],
+          "headline-md": ["26px",{"lineHeight":"1.3","fontWeight":"700"}],
+          "body-md": ["17px",{"lineHeight":"1.6","fontWeight":"400"}]
+        }
+      }
     }
-  </script>
+  }
+</script>
+<style>
+  :root {
+    --neu-bg: #e0e5ec;
+    --neu-shadow-dark: #b8bec7;
+    --neu-shadow-light: #ffffff;
+    --neu-accent: #006970;
+    --neu-text: #0f172a;
+    --neu-text-muted: #334155;
+  }
+  body {
+    background-color: var(--neu-bg);
+    color: var(--neu-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h2,h3,h4,h5,h6 { color: #0f172a; font-weight: 800; }
+  .glass-panel {
+    background: var(--neu-bg);
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    border: none !important;
+  }
+  .neu-header {
+    background: var(--neu-bg);
+    box-shadow: 0 4px 10px var(--neu-shadow-dark), 0 -2px 6px var(--neu-shadow-light);
+  }
+  .neu-btn {
+    background: var(--neu-bg);
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+    border: none; color: var(--neu-text-muted); transition: all 0.15s ease; cursor: pointer;
+  }
+  .neu-btn:hover { box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light); color: var(--neu-accent); }
+  .neu-btn:active { box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light); }
+  .neu-inset {
+    background: var(--neu-bg);
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
+    border: none !important;
+  }
+  .neu-inset:focus-within {
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light), 0 0 0 2px rgba(0,133,143,0.35);
+    outline: none;
+  }
+  .neu-icon-badge {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 7px var(--neu-shadow-dark), -3px -3px 7px var(--neu-shadow-light);
+    border-radius: 0.75rem; padding: 0.65rem; display: inline-flex;
+  }
+  .stat-card {
+    background: var(--neu-bg);
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    border-radius: 1rem; padding: 1.25rem; position: relative; overflow: hidden;
+  }
+  select.neu-select {
+    background: var(--neu-bg);
+    box-shadow: inset 3px 3px 7px var(--neu-shadow-dark), inset -3px -3px 7px var(--neu-shadow-light);
+    border: none; color: #0f172a; border-radius: 0.5rem; padding: 0.45rem 1rem;
+    font-size: 0.88rem; font-weight: 600; appearance: auto; width: 100%;
+  }
+  .filter-card {
+    background: var(--neu-bg);
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    border-radius: 1rem; padding: 1.1rem 1.25rem;
+  }
+  .action-btn {
+    background: var(--neu-bg);
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+    border: none; border-radius: 0.6rem; padding: 0.55rem 1.25rem;
+    font-size: 0.88rem; font-weight: 700; color: #334155;
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.15s;
+  }
+  .action-btn:hover { color: var(--neu-accent); box-shadow: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light); }
+  .action-btn:active { box-shadow: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light); }
+  .details-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.88rem; font-weight: 700; color: var(--neu-accent);
+    text-decoration: none; transition: opacity 0.15s;
+  }
+  .details-btn:hover { opacity: 0.75; text-decoration: underline; }
+  tr.neu-row:hover { background: #d8dfe8; }
+  .page-btn-active {
+    background: var(--neu-accent); color: #fff; font-weight: 800;
+    width: 2rem; height: 2rem; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 0.82rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .page-btn {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+    color: #334155; font-weight: 700; font-size: 0.82rem;
+    width: 2rem; height: 2rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .page-btn:hover { color: var(--neu-accent); }
+  .avatar-bubble {
+    background: var(--neu-bg);
+    box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+    width: 2rem; height: 2rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800; color: #006970;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--neu-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--neu-shadow-dark); border-radius: 10px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
 </head>
-<body class="bg-obsidian-base font-body-md text-on-surface">
-<!-- Shared Sidebar -->
+<body>
 <div id="sidebar-container"></div>
-<!-- Main Content Wrapper -->
-<main class="ml-64 min-h-screen relative">
-<!-- TopAppBar -->
-<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-charcoal-surface/80 backdrop-blur-xl border-b border-glass-stroke shadow-md z-40 flex justify-between items-center px-margin-desktop">
-<div class="flex items-center gap-4">
-<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Admin Console</h2>
-<div class="h-4 w-[1px] bg-glass-stroke mx-2"></div>
-<nav class="hidden md:flex gap-6">
-<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Analytics</a>
-<a class="text-primary border-b-2 border-primary pb-1 font-bold" href="#">Reports</a>
-<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Logs</a>
-</nav>
-</div>
-<div class="flex items-center gap-6">
-<div class="relative group">
-<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
-<input class="bg-obsidian-base/50 border-b border-glass-stroke focus:border-primary-container transition-all outline-none pl-10 pr-4 py-1 text-sm rounded-t-md group-focus-within:bg-obsidian-base" placeholder="Search orders..." type="text"/>
-</div>
-<div class="flex items-center gap-3">
-<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-container transition-colors" data-icon="notifications">notifications</button>
-<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-container transition-colors" data-icon="dark_mode">dark_mode</button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-glass-stroke">
-<img class="w-full h-full object-cover" data-alt="A professional headshot of a Chief Technologist in a high-tech studio environment, with soft cyan rim lighting and a deep charcoal background. The individual has a confident expression, wearing minimalist futuristic apparel that matches the Obsidian Orbit aesthetic. High-key cinematic detail and bokeh effect on the background digital panels." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz6ebLo58UMXDZwnPMpZd3f9ytvQJ0omUSfU8hrkplh_b0wgQXSG9mk153rnBdwlOLDUTw5myDn9RHVWIDUGQtH2U9jNm714FN3WzBv2_rY1l4LUyjwG4kJ8kDjoqewSj-cPh0jquZvpWEXIUDmYTppu5BKLurAbptxpgqKhxtxyDRfdAIZ5-kXfGNi6MEXX5bca9siCrjp7MA4XsuYEEBh0zN0uYkG2mO34qf71Mapg-fgEETc1pg"/>
-</div>
-</div>
-</div>
-</header>
-<!-- Canvas -->
-<div class="pt-24 px-margin-desktop pb-margin-desktop max-w-[1600px] mx-auto">
-<!-- Page Header & Stats -->
-<div class="flex justify-between items-end mb-10">
-<div>
-<h3 class="font-display-lg text-[40px] text-on-surface font-bold">Purchase Orders</h3>
-<p class="text-on-surface-variant">Real-time marketplace transaction stream and management.</p>
-</div>
-<button data-action="export" class="flex items-center gap-2 px-6 py-3 bg-glass-stroke/10 border border-glass-stroke rounded-xl text-primary-container hover:bg-glass-stroke/20 transition-all font-bold">
-<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
-          Export Data
-        </button>
-</div>
-<!-- Filters Row -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-<div class="glass-panel p-5 rounded-2xl flex flex-col gap-2">
-<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Date Range</label>
-<div class="flex items-center gap-2 text-on-surface">
-<span class="material-symbols-outlined text-primary-container text-lg" data-icon="calendar_today">calendar_today</span>
-<select data-date-filter class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
-<option>Last 30 Days</option>
-<option>This Quarter</option>
-<option>Custom Range</option>
-</select>
-</div>
-</div>
-<div class="glass-panel p-5 rounded-2xl flex flex-col gap-2">
-<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order Status</label>
-<div class="flex items-center gap-2 text-on-surface">
-<span class="material-symbols-outlined text-secondary-container text-lg" data-icon="filter_list">filter_list</span>
-<select data-status-filter class="bg-transparent border-none focus:ring-0 text-sm font-bold w-full cursor-pointer">
-<option>All Statuses</option>
-<option>Pending</option>
-<option>Processing</option>
-<option>Shipped</option>
-<option>Delivered</option>
-</select>
-</div>
-</div>
-<div class="glass-panel p-5 rounded-2xl flex flex-col gap-2">
-<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Total Volume</label>
-<div class="flex items-baseline gap-2">
-<span class="text-2xl font-bold text-on-surface">$248.3k</span>
-<span class="text-[10px] text-primary-container">+12.5%</span>
-</div>
-</div>
-<div class="glass-panel p-5 rounded-2xl flex flex-col gap-2">
-<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Active Orders</label>
-<div class="flex items-baseline gap-2">
-<span class="text-2xl font-bold text-on-surface">1,402</span>
-<span class="text-[10px] text-secondary-container">High Priority</span>
-</div>
-</div>
-</div>
-<!-- Data Table -->
-<div class="glass-panel rounded-3xl overflow-hidden neon-glow-primary">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-glass-stroke/10">
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order ID</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Customer Name</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Date</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Status</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-glass-stroke">
-<tr data-order-row data-order-status="delivered" class="hover:bg-glass-stroke/5 transition-colors group">
-<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92841</td>
-<td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">AL</span></div>
-<span data-customer-name>Aether Labs</span>
-</td>
-<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 24, 2023</td>
-<td data-order-amount class="px-6 py-5 font-bold">$12,450.00</td>
-<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span></td>
-<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
-</tr>
-<tr data-order-row data-order-status="processing" class="hover:bg-glass-stroke/5 transition-colors group">
-<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92842</td>
-<td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">NV</span></div>
-<span data-customer-name>Nova Visuals</span>
-</td>
-<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
-<td data-order-amount class="px-6 py-5 font-bold">$4,120.50</td>
-<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-secondary-container/10 text-secondary-container border border-secondary-container/20">Processing</span></td>
-<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
-</tr>
-<tr data-order-row data-order-status="pending" class="hover:bg-glass-stroke/5 transition-colors group">
-<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92843</td>
-<td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">SM</span></div>
-<span data-customer-name>Solar Media</span>
-</td>
-<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 25, 2023</td>
-<td data-order-amount class="px-6 py-5 font-bold">$2,800.00</td>
-<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-400/10 text-amber-400 border border-amber-400/20">Pending</span></td>
-<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
-</tr>
-<tr data-order-row data-order-status="shipped" class="hover:bg-glass-stroke/5 transition-colors group">
-<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92844</td>
-<td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">CH</span></div>
-<span data-customer-name>CineHype</span>
-</td>
-<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
-<td data-order-amount class="px-6 py-5 font-bold">$8,900.00</td>
-<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">Shipped</span></td>
-<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
-</tr>
-<tr data-order-row data-order-status="delivered" class="hover:bg-glass-stroke/5 transition-colors group">
-<td data-order-id class="px-6 py-5 font-bold text-primary-container">#OO-92845</td>
-<td class="px-6 py-5 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-container/20 to-secondary-container/20 flex items-center justify-center border border-glass-stroke"><span class="text-[10px] font-bold">OX</span></div>
-<span data-customer-name>Onyx Studio</span>
-</td>
-<td data-order-date class="px-6 py-5 text-on-surface-variant">Oct 26, 2023</td>
-<td data-order-amount class="px-6 py-5 font-bold">$1,200.00</td>
-<td class="px-6 py-5"><span data-order-status-label class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">Delivered</span></td>
-<td class="px-6 py-5 text-right"><button data-order-details class="text-primary-container hover:underline font-bold text-sm">View Details</button></td>
-</tr>
-</tbody>
-</table>
-<!-- Pagination -->
-<div class="p-6 border-t border-glass-stroke flex justify-between items-center bg-glass-stroke/5">
-<span class="text-xs text-on-surface-variant">Showing 1 to 5 of 142 orders</span>
-<div class="flex gap-2">
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-glass-stroke/10 text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/20 transition-all">
-<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
-</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-container text-obsidian-base font-bold text-xs">1</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-glass-stroke/10 text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/20 transition-all font-bold text-xs">2</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-glass-stroke/10 text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/20 transition-all font-bold text-xs">3</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-glass-stroke/10 text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/20 transition-all">
-<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Atmospheric Background Element -->
-<div class="fixed bottom-0 right-0 -z-10 pointer-events-none opacity-20">
-<div class="w-[600px] h-[600px] bg-primary-container/20 rounded-full blur-[120px] absolute -bottom-40 -right-40"></div>
-<div class="w-[400px] h-[400px] bg-secondary-container/10 rounded-full blur-[100px] absolute -bottom-20 right-40"></div>
-</div>
-<div id="footer-container"></div>
-</div>
+<main class="lg:ml-64 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 neu-header px-margin-desktop py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#006970;">Purchase Orders</h2>
+      <span class="neu-inset rounded-full px-3 py-1" style="font-size:0.78rem;font-weight:600;color:#334155;">Live Stream</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="relative w-64 neu-inset rounded-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2" style="color:#475569;">search</span>
+        <input class="bg-transparent border-none focus:ring-0 w-full pl-10 pr-4 py-2" style="font-size:0.92rem;color:#0f172a;" placeholder="Search orders..." type="text"/>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+        </div>
+        <div class="hidden md:block">
+          <p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="p-margin-desktop space-y-8">
+
+    <!-- Page Title + Export -->
+    <div class="flex justify-between items-end">
+      <div>
+        <h3 style="font-size:1.75rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;">Purchase Orders</h3>
+        <p style="font-size:0.95rem;color:#334155;margin-top:4px;">Real-time marketplace transaction stream and management.</p>
+      </div>
+      <button class="action-btn" data-action="export">
+        <span class="material-symbols-outlined" style="font-size:1.1rem;">file_download</span>
+        Export Data
+      </button>
+    </div>
+
+    <!-- Filter / Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+      <div class="filter-card flex flex-col gap-2">
+        <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Date Range</label>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;color:#006970;">calendar_today</span>
+          <select class="neu-select" data-date-filter>
+            <option>Last 30 Days</option>
+            <option>This Quarter</option>
+            <option>Custom Range</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-card flex flex-col gap-2">
+        <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Order Status</label>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;color:#7b1fa2;">filter_list</span>
+          <select class="neu-select" data-status-filter>
+            <option>All Statuses</option>
+            <option>Pending</option>
+            <option>Processing</option>
+            <option>Shipped</option>
+            <option>Delivered</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-card flex flex-col gap-2">
+        <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Total Volume</label>
+        <div class="flex items-baseline gap-2">
+          <span style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">$248.3k</span>
+          <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;">+12.5%</span>
+        </div>
+      </div>
+      <div class="filter-card flex flex-col gap-2">
+        <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Active Orders</label>
+        <div class="flex items-baseline gap-2">
+          <span style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">1,402</span>
+          <span style="font-size:0.78rem;font-weight:700;color:#b71c1c;">High Priority</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="glass-panel rounded-3xl overflow-hidden">
+      <table class="w-full text-left border-collapse">
+        <thead style="background:#d8dfe8;">
+          <tr>
+            <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Order ID</th>
+            <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Customer Name</th>
+            <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Date</th>
+            <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Amount</th>
+            <th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Status</th>
+            <th class="px-6 py-4 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Row 1 -->
+          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92841</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">AL</div>
+                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Aether Labs</span>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 24, 2023</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$12,450.00</td>
+            <td class="px-6 py-5">
+              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">Delivered</span>
+            </td>
+            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
+          </tr>
+          <!-- Row 2 -->
+          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92842</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">NV</div>
+                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Nova Visuals</span>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 25, 2023</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$4,120.50</td>
+            <td class="px-6 py-5">
+              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">Processing</span>
+            </td>
+            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
+          </tr>
+          <!-- Row 3 -->
+          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92843</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">SM</div>
+                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Solar Media</span>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 25, 2023</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$2,800.00</td>
+            <td class="px-6 py-5">
+              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(180,83,9,0.12);color:#92400e;">Pending</span>
+            </td>
+            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
+          </tr>
+          <!-- Row 4 -->
+          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92844</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">CH</div>
+                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">CineHype</span>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 26, 2023</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$8,900.00</td>
+            <td class="px-6 py-5">
+              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(29,78,216,0.1);color:#1e40af;">Shipped</span>
+            </td>
+            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
+          </tr>
+          <!-- Row 5 -->
+          <tr class="neu-row transition-colors">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92845</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">OX</div>
+                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Onyx Studio</span>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 26, 2023</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$1,200.00</td>
+            <td class="px-6 py-5">
+              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">Delivered</span>
+            </td>
+            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="px-6 py-4 flex justify-between items-center" style="border-top:1px solid rgba(0,0,0,0.08);">
+        <span style="font-size:0.88rem;color:#334155;">Showing <strong style="color:#0f172a;">1 to 5</strong> of 142 orders</span>
+        <div class="flex gap-2">
+          <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1rem;">chevron_left</span></button>
+          <button class="page-btn-active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1rem;">chevron_right</span></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div id="footer-container"></div>
 </main>
 <script src="dashboard-components.js"></script>
 </body></html>
