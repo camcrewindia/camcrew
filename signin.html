@@ -58,7 +58,12 @@
 <!-- Password Input -->
 <div class="relative group">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
-<input class="w-full bg-surface-container-lowest rounded-lg border-b border-glass-stroke py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary-container transition-all placeholder:text-outline/50 font-body-md rounded-t-lg" placeholder="Password" required="" type="password"/>
+<input id="password-input" class="w-full bg-surface-container-lowest rounded-lg border-b border-glass-stroke py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary-container transition-all placeholder:text-outline/50 font-body-md rounded-t-lg" placeholder="Password" required="" type="password"/>
+</div>
+<!-- Confirm Password — shown only for Professional signup -->
+<div class="relative group hidden" id="confirm-password-wrap">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock_reset</span>
+<input id="confirm-password-input" class="w-full bg-surface-container-lowest rounded-lg border-b border-glass-stroke py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary-container transition-all placeholder:text-outline/50 font-body-md rounded-t-lg" placeholder="Confirm Password" type="password"/>
 </div>
 </div>
 <!-- Forgot Password -->
@@ -171,13 +176,26 @@
         function updateAuthTexts() {
             const submitBtn = document.getElementById('submit-auth');
             const toggleContainer = document.getElementById('toggle-container');
+            const confirmWrap = document.getElementById('confirm-password-wrap');
+            const confirmInput = document.getElementById('confirm-password-input');
 
             if (isLogin) {
                 submitBtn.innerText = 'Sign In';
                 toggleContainer.innerHTML = `<span style="font-size:0.95rem;color:#b9cacb;">Don't have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' style='color:#00dbe9;font-weight:700;background:none;border:none;cursor:pointer;font-size:0.95rem;'>Sign up</button></span>`;
+                // Always hide confirm password in login mode
+                confirmWrap.classList.add('hidden');
+                confirmInput.required = false;
             } else {
                 submitBtn.innerText = 'Create Account';
                 toggleContainer.innerHTML = `<span style="font-size:0.95rem;color:#b9cacb;">Already have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' style='color:#00dbe9;font-weight:700;background:none;border:none;cursor:pointer;font-size:0.95rem;'>Sign in</button></span>`;
+                // Show confirm password only for professional signup
+                if (currentRole === 'professional') {
+                    confirmWrap.classList.remove('hidden');
+                    confirmInput.required = true;
+                } else {
+                    confirmWrap.classList.add('hidden');
+                    confirmInput.required = false;
+                }
             }
         }
 
@@ -186,7 +204,28 @@
             e.preventDefault();
 
             const email    = e.target.querySelector('input[type="email"]').value.trim();
-            const password = e.target.querySelector('input[type="password"]').value;
+            const password = document.getElementById('password-input').value;
+
+            // Professional signup: validate confirm password then redirect
+            if (currentRole === 'professional' && !isLogin) {
+                const confirm = document.getElementById('confirm-password-input').value;
+                if (!password) { showError('Please enter a password.'); return; }
+                if (password !== confirm) { showError('Passwords do not match. Please try again.'); return; }
+                showError('');
+                const submitBtn = document.getElementById('submit-auth');
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+                try {
+                    await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password, role: 'professional' }),
+                    });
+                } catch (_) { /* demo-safe: continue regardless */ }
+                window.location.href = 'professionalsetup.html';
+                return;
+            }
+
             const endpoint = isLogin ? '/api/login' : '/api/register';
 
             // Clear previous errors
