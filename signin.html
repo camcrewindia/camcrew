@@ -30,19 +30,19 @@
 <div class="glass-panel rounded-3xl p-8 md:p-12 shadow-neon-blue-glow relative overflow-hidden transition-all duration-500">
 <!-- Role Selection -->
 <div class="mb-10">
-<label class="font-label-caps text-label-caps text-on-surface-variant mb-4 block">SELECT YOUR ROLE</label>
+<label style="font-size:0.78rem;font-weight:700;letter-spacing:0.1em;color:#b9cacb;text-transform:uppercase;" class="mb-4 block">Select Your Role</label>
 <div class="grid grid-cols-3 gap-4" id="role-selector">
 <button class="role-card active glass-panel py-6 rounded-xl flex flex-col items-center space-y-2 transition-all duration-300 hover:scale-105 border border-glass-stroke" id="role-customer" onclick="selectRole('customer')">
 <span class="material-symbols-outlined text-primary text-3xl">person</span>
-<span class="font-label-caps text-[10px] tracking-widest text-on-surface uppercase">Customer</span>
+<span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Customer</span>
 </button>
 <button class="role-card glass-panel py-6 rounded-xl flex flex-col items-center space-y-2 transition-all duration-300 hover:scale-105 border border-glass-stroke" id="role-professional" onclick="selectRole('professional')">
 <span class="material-symbols-outlined text-secondary text-3xl">camera</span>
-<span class="font-label-caps text-[10px] tracking-widest text-on-surface uppercase">Professional</span>
+<span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Professional</span>
 </button>
 <button class="role-card glass-panel py-6 rounded-xl flex flex-col items-center space-y-2 transition-all duration-300 hover:scale-105 border border-glass-stroke" id="role-studio" onclick="selectRole('studio')">
 <span class="material-symbols-outlined text-tertiary-fixed-dim text-3xl">business</span>
-<span class="font-label-caps text-[10px] tracking-widest text-on-surface uppercase">Studio</span>
+<span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Studio</span>
 </button>
 </div>
 </div>
@@ -66,37 +66,37 @@
 <a class="font-label-caps text-[11px] text-primary hover:text-primary-fixed transition-colors" href="#">Forgot Password?</a>
 </div>
 <!-- Submit Button -->
-<button class="shimmer-btn w-full py-4 bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-headline-md rounded-xl shadow-lg transition-transform active:scale-95" id="submit-auth" type="submit">
-                            SIGN IN
-                        </button>
+<button class="cc-btn-primary" id="submit-auth" type="submit">
+  Sign In
+</button>
 <!-- Social Logins -->
 <div class="space-y-6 transition-opacity duration-300" id="social-auth-section">
 <div class="relative flex items-center py-2">
 <div class="flex-grow border-t border-glass-stroke"></div>
-<span class="flex-shrink mx-4 text-outline font-label-caps text-[10px]">OR CONTINUE WITH</span>
+<span style="font-size:0.78rem;font-weight:600;color:#849495;flex-shrink:0;margin:0 1rem;">or continue with</span>
 <div class="flex-grow border-t border-glass-stroke"></div>
 </div>
 <div class="grid grid-cols-2 gap-4">
-<button class="flex items-center justify-center space-x-2 py-3 px-4 glass-panel rounded-xl hover:bg-white/5 transition-colors group" type="button">
+<button class="cc-btn-ghost" type="button" style="gap:0.6rem;">
 <svg class="w-5 h-5" viewbox="0 0 24 24"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" fill="currentColor"></path></svg>
-<span class="font-body-md text-sm text-on-surface">Google</span>
+<span style="font-size:0.95rem;font-weight:600;">Google</span>
 </button>
-<button class="flex items-center justify-center space-x-2 py-3 px-4 glass-panel rounded-xl hover:bg-white/5 transition-colors group" type="button">
+<button class="cc-btn-ghost" type="button" style="gap:0.6rem;">
 <svg class="w-5 h-5" viewbox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.5-10 10 0 5 3.66 9.12 8.44 9.88v-6.99h-2.54v-2.89h2.54v-2.2c0-2.5 1.47-3.89 3.79-3.89 1.11 0 2.28.2 2.28.2v2.5h-1.28c-1.24 0-1.63.77-1.63 1.56v1.83h2.82l-.45 2.89h-2.37v6.99c4.78-.76 8.44-4.88 8.44-9.88 0-5.5-4.5-10-10-10z" fill="currentColor"></path></svg>
-<span class="font-body-md text-sm text-on-surface">Facebook</span>
+<span style="font-size:0.95rem;font-weight:600;">Facebook</span>
 </button>
 </div>
 <!-- Mobile OTP option -->
-<button class="w-full flex items-center justify-center space-x-2 py-3 border border-glass-stroke rounded-xl hover:border-primary/50 transition-all" id="otp-btn" type="button">
-<span class="material-symbols-outlined text-primary text-xl">app_shortcut</span>
-<span class="font-label-caps text-xs text-on-surface tracking-wider">SIGN IN WITH MOBILE OTP</span>
+<button class="cc-btn-ghost" id="otp-btn" type="button">
+<span class="material-symbols-outlined" style="font-size:1.15rem;color:#00dbe9;">app_shortcut</span>
+<span style="font-size:0.95rem;font-weight:600;">Sign in with Mobile OTP</span>
 </button>
 </div>
 <!-- Switch Toggle -->
 <div class="pt-6 text-center transition-all duration-300" id="toggle-wrapper">
-<p class="font-body-md text-on-surface-variant" id="toggle-container">
-                                Don't have an account? 
-                                <button class="text-primary font-bold hover:underline ml-1" id="auth-toggle" onclick="toggleMode()" type="button">Sign up</button>
+<p style="font-size:0.95rem;color:#b9cacb;" id="toggle-container">
+  Don't have an account?
+  <button style="color:#00dbe9;font-weight:700;background:none;border:none;cursor:pointer;font-size:0.95rem;" id="auth-toggle" onclick="toggleMode()" type="button">Sign up</button>
 </p>
 </div>
 </form>
@@ -169,11 +169,11 @@
             const toggleContainer = document.getElementById('toggle-container');
 
             if (isLogin) {
-                submitBtn.innerText = 'SIGN IN';
-                toggleContainer.innerHTML = `Don't have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' class='text-primary font-bold hover:underline ml-1'>Sign up</button>`;
+                submitBtn.innerText = 'Sign In';
+                toggleContainer.innerHTML = `<span style="font-size:0.95rem;color:#b9cacb;">Don't have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' style='color:#00dbe9;font-weight:700;background:none;border:none;cursor:pointer;font-size:0.95rem;'>Sign up</button></span>`;
             } else {
-                submitBtn.innerText = 'CREATE ACCOUNT';
-                toggleContainer.innerHTML = `Already have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' class='text-primary font-bold hover:underline ml-1'>Sign in</button>`;
+                submitBtn.innerText = 'Create Account';
+                toggleContainer.innerHTML = `<span style="font-size:0.95rem;color:#b9cacb;">Already have an account? <button type='button' onclick='toggleMode()' id='auth-toggle' style='color:#00dbe9;font-weight:700;background:none;border:none;cursor:pointer;font-size:0.95rem;'>Sign in</button></span>`;
             }
         }
 
@@ -253,8 +253,8 @@
                     <div class="flex justify-between gap-2">
                         ${[1, 2, 3, 4, 5, 6].map(() => `<input type="text" maxlength="1" class="w-12 h-14 bg-surface-container-high rounded-lg border border-glass-stroke text-center text-primary font-bold text-xl focus:border-primary focus:outline-none">`).join('')}
                     </div>
-                    <button onclick="handleOTPVerification()" class="shimmer-btn w-full py-4 bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-headline-md rounded-xl">VERIFY</button>
-                    <button onclick="location.reload()" class="w-full py-4 glass-panel rounded-xl text-primary font-label-caps">CANCEL</button>
+                    <button onclick="handleOTPVerification()" class="cc-btn-primary">Verify Code</button>
+                    <button onclick="location.reload()" class="cc-btn-ghost" style="margin-top:0.5rem;">Cancel</button>
                 </div>
             `;
         });

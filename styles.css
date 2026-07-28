@@ -282,6 +282,83 @@ input:not(:placeholder-shown) ~ .floating-label {
     box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
 }
 
+/* ── Primary CTA Button (dark theme) ────────────────────────────── */
+.cc-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.9rem 2rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #001f22;
+    background: #00dbe9;
+    box-shadow: 0 0 0 1px rgba(0,219,233,0.3), 0 4px 20px rgba(0,219,233,0.18);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
+}
+.cc-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+}
+.cc-btn-primary:hover {
+    background: #00f0ff;
+    box-shadow: 0 0 0 1px rgba(0,240,255,0.5), 0 6px 28px rgba(0,240,255,0.3);
+    transform: translateY(-1px);
+}
+.cc-btn-primary:hover::after {
+    animation: shimmer 0.7s forwards;
+}
+.cc-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 0 0 1px rgba(0,219,233,0.3), 0 2px 10px rgba(0,219,233,0.15);
+}
+.cc-btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Ghost / Secondary Button (dark theme) ───────────────────────── */
+.cc-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.9rem 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.14);
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #dce4e5;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+.cc-btn-ghost:hover {
+    border-color: rgba(0,240,255,0.5);
+    background: rgba(0,240,255,0.06);
+    color: #00f0ff;
+}
+
 /* ── Sign-in Page ────────────────────────────────────────────────── */
 .role-card.active {
     border-color: #00f0ff;

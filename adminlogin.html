@@ -48,8 +48,8 @@
         <!-- ── STAGE 1: Credentials ──────────────────────────────────── -->
         <div id="form-stage-1">
           <div class="mb-8">
-            <h1 class="font-headline-md text-headline-md text-on-surface mb-2">Admin Access</h1>
-            <p class="text-on-surface-variant text-body-md">Enter your credentials to access the dashboard and site management tools.</p>
+            <h1 class="font-headline-md text-headline-md text-on-surface mb-2" style="font-size:1.5rem;font-weight:800;color:#dce4e5;">Admin Access</h1>
+            <p style="font-size:1rem;color:#b9cacb;line-height:1.6;">Enter your credentials to access the dashboard and site management tools.</p>
           </div>
 
           <form class="space-y-6" id="admin-login-form" onsubmit="handleAdminLogin(event)">
@@ -102,13 +102,9 @@
             </div>
 
             <!-- Submit -->
-            <button
-              class="shimmer-btn w-full py-4 mt-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-label-caps text-label-caps tracking-widest shadow-lg shadow-primary-container/20 hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center gap-2"
-              type="submit"
-              id="submit-btn"
-            >
-              CONTINUE TO VERIFICATION
-              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <button class="cc-btn-primary" type="submit" id="submit-btn">
+              Continue to Verification
+              <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span>
             </button>
 
           </form>
@@ -121,8 +117,8 @@
               <span class="material-symbols-outlined text-[18px]">arrow_back</span>
               <span class="font-label-caps text-label-caps">BACK TO LOGIN</span>
             </button>
-            <h1 class="font-headline-md text-headline-md text-on-surface mb-2">OTP Verification</h1>
-            <p class="text-on-surface-variant text-body-md">We've sent a 6-digit security code to your registered device.</p>
+            <h1 style="font-size:1.5rem;font-weight:800;color:#dce4e5;margin-bottom:0.5rem;">OTP Verification</h1>
+            <p style="font-size:1rem;color:#b9cacb;line-height:1.6;">We've sent a 6-digit security code to your registered device.</p>
           </div>
 
           <form class="space-y-8" onsubmit="handleOtpSubmit(event)">
@@ -140,20 +136,17 @@
                 <button class="text-primary font-bold hover:underline" type="button" id="resend-btn" onclick="startResendTimer()">Resend in 0:45</button>
               </p>
             </div>
-            <button
-              class="shimmer-btn w-full py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-label-caps text-label-caps tracking-widest shadow-lg shadow-primary-container/20 hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center gap-2"
-              type="submit"
-            >
-              AUTHENTICATE SESSION
-              <span class="material-symbols-outlined text-[18px]">verified_user</span>
+            <button class="cc-btn-primary" type="submit">
+              Authenticate Session
+              <span class="material-symbols-outlined" style="font-size:1.1rem;">verified_user</span>
             </button>
           </form>
         </div>
 
         <!-- Bottom note -->
         <div class="mt-8 text-center">
-          <p class="text-on-surface-variant/60 font-label-caps text-label-caps">
-            ENCRYPTED SESSION • AES-256 COMPLIANT
+          <p style="font-size:0.78rem;font-weight:600;letter-spacing:0.1em;color:rgba(185,202,203,0.55);">
+            Encrypted Session · AES-256 Compliant
           </p>
           <div class="flex justify-center gap-6 mt-4">
             <a class="text-on-surface-variant hover:text-primary transition-colors text-label-caps font-label-caps" href="#">Support System</a>
