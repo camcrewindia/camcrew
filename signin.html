@@ -326,32 +326,70 @@
         }
 
         // Dynamic Routing Logic
-        document.getElementById('login-form').addEventListener('submit', (e) => {
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Visual feedback
-            const toast = document.getElementById('success-toast');
-            const toastText = document.getElementById('toast-text');
-            
-            if (!isLogin) {
-                toastText.innerText = 'Account created successfully. Redirecting...';
-            } else {
-                toastText.innerText = 'Successfully authenticated. Welcome back.';
-            }
 
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            
-            // Delay redirection to allow user to see success state
-            setTimeout(() => {
-                if (currentRole === 'studio') {
-                    window.location.href = 'admin.html';
-                } else {
-                    // Both customer and professional go to home.html
-                    window.location.href = 'index.html';
+            const email    = e.target.querySelector('input[type="email"]').value.trim();
+            const password = e.target.querySelector('input[type="password"]').value;
+            const endpoint = isLogin ? '/api/login' : '/api/register';
+
+            // Clear previous errors
+            showError('');
+            const submitBtn = document.getElementById('submit-auth');
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            try {
+                const res  = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role: currentRole }),
+                });
+                const data = await res.json();
+
+                if (!data.ok) {
+                    showError(data.error || 'Something went wrong. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    return;
                 }
-            }, 1200);
+
+                // Success feedback
+                const toast    = document.getElementById('success-toast');
+                const toastText = document.getElementById('toast-text');
+                toastText.innerText = isLogin
+                    ? 'Successfully authenticated. Welcome back.'
+                    : 'Account created successfully. Redirecting...';
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                setTimeout(() => {
+                    if (data.user.role === 'studio') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                }, 1200);
+
+            } catch (err) {
+                showError('Network error. Please check your connection.');
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
         });
+
+        function showError(msg) {
+            let el = document.getElementById('auth-error');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'auth-error';
+                el.className = 'text-center text-sm font-body-md';
+                el.style.color = '#ffb4ab';
+                const btn = document.getElementById('submit-auth');
+                btn.parentNode.insertBefore(el, btn);
+            }
+            el.textContent = msg;
+        }
 
         // OTP simulation
         document.getElementById('otp-btn').addEventListener('click', () => {
