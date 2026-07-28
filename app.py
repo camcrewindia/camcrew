@@ -32,13 +32,19 @@ def init_db():
     with get_db() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                email    TEXT    NOT NULL UNIQUE,
-                password TEXT    NOT NULL,
-                role     TEXT    NOT NULL DEFAULT 'customer',
-                created_at TEXT  DEFAULT (datetime('now'))
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                email        TEXT    NOT NULL UNIQUE,
+                password     TEXT    NOT NULL,
+                role         TEXT    NOT NULL DEFAULT 'customer',
+                display_name TEXT,
+                created_at   TEXT    DEFAULT (datetime('now'))
             )
         """)
+        # Migrate: add display_name if it doesn't exist yet
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN display_name TEXT")
+        except Exception:
+            pass
         conn.commit()
 
 
@@ -146,6 +152,45 @@ def me():
             "role":  session["role"],
         }
     })
+
+
+@app.route("/api/profile", methods=["GET"])
+def get_profile():
+    if "user_id" not in session:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT email, role, display_name, created_at FROM users WHERE id = ?",
+            (session["user_id"],)
+        ).fetchone()
+    if not row:
+        return jsonify({"ok": False, "error": "User not found."}), 404
+    return jsonify({
+        "ok": True,
+        "profile": {
+            "email":        row["email"],
+            "role":         row["role"],
+            "display_name": row["display_name"] or "",
+            "created_at":   row["created_at"],
+        }
+    })
+
+
+@app.route("/api/profile", methods=["PATCH"])
+def update_profile():
+    if "user_id" not in session:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data = request.get_json(force=True)
+    display_name = (data.get("display_name") or "").strip()
+    if len(display_name) > 60:
+        return jsonify({"ok": False, "error": "Display name must be 60 characters or fewer."}), 400
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE users SET display_name = ? WHERE id = ?",
+            (display_name, session["user_id"])
+        )
+        conn.commit()
+    return jsonify({"ok": True, "display_name": display_name})
 
 
 if __name__ == "__main__":
