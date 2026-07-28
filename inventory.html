@@ -461,9 +461,247 @@
 </main>
 
 <!-- FAB -->
-<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full flex items-center justify-center z-50" style="background:var(--neu-accent);color:#fff;box-shadow:0 8px 24px rgba(0,105,112,0.4);transition:all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+<button id="fab-add-btn" class="fixed bottom-10 right-10 w-16 h-16 rounded-full flex items-center justify-center z-50" style="background:var(--neu-accent);color:#fff;box-shadow:0 8px 24px rgba(0,105,112,0.4);transition:all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
   <span class="material-symbols-outlined" style="font-size:1.6rem;">add</span>
 </button>
+
+<!-- Add Product Modal Overlay -->
+<div id="add-product-overlay" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(14,23,42,0.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <!-- Modal Panel -->
+  <div id="add-product-modal" style="
+    background:var(--neu-bg);
+    box-shadow:12px 12px 28px var(--neu-shadow-dark),-12px -12px 28px var(--neu-shadow-light);
+    border-radius:1.75rem;
+    width:100%;max-width:520px;
+    margin:1.5rem;
+    padding:2.25rem 2.5rem 2rem;
+    position:relative;
+    transform:scale(0.95);opacity:0;
+    transition:transform 0.25s cubic-bezier(.34,1.56,.64,1),opacity 0.2s ease;
+  ">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;">
+      <div style="display:flex;align-items:center;gap:0.85rem;">
+        <div style="
+          background:var(--neu-bg);
+          box-shadow:4px 4px 10px var(--neu-shadow-dark),-4px -4px 10px var(--neu-shadow-light);
+          border-radius:0.85rem;padding:0.6rem;display:inline-flex;
+        ">
+          <span class="material-symbols-outlined" style="font-size:1.4rem;color:var(--neu-accent);">inventory_2</span>
+        </div>
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:800;color:#0f172a;line-height:1.2;">Add New Product</h3>
+          <p style="font-size:0.78rem;color:#475569;margin-top:2px;">Fill in the details below to add a new inventory item.</p>
+        </div>
+      </div>
+      <button id="close-modal-btn" style="
+        background:var(--neu-bg);
+        box-shadow:3px 3px 7px var(--neu-shadow-dark),-3px -3px 7px var(--neu-shadow-light);
+        border:none;border-radius:0.65rem;padding:0.45rem;
+        display:inline-flex;align-items:center;justify-content:center;
+        cursor:pointer;color:#475569;transition:all 0.15s;
+      " onmouseover="this.style.color='#b71c1c'" onmouseout="this.style.color='#475569'">
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form id="add-product-form" onsubmit="return false;" style="display:flex;flex-direction:column;gap:1.1rem;">
+
+      <!-- Item Name -->
+      <div>
+        <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Item Name</label>
+        <div style="
+          background:var(--neu-bg);
+          box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+          border-radius:0.75rem;padding:0.65rem 1rem;
+          display:flex;align-items:center;gap:0.5rem;
+        ">
+          <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">label</span>
+          <input type="text" placeholder="e.g. Arri Alexa Mini LF" style="
+            background:transparent;border:none;outline:none;
+            font-size:0.92rem;color:#0f172a;width:100%;
+            font-family:'Plus Jakarta Sans',sans-serif;
+          "/>
+        </div>
+      </div>
+
+      <!-- SKU + Category row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+          <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">SKU</label>
+          <div style="
+            background:var(--neu-bg);
+            box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+            border-radius:0.75rem;padding:0.65rem 1rem;
+            display:flex;align-items:center;gap:0.5rem;
+          ">
+            <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">qr_code</span>
+            <input type="text" placeholder="e.g. CAM-AR-01" style="
+              background:transparent;border:none;outline:none;
+              font-size:0.92rem;color:#0f172a;width:100%;
+              font-family:'Plus Jakarta Sans',sans-serif;font-family:monospace;
+            "/>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Category</label>
+          <div style="
+            background:var(--neu-bg);
+            box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+            border-radius:0.75rem;padding:0.65rem 1rem;
+            display:flex;align-items:center;gap:0.5rem;
+          ">
+            <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">category</span>
+            <select style="
+              background:transparent;border:none;outline:none;
+              font-size:0.92rem;color:#0f172a;width:100%;cursor:pointer;
+              font-family:'Plus Jakarta Sans',sans-serif;
+            ">
+              <option value="">Select…</option>
+              <option>Cameras</option>
+              <option>Lenses</option>
+              <option>Lighting</option>
+              <option>Audio</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Level + Unit Price row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+          <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Stock Level</label>
+          <div style="
+            background:var(--neu-bg);
+            box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+            border-radius:0.75rem;padding:0.65rem 1rem;
+            display:flex;align-items:center;gap:0.5rem;
+          ">
+            <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">inventory</span>
+            <input type="number" min="0" placeholder="0" style="
+              background:transparent;border:none;outline:none;
+              font-size:0.92rem;color:#0f172a;width:100%;
+              font-family:'Plus Jakarta Sans',sans-serif;
+            "/>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Unit Price</label>
+          <div style="
+            background:var(--neu-bg);
+            box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+            border-radius:0.75rem;padding:0.65rem 1rem;
+            display:flex;align-items:center;gap:0.5rem;
+          ">
+            <span style="font-size:0.92rem;font-weight:700;color:#475569;flex-shrink:0;">$</span>
+            <input type="number" min="0" placeholder="0.00" style="
+              background:transparent;border:none;outline:none;
+              font-size:0.92rem;color:#0f172a;width:100%;
+              font-family:'Plus Jakarta Sans',sans-serif;
+            "/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Description <span style="color:#94a3b8;text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+        <div style="
+          background:var(--neu-bg);
+          box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+          border-radius:0.75rem;padding:0.65rem 1rem;
+        ">
+          <textarea rows="2" placeholder="Short equipment description…" style="
+            background:transparent;border:none;outline:none;resize:none;
+            font-size:0.92rem;color:#0f172a;width:100%;
+            font-family:'Plus Jakarta Sans',sans-serif;line-height:1.5;
+          "></textarea>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height:1px;background:rgba(0,0,0,0.07);border-radius:1px;margin:0.25rem 0;"></div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex;gap:0.85rem;justify-content:flex-end;align-items:center;">
+        <button type="button" id="cancel-modal-btn" style="
+          background:var(--neu-bg);
+          box-shadow:4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light);
+          border:none;border-radius:0.65rem;padding:0.65rem 1.4rem;
+          font-size:0.88rem;font-weight:700;color:#334155;
+          font-family:'Plus Jakarta Sans',sans-serif;
+          display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.15s;
+        "
+        onmouseover="this.style.color='var(--neu-accent)';this.style.boxShadow='6px 6px 12px var(--neu-shadow-dark),-6px -6px 12px var(--neu-shadow-light)'"
+        onmouseout="this.style.color='#334155';this.style.boxShadow='4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light)'"
+        onmousedown="this.style.boxShadow='inset 3px 3px 7px var(--neu-shadow-dark),inset -3px -3px 7px var(--neu-shadow-light)'"
+        onmouseup="this.style.boxShadow='4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light)'">
+          Cancel
+        </button>
+        <button type="submit" style="
+          background:var(--neu-accent);color:#fff;
+          box-shadow:4px 4px 10px rgba(0,105,112,0.35);
+          border:none;border-radius:0.65rem;padding:0.65rem 1.6rem;
+          font-size:0.88rem;font-weight:700;
+          font-family:'Plus Jakarta Sans',sans-serif;
+          display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:all 0.15s;
+        "
+        onmouseover="this.style.boxShadow='6px 6px 14px rgba(0,105,112,0.45)';this.style.transform='translateY(-1px)'"
+        onmouseout="this.style.boxShadow='4px 4px 10px rgba(0,105,112,0.35)';this.style.transform='translateY(0)'"
+        onmousedown="this.style.transform='translateY(0)';this.style.boxShadow='2px 2px 6px rgba(0,105,112,0.3)'"
+        onmouseup="this.style.boxShadow='4px 4px 10px rgba(0,105,112,0.35)'">
+          <span class="material-symbols-outlined" style="font-size:1.05rem;">add_box</span>
+          Add Product
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+  #add-product-overlay input::placeholder,
+  #add-product-overlay textarea::placeholder { color:#94a3b8; }
+  #add-product-overlay input[type=number]::-webkit-inner-spin-button { opacity:0.4; }
+</style>
+
+<script>
+  (function(){
+    const overlay = document.getElementById('add-product-overlay');
+    const modal   = document.getElementById('add-product-modal');
+    const fabBtn  = document.getElementById('fab-add-btn');
+    const addBtn  = document.querySelector('[data-action="add-item"]');
+    const closeBtn  = document.getElementById('close-modal-btn');
+    const cancelBtn = document.getElementById('cancel-modal-btn');
+
+    function openModal() {
+      overlay.style.display = 'flex';
+      requestAnimationFrame(() => {
+        modal.style.transform = 'scale(1)';
+        modal.style.opacity   = '1';
+      });
+    }
+    function closeModal() {
+      modal.style.transform = 'scale(0.95)';
+      modal.style.opacity   = '0';
+      setTimeout(() => { overlay.style.display = 'none'; }, 220);
+    }
+
+    fabBtn.addEventListener('click', openModal);
+    if (addBtn) addBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    overlay.addEventListener('click', function(e){
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && overlay.style.display === 'flex') closeModal();
+    });
+  })();
+</script>
 
 <script src="dashboard-components.js"></script>
 </body></html>
