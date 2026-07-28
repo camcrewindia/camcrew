@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Camcrew Studio | Obsidian Orbit Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#006970",
+                    "tertiary": "#f9f5f5",
+                    "inverse-surface": "#dce4e5",
+                    "surface-container-lowest": "#080f10",
+                    "tertiary-fixed": "#e5e2e1",
+                    "on-background": "#dce4e5",
+                    "on-tertiary-fixed-variant": "#474646",
+                    "obsidian-base": "#0A0A0B",
+                    "on-secondary": "#520072",
+                    "secondary-fixed": "#f8d8ff",
+                    "primary-container": "#00f0ff",
+                    "surface": "#0d1515",
+                    "on-secondary-fixed-variant": "#74009f",
+                    "surface-container-low": "#151d1e",
+                    "primary-fixed": "#7df4ff",
+                    "surface-tint": "#00dbe9",
+                    "on-primary": "#00363a",
+                    "charcoal-surface": "#161618",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#0d1515",
+                    "on-error": "#690005",
+                    "secondary-fixed-dim": "#ebb2ff",
+                    "secondary-container": "#b600f8",
+                    "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                    "background": "#0d1515",
+                    "primary": "#dbfcff",
+                    "on-tertiary": "#313030",
+                    "neon-purple-glow": "rgba(188, 19, 254, 0.4)",
+                    "error-container": "#93000a",
+                    "secondary": "#ebb2ff",
+                    "error": "#ffb4ab",
+                    "on-secondary-fixed": "#320047",
+                    "surface-bright": "#333b3b",
+                    "tertiary-container": "#dcd9d8",
+                    "on-primary-fixed-variant": "#004f54",
+                    "surface-container-high": "#232b2c",
+                    "surface-container": "#192122",
+                    "on-tertiary-container": "#605f5e",
+                    "on-surface": "#dce4e5",
+                    "on-primary-container": "#006970",
+                    "on-surface-variant": "#b9cacb",
+                    "on-secondary-container": "#fff6fc",
+                    "on-primary-fixed": "#002022",
+                    "neon-blue-glow": "rgba(0, 240, 255, 0.4)",
+                    "tertiary-fixed-dim": "#c8c6c5",
+                    "outline": "#849495",
+                    "primary-fixed-dim": "#00dbe9",
+                    "outline-variant": "#3b494b",
+                    "on-tertiary-fixed": "#1c1b1b",
+                    "surface-variant": "#2e3637",
+                    "inverse-on-surface": "#2a3233",
+                    "surface-container-highest": "#2e3637"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-xl": "4rem",
+                    "stack-md": "1.5rem",
+                    "margin-desktop": "80px",
+                    "margin-mobile": "20px",
+                    "stack-xs": "0.5rem",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Plus Jakarta Sans"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0B;
+            color: #dce4e5;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .neon-border-glow:focus-within {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border-color: #00f0ff;
+        }
+
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-effect::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.03),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 6s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0A0A0B;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b494b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- WebGL Background Overlay -->
+
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-obsidian-base hidden lg:flex flex-col border-r border-glass-stroke z-40">
+<div class="p-8">
+<img alt="Camcrew Studio Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">STUDIO ADMIN</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Active Tab: Home (Dashboard) -->
+<a class="bg-secondary-container/20 text-secondary border-r-4 border-secondary p-4 flex items-center gap-3 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest">Home</span>
+</a>
+<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Inventory</span>
+</a>
+<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">shopping_bag</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Orders</span>
+</a>
+<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">verified_user</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Verification</span>
+</a>
+<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">credit_card</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Subscriptions</span>
+</a>
+<a class="text-on-surface-variant p-4 flex items-center gap-3 hover:bg-surface-container-high rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest group-hover:text-primary">Settings</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full bg-gradient-to-r from-primary-container to-secondary py-3 rounded-xl text-on-primary font-bold shadow-neon-blue-glow hover:scale-105 transition-all duration-300 shimmer-effect">
+                New Booking
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-64 min-h-screen relative z-10 flex flex-col">
+<!-- Top Summary Bar -->
+<header class="sticky top-0 z-30 bg-obsidian-base/60 backdrop-blur-xl border-b border-glass-stroke px-margin-desktop py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-primary">Overview</h2>
+<span class="text-on-surface-variant px-3 py-1 bg-surface-container rounded-full text-xs font-medium border border-glass-stroke">Live Metrics</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64 neon-border-glow transition-all rounded-full bg-surface-container-low border border-glass-stroke">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 w-full pl-10 pr-4 py-2 placeholder:text-on-surface-variant" placeholder="Search platform..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio director headshot in a cinematic lighting setup with deep shadows and sharp blue highlights, wearing a modern black turtleneck against a blurred high-tech studio background. The style is consistent with high-end tech branding, emphasizing authority and professional precision in the film industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+</div>
+<div class="hidden md:block">
+<p class="text-sm font-bold text-primary">Alex Mercer</p>
+<p class="text-[10px] text-on-surface-variant font-label-caps">SYSTEM ADMIN</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Dashboard Body -->
+<div class="p-margin-desktop space-y-stack-xl flex-1 custom-scrollbar overflow-y-auto">
+<!-- Section 1: Platform Analytics -->
+<section class="space-y-stack-md">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-display-lg text-headline-md text-primary">Platform Pulse</h3>
+<p class="text-on-surface-variant font-body-md">Real-time growth and ecosystem distribution.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 glass-panel rounded-lg hover:text-primary transition-colors"><span class="material-symbols-outlined">refresh</span></button>
+<button class="p-2 glass-panel rounded-lg hover:text-primary transition-colors"><span class="material-symbols-outlined">download</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Stat Card 1 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:shadow-neon-blue-glow transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary-container bg-primary-container/10 p-3 rounded-xl">groups</span>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-md">+12%</span>
+</div>
+<p class="text-on-surface-variant font-label-caps text-xs">TOTAL CUSTOMERS</p>
+<h4 class="text-4xl font-extrabold text-primary mt-1">12,842</h4>
+<div class="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[70%]" style="box-shadow: 0 0 10px #00f0ff"></div>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:shadow-neon-purple-glow transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary bg-secondary/10 p-3 rounded-xl">camera_outdoor</span>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-md">+8%</span>
+</div>
+<p class="text-on-surface-variant font-label-caps text-xs">ACTIVE PROFESSIONALS</p>
+<h4 class="text-4xl font-extrabold text-primary mt-1">3,120</h4>
+<div class="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[45%]" style="box-shadow: 0 0 10px #ebb2ff"></div>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:shadow-neon-blue-glow transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary-fixed-dim bg-primary-fixed-dim/10 p-3 rounded-xl">apartment</span>
+<span class="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-md">+24%</span>
+</div>
+<p class="text-on-surface-variant font-label-caps text-xs">VERIFIED STUDIOS</p>
+<h4 class="text-4xl font-extrabold text-primary mt-1">456</h4>
+<div class="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed-dim w-[90%]" style="box-shadow: 0 0 10px #00dbe9"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Growth Chart (Visual Representation) -->
+<div class="lg:col-span-2 glass-panel p-8 rounded-3xl h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<h5 class="text-lg font-bold text-primary">User Acquisition Trend</h5>
+<div class="flex gap-4 text-xs font-label-caps">
+<span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary-container"></div> Professionals</span>
+<span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-secondary"></div> Studios</span>
+</div>
+</div>
+<div class="flex-1 relative">
+<!-- Visual Chart Placeholder -->
+
+</div>
+</div>
+<!-- Subscription Tier Breakdown -->
+<div class="glass-panel p-8 rounded-3xl flex flex-col">
+<h5 class="text-lg font-bold text-primary mb-6">Tier Distribution</h5>
+<div class="space-y-6 flex-1">
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Pro Tier</span>
+<span class="text-primary-fixed-dim">58%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[58%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Elite Professional</span>
+<span class="text-secondary">32%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[32%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Studio Enterprise</span>
+<span class="text-primary-fixed">10%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed w-[10%]"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-glass-stroke">
+<button class="w-full text-center text-xs font-label-caps text-on-surface-variant hover:text-primary transition-colors">VIEW REVENUE REPORT</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2 & 3 Grid: Inventory & Studio Requests -->
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-stack-xl">
+<!-- Inventory & Orders -->
+<div class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-primary">Commerce Hub</h3>
+<a class="text-secondary text-sm font-bold hover:underline" href="#">Manage All</a>
+</div>
+<!-- Tabs for Inventory / Orders -->
+<div class="glass-panel rounded-3xl overflow-hidden">
+<div class="p-6 border-b border-glass-stroke flex gap-8">
+<button class="text-primary font-bold border-b-2 border-primary-container pb-1">Sales Inventory</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors pb-1">Purchase Orders</button>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">EQUIPMENT</th>
+<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">SKU</th>
+<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">STOCK</th>
+<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant text-right">PRICE</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-glass-stroke">
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-10 h-10 bg-obsidian-base border border-glass-stroke rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-xl">photo_camera</span>
+</div>
+<span class="text-sm font-semibold">Red V-Raptor 8K</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-RVR-001</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-400/10 text-emerald-400 text-[10px] font-bold rounded-md uppercase">12 Units</span>
+</td>
+<td class="px-6 py-4 text-sm text-right font-bold text-primary">$24,995</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-10 h-10 bg-obsidian-base border border-glass-stroke rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-xl">lens</span>
+</div>
+<span class="text-sm font-semibold">Arri Signature Prime 35mm</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-ASP-35</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-primary-container/10 text-primary-container text-[10px] font-bold rounded-md uppercase">4 Units</span>
+</td>
+<td class="px-6 py-4 text-sm text-right font-bold text-primary">$32,000</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-10 h-10 bg-obsidian-base border border-glass-stroke rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-xl">lightbulb</span>
+</div>
+<span class="text-sm font-semibold">Aputure 1200d Pro</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-APT-120</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container/10 text-error text-[10px] font-bold rounded-md uppercase">Low Stock (2)</span>
+</td>
+<td class="px-6 py-4 text-sm text-right font-bold text-primary">$3,290</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Studio Verification Queue -->
+<div class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-primary">Verification Queue</h3>
+<span class="bg-error-container text-error text-[10px] font-bold px-2 py-1 rounded-full">5 PENDING</span>
+</div>
+<div class="space-y-4">
+<!-- Request Card 1 -->
+<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
+<span class="material-symbols-outlined text-secondary">movie</span>
+</div>
+<div>
+<h6 class="text-sm font-bold text-primary">Nebula Cine-Labs</h6>
+<p class="text-xs text-on-surface-variant">Rep: Sarah Jenkins • Oct 24, 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
+<span class="material-symbols-outlined text-secondary">camera_roll</span>
+</div>
+<div>
+<h6 class="text-sm font-bold text-primary">Velvet Frame Productions</h6>
+<p class="text-xs text-on-surface-variant">Rep: Marcus Thorne • Oct 23, 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+</div>
+</div>
+<!-- Request Card 3 -->
+<div class="glass-panel p-5 rounded-2xl flex items-center justify-between group hover:border-primary-container/30 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center border border-glass-stroke">
+<span class="material-symbols-outlined text-secondary">video_stable</span>
+</div>
+<div>
+<h6 class="text-sm font-bold text-primary">Oasis Media House</h6>
+<p class="text-xs text-on-surface-variant">Rep: Elena Rodriguez • Oct 22, 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-surface-container hover:bg-emerald-400/20 text-emerald-400 text-xs font-bold rounded-lg transition-all">Approve</button>
+<button class="px-4 py-2 bg-surface-container hover:bg-error-container/20 text-error text-xs font-bold rounded-lg transition-all">Deny</button>
+</div>
+</div>
+<button class="w-full py-4 glass-panel border-dashed border-2 border-glass-stroke rounded-2xl text-on-surface-variant text-xs font-bold hover:text-primary hover:border-primary-container transition-all">
+                            VIEW ALL PENDING REQUESTS
+                        </button>
+</div>
+</div>
+</section>
+<!-- Section 4: Subscription Management -->
+<section class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-primary">Active Subscriptions</h3>
+<div class="flex gap-4">
+<select class="bg-surface-container border-glass-stroke text-on-surface text-xs rounded-lg px-4 py-2 focus:ring-primary-container">
+<option>All Tiers</option>
+<option>Studio Enterprise</option>
+<option>Elite Pro</option>
+</select>
+</div>
+</div>
+<div class="glass-panel rounded-3xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-glass-stroke">
+<tr>
+<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Subscriber</th>
+<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Tier</th>
+<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Expiry Date</th>
+<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-glass-stroke">
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="px-8 py-6">
+<p class="text-sm font-bold text-primary">Lumina Motion Graphics</p>
+<p class="text-[10px] text-on-surface-variant">ID: SUB-89021</p>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-primary-container/20 text-primary-container text-[10px] font-bold rounded-full">STUDIO ENTERPRISE</span>
+</td>
+<td class="px-8 py-6 text-sm text-on-surface">Dec 15, 2025</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+<span class="text-xs font-medium text-on-surface">Active</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-container transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="px-8 py-6">
+<p class="text-sm font-bold text-primary">David Chen</p>
+<p class="text-[10px] text-on-surface-variant">ID: SUB-77342</p>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-bold rounded-full">ELITE PROFESSIONAL</span>
+</td>
+<td class="px-8 py-6 text-sm text-on-surface">Jan 02, 2025</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+<span class="text-xs font-medium text-on-surface">Active</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-container transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="px-8 py-6">
+<p class="text-sm font-bold text-primary">Shadowplay Studios</p>
+<p class="text-[10px] text-on-surface-variant">ID: SUB-12903</p>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-primary-container/20 text-primary-container text-[10px] font-bold rounded-full">STUDIO ENTERPRISE</span>
+</td>
+<td class="px-8 py-6 text-sm text-on-surface">Nov 28, 2024</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-xs font-medium text-on-surface">Expiring Soon</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary-container transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Anchor -->
+<footer class="mt-stack-xl border-t border-glass-stroke px-margin-desktop py-8 bg-obsidian-base/80 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex flex-col items-center md:items-start">
+<h4 class="font-display-lg text-headline-md text-primary-fixed tracking-tighter">Camcrew Studio</h4>
+<p class="text-on-surface-variant text-xs mt-1">© 2024 Camcrew Studio. Precision in Every Frame.</p>
+</div>
+<div class="flex gap-8 text-xs font-label-caps text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="hover:text-primary transition-colors" href="#">Careers</a>
+</div>
+</footer>
+</main>
+<!-- Floating Action Button (Admin Helper) -->
+<button class="fixed bottom-10 right-10 w-14 h-14 bg-gradient-to-tr from-secondary to-primary-container rounded-full flex items-center justify-center text-on-secondary shadow-2xl hover:scale-110 transition-transform z-50 shimmer-effect">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</button>
+<script>
+        // Micro-interaction: Subtle parallax on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const panels = document.querySelectorAll('.glass-panel');
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            panels.forEach(panel => {
+                panel.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            });
+        });
+    </script>
+</body></html>

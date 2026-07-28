@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Management | Obsidian Orbit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .neon-glow-hover:hover {
+            box-shadow: 0px 0px 20px rgba(0, 240, 255, 0.2);
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.05) 45%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 55%,
+                transparent 100%
+            );
+            transform: rotate(45deg);
+            animation: shimmer-effect 4s infinite;
+        }
+        @keyframes shimmer-effect {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0A0B; }
+        ::-webkit-scrollbar-thumb { background: #2e3637; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#006970",
+                        "secondary-container": "#b600f8",
+                        "obsidian-base": "#0A0A0B",
+                        "tertiary-container": "#dcd9d8",
+                        "on-primary": "#00363a",
+                        "background": "#0d1515",
+                        "outline": "#849495",
+                        "surface-container-highest": "#2e3637",
+                        "charcoal-surface": "#161618",
+                        "glass-stroke": "rgba(255, 255, 255, 0.12)",
+                        "primary-container": "#00f0ff",
+                        "on-surface": "#dce4e5",
+                        "on-surface-variant": "#b9cacb"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "stack-xl": "4rem",
+                        "stack-md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-obsidian-base text-on-surface font-body-md overflow-hidden">
+<!-- Background Atmospheric Effect -->
+
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-charcoal-surface/80 backdrop-blur-xl flex flex-col h-full p-stack-md border-r border-glass-stroke shadow-[0px_10px_30px_rgba(0,240,255,0.1)] z-50">
+<div class="mb-10">
+<h1 class="font-display-lg text-display-lg font-bold bg-gradient-to-r from-primary-container to-secondary-container bg-clip-text text-transparent">Obsidian Orbit</h1>
+<p class="text-xs tracking-widest text-on-surface-variant uppercase mt-1">Cinema Logistics Suite</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active Tab: Inventory -->
+<a class="flex items-center gap-3 p-3 rounded-lg text-primary-container font-bold border-r-2 border-primary-container bg-primary-container/10 transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Purchase Orders</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span>Partner Verification</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-glass-stroke/10 transition-all hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="loyalty">loyalty</span>
+<span>Subscriptions</span>
+</a>
+</nav>
+<div class="pt-6 mt-6 border-t border-glass-stroke space-y-2">
+<button class="w-full bg-gradient-to-r from-primary-container to-secondary-container text-obsidian-base font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.05] transition-transform active:scale-95 shimmer">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                    New Entry
+                </button>
+<div class="mt-8 space-y-2">
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden relative">
+<!-- TopAppBar -->
+<header class="h-16 flex justify-between items-center px-margin-desktop bg-charcoal-surface/80 backdrop-blur-xl border-b border-glass-stroke shadow-md z-40">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Admin Console</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Analytics</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Reports</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#">Logs</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-obsidian-base/50 border border-glass-stroke rounded-full pl-10 pr-4 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary-container text-sm w-64 transition-all focus:w-80" placeholder="Search system..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary-container transition-colors"><span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span></button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary-container/30">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior technologist with short grey hair and modern glasses, lit with cinematic cyan and purple neon rim lighting against a dark studio background, high resolution, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFrpe-6Tl7hIkrbh_SCKKL69GJCRdnMiBjv5cTRpkc-oBL7TjH1vCk3rfdC6nJq9W-1SwFx2N9xhtruULAuU85YS2a-1_RMvhI_J6Z2-Uq2K7i1QmJOCXSotcTK36tcvGQ_3TzsJ69-rrsYYXzSqN6FT9uYzUEOMbBu1SvCCxM8evUvbEs_qb0RfxZ14GRHv9YtihofvmMVNVGHJlJqcKw2Qn4Z7DTLQ_VSZoFXNDDN-VwlfYiiz09"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 overflow-y-auto p-margin-desktop space-y-8 pb-32">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="text-display-lg font-bold text-on-surface">Equipment Inventory</h2>
+<p class="text-on-surface-variant mt-2 max-w-xl">Centralized control for high-fidelity cinematic assets. Monitor stock levels, SKUs, and equipment status in real-time.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 glass-panel rounded-xl text-on-surface hover:text-primary-container flex items-center gap-2 hover:scale-[1.02] transition-all">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
+                            Export CSV
+                        </button>
+<button class="px-6 py-3 bg-primary-container text-on-primary font-bold rounded-xl flex items-center gap-2 hover:scale-[1.05] transition-all shimmer">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+                            Add New Item
+                        </button>
+</div>
+</div>
+<!-- Stats Overview Bento -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-caps">Total Assets</span>
+<span class="material-symbols-outlined text-primary-container" data-icon="precision_manufacturing">precision_manufacturing</span>
+</div>
+<div class="text-3xl font-bold">1,284</div>
+<div class="text-sm text-green-400 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span> 12% from last month
+                        </div>
+</div>
+<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-caps">Active Rentals</span>
+<span class="material-symbols-outlined text-secondary-container" data-icon="videocam">videocam</span>
+</div>
+<div class="text-3xl font-bold">452</div>
+<div class="text-sm text-on-surface-variant mt-2">Currently on location</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-caps">Low Stock Alerts</span>
+<span class="material-symbols-outlined text-yellow-500" data-icon="warning">warning</span>
+</div>
+<div class="text-3xl font-bold">18</div>
+<div class="text-sm text-yellow-500 mt-2 flex items-center gap-1">Requires urgent restock</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl neon-glow-hover transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-caps">Valuation</span>
+<span class="material-symbols-outlined text-primary-container" data-icon="payments">payments</span>
+</div>
+<div class="text-3xl font-bold">$2.4M</div>
+<div class="text-sm text-on-surface-variant mt-2 flex items-center gap-1">Estimated asset value</div>
+</div>
+</div>
+<!-- Main Data Table Container -->
+<div class="glass-panel rounded-2xl overflow-hidden shadow-2xl relative">
+<!-- Table Header/Filter Bar -->
+<div class="p-6 border-b border-glass-stroke flex flex-wrap gap-4 items-center justify-between bg-white/5">
+<div class="flex gap-4">
+<select class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
+<option>All Categories</option>
+<option>Cameras</option>
+<option>Lenses</option>
+<option>Lighting</option>
+<option>Audio</option>
+</select>
+<select class="bg-obsidian-base border border-glass-stroke rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary-container text-on-surface-variant">
+<option>Status: Any</option>
+<option>In Stock</option>
+<option>Low Stock</option>
+<option>Out of Stock</option>
+</select>
+</div>
+<div class="text-sm text-on-surface-variant">
+                            Showing <span class="text-on-surface font-bold">1-10</span> of <span class="text-on-surface font-bold">128</span> entries
+                        </div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/2 text-on-surface-variant font-label-caps text-[11px] tracking-wider uppercase">
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Item Name</th>
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke">SKU</th>
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Category</th>
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Stock Level</th>
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke">Unit Price</th>
+<th class="px-6 py-4 font-semibold border-b border-glass-stroke text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-glass-stroke">
+<!-- Row 1 -->
+<tr class="hover:bg-primary-container/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up of a professional high-end cinema camera with a large lens, matte black finish, illuminated by sharp blue highlights, industrial futuristic equipment aesthetic, obsidian minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJPuZVP3tr064y_OpjAgJxsyilw_aSpMLY0Rwz6YeJAPdUxftTlhN2kDs5O_24jTpLQJYCp9mja_tzymkfm8t0M9gahtWfryG2HeLzGXrhA70J0-WUIU6POkWVcXbZcb788JUd6jp6r_kzb3jrI4GPYGobrehou2BcfyX7TjAP1GdWRUmLgdvXHoXRNZQy9CNfYVoDfT1r1gvRF16l20ydQ9NT71stxoXySwHg_7su1LCeHuns3Iuy"/>
+</div>
+<div>
+<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Arri Alexa Mini LF</div>
+<div class="text-xs text-on-surface-variant">Full-frame Digital Cinema</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">CAM-AR-LF-01</td>
+<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Cameras</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-sm font-medium">In Stock (12)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-primary-container">$58,000</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary-container/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A set of premium cinema prime lenses standing on a dark reflective surface, metallic and glass textures catching neon light, high tech cinema equipment, dark mood lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy3XS3WPO08lI7Cn3meGAJJxGgSYRZHuVVpXSX8X1StJW0pZBH3jMAG0DeOdw-g5jrJHQjQtINFjl2280wcorHb8dDnMamHRfPlFD2gehWxNYR2g0rRleFEgZ-9f2lhdwwaYI6R0e7lcnioDj6TqUMqQnQQcRWo_C2qF09skER_WNhYm-qmmnqrKmJA3OvX4YMuZHuJ6NHGJRpeaxTwB2O8N_toGJhWrLarEvgcMbUqQm2W9J1mF9e"/>
+</div>
+<div>
+<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Cooke S7/i Full Frame</div>
+<div class="text-xs text-on-surface-variant">T2.0 50mm Prime</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">LNS-CK-50-02</td>
+<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lenses</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-yellow-500">
+<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+<span class="text-sm font-medium">Low Stock (2)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-primary-container">$24,500</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary-container/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Futuristic LED lighting panel for movie production, honeycomb grid texture, emitting a soft cyan glow in a smoky studio, technical cinema lighting gear, high-end photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQslMGatplwksSSQXLjtr4WY4yIvvA8zT8FeDxh-Y0T6WJTTjieHoQpnTOw6j4Tk6aJzS6HLqggCXCEo-r_O12BxJ0ezQxVJBBbhqW0I26814ndQFbxQ5GJd_F8wJLar8KYHklvG8k6s5BHmYSD091QxdygfseyB-lNGklFY9gyM_kLZjwwiGd3LmEe6Er0e2UuhWybGZDe3HH5TFPLybFXxrlD6t3GP-lU9jscr6NbiXN3ofwt-1"/>
+</div>
+<div>
+<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Aputure Nova P600c</div>
+<div class="text-xs text-on-surface-variant">RGBWW LED Panel</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">LGT-AP-600-08</td>
+<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Lighting</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-red-500">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+<span class="text-sm font-medium">Out of Stock</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-primary-container">$3,290</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary-container/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-obsidian-base border border-glass-stroke overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A sleek black professional audio field recorder with glowing OLED screen and silver dials, premium sound recording equipment, studio atmosphere, dark minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAXeZM77jKsHN56V9Qdm10cMF3t1wKo3TFg5Dp0i2vZl0EoM00QGv0ymVEI3OAKg_AH0rM-YX6EP7rrVjPOoTOPCquE827atmsUobHnXbY8OZjIBVUHavqbDlxHpPckx-1ulCJ776_lsV1eqF_Wo7ou5T8MzNLZbtQ3q53OZ9AbR8eEEOHpwnMD6_3YKGk3VVxgAWUE3Z3qtu71dID39DYU_Bg0KKG05rTdbb6YVaOBNJxxT7s0FbG"/>
+</div>
+<div>
+<div class="font-bold text-on-surface group-hover:text-primary-container transition-colors">Sound Devices 833</div>
+<div class="text-xs text-on-surface-variant">12-Track Field Recorder</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-sm text-on-surface-variant">AUD-SD-833-04</td>
+<td class="px-6 py-5"><span class="px-2 py-1 rounded bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wide">Audio</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-sm font-medium">In Stock (5)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-primary-container">$4,275</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-glass-stroke/20 rounded-lg text-on-surface-variant hover:text-red-400 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 border-t border-glass-stroke flex justify-center">
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:bg-primary-container hover:text-on-primary transition-all"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary-container text-on-primary font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">3</button>
+<span class="w-10 h-10 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:text-primary-container transition-all font-bold">12</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel hover:bg-primary-container hover:text-on-primary transition-all"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Footer Section Info -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+<div class="glass-panel p-8 rounded-3xl relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="text-xl font-bold mb-4">Stock Utilization Trend</h3>
+<div class="h-48 flex items-end gap-2">
+<div class="w-full bg-primary-container/20 h-[60%] rounded-t-lg relative group transition-all hover:bg-primary-container/40">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">78%</div>
+</div>
+<div class="w-full bg-primary-container/20 h-[45%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+<div class="w-full bg-primary-container/20 h-[85%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+<div class="w-full bg-primary-container/20 h-[70%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+<div class="w-full bg-primary-container/20 h-[95%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+<div class="w-full bg-primary-container/20 h-[50%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+<div class="w-full bg-primary-container/20 h-[30%] rounded-t-lg relative group transition-all hover:bg-primary-container/40"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] text-on-surface-variant font-label-caps">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center">
+<div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container mb-4">
+<span class="material-symbols-outlined text-4xl" data-icon="quick_reference_all">quick_reference_all</span>
+</div>
+<h3 class="text-xl font-bold">Maintenance Schedule</h3>
+<p class="text-on-surface-variant mt-2 text-sm">Next system-wide equipment calibration is scheduled in <span class="text-primary-container font-bold underline">4 days</span>. Ensure all returned assets are checked.</p>
+<button class="mt-6 text-primary-container font-bold hover:underline flex items-center gap-2">
+                            View Schedule <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- FAB (Contextual) -->
+<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary-container text-on-primary shadow-[0px_0px_30px_rgba(0,240,255,0.4)] flex items-center justify-center hover:scale-[1.15] active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform" data-icon="add">add</span>
+</button>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Interactive table hover effect simulation
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'translateX(4px)';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'translateX(0px)';
+            });
+        });
+
+        // Search focus visual feedback
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.2)';
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.style.boxShadow = 'none';
+        });
+    </script>
+</body></html>

@@ -29,19 +29,10 @@
 <main class="relative z-10 flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-stack-xl">
 <div class="w-full max-w-lg perspective-lg">
 <!-- Login Card -->
-<div class="animate-float glass-panel rounded-xl p-8 md:p-12 shadow-neon-blue-glow relative overflow-hidden group" id="login-container">
+<div class="glass-panel rounded-xl p-8 md:p-12 shadow-neon-blue-glow relative overflow-hidden group" id="login-container">
 <!-- Inner Light Simulation -->
 <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
 <div class="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
-<!-- Role Selector -->
-<div class="flex gap-4 mb-8">
-<button class="flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all duration-300" id="role-studio">
-                        STUDIO ROLE
-                    </button>
-<button class="flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-glass-stroke text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all duration-300" id="role-admin">
-                        ADMIN ROLE
-                    </button>
-</div>
 <!-- Form Section -->
 <div id="form-stage-1">
 <div class="mb-8">
@@ -239,19 +230,6 @@
             });
         });
 
-        // Role Toggle
-        const studioBtn = document.getElementById('role-studio');
-        const adminBtn = document.getElementById('role-admin');
-
-        studioBtn.onclick = () => {
-            studioBtn.className = 'flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-primary/20 bg-primary/5 text-primary transition-all duration-300';
-            adminBtn.className = 'flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-glass-stroke text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all duration-300';
-        };
-
-        adminBtn.onclick = () => {
-            adminBtn.className = 'flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-primary/20 bg-primary/5 text-primary transition-all duration-300';
-            studioBtn.className = 'flex-1 py-3 rounded-lg font-label-caps text-label-caps border border-glass-stroke text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all duration-300';
-        };
     </script>
 
   <script src="footer-loader.js"></script>
