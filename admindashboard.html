@@ -18,7 +18,7 @@
                     "inverse-surface": "#2c3e50",
                     "surface-container-lowest": "#d1d9e6",
                     "tertiary-fixed": "#e5e2e1",
-                    "on-background": "#2c3e50",
+                    "on-background": "#0f172a",
                     "on-tertiary-fixed-variant": "#474646",
                     "obsidian-base": "#e0e5ec",
                     "on-secondary": "#ffffff",
@@ -51,9 +51,9 @@
                     "surface-container-high": "#cdd5e0",
                     "surface-container": "#dde3eb",
                     "on-tertiary-container": "#605f5e",
-                    "on-surface": "#2c3e50",
+                    "on-surface": "#0f172a",
                     "on-primary-container": "#ffffff",
-                    "on-surface-variant": "#546e7a",
+                    "on-surface-variant": "#475569",
                     "on-secondary-container": "#f3e5f5",
                     "on-primary-fixed": "#002022",
                     "neon-blue-glow": "rgba(0, 133, 143, 0.2)",
@@ -89,12 +89,12 @@
                     "body-md": ["Plus Jakarta Sans"]
             },
             "fontSize": {
-                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
-                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    "label-caps": ["13px", {"lineHeight": "1.1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["34px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "display-lg": ["50px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["19px", {"lineHeight": "1.7", "fontWeight": "400"}],
+                    "headline-md": ["26px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "body-md": ["17px", {"lineHeight": "1.6", "fontWeight": "400"}]
             }
           },
         },
@@ -107,8 +107,8 @@
             --neu-shadow-dark: #b8bec7;
             --neu-shadow-light: #ffffff;
             --neu-accent: #006970;
-            --neu-text: #2c3e50;
-            --neu-text-muted: #546e7a;
+            --neu-text: #0f172a;
+            --neu-text-muted: #334155;
         }
 
         body {
@@ -116,6 +116,74 @@
             color: var(--neu-text);
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Global typography upgrades ── */
+        p, span, td, th, li, label {
+            color: inherit;
+            font-size: inherit;
+        }
+
+        /* Section headings */
+        h3 { font-size: 1.35rem; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; }
+        h4 { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+        h5 { font-size: 1rem;   font-weight: 700; color: #0f172a; }
+        h6 { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+
+        /* Stat numbers */
+        .stat-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        /* Table text */
+        table th {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #334155;
+        }
+        table td {
+            font-size: 0.95rem;
+            color: #0f172a;
+        }
+
+        /* Section sub-labels */
+        .label-caps-text {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #475569;
+            text-transform: uppercase;
+        }
+
+        /* Muted support text */
+        .muted-text {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* Card heading in header */
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #006970;
+            letter-spacing: -0.01em;
+        }
+
+        /* Live metrics pill */
+        .live-pill {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #334155;
         }
 
         /* Raised card — replaces glass-panel */
@@ -165,28 +233,28 @@
             background: var(--neu-bg);
             box-shadow: 3px 3px 7px var(--neu-shadow-dark),
                         -3px -3px 7px var(--neu-shadow-light);
-            color: #2e7d32;
+            color: #1b5e20;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             border-radius: 0.5rem;
-            padding: 0.4rem 1rem;
+            padding: 0.45rem 1.1rem;
             border: none;
             transition: all 0.15s ease;
         }
         .action-btn-approve:hover {
             box-shadow: inset 3px 3px 7px var(--neu-shadow-dark),
                         inset -3px -3px 7px var(--neu-shadow-light);
-            color: #1b5e20;
+            color: #145214;
         }
         .action-btn-deny {
             background: var(--neu-bg);
             box-shadow: 3px 3px 7px var(--neu-shadow-dark),
                         -3px -3px 7px var(--neu-shadow-light);
-            color: #c62828;
+            color: #b71c1c;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             border-radius: 0.5rem;
-            padding: 0.4rem 1rem;
+            padding: 0.45rem 1.1rem;
             border: none;
             transition: all 0.15s ease;
         }
@@ -342,21 +410,21 @@
 <!-- Top Summary Bar -->
 <header class="sticky top-0 z-30 neu-header px-margin-desktop py-4 flex items-center justify-between">
 <div class="flex items-center gap-4">
-<h2 class="font-headline-md text-primary">Overview</h2>
-<span class="text-on-surface-variant px-3 py-1 neu-inset rounded-full text-xs font-medium">Live Metrics</span>
+<h2 class="font-headline-md text-primary" style="font-size:1.4rem;font-weight:800;color:#006970;">Overview</h2>
+<span class="neu-inset rounded-full live-pill px-3 py-1">Live Metrics</span>
 </div>
 <div class="flex items-center gap-6">
 <div class="relative w-64 neu-inset rounded-full transition-all">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="bg-transparent border-none text-sm focus:ring-0 w-full pl-10 pr-4 py-2 placeholder:text-on-surface-variant text-on-surface" placeholder="Search platform..." type="text"/>
+<input class="bg-transparent border-none focus:ring-0 w-full pl-10 pr-4 py-2" style="font-size:0.92rem;color:#0f172a;" placeholder="Search platform..." type="text"/>
 </div>
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);">
 <img class="w-full h-full object-cover" data-alt="A professional studio director headshot in a cinematic lighting setup with deep shadows and sharp blue highlights, wearing a modern black turtleneck against a blurred high-tech studio background. The style is consistent with high-end tech branding, emphasizing authority and professional precision in the film industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
 </div>
 <div class="hidden md:block">
-<p class="text-sm font-bold text-primary">Alex Mercer</p>
-<p class="text-[10px] text-on-surface-variant font-label-caps">SYSTEM ADMIN</p>
+<p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
+<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
 </div>
 </div>
 </div>
@@ -367,8 +435,8 @@
 <section class="space-y-stack-md">
 <div class="flex justify-between items-end">
 <div>
-<h3 class="font-display-lg text-headline-md text-primary">Platform Pulse</h3>
-<p class="text-on-surface-variant font-body-md">Real-time growth and ecosystem distribution.</p>
+<h3 style="font-size:1.5rem;font-weight:800;color:#006970;letter-spacing:-0.01em;">Platform Pulse</h3>
+<p style="font-size:0.95rem;color:#334155;margin-top:2px;">Real-time growth and ecosystem distribution.</p>
 </div>
 <div class="flex gap-2">
 <button class="neu-btn p-2 rounded-lg"><span class="material-symbols-outlined">refresh</span></button>
@@ -382,8 +450,8 @@
 <span class="neu-icon-badge material-symbols-outlined text-primary-container">groups</span>
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+12%</span>
 </div>
-<p class="text-on-surface-variant font-label-caps text-xs">TOTAL CUSTOMERS</p>
-<h4 class="text-4xl font-extrabold text-on-surface mt-1">12,842</h4>
+<p class="label-caps-text mt-1">TOTAL CUSTOMERS</p>
+<h4 class="stat-number mt-2">12,842</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary-container w-[70%] rounded-full"></div>
 </div>
@@ -394,8 +462,8 @@
 <span class="neu-icon-badge material-symbols-outlined text-secondary">camera_outdoor</span>
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+8%</span>
 </div>
-<p class="text-on-surface-variant font-label-caps text-xs">ACTIVE PROFESSIONALS</p>
-<h4 class="text-4xl font-extrabold text-on-surface mt-1">3,120</h4>
+<p class="label-caps-text mt-1">ACTIVE PROFESSIONALS</p>
+<h4 class="stat-number mt-2">3,120</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-secondary w-[45%] rounded-full"></div>
 </div>
@@ -406,8 +474,8 @@
 <span class="neu-icon-badge material-symbols-outlined text-primary-fixed-dim">apartment</span>
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+24%</span>
 </div>
-<p class="text-on-surface-variant font-label-caps text-xs">VERIFIED STUDIOS</p>
-<h4 class="text-4xl font-extrabold text-on-surface mt-1">456</h4>
+<p class="label-caps-text mt-1">VERIFIED STUDIOS</p>
+<h4 class="stat-number mt-2">456</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary-fixed-dim w-[90%] rounded-full"></div>
 </div>
@@ -417,8 +485,8 @@
 <!-- Growth Chart (Visual Representation) -->
 <div class="lg:col-span-2 glass-panel p-8 rounded-3xl h-[400px] flex flex-col">
 <div class="flex justify-between items-center mb-8">
-<h5 class="text-lg font-bold text-on-surface">User Acquisition Trend</h5>
-<div class="flex gap-4 text-xs font-label-caps text-on-surface-variant">
+<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;">User Acquisition Trend</h5>
+<div class="flex gap-4" style="font-size:0.78rem;font-weight:700;letter-spacing:0.07em;color:#475569;">
 <span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary-container"></div> Professionals</span>
 <span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-secondary"></div> Studios</span>
 </div>
@@ -429,30 +497,30 @@
 </div>
 <!-- Subscription Tier Breakdown -->
 <div class="glass-panel p-8 rounded-3xl flex flex-col">
-<h5 class="text-lg font-bold text-on-surface mb-6">Tier Distribution</h5>
+<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;margin-bottom:1.5rem;">Tier Distribution</h5>
 <div class="space-y-6 flex-1">
 <div class="space-y-2">
-<div class="flex justify-between text-sm">
-<span class="text-on-surface">Pro Tier</span>
-<span class="text-primary font-bold">58%</span>
+<div class="flex justify-between" style="font-size:0.95rem;">
+<span style="color:#0f172a;font-weight:600;">Pro Tier</span>
+<span style="color:#006970;font-weight:800;">58%</span>
 </div>
 <div class="h-2 neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary-container w-[58%] rounded-full"></div>
 </div>
 </div>
 <div class="space-y-2">
-<div class="flex justify-between text-sm">
-<span class="text-on-surface">Elite Professional</span>
-<span class="text-secondary font-bold">32%</span>
+<div class="flex justify-between" style="font-size:0.95rem;">
+<span style="color:#0f172a;font-weight:600;">Elite Professional</span>
+<span style="color:#7b1fa2;font-weight:800;">32%</span>
 </div>
 <div class="h-2 neu-track rounded-full overflow-hidden">
 <div class="h-full bg-secondary w-[32%] rounded-full"></div>
 </div>
 </div>
 <div class="space-y-2">
-<div class="flex justify-between text-sm">
-<span class="text-on-surface">Studio Enterprise</span>
-<span class="text-primary font-bold">10%</span>
+<div class="flex justify-between" style="font-size:0.95rem;">
+<span style="color:#0f172a;font-weight:600;">Studio Enterprise</span>
+<span style="color:#006970;font-weight:800;">10%</span>
 </div>
 <div class="h-2 neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary w-[10%] rounded-full"></div>
@@ -470,8 +538,8 @@
 <!-- Inventory & Orders -->
 <div class="space-y-stack-md">
 <div class="flex items-center justify-between">
-<h3 class="font-headline-md text-on-surface">Commerce Hub</h3>
-<a class="text-secondary text-sm font-bold hover:underline" href="inventory.html">Manage All →</a>
+<h3 style="font-size:1.35rem;font-weight:800;color:#0f172a;">Commerce Hub</h3>
+<a style="color:#7b1fa2;font-size:0.92rem;font-weight:700;" class="hover:underline" href="inventory.html">Manage All →</a>
 </div>
 <!-- Tabs for Inventory / Orders -->
 <div class="glass-panel rounded-3xl overflow-hidden">
@@ -483,10 +551,10 @@
 <table class="w-full text-left">
 <thead style="background:#d8dfe8;">
 <tr>
-<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">EQUIPMENT</th>
-<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">SKU</th>
-<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant">STOCK</th>
-<th class="px-6 py-4 text-[10px] font-label-caps text-on-surface-variant text-right">PRICE</th>
+<th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">EQUIPMENT</th>
+<th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">SKU</th>
+<th class="px-6 py-4" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">STOCK</th>
+<th class="px-6 py-4 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">PRICE</th>
 </tr>
 </thead>
 <tbody style="border-top: 1px solid rgba(0,0,0,0.06);">
@@ -495,39 +563,39 @@
 <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn">
 <span class="material-symbols-outlined text-primary-container text-xl">photo_camera</span>
 </div>
-<span class="text-sm font-semibold text-on-surface">Red V-Raptor 8K</span>
+<span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Red V-Raptor 8K</span>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-RVR-001</td>
+<td class="px-6 py-4 font-mono" style="font-size:0.88rem;color:#334155;">CC-RVR-001</td>
 <td class="px-6 py-4">
-<span class="px-2 py-1 text-[10px] font-bold rounded-md uppercase" style="background:rgba(46,125,50,0.12); color:#2e7d32;">12 Units</span>
+<span class="px-2 py-1 rounded-md uppercase" style="font-size:0.78rem;font-weight:700;background:rgba(46,125,50,0.12);color:#1b5e20;">12 Units</span>
 </td>
-<td class="px-6 py-4 text-sm text-right font-bold text-primary">$24,995</td>
+<td class="px-6 py-4 text-right" style="font-size:0.95rem;font-weight:800;color:#006970;">$24,995</td>
 </tr>
 <tr class="neu-row transition-colors" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
 <td class="px-6 py-4 flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn">
 <span class="material-symbols-outlined text-primary-container text-xl">lens</span>
 </div>
-<span class="text-sm font-semibold text-on-surface">Arri Signature Prime 35mm</span>
+<span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Arri Signature Prime 35mm</span>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-ASP-35</td>
+<td class="px-6 py-4 font-mono" style="font-size:0.88rem;color:#334155;">CC-ASP-35</td>
 <td class="px-6 py-4">
-<span class="px-2 py-1 text-[10px] font-bold rounded-md uppercase" style="background:rgba(0,133,143,0.1); color:#006970;">4 Units</span>
+<span class="px-2 py-1 rounded-md uppercase" style="font-size:0.78rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">4 Units</span>
 </td>
-<td class="px-6 py-4 text-sm text-right font-bold text-primary">$32,000</td>
+<td class="px-6 py-4 text-right" style="font-size:0.95rem;font-weight:800;color:#006970;">$32,000</td>
 </tr>
 <tr class="neu-row transition-colors">
 <td class="px-6 py-4 flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn">
 <span class="material-symbols-outlined text-primary-container text-xl">lightbulb</span>
 </div>
-<span class="text-sm font-semibold text-on-surface">Aputure 1200d Pro</span>
+<span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Aputure 1200d Pro</span>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">CC-APT-120</td>
+<td class="px-6 py-4 font-mono" style="font-size:0.88rem;color:#334155;">CC-APT-120</td>
 <td class="px-6 py-4">
-<span class="px-2 py-1 text-[10px] font-bold rounded-md uppercase" style="background:rgba(198,40,40,0.1); color:#c62828;">Low Stock (2)</span>
+<span class="px-2 py-1 rounded-md uppercase" style="font-size:0.78rem;font-weight:700;background:rgba(198,40,40,0.1);color:#b71c1c;">Low Stock (2)</span>
 </td>
-<td class="px-6 py-4 text-sm text-right font-bold text-primary">$3,290</td>
+<td class="px-6 py-4 text-right" style="font-size:0.95rem;font-weight:800;color:#006970;">$3,290</td>
 </tr>
 </tbody>
 </table>
@@ -537,8 +605,8 @@
 <!-- Studio Verification Queue -->
 <div class="space-y-stack-md">
 <div class="flex items-center justify-between">
-<h3 class="font-headline-md text-on-surface">Verification Queue</h3>
-<span data-pending-badge class="text-[10px] font-bold px-2 py-1 rounded-full" style="background:rgba(198,40,40,0.1); color:#c62828;">5 PENDING</span>
+<h3 style="font-size:1.35rem;font-weight:800;color:#0f172a;">Verification Queue</h3>
+<span data-pending-badge class="px-3 py-1 rounded-full" style="font-size:0.78rem;font-weight:700;letter-spacing:0.06em;background:rgba(183,28,28,0.1);color:#b71c1c;">5 PENDING</span>
 </div>
 <div class="space-y-4">
 <!-- Request Card 1 -->
@@ -548,8 +616,8 @@
 <span class="material-symbols-outlined text-secondary">movie</span>
 </div>
 <div>
-<h6 class="text-sm font-bold text-on-surface">Nebula Cine-Labs</h6>
-<p class="text-xs text-on-surface-variant">Rep: Sarah Jenkins • Oct 24, 2024</p>
+<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Nebula Cine-Labs</h6>
+<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Sarah Jenkins • Oct 24, 2024</p>
 </div>
 </div>
 <div class="flex items-center gap-2">
@@ -564,8 +632,8 @@
 <span class="material-symbols-outlined text-secondary">camera_roll</span>
 </div>
 <div>
-<h6 class="text-sm font-bold text-on-surface">Velvet Frame Productions</h6>
-<p class="text-xs text-on-surface-variant">Rep: Marcus Thorne • Oct 23, 2024</p>
+<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Velvet Frame Productions</h6>
+<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Marcus Thorne • Oct 23, 2024</p>
 </div>
 </div>
 <div class="flex items-center gap-2">
@@ -580,8 +648,8 @@
 <span class="material-symbols-outlined text-secondary">video_stable</span>
 </div>
 <div>
-<h6 class="text-sm font-bold text-on-surface">Oasis Media House</h6>
-<p class="text-xs text-on-surface-variant">Rep: Elena Rodriguez • Oct 22, 2024</p>
+<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Oasis Media House</h6>
+<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Elena Rodriguez • Oct 22, 2024</p>
 </div>
 </div>
 <div class="flex items-center gap-2">
@@ -598,7 +666,7 @@
 <!-- Section 4: Subscription Management -->
 <section class="space-y-stack-md">
 <div class="flex items-center justify-between">
-<h3 class="font-headline-md text-on-surface">Active Subscriptions</h3>
+<h3 style="font-size:1.35rem;font-weight:800;color:#0f172a;">Active Subscriptions</h3>
 <div class="flex gap-4">
 <select class="neu-select">
 <option>All Tiers</option>
@@ -612,27 +680,27 @@
 <table class="w-full text-left">
 <thead style="background:#d8dfe8; border-bottom: 1px solid rgba(0,0,0,0.08);">
 <tr>
-<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Subscriber</th>
-<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Tier</th>
-<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Expiry Date</th>
-<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">Status</th>
-<th class="px-8 py-5 text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest text-right">Actions</th>
+<th class="px-8 py-5 uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Subscriber</th>
+<th class="px-8 py-5 uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Tier</th>
+<th class="px-8 py-5 uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Expiry Date</th>
+<th class="px-8 py-5 uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Status</th>
+<th class="px-8 py-5 text-right uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Actions</th>
 </tr>
 </thead>
 <tbody>
 <tr class="neu-row transition-colors" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
 <td class="px-8 py-6">
-<p class="text-sm font-bold text-on-surface">Lumina Motion Graphics</p>
-<p class="text-[10px] text-on-surface-variant">ID: SUB-89021</p>
+<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">Lumina Motion Graphics</p>
+<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-89021</p>
 </td>
 <td class="px-8 py-6">
-<span class="px-3 py-1 text-[10px] font-bold rounded-full" style="background:rgba(0,133,143,0.12); color:#006970;">STUDIO ENTERPRISE</span>
+<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">STUDIO ENTERPRISE</span>
 </td>
-<td class="px-8 py-6 text-sm text-on-surface">Dec 15, 2025</td>
+<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Dec 15, 2025</td>
 <td class="px-8 py-6">
 <div class="flex items-center gap-2">
 <div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-<span class="text-xs font-medium text-on-surface">Active</span>
+<span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span>
 </div>
 </td>
 <td class="px-8 py-6 text-right">
@@ -641,17 +709,17 @@
 </tr>
 <tr class="neu-row transition-colors" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
 <td class="px-8 py-6">
-<p class="text-sm font-bold text-on-surface">David Chen</p>
-<p class="text-[10px] text-on-surface-variant">ID: SUB-77342</p>
+<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">David Chen</p>
+<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-77342</p>
 </td>
 <td class="px-8 py-6">
-<span class="px-3 py-1 text-[10px] font-bold rounded-full" style="background:rgba(123,31,162,0.12); color:#7b1fa2;">ELITE PROFESSIONAL</span>
+<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">ELITE PROFESSIONAL</span>
 </td>
-<td class="px-8 py-6 text-sm text-on-surface">Jan 02, 2025</td>
+<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Jan 02, 2025</td>
 <td class="px-8 py-6">
 <div class="flex items-center gap-2">
 <div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-<span class="text-xs font-medium text-on-surface">Active</span>
+<span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span>
 </div>
 </td>
 <td class="px-8 py-6 text-right">
@@ -660,17 +728,17 @@
 </tr>
 <tr class="neu-row transition-colors">
 <td class="px-8 py-6">
-<p class="text-sm font-bold text-on-surface">Shadowplay Studios</p>
-<p class="text-[10px] text-on-surface-variant">ID: SUB-12903</p>
+<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">Shadowplay Studios</p>
+<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-12903</p>
 </td>
 <td class="px-8 py-6">
-<span class="px-3 py-1 text-[10px] font-bold rounded-full" style="background:rgba(0,133,143,0.12); color:#006970;">STUDIO ENTERPRISE</span>
+<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">STUDIO ENTERPRISE</span>
 </td>
-<td class="px-8 py-6 text-sm text-on-surface">Nov 28, 2024</td>
+<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Nov 28, 2024</td>
 <td class="px-8 py-6">
 <div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full" style="background:#c62828;"></div>
-<span class="text-xs font-medium text-on-surface">Expiring Soon</span>
+<div class="w-2 h-2 rounded-full" style="background:#b71c1c;"></div>
+<span style="font-size:0.88rem;font-weight:600;color:#b71c1c;">Expiring Soon</span>
 </div>
 </td>
 <td class="px-8 py-6 text-right">
