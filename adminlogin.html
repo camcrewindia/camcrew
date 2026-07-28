@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Admin Login | Camcrew Studio</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="tailwind-config.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-obsidian-base min-h-screen flex flex-col font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- Ambient Background -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-[20%] -right-[10%] w-[55%] h-[55%] bg-error/5 blur-[140px] rounded-full"></div>
+    <div class="absolute -bottom-[20%] -left-[10%] w-[45%] h-[45%] bg-primary-container/8 blur-[120px] rounded-full"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30%] h-[30%] bg-secondary-container/5 blur-[100px] rounded-full"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 w-full flex justify-center pt-10 pb-6">
+    <div class="flex flex-col items-center gap-3">
+      <img
+        alt="Camcrew Studio"
+        class="h-10 md:h-12 w-auto object-contain brightness-110"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+      >
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-error/70 text-[14px]">shield</span>
+        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-[0.25em] text-[11px]">Admin Control Center</span>
+        <span class="material-symbols-outlined text-error/70 text-[14px]">shield</span>
+      </div>
+      <!-- Logged-in badge (shown after auth) -->
+      <div id="admin-user-badge" class="hidden items-center gap-2 mt-1 glass-panel px-4 py-2 rounded-full border border-error/30">
+        <span class="material-symbols-outlined text-error text-[16px]">admin_panel_settings</span>
+        <span id="admin-user-email" class="font-label-caps text-[11px] text-error"></span>
+        <span class="font-label-caps text-[9px] text-on-surface-variant">· ADMIN</span>
+        <button onclick="adminSignOut()" class="ml-2 font-label-caps text-[10px] text-on-surface-variant hover:text-error transition-colors">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div class="w-full max-w-md">
+
+      <!-- Login Card -->
+      <div class="glass-panel rounded-2xl p-8 md:p-12 relative overflow-hidden border border-error/10 shadow-[0_0_60px_rgba(179,38,30,0.07)]" id="login-container">
+
+        <!-- Top edge accent lines -->
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-error/20 to-transparent"></div>
+        <div class="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-error/10 via-transparent to-transparent"></div>
+        <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-error/10 via-transparent to-transparent"></div>
+
+        <!-- ── STAGE 1: Credentials ──────────────────────────────────── -->
+        <div id="form-stage-1">
+          <div class="mb-8">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-9 h-9 rounded-lg bg-error/10 border border-error/20 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-error text-[18px]">admin_panel_settings</span>
+              </div>
+              <div>
+                <h1 class="font-headline-md text-headline-md text-on-surface leading-tight">Admin Access</h1>
+                <p class="text-on-surface-variant text-[12px] font-label-caps tracking-wider">RESTRICTED — AUTHORISED PERSONNEL ONLY</p>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-body-md mt-4">Sign in with your admin credentials to access the dashboard and site management tools.</p>
+          </div>
+
+          <form class="space-y-6" id="admin-login-form" onsubmit="handleAdminLogin(event)">
+
+            <!-- Email -->
+            <div class="group/input relative">
+              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 group-focus-within/input:text-error transition-colors">
+                EMAIL ADDRESS
+              </label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within/input:text-error transition-colors text-[20px]">alternate_email</span>
+                <input
+                  class="w-full bg-transparent border-0 border-b border-glass-stroke pl-8 pb-3 text-on-surface focus:ring-0 focus:border-error transition-all duration-300 placeholder:text-on-surface-variant/30"
+                  placeholder="admin@camcrew.studio"
+                  required
+                  type="email"
+                  autocomplete="username"
+                >
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="group/input relative">
+              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 group-focus-within/input:text-error transition-colors">
+                PASSWORD
+              </label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within/input:text-error transition-colors text-[20px]">lock</span>
+                <input
+                  class="w-full bg-transparent border-0 border-b border-glass-stroke pl-8 pb-3 pr-8 text-on-surface focus:ring-0 focus:border-error transition-all duration-300 placeholder:text-on-surface-variant/30"
+                  placeholder="••••••••"
+                  required
+                  type="password"
+                  id="password-input"
+                  autocomplete="current-password"
+                >
+                <button
+                  class="absolute right-0 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors"
+                  type="button"
+                  onclick="togglePassword()"
+                  id="pw-toggle"
+                >
+                  <span class="material-symbols-outlined text-[20px]" id="pw-toggle-icon">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember + Forgot -->
+            <div class="flex items-center justify-between pt-1">
+              <label class="flex items-center gap-2 cursor-pointer group/check">
+                <input class="w-4 h-4 rounded-sm border-glass-stroke bg-transparent text-error focus:ring-error/50" type="checkbox">
+                <span class="text-label-caps font-label-caps text-on-surface-variant group-hover/check:text-on-surface transition-colors">Remember device</span>
+              </label>
+              <a class="text-label-caps font-label-caps text-error/70 hover:text-error hover:underline underline-offset-4 transition-colors" href="#">Forgot Password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button
+              class="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-error/80 to-error text-white font-label-caps text-label-caps tracking-widest shadow-lg shadow-error/20 hover:shadow-error/40 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2"
+              type="submit"
+              id="submit-btn"
+            >
+              CONTINUE TO VERIFICATION
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+
+          </form>
+        </div>
+
+        <!-- ── STAGE 2: OTP ───────────────────────────────────────────── -->
+        <div class="hidden" id="form-stage-2">
+          <div class="mb-8">
+            <button
+              class="flex items-center gap-2 text-on-surface-variant hover:text-error mb-6 transition-colors"
+              onclick="showLogin()"
+            >
+              <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+              <span class="font-label-caps text-label-caps">BACK TO LOGIN</span>
+            </button>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-9 h-9 rounded-lg bg-error/10 border border-error/20 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-error text-[18px]">phonelink_lock</span>
+              </div>
+              <div>
+                <h1 class="font-headline-md text-headline-md text-on-surface leading-tight">OTP Verification</h1>
+                <p class="text-on-surface-variant text-[12px] font-label-caps tracking-wider">2-FACTOR AUTHENTICATION</p>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-body-md mt-4">A 6-digit security code has been sent to your registered device.</p>
+          </div>
+
+          <form class="space-y-8" onsubmit="handleOtpSubmit(event)">
+            <div class="flex justify-between gap-2 md:gap-3">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+              <input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-headline-md font-bold bg-surface-container-low border border-glass-stroke rounded-lg focus:border-error focus:ring-1 focus:ring-error/30 transition-all" maxlength="1" type="text" inputmode="numeric">
+            </div>
+            <p class="text-center text-body-md text-on-surface-variant">
+              Didn't receive the code?
+              <button class="text-error font-bold hover:underline ml-1" type="button" id="resend-btn" onclick="startResendTimer()">Resend</button>
+            </p>
+            <button
+              class="w-full py-4 rounded-xl bg-gradient-to-r from-error/80 to-error text-white font-label-caps text-label-caps tracking-widest shadow-lg shadow-error/20 hover:shadow-error/40 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2"
+              type="submit"
+            >
+              AUTHENTICATE SESSION
+              <span class="material-symbols-outlined text-[18px]">verified_user</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Bottom note -->
+        <div class="mt-10 pt-6 border-t border-glass-stroke/50 text-center">
+          <p class="text-on-surface-variant/50 font-label-caps text-label-caps text-[10px] tracking-widest">
+            ENCRYPTED SESSION &nbsp;•&nbsp; AES-256 COMPLIANT &nbsp;•&nbsp; CAMCREW INTERNAL
+          </p>
+          <div class="flex justify-center gap-6 mt-3">
+            <a class="text-on-surface-variant/60 hover:text-error transition-colors text-label-caps font-label-caps text-[10px]" href="#">Support</a>
+            <a class="text-on-surface-variant/60 hover:text-error transition-colors text-label-caps font-label-caps text-[10px]" href="#">Privacy Protocol</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Back to main site link -->
+      <div class="mt-6 text-center">
+        <a href="index.html" class="inline-flex items-center gap-1.5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors font-label-caps text-[11px] tracking-wider">
+          <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+          BACK TO CAMCREW
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Success Toast -->
+  <div
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 glass-panel px-8 py-4 rounded-full border border-error/40 shadow-[0_0_30px_rgba(179,38,30,0.3)] flex items-center gap-3 opacity-0 translate-y-10 transition-all duration-500 pointer-events-none z-[100]"
+    id="success-toast"
+  >
+    <span class="material-symbols-outlined text-error">verified_user</span>
+    <span class="font-body-md text-on-surface">Admin session authenticated. Redirecting…</span>
+  </div>
+
+  <script>
+    // ── Password visibility toggle ──────────────────────────────────────────
+    function togglePassword() {
+      const input = document.getElementById('password-input');
+      const icon  = document.getElementById('pw-toggle-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+
+    // ── Stage transitions ───────────────────────────────────────────────────
+    function showOtp() {
+      const s1 = document.getElementById('form-stage-1');
+      const s2 = document.getElementById('form-stage-2');
+      s1.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      setTimeout(() => {
+        s1.classList.add('hidden');
+        s2.classList.remove('hidden');
+        s2.classList.add('animate-in', 'fade-in', 'duration-300');
+        // Focus first OTP input
+        const first = s2.querySelector('.otp-input');
+        if (first) first.focus();
+        startResendTimer();
+      }, 300);
+    }
+
+    function showLogin() {
+      const s1 = document.getElementById('form-stage-1');
+      const s2 = document.getElementById('form-stage-2');
+      s2.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      setTimeout(() => {
+        s2.classList.add('hidden');
+        s2.classList.remove('opacity-0');
+        s1.classList.remove('hidden', 'opacity-0');
+      }, 300);
+    }
+
+    // ── Credentials submit ──────────────────────────────────────────────────
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const form      = document.getElementById('admin-login-form');
+      const email     = form.querySelector('input[type="email"]').value.trim();
+      const password  = document.getElementById('password-input').value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      clearError();
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.65';
+
+      try {
+        const res  = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+
+        if (!data.ok) {
+          showError(data.error || 'Login failed. Please check your credentials.');
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          return;
+        }
+
+        if (data.user.role !== 'admin') {
+          showError('Access denied. This portal is for admin accounts only.');
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          // Sign out the non-admin session we just created
+          await fetch('/api/logout', { method: 'POST' });
+          return;
+        }
+
+        // Show the logged-in badge
+        const badge = document.getElementById('admin-user-badge');
+        document.getElementById('admin-user-email').textContent = data.user.email;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+
+        showOtp();
+
+      } catch (_) {
+        showError('Network error. Please check your connection and try again.');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      }
+    }
+
+    // ── OTP submit ──────────────────────────────────────────────────────────
+    function handleOtpSubmit(e) {
+      e.preventDefault();
+      const inputs = document.querySelectorAll('#form-stage-2 .otp-input');
+      const code   = Array.from(inputs).map(i => i.value).join('');
+      if (code.length < 6) {
+        alert('Please enter all 6 digits.');
+        return;
+      }
+
+      const toast = document.getElementById('success-toast');
+      toast.classList.remove('opacity-0', 'translate-y-10');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1400);
+    }
+
+    // ── Error helpers ───────────────────────────────────────────────────────
+    function showError(msg) {
+      let el = document.getElementById('login-error');
+      if (!el) {
+        el = document.createElement('p');
+        el.id = 'login-error';
+        el.className = 'text-center text-sm font-body-md mt-1';
+        el.style.color = '#ffb4ab';
+        const btn = document.getElementById('submit-btn');
+        btn.parentNode.insertBefore(el, btn);
+      }
+      el.textContent = msg;
+    }
+
+    function clearError() {
+      const el = document.getElementById('login-error');
+      if (el) el.textContent = '';
+    }
+
+    // ── OTP auto-focus & auto-advance ───────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          // Allow only digits
+          e.target.value = e.target.value.replace(/\D/g, '');
+          if (e.target.value && index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+          }
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            otpInputs[index - 1].focus();
+          }
+        });
+        // Handle paste into first box
+        input.addEventListener('paste', (e) => {
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+          if (pasted.length === 6) {
+            e.preventDefault();
+            otpInputs.forEach((inp, i) => { inp.value = pasted[i] || ''; });
+            otpInputs[5].focus();
+          }
+        });
+      });
+    });
+
+    // ── Resend timer ────────────────────────────────────────────────────────
+    let resendInterval = null;
+
+    function startResendTimer() {
+      const btn = document.getElementById('resend-btn');
+      if (!btn) return;
+      let seconds = 45;
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.textContent = `Resend in 0:${String(seconds).padStart(2, '0')}`;
+      clearInterval(resendInterval);
+      resendInterval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(resendInterval);
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.textContent = 'Resend';
+        } else {
+          btn.textContent = `Resend in 0:${String(seconds).padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    // ── Sign out ────────────────────────────────────────────────────────────
+    async function adminSignOut() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.reload();
+    }
+
+    // ── Already logged in as admin? ─────────────────────────────────────────
+    (async () => {
+      try {
+        const res  = await fetch('/api/me');
+        const data = await res.json();
+        if (data.ok && data.user.role === 'admin') {
+          const badge = document.getElementById('admin-user-badge');
+          document.getElementById('admin-user-email').textContent = data.user.email;
+          badge.classList.remove('hidden');
+          badge.classList.add('flex');
+        }
+      } catch (_) {}
+    })();
+  </script>
+
+</body>
+</html>

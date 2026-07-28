@@ -88,7 +88,7 @@ def register():
     if len(password) < 6:
         return jsonify({"ok": False, "error": "Password must be at least 6 characters."}), 400
 
-    if role not in ("customer", "professional", "studio"):
+    if role not in ("customer", "professional", "studio", "admin"):
         role = "customer"
 
     hashed = generate_password_hash(password)
