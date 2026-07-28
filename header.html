@@ -84,18 +84,24 @@
 
                 <!-- Mobile: logged-in -->
                 <div id="mobile-user-area" style="display:none" class="flex-col gap-3">
-                    <a href="profile.html" class="flex items-center gap-2 hover:text-primary transition-colors">
-                        <span class="material-symbols-outlined text-primary">account_circle</span>
-                        <div class="flex flex-col">
-                            <span id="mobile-user-email" class="text-on-surface font-body-md text-sm truncate max-w-[200px]"></span>
-                            <span id="mobile-user-role" class="text-primary-fixed-dim font-label-caps text-[10px] uppercase"></span>
+                    <!-- Profile card -->
+                    <a href="profile.html" class="flex items-center gap-3 bg-white/5 border border-primary/20 rounded-2xl px-4 py-3 hover:border-primary/50 transition-all">
+                        <span class="material-symbols-outlined text-primary text-[28px]">account_circle</span>
+                        <div class="flex flex-col min-w-0">
+                            <span id="mobile-user-email" class="text-on-surface font-bold text-sm truncate"></span>
+                            <span id="mobile-user-role" class="text-primary-fixed-dim font-label-caps text-[10px] uppercase tracking-widest mt-0.5"></span>
                         </div>
+                        <span class="material-symbols-outlined text-on-surface-variant text-sm ml-auto">chevron_right</span>
                     </a>
-                    <button onclick="signOut()" class="w-full text-center py-2 border border-glass-stroke rounded-full font-label-caps text-[11px] text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors">Sign Out</button>
+                    <!-- Sign Out button -->
+                    <button onclick="signOut()" class="w-full flex items-center justify-center gap-2 py-2.5 border border-glass-stroke rounded-full font-label-caps text-[11px] text-on-surface-variant hover:text-primary hover:border-primary/50 transition-all">
+                        <span class="material-symbols-outlined text-[16px]">logout</span>
+                        Sign Out
+                    </button>
                 </div>
 
                 <!-- Mobile: logged-out -->
-                <div id="mobile-signout-area" class="flex items-center justify-between pt-2">
+                <div id="mobile-signout-area" class="flex items-center justify-between pt-1">
                     <a href="profile.html" class="flex items-center gap-2 hover:text-primary transition-colors">
                         <span class="material-symbols-outlined">account_circle</span>
                         <span>Profile</span>
