@@ -275,108 +275,7 @@ void main() {
 <!-- STITCH_SHADER_END:ANIMATION_6 -->
 </div>
 <!-- Navigation Header -->
-<header class="fixed top-0 w-full z-[100] px-margin-mobile md:px-margin-desktop py-2 md:py-4">
-    <div class="relative max-w-screen-2xl mx-auto">
-        <!-- Reduced mobile padding (px-4 py-2 mt-2) and kept desktop padding (md:px-8 md:py-3 md:mt-4) -->
-        <nav class="relative z-50 flex justify-between items-center rounded-full mt-2 md:mt-4 bg-charcoal-surface/60 border border-glass-stroke backdrop-blur-xl px-4 md:px-8 py-2 md:py-3 shadow-[0px_10px_30px_rgba(0,240,255,0.1)] transition-all duration-300">
-            <div class="flex items-center gap-2">
-                <img alt="Camcrew Studio Logo" class="h-8 md:h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD77BefF4YOo9u3CNzW2eRrpewDm4u9XwbxnTVh94iqjjcZI07YnFffdKrCezSFNH2bErZCHc9TGRDoAVQkfvugRtKFKjEx7KV2dhEu7RWxQivw7wkQlWItwxeg5wAMSmSCzL7dDxpte50-nfp4_U7NeYu6pFxq9By__oEExF4y72b8JbYCxPxbMhwv6MoMq_keBx_BPy4KkkwFSClvxTv0HEDP3ovgRyW8BxzacWmldgRR2GYVLeJPClg13jTzSwh22MTMBgZJmmuvWQ">
-            </div>
-            
-            <!-- Desktop Navigation Links -->
-            <div class="hidden md:flex items-center space-x-8 font-body-md text-on-surface-variant">
-                <a href="index.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Home</a>
-                <div class="relative group">
-                    <a href="services.html" class=" hover:text-primary transition-all duration-300 flex items-center gap-1 py-1">
-                        Services
-                        <span class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">keyboard_arrow_down</span>
-                    </a>
-                   <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-    						<div class="glass-panel bg-obsidian-base/75 rounded-2xl border-glass-stroke p-2 min-w-[200px] shadow-2xl backdrop-blur-xl">
-                            <a href="photographers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">photo_camera</span>
-                                <span class="font-body-md">Photographers</span>
-                            </a>
-                            <a href="videographers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">videocam</span>
-                                <span class="font-body-md">Videographers</span>
-                            </a>
-                            <a href="designers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">palette</span>
-                                <span class="font-body-md">Designers</span>
-                            </a>
-                            <a href="developers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">code</span>
-                                <span class="font-body-md">Developers</span>
-                            </a>
-                            <a href="organizers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">event</span>
-                                <span class="font-body-md">Organizers</span>
-                            </a>
-                            <a href="caterers.html " class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">restaurant</span>
-                                <span class="font-body-md">Caterers</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <a href="rentals.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Rentals</a>
-                <a href="sales.html" class="hover:text-primary transition-all duration-300 hover:scale-105">Sales</a>
-                <a class="text-primary font-bold border-b-2 border-primary hover:text-primary transition-all duration-300 hover:scale-105">Checkout</a>
-                <a href="About.html" class="hover:text-primary transition-all duration-300 hover:scale-105">About us</a>
-            </div>
-
-            <!-- Desktop Profile & Cart & Sign In / Mobile Toggle Button -->
-            <div class="flex items-center gap-4">
-                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
-                <button class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
-                <a href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">
-                    Sign In
-                </a>
-                
-                <!-- Visible only on mobile -->
-                <button class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</button>
-                <button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-3xl">menu</button>
-            </div>
-        </nav>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="absolute top-full left-0 w-full mt-2 rounded-2xl bg-obsidian-base/65 backdrop-blur-xl border border-glass-stroke p-6 opacity-0 invisible translate-y-[-10px] transition-all duration-300 md:hidden z-[100] shadow-2xl">
-            <div class="flex flex-col gap-4 font-body-md text-on-surface-variant">
-                <a href="index.html" class="text-primary font-bold border-l-2 border-primary pl-3 py-2">Home</a>
-                
-                <div class="flex flex-col">
-                    <span class="font-bold text-on-surface py-2">Services</span>
-                    <div class="flex flex-col pl-4 border-l-2 border-glass-stroke mt-1 space-y-3 py-2">
-                        <a href="photographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">photo_camera</span> Photographers</a>
-                        <a href="videographers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">videocam</span> Videographers</a>
-                        <a href="designers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">palette</span> Designers</a>
-                        <a href="developers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">code</span> Developers</a>
-                        <a href="organizers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">event</span> Organizers</a>
-                        <a href="caterers.html" class="hover:text-primary transition-colors flex items-center gap-3"><span class="material-symbols-outlined text-sm">restaurant</span> Caterers</a>
-                    </div>
-                </div>
-
-                <a href="rentals.html" class="hover:text-primary transition-colors py-2">Rentals</a>
-                <a href="sales.html" class="hover:text-primary transition-colors py-2">Sales</a>
-                <a class="font-bold hover:text-primary transition-colors py-2">Checkout</a>
-                <a href="About.html" class="hover:text-primary transition-colors py-2">About us</a>
-                
-                <hr class="border-glass-stroke my-2">
-                
-                <div class="flex items-center justify-between pt-2">
-                    <button class="flex items-center gap-2 hover:text-primary transition-colors">
-                        <span class="material-symbols-outlined">account_circle</span>
-                        <span>Profile</span>
-                    </button>
-                    <a href="signin.html" class="bg-primary-container text-on-primary font-bold py-2 px-6 rounded-full text-label-caps hover:scale-105 transition-transform">
-                        Sign In
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
+<div id="site-header"></div>
 <!-- Main Content Canvas -->
 <main class="flex-grow pt-32 pb-stack-xl px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto w-full relative">
 <!-- Atmospheric Background Shader -->
@@ -620,4 +519,5 @@ void main() {
             }, 2000);
         });
     </script>
+<script src="header-loader.js"></script>
 </body></html>
