@@ -74,6 +74,11 @@
   function showLoggedIn(user) {
     const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
 
+    // Route profile links to the right page based on role
+    const profileHref = user.role === 'professional'
+      ? 'professional-profile.html'
+      : 'profile.html';
+
     // Desktop
     const userArea    = document.getElementById('desktop-user-area');
     const accountIcon = document.getElementById('desktop-account-icon');
@@ -86,6 +91,21 @@
     if (emailEl) emailEl.textContent = user.email.split('@')[0];
     if (roleEl)  roleEl.textContent  = roleLabel;
 
+    // Point the desktop profile card link to the correct profile page
+    if (userArea) {
+      const desktopProfileLink = userArea.querySelector('a[href]');
+      if (desktopProfileLink) desktopProfileLink.href = profileHref;
+    }
+
+    // Also update the logged-out account icon so it routes correctly after JS runs
+    if (accountIcon) accountIcon.href = profileHref;
+
+    // Give professional accounts a purple-tinted role pill
+    if (user.role === 'professional' && roleEl) {
+      roleEl.style.cssText +=
+        ';background:rgba(188,19,254,0.15);color:#ebb2ff;border:1px solid rgba(188,19,254,0.3);border-radius:9999px;padding:2px 8px;';
+    }
+
     // Mobile
     const mobileUserArea   = document.getElementById('mobile-user-area');
     const mobileSignoutArea = document.getElementById('mobile-signout-area');
@@ -95,6 +115,12 @@
     const mobileRole  = document.getElementById('mobile-user-role');
     if (mobileEmail) mobileEmail.textContent = user.email;
     if (mobileRole)  mobileRole.textContent  = roleLabel;
+
+    // Point the mobile profile card link to the correct profile page
+    if (mobileUserArea) {
+      const mobileProfileLink = mobileUserArea.querySelector('a[href]');
+      if (mobileProfileLink) mobileProfileLink.href = profileHref;
+    }
 
     // Dispatch event so page scripts can react
     document.dispatchEvent(new CustomEvent('camcrew:auth', { detail: { user } }));
