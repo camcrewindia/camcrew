@@ -356,24 +356,19 @@
       status.classList.remove('hidden');
     }
 
-    /* ── Registration submit ── */
+    /* ── Profile completion submit ── */
     async function handleRegister(e) {
       e.preventDefault();
       const errEl  = document.getElementById('reg-error');
       const submit = document.getElementById('reg-submit');
       errEl.classList.add('hidden');
 
-      const payload = {
-        name:     document.getElementById('reg-name').value.trim(),
-        email:    document.getElementById('reg-email').value.trim(),
-        age:      document.getElementById('reg-age').value,
-        gender:   document.getElementById('reg-gender').value,
-        aadhar:   document.getElementById('reg-aadhar').value.replace(/\s/g, ''),
-        location: document.getElementById('reg-location').value.trim(),
-        role:     'customer',
-      };
+      const name     = document.getElementById('reg-name').value.trim();
+      const age      = document.getElementById('reg-age').value;
+      const gender   = document.getElementById('reg-gender').value;
+      const location = document.getElementById('reg-location').value.trim();
 
-      if (!payload.name || !payload.email || !payload.age || !payload.gender || !payload.location) {
+      if (!name || !age || !gender || !location) {
         errEl.textContent = 'Please fill in all required fields.';
         errEl.classList.remove('hidden');
         return;
@@ -383,23 +378,24 @@
       submit.style.opacity = '0.7';
 
       try {
-        const res  = await fetch('/api/register', {
-          method: 'POST',
+        // Account was already created on signup.html — just save the display name.
+        const res  = await fetch('/api/profile', {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ display_name: name }),
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.ok !== false) {
-          window.location.href = 'signin.html?registered=1';
+          window.location.href = 'index.html';
         } else {
-          errEl.textContent = data.error || 'Registration failed. Please try again.';
+          errEl.textContent = data.error || 'Could not save profile. Please try again.';
           errEl.classList.remove('hidden');
           submit.disabled = false;
           submit.style.opacity = '1';
         }
       } catch (_) {
         /* demo-safe: no backend */
-        window.location.href = 'signin.html?registered=1';
+        window.location.href = 'index.html';
       }
     }
   </script>
