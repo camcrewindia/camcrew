@@ -219,6 +219,25 @@
 <main class="relative z-10 flex justify-center px-margin-mobile md:px-margin-desktop pb-20">
   <div class="w-full max-w-2xl">
 
+    <!-- Role Selector -->
+    <div class="glass-panel rounded-2xl p-5 mb-8">
+      <label style="font-size:0.78rem;font-weight:700;letter-spacing:0.1em;color:#b9cacb;text-transform:uppercase;" class="mb-3 block">Sign Up As</label>
+      <div class="grid grid-cols-3 gap-3">
+        <button onclick="window.location.href='customersignup.html'" type="button" class="role-card glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+          <span class="material-symbols-outlined text-primary text-2xl">person</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Customer</span>
+        </button>
+        <button onclick="window.location.href='professionalsetup.html'" type="button" class="role-card active glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+          <span class="material-symbols-outlined text-secondary text-2xl">camera</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Professional</span>
+        </button>
+        <button onclick="window.location.href='studiosignup.html'" type="button" class="role-card glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+          <span class="material-symbols-outlined text-tertiary-fixed-dim text-2xl">business</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Studio</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Page title -->
     <div class="text-center mb-8 mt-2">
       <h1 style="font-size:1.75rem;font-weight:800;color:#dce4e5;line-height:1.2;">Set up your professional profile</h1>

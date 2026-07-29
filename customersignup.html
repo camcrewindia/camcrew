@@ -139,6 +139,25 @@
           <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
           <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
 
+          <!-- Role Selector -->
+          <div class="mb-7">
+            <label style="font-size:0.78rem;font-weight:700;letter-spacing:0.1em;color:#b9cacb;text-transform:uppercase;" class="mb-3 block">Sign Up As</label>
+            <div class="grid grid-cols-3 gap-3">
+              <button onclick="window.location.href='customersignup.html'" type="button" class="role-card active glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+                <span class="material-symbols-outlined text-primary text-2xl">person</span>
+                <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Customer</span>
+              </button>
+              <button onclick="window.location.href='professionalsetup.html'" type="button" class="role-card glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+                <span class="material-symbols-outlined text-secondary text-2xl">camera</span>
+                <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Professional</span>
+              </button>
+              <button onclick="window.location.href='studiosignup.html'" type="button" class="role-card glass-panel py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-300 hover:scale-105 border border-glass-stroke">
+                <span class="material-symbols-outlined text-tertiary-fixed-dim text-2xl">business</span>
+                <span style="font-size:0.82rem;font-weight:700;color:#dce4e5;">Studio</span>
+              </button>
+            </div>
+          </div>
+
           <div class="mb-7">
             <h3 style="font-size:1.45rem;font-weight:800;color:#dce4e5;margin-bottom:0.3rem;">Customer Registration</h3>
             <p style="font-size:0.97rem;color:#849495;">Complete your profile to start creating.</p>
