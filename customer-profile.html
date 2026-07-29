@@ -144,7 +144,19 @@
 </style>
 </head>
 <body class="bg-obsidian-base min-h-screen flex flex-col font-body-md antialiased">
-<div id="site-header"></div>
+<!-- Close button -->
+<button onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
+  id="close-btn"
+  title="Close"
+  style="position:fixed;top:1.1rem;right:1.25rem;z-index:500;
+         width:2.4rem;height:2.4rem;border-radius:50%;
+         background:rgba(22,34,35,0.9);border:1px solid rgba(255,255,255,0.12);
+         display:flex;align-items:center;justify-content:center;
+         color:#849495;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(8px);"
+  onmouseover="this.style.color='#dce4e5';this.style.borderColor='rgba(255,255,255,0.3)';this.style.background='rgba(40,55,56,0.95)'"
+  onmouseout="this.style.color='#849495';this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(22,34,35,0.9)'">
+  <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+</button>
 
 <!-- Auth Gate -->
 <div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
@@ -1140,7 +1152,6 @@ async function init() {
 
 init();
 </script>
-<script src="header-loader.js"></script>
 <script src="footer-loader.js"></script>
 </body>
 </html>
