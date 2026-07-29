@@ -155,22 +155,36 @@
     background:var(--nb);
     border-radius:1.5rem; padding:2rem; width:100%; max-width:480px;
     max-height:90vh; overflow-y:auto;
-    box-shadow: 12px 12px 30px var(--ns), -12px -12px 30px var(--nl);
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
   }
 
   /* ── Form inputs ── */
   .fi {
-    width:100%; background:var(--nb); border:none;
-    border-radius:0.6rem; padding:0.75rem 1rem; color:#dce4e5;
+    width:100%; background-color:var(--nb) !important; border:none;
+    border-radius:0.6rem; padding:0.75rem 1rem; color:#dce4e5 !important;
     font-size:0.9rem; outline:none;
     box-shadow: var(--ni-s);
     transition:box-shadow 0.2s;
     font-family:'Plus Jakarta Sans',sans-serif;
+    color-scheme: dark;
+    -webkit-text-fill-color: #dce4e5;
   }
   .fi:focus {
     box-shadow: inset 3px 3px 8px var(--ns), inset -3px -3px 8px var(--nl),
                 0 0 0 2px rgba(0,219,233,0.3);
   }
+  /* Override browser autofill white flash */
+  .fi:-webkit-autofill,
+  .fi:-webkit-autofill:hover,
+  .fi:-webkit-autofill:focus,
+  .fi:-webkit-autofill:active {
+    -webkit-box-shadow: inset 2px 2px 6px var(--ns), inset -2px -2px 6px var(--nl),
+                        0 0 0 9999px var(--nb) inset !important;
+    -webkit-text-fill-color: #dce4e5 !important;
+    caret-color: #dce4e5;
+  }
+  .fi.opacity-60 { -webkit-text-fill-color: rgba(220,228,229,0.6) !important; }
   .fi-label { font-size:0.78rem; font-weight:700; letter-spacing:0.08em; color:#849495; text-transform:uppercase; margin-bottom:0.4rem; display:block; }
 
   /* ── Empty state ── */
@@ -394,7 +408,7 @@
     <div class="cp-sidebar-logo">
       <a href="index.html">
         <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
-             alt="Camcrew Studio" class="cp-sidebar-logo" style="height:1.4rem;width:auto;"/>
+             alt="Camcrew Studio" class="cp-sidebar-logo" style="height:3.5rem;width:auto;"/>
       </a>
     </div>
 
