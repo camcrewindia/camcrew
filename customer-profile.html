@@ -13,9 +13,9 @@
      Base: #111d1e  |  Dark shadow: #0a1516  |  Light shadow: #192a2b
   ══════════════════════════════════════════════════════ */
   :root {
-    --nb:  #111d1e;   /* neumorphic base */
-    --ns:  #0a1516;   /* shadow dark */
-    --nl:  #192a2b;   /* shadow light */
+    --nb:  #141414;   /* neumorphic base */
+    --ns:  #000000;   /* shadow dark */
+    --nl:  #1e1e1e;   /* shadow light */
     --nr:  6px 6px 14px var(--ns), -6px -6px 14px var(--nl);   /* raised */
     --nr-s:3px 3px 8px  var(--ns), -3px -3px 8px  var(--nl);   /* raised small */
     --ni:  inset 4px 4px 10px var(--ns), inset -4px -4px 10px var(--nl); /* inset */
@@ -220,17 +220,49 @@
   .nm-signout:hover { color:#ff6464; box-shadow:4px 4px 10px var(--ns),-4px -4px 10px var(--nl),0 0 8px rgba(255,100,100,0.15); }
   .nm-signout:active { box-shadow: var(--ni-s); }
 
+  /* ── Mobile header bar ── */
+  .mobile-header {
+    display:none; align-items:center; justify-content:space-between;
+    padding:0.75rem 1rem;
+    background:var(--nb);
+    box-shadow:0 2px 10px var(--ns), 0 1px 0 var(--nl);
+    position:sticky; top:0; z-index:100; flex-shrink:0;
+  }
+  .mobile-header-logo { height:1.5rem; width:auto; }
+  .mobile-header-back {
+    width:2.2rem; height:2.2rem; border-radius:50%; background:var(--nb);
+    display:flex; align-items:center; justify-content:center;
+    color:#849495; cursor:pointer; border:none;
+    box-shadow: var(--nr-s); flex-shrink:0;
+    transition:all 0.18s;
+  }
+  .mobile-header-back:hover { color:#dce4e5; }
+  .mobile-header-back:active { box-shadow: var(--ni-s); }
+
+  /* ── Mobile user pill ── */
+  .mobile-user-pill {
+    display:flex; align-items:center; gap:0.55rem;
+    background:var(--nb); border-radius:999px; padding:0.3rem 0.75rem 0.3rem 0.3rem;
+    box-shadow: var(--nr-s);
+  }
+  .mobile-user-pill-avatar {
+    width:1.65rem; height:1.65rem; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; font-weight:900; color:#111d1e; flex-shrink:0;
+    background:linear-gradient(135deg,#00dbe9,#ebb2ff);
+  }
+
   /* ── Mobile tabs ── */
   .mobile-tabs {
-    display:none; overflow-x:auto; gap:0.5rem; padding:0.85rem 1rem;
+    display:none; overflow-x:auto; gap:0.4rem; padding:0.65rem 1rem;
     background:var(--nb);
-    box-shadow:0 4px 12px var(--ns);
-    scrollbar-width:none;
+    border-bottom:1px solid var(--ns);
+    scrollbar-width:none; flex-shrink:0;
   }
   .mobile-tabs::-webkit-scrollbar { display:none; }
   .mobile-tab {
-    display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap;
-    padding:0.5rem 1rem; border-radius:999px; font-size:0.8rem; font-weight:700;
+    display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap;
+    padding:0.45rem 0.85rem; border-radius:999px; font-size:0.77rem; font-weight:700;
     color:#849495; cursor:pointer; background:var(--nb);
     box-shadow: var(--nr-s);
     transition:all 0.2s; border:none;
@@ -239,7 +271,7 @@
     color:var(--ac);
     box-shadow: var(--ni-s);
   }
-  .mobile-tab .material-symbols-outlined { font-size:1rem; }
+  .mobile-tab .material-symbols-outlined { font-size:0.95rem; }
 
   /* ── Auth-gate card ── */
   .nm-auth-card {
@@ -301,10 +333,21 @@
   ::-webkit-scrollbar-track { background:var(--nb); }
   ::-webkit-scrollbar-thumb { background:var(--ns); border-radius:999px; }
 
+  /* ── Sidebar logo ── */
+  .cp-sidebar-logo {
+    padding:1.1rem 1.2rem 0.9rem;
+    display:flex; align-items:center;
+    border-bottom:1px solid var(--ns);
+    flex-shrink:0;
+  }
+  .cp-sidebar-logo img { height:1.4rem; width:auto; }
+
   @media (max-width:768px) {
-    .cp-sidebar { display:none; }
-    .mobile-tabs { display:flex; }
-    .cp-content  { padding:1.25rem 4rem 1.25rem 1.25rem; }
+    .cp-sidebar    { display:none; }
+    .mobile-header { display:flex; }
+    .mobile-tabs   { display:flex; }
+    .cp-content    { padding:1.1rem; }
+    #close-btn     { display:none !important; }
   }
 </style>
 </head>
@@ -326,6 +369,12 @@
 <!-- Auth Gate -->
 <div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
   <div class="nm-auth-card">
+    <div class="mb-5">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
+             alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
+      </a>
+    </div>
     <div class="nm-icon-circle mx-auto">
       <span class="material-symbols-outlined text-primary" style="font-size:2rem;">account_circle</span>
     </div>
@@ -341,6 +390,14 @@
 
   <!-- Sidebar -->
   <aside class="cp-sidebar">
+    <!-- Logo -->
+    <div class="cp-sidebar-logo">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
+             alt="Camcrew Studio" class="cp-sidebar-logo" style="height:1.4rem;width:auto;"/>
+      </a>
+    </div>
+
     <!-- Profile summary -->
     <div class="p-5 pb-3">
       <div class="flex items-center gap-3 mb-4">
@@ -399,6 +456,25 @@
 
   <!-- Main content -->
   <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Mobile header -->
+    <div class="mobile-header">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
+             alt="Camcrew Studio" class="mobile-header-logo"/>
+      </a>
+      <div class="flex items-center gap-2">
+        <div id="mob-user-pill" class="mobile-user-pill" style="display:none">
+          <div id="mob-avatar" class="mobile-user-pill-avatar">?</div>
+          <span id="mob-name" class="text-xs font-bold text-on-surface truncate" style="max-width:90px"></span>
+        </div>
+        <button class="mobile-header-back"
+                onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
+                title="Back">
+          <span class="material-symbols-outlined" style="font-size:1.15rem;">arrow_back</span>
+        </button>
+      </div>
+    </div>
 
     <!-- Mobile tab bar -->
     <div class="mobile-tabs">
@@ -1293,11 +1369,22 @@ function closeModal(id, event) {
 function populateSidebar() {
   if (!S.profile) return;
   const p = S.profile;
-  const initial = (p.display_name || p.email).charAt(0).toUpperCase();
+  const displayName = p.display_name || p.email.split('@')[0];
+  const initial     = displayName.charAt(0).toUpperCase();
+  // Desktop sidebar
   document.getElementById('sb-avatar').textContent = initial;
-  document.getElementById('sb-name').textContent   = p.display_name || p.email.split('@')[0];
+  document.getElementById('sb-name').textContent   = displayName;
   document.getElementById('sb-email').textContent  = p.email;
-  document.getElementById('ov-name').textContent   = p.display_name || p.email.split('@')[0];
+  document.getElementById('ov-name').textContent   = displayName;
+  // Mobile header pill
+  const pill   = document.getElementById('mob-user-pill');
+  const avatar = document.getElementById('mob-avatar');
+  const name   = document.getElementById('mob-name');
+  if (pill && avatar && name) {
+    avatar.textContent  = initial;
+    name.textContent    = displayName;
+    pill.style.display  = 'flex';
+  }
 }
 
 async function init() {
