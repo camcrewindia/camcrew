@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import secrets
+from datetime import datetime, timedelta
 from flask import (
     Flask, request, session, jsonify,
     send_from_directory, abort
@@ -45,6 +47,17 @@ def init_db():
             conn.execute("ALTER TABLE users ADD COLUMN display_name TEXT")
         except Exception:
             pass
+
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id    INTEGER NOT NULL,
+                token      TEXT    NOT NULL UNIQUE,
+                expires_at TEXT    NOT NULL,
+                used       INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
         conn.commit()
 
 
@@ -139,6 +152,78 @@ def login():
 def logout():
     session.clear()
     return jsonify({"ok": True})
+
+
+@app.route("/api/forgot-password", methods=["POST"])
+def forgot_password():
+    data  = request.get_json(force=True)
+    email = (data.get("email") or "").strip().lower()
+
+    if not email:
+        return jsonify({"ok": False, "error": "Email is required."}), 400
+
+    with get_db() as conn:
+        row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+
+    # Always return success to avoid leaking whether an account exists
+    if not row:
+        return jsonify({"ok": True, "message": "If that email is registered, a reset link has been sent."})
+
+    token      = secrets.token_urlsafe(32)
+    expires_at = (datetime.utcnow() + timedelta(hours=1)).isoformat()
+
+    with get_db() as conn:
+        # Invalidate any previous unused tokens for this user
+        conn.execute(
+            "UPDATE password_reset_tokens SET used = 1 WHERE user_id = ? AND used = 0",
+            (row["id"],)
+        )
+        conn.execute(
+            "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)",
+            (row["id"], token, expires_at),
+        )
+        conn.commit()
+
+    # In production, send token via email. Here we return it so the UI can
+    # construct the reset link (dev/demo mode — replace with email delivery).
+    return jsonify({
+        "ok": True,
+        "message": "If that email is registered, a reset link has been sent.",
+        "reset_token": token,  # Remove this in production once email is wired up
+    })
+
+
+@app.route("/api/reset-password", methods=["POST"])
+def reset_password():
+    data     = request.get_json(force=True)
+    token    = (data.get("token")    or "").strip()
+    password = (data.get("password") or "").strip()
+
+    if not token or not password:
+        return jsonify({"ok": False, "error": "Token and new password are required."}), 400
+
+    if len(password) < 6:
+        return jsonify({"ok": False, "error": "Password must be at least 6 characters."}), 400
+
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT * FROM password_reset_tokens WHERE token = ? AND used = 0",
+            (token,)
+        ).fetchone()
+
+    if not row:
+        return jsonify({"ok": False, "error": "This reset link is invalid or has already been used."}), 400
+
+    if datetime.utcnow() > datetime.fromisoformat(row["expires_at"]):
+        return jsonify({"ok": False, "error": "This reset link has expired. Please request a new one."}), 400
+
+    hashed = generate_password_hash(password)
+    with get_db() as conn:
+        conn.execute("UPDATE users SET password = ? WHERE id = ?", (hashed, row["user_id"]))
+        conn.execute("UPDATE password_reset_tokens SET used = 1 WHERE id = ?", (row["id"],))
+        conn.commit()
+
+    return jsonify({"ok": True, "message": "Password updated successfully. You can now sign in."})
 
 
 @app.route("/api/me", methods=["GET"])
