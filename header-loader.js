@@ -37,7 +37,8 @@
     'developers.html':   'services',
     'organizers.html':   'services',
     'caterers.html':     'services',
-    'profile.html':      'profile',
+    'profile.html':         'profile',
+    'customer-profile.html':'profile',
     'signin.html':       'signin',
   }[page];
 
@@ -77,7 +78,7 @@
     // Route profile links to the right page based on role
     const profileHref = user.role === 'professional'
       ? 'professional-profile.html'
-      : 'profile.html';
+      : 'customer-profile.html';
 
     // Desktop
     const userArea    = document.getElementById('desktop-user-area');

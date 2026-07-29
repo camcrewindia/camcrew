@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Account | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="tailwind-config.js"></script>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+  /* ── Layout ── */
+  #dashboard { display:none; min-height:calc(100vh - 72px); }
+  .cp-sidebar {
+    width: 270px; flex-shrink: 0;
+    background: rgba(13,21,21,0.95);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; display: flex; flex-direction: column;
+    scrollbar-width: thin; scrollbar-color: rgba(0,219,233,0.2) transparent;
+  }
+  .cp-content { flex:1; overflow-y:auto; padding: 2rem; min-width:0; }
+  /* ── Nav Items ── */
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 1.1rem; border-radius: 0.6rem; cursor: pointer;
+    color: #849495; font-size: 0.9rem; font-weight: 600;
+    transition: all 0.18s; margin: 0.1rem 0.6rem; border: 1px solid transparent;
+  }
+  .nav-item:hover { color: #dce4e5; background: rgba(255,255,255,0.05); }
+  .nav-item.active {
+    color: #00dbe9; background: rgba(0,219,233,0.1);
+    border-color: rgba(0,219,233,0.25);
+  }
+  .nav-item .material-symbols-outlined { font-size: 1.2rem; }
+  .nav-divider { height:1px; background: rgba(255,255,255,0.07); margin: 0.5rem 1rem; }
+  /* ── Section header ── */
+  .sec-title { font-size:1.35rem; font-weight:800; color:#dce4e5; margin-bottom:0.25rem; }
+  .sec-sub   { font-size:0.87rem; color:#849495; margin-bottom:1.5rem; }
+  /* ── Badges ── */
+  .badge {
+    display:inline-flex; align-items:center; gap:0.3rem;
+    padding: 0.2rem 0.65rem; border-radius:999px;
+    font-size:0.75rem; font-weight:700; letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .badge-processing  { background:rgba(0,219,233,0.12); color:#00dbe9;  border:1px solid rgba(0,219,233,0.3); }
+  .badge-confirmed   { background:rgba(99,202,183,0.12);color:#63cab7;  border:1px solid rgba(99,202,183,0.3); }
+  .badge-delivered   { background:rgba(74,222,128,0.12); color:#4ade80;  border:1px solid rgba(74,222,128,0.3); }
+  .badge-completed   { background:rgba(74,222,128,0.12); color:#4ade80;  border:1px solid rgba(74,222,128,0.3); }
+  .badge-cancelled   { background:rgba(255,100,100,0.12);color:#ff6464;  border:1px solid rgba(255,100,100,0.3); }
+  .badge-pending     { background:rgba(251,191,36,0.12); color:#fbbf24;  border:1px solid rgba(251,191,36,0.3); }
+  .badge-in_transit  { background:rgba(168,85,247,0.12); color:#a855f7;  border:1px solid rgba(168,85,247,0.3); }
+  .badge-rejected    { background:rgba(255,72,66,0.12);  color:#ffb4ab;  border:1px solid rgba(255,72,66,0.3);  }
+  .badge-bronze { background:rgba(180,120,60,0.15); color:#cd7f32; border:1px solid rgba(180,120,60,0.3); }
+  .badge-silver { background:rgba(160,160,180,0.15);color:#c0c0d0; border:1px solid rgba(160,160,180,0.3); }
+  .badge-gold   { background:rgba(255,200,40,0.15); color:#ffd700; border:1px solid rgba(255,200,40,0.3); }
+  /* ── Cards ── */
+  .data-card {
+    background: rgba(22,34,35,0.8); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1rem; padding: 1.25rem 1.4rem;
+    transition: border-color 0.2s;
+  }
+  .data-card:hover { border-color: rgba(0,219,233,0.2); }
+  /* ── Stat cards ── */
+  .stat-card {
+    background: rgba(22,34,35,0.8); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.9rem; padding: 1.2rem; display:flex; flex-direction:column; gap:0.5rem;
+  }
+  /* ── Tracking timeline ── */
+  .timeline-step { display:flex; align-items:flex-start; gap:1rem; padding-bottom:1.5rem; position:relative; }
+  .timeline-step:not(:last-child)::after {
+    content:''; position:absolute; left:14px; top:32px;
+    width:2px; height:calc(100% - 16px);
+    background: rgba(255,255,255,0.1);
+  }
+  .timeline-step.done::after  { background: rgba(74,222,128,0.4); }
+  .timeline-step.active::after { background: rgba(0,219,233,0.3); }
+  .t-icon {
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; border:2px solid rgba(255,255,255,0.1);
+    background: rgba(22,34,35,1); z-index:1;
+  }
+  .t-icon.done   { background:rgba(74,222,128,0.15); border-color:rgba(74,222,128,0.5); color:#4ade80; }
+  .t-icon.active { background:rgba(0,219,233,0.15);  border-color:rgba(0,219,233,0.5);  color:#00dbe9; }
+  /* ── Progress bar ── */
+  .progress-bar { height:6px; border-radius:999px; background:rgba(255,255,255,0.08); overflow:hidden; }
+  .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#00dbe9,#ebb2ff); transition:width 0.6s ease; }
+  /* ── Modal ── */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:200;
+    background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; padding:1rem;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal-box {
+    background:#0d1515; border:1px solid rgba(255,255,255,0.12);
+    border-radius:1.25rem; padding:1.75rem; width:100%; max-width:480px;
+    max-height:90vh; overflow-y:auto;
+  }
+  /* ── Field input ── */
+  .fi {
+    width:100%; background:rgba(8,15,16,0.9); border:1px solid rgba(255,255,255,0.1);
+    border-radius:0.5rem; padding:0.7rem 1rem; color:#dce4e5;
+    font-size:0.9rem; outline:none; transition:border-color 0.2s;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .fi:focus { border-color:rgba(0,219,233,0.5); }
+  .fi-label { font-size:0.78rem; font-weight:700; letter-spacing:0.08em; color:#849495; text-transform:uppercase; margin-bottom:0.4rem; display:block; }
+  /* ── Empty state ── */
+  .empty-state { text-align:center; padding:3rem 2rem; }
+  .empty-icon  { font-size:3rem; color:rgba(255,255,255,0.15); margin-bottom:1rem; }
+  /* ── Action buttons ── */
+  .btn-sm {
+    display:inline-flex; align-items:center; gap:0.35rem;
+    padding:0.4rem 0.9rem; border-radius:0.45rem; font-size:0.78rem; font-weight:700;
+    cursor:pointer; transition:all 0.18s; border:1px solid;
+  }
+  .btn-sm-cyan   { color:#00dbe9; border-color:rgba(0,219,233,0.35); background:rgba(0,219,233,0.07); }
+  .btn-sm-cyan:hover { background:rgba(0,219,233,0.18); }
+  .btn-sm-red    { color:#ff6464; border-color:rgba(255,100,100,0.35); background:rgba(255,100,100,0.07); }
+  .btn-sm-red:hover  { background:rgba(255,100,100,0.18); }
+  .btn-sm-ghost  { color:#849495; border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); }
+  .btn-sm-ghost:hover { color:#dce4e5; background:rgba(255,255,255,0.08); }
+  /* ── Mobile tabs ── */
+  .mobile-tabs {
+    display:none; overflow-x:auto; gap:0.5rem; padding:0.75rem 1rem;
+    background:rgba(13,21,21,0.95); border-bottom:1px solid rgba(255,255,255,0.08);
+    scrollbar-width:none;
+  }
+  .mobile-tabs::-webkit-scrollbar { display:none; }
+  .mobile-tab {
+    display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap;
+    padding:0.45rem 0.9rem; border-radius:999px; font-size:0.8rem; font-weight:700;
+    color:#849495; border:1px solid transparent; cursor:pointer; transition:all 0.18s;
+  }
+  .mobile-tab.active { color:#00dbe9; background:rgba(0,219,233,0.1); border-color:rgba(0,219,233,0.3); }
+  .mobile-tab .material-symbols-outlined { font-size:1rem; }
+  @media (max-width: 768px) {
+    .cp-sidebar { display:none; }
+    .mobile-tabs { display:flex; }
+    .cp-content { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body class="bg-obsidian-base min-h-screen flex flex-col font-body-md antialiased">
+<div id="site-header"></div>
+
+<!-- Auth Gate -->
+<div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
+  <div class="glass-panel rounded-2xl p-10 text-center max-w-sm w-full">
+    <span class="material-symbols-outlined text-primary" style="font-size:3rem;">account_circle</span>
+    <h2 class="text-on-surface font-bold text-xl mt-4 mb-2">Sign in to view your account</h2>
+    <p class="text-on-surface-variant text-sm mb-6">Manage orders, bookings, addresses and more.</p>
+    <a href="signin.html" class="cc-btn-primary">Sign In</a>
+    <p class="text-sm text-on-surface-variant mt-4">No account? <a href="signup.html" class="text-primary font-bold">Sign up</a></p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" class="flex flex-1" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="cp-sidebar">
+    <!-- Profile summary -->
+    <div class="p-5 pb-3">
+      <div class="flex items-center gap-3 mb-4">
+        <div id="sb-avatar" class="w-11 h-11 rounded-full flex items-center justify-center text-lg font-black text-obsidian-base flex-shrink-0"
+             style="background:linear-gradient(135deg,#00dbe9,#ebb2ff)">?</div>
+        <div class="min-w-0">
+          <p id="sb-name"  class="text-on-surface font-bold text-sm truncate">Loading…</p>
+          <p id="sb-email" class="text-outline text-xs truncate">…</p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+
+    <!-- Nav -->
+    <nav class="py-2 flex-1">
+      <div class="nav-item active" data-section="overview"  onclick="showSection('overview')">
+        <span class="material-symbols-outlined">dashboard</span> Overview
+      </div>
+      <div class="nav-divider" style="margin:0.4rem 1rem 0.3rem;"></div>
+      <p style="font-size:0.68rem;font-weight:700;letter-spacing:0.12em;color:#5a7475;text-transform:uppercase;padding:0 1.2rem 0.3rem;">Orders & Bookings</p>
+      <div class="nav-item" data-section="orders"   onclick="showSection('orders')">
+        <span class="material-symbols-outlined">inventory_2</span> My Orders
+      </div>
+      <div class="nav-item" data-section="bookings" onclick="showSection('bookings')">
+        <span class="material-symbols-outlined">calendar_month</span> Bookings
+      </div>
+      <div class="nav-item" data-section="tracking" onclick="showSection('tracking')">
+        <span class="material-symbols-outlined">local_shipping</span> Order Tracking
+      </div>
+      <div class="nav-item" data-section="refunds"  onclick="showSection('refunds')">
+        <span class="material-symbols-outlined">currency_rupee</span> Refunds
+      </div>
+      <div class="nav-divider" style="margin:0.4rem 1rem 0.3rem;"></div>
+      <p style="font-size:0.68rem;font-weight:700;letter-spacing:0.12em;color:#5a7475;text-transform:uppercase;padding:0 1.2rem 0.3rem;">Account</p>
+      <div class="nav-item" data-section="payments"  onclick="showSection('payments')">
+        <span class="material-symbols-outlined">credit_card</span> Payment Methods
+      </div>
+      <div class="nav-item" data-section="addresses" onclick="showSection('addresses')">
+        <span class="material-symbols-outlined">location_on</span> Addresses
+      </div>
+      <div class="nav-item" data-section="rewards"   onclick="showSection('rewards')">
+        <span class="material-symbols-outlined">redeem</span> Rewards & Coupons
+      </div>
+      <div class="nav-item" data-section="account"   onclick="showSection('account')">
+        <span class="material-symbols-outlined">manage_accounts</span> Account Settings
+      </div>
+    </nav>
+
+    <!-- Sign out -->
+    <div class="p-4 pt-2">
+      <button onclick="window.signOut && window.signOut()"
+        class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-outline hover:text-[#ff6464] hover:bg-[rgba(255,100,100,0.08)] border border-transparent hover:border-[rgba(255,100,100,0.2)] transition-all text-sm font-bold">
+        <span class="material-symbols-outlined" style="font-size:1.1rem;">logout</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Mobile tab bar -->
+    <div class="mobile-tabs">
+      <div class="mobile-tab active" data-section="overview"  onclick="showSection('overview')"><span class="material-symbols-outlined">dashboard</span>Overview</div>
+      <div class="mobile-tab" data-section="orders"   onclick="showSection('orders')"><span class="material-symbols-outlined">inventory_2</span>Orders</div>
+      <div class="mobile-tab" data-section="bookings" onclick="showSection('bookings')"><span class="material-symbols-outlined">calendar_month</span>Bookings</div>
+      <div class="mobile-tab" data-section="tracking" onclick="showSection('tracking')"><span class="material-symbols-outlined">local_shipping</span>Tracking</div>
+      <div class="mobile-tab" data-section="refunds"  onclick="showSection('refunds')"><span class="material-symbols-outlined">currency_rupee</span>Refunds</div>
+      <div class="mobile-tab" data-section="payments"  onclick="showSection('payments')"><span class="material-symbols-outlined">credit_card</span>Payments</div>
+      <div class="mobile-tab" data-section="addresses" onclick="showSection('addresses')"><span class="material-symbols-outlined">location_on</span>Addresses</div>
+      <div class="mobile-tab" data-section="rewards"   onclick="showSection('rewards')"><span class="material-symbols-outlined">redeem</span>Rewards</div>
+      <div class="mobile-tab" data-section="account"   onclick="showSection('account')"><span class="material-symbols-outlined">manage_accounts</span>Account</div>
+    </div>
+
+    <div class="cp-content">
+
+      <!-- ═══ OVERVIEW ═══════════════════════════════════════════════ -->
+      <div id="sec-overview">
+        <p class="sec-title">Welcome back, <span id="ov-name">…</span> 👋</p>
+        <p class="sec-sub">Here's a snapshot of your Camcrew account.</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div class="stat-card">
+            <span class="material-symbols-outlined text-primary" style="font-size:1.6rem;">inventory_2</span>
+            <p id="ov-orders" class="text-2xl font-black text-on-surface">—</p>
+            <p class="text-xs text-outline font-semibold">Total Orders</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined text-secondary" style="font-size:1.6rem;">calendar_month</span>
+            <p id="ov-bookings" class="text-2xl font-black text-on-surface">—</p>
+            <p class="text-xs text-outline font-semibold">Active Bookings</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:#fbbf24;">redeem</span>
+            <p id="ov-points" class="text-2xl font-black text-on-surface">—</p>
+            <p class="text-xs text-outline font-semibold">Reward Points</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:#a78bfa;">location_on</span>
+            <p id="ov-addr" class="text-2xl font-black text-on-surface">—</p>
+            <p class="text-xs text-outline font-semibold">Saved Addresses</p>
+          </div>
+        </div>
+        <!-- Quick links -->
+        <p class="text-xs font-bold uppercase tracking-widest text-outline mb-3">Quick Actions</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button onclick="showSection('orders')" class="data-card flex flex-col items-center gap-2 py-4 text-center hover:border-primary/40 transition-all cursor-pointer">
+            <span class="material-symbols-outlined text-primary" style="font-size:1.8rem;">inventory_2</span>
+            <span class="text-xs font-bold text-on-surface-variant">My Orders</span>
+          </button>
+          <button onclick="showSection('bookings')" class="data-card flex flex-col items-center gap-2 py-4 text-center hover:border-secondary/40 transition-all cursor-pointer">
+            <span class="material-symbols-outlined text-secondary" style="font-size:1.8rem;">calendar_month</span>
+            <span class="text-xs font-bold text-on-surface-variant">Bookings</span>
+          </button>
+          <button onclick="showSection('addresses')" class="data-card flex flex-col items-center gap-2 py-4 text-center hover:border-[#a78bfa]/40 transition-all cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#a78bfa;">location_on</span>
+            <span class="text-xs font-bold text-on-surface-variant">Addresses</span>
+          </button>
+          <button onclick="showSection('rewards')" class="data-card flex flex-col items-center gap-2 py-4 text-center hover:border-[#fbbf24]/40 transition-all cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#fbbf24;">redeem</span>
+            <span class="text-xs font-bold text-on-surface-variant">Rewards</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══ ORDERS ═══════════════════════════════════════════════ -->
+      <div id="sec-orders" class="hidden">
+        <p class="sec-title">My Orders</p>
+        <p class="sec-sub">Track, cancel, or request refunds on your purchases.</p>
+        <div id="orders-list"></div>
+      </div>
+
+      <!-- ═══ BOOKINGS ════════════════════════════════════════════ -->
+      <div id="sec-bookings" class="hidden">
+        <p class="sec-title">Bookings</p>
+        <p class="sec-sub">Professional service bookings and their current status.</p>
+        <div id="bookings-list"></div>
+      </div>
+
+      <!-- ═══ TRACKING ════════════════════════════════════════════ -->
+      <div id="sec-tracking" class="hidden">
+        <p class="sec-title">Order Tracking</p>
+        <p class="sec-sub">Follow your shipment in real-time.</p>
+        <div id="tracking-selector" class="mb-6"></div>
+        <div id="tracking-timeline"></div>
+      </div>
+
+      <!-- ═══ REFUNDS ═════════════════════════════════════════════ -->
+      <div id="sec-refunds" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">Refunds</p>
+          <button onclick="openRefundModal()" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Request Refund
+          </button>
+        </div>
+        <p class="sec-sub">Request and track refunds for cancelled or delivered orders.</p>
+        <div id="refunds-list"></div>
+      </div>
+
+      <!-- ═══ PAYMENT METHODS ═════════════════════════════════════ -->
+      <div id="sec-payments" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">Payment Methods</p>
+          <button onclick="openAddPaymentModal()" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Method
+          </button>
+        </div>
+        <p class="sec-sub">Manage your saved cards, UPI IDs, and wallets.</p>
+        <div id="payments-list"></div>
+      </div>
+
+      <!-- ═══ ADDRESSES ═══════════════════════════════════════════ -->
+      <div id="sec-addresses" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">Delivery Addresses</p>
+          <button onclick="openAddAddressModal()" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Address
+          </button>
+        </div>
+        <p class="sec-sub">Add or edit addresses used for your orders.</p>
+        <div id="addresses-list"></div>
+      </div>
+
+      <!-- ═══ REWARDS ═════════════════════════════════════════════ -->
+      <div id="sec-rewards" class="hidden">
+        <p class="sec-title">Rewards & Coupons</p>
+        <p class="sec-sub">Your points balance, membership tier, and available discount codes.</p>
+        <div id="rewards-content"></div>
+      </div>
+
+      <!-- ═══ ACCOUNT ═════════════════════════════════════════════ -->
+      <div id="sec-account" class="hidden">
+        <p class="sec-title">Account Settings</p>
+        <p class="sec-sub">Update your name and manage account security.</p>
+        <div class="data-card max-w-lg space-y-5">
+          <div>
+            <label class="fi-label">Display Name</label>
+            <input id="ac-name" class="fi" type="text" placeholder="Your display name"/>
+          </div>
+          <div>
+            <label class="fi-label">Email Address</label>
+            <input id="ac-email" class="fi opacity-60 cursor-not-allowed" type="email" readonly/>
+          </div>
+          <div>
+            <label class="fi-label">Role</label>
+            <input id="ac-role" class="fi opacity-60 cursor-not-allowed" type="text" readonly/>
+          </div>
+          <div id="ac-msg" class="hidden text-sm"></div>
+          <div class="flex gap-3 flex-wrap">
+            <button onclick="saveAccount()" class="cc-btn-primary" id="ac-save" style="width:auto;padding:0.7rem 1.8rem">Save Changes</button>
+            <a href="forgot-password.html" class="btn-sm btn-sm-ghost" style="padding:0.7rem 1.2rem;text-decoration:none;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">lock_reset</span> Change Password
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cp-content -->
+  </div><!-- /flex-1 -->
+</div><!-- /dashboard -->
+
+<!-- ═══ MODALS ═════════════════════════════════════════════════════════ -->
+
+<!-- Add Address Modal -->
+<div id="modal-address" class="modal-overlay" onclick="closeModal('modal-address',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-on-surface font-bold text-lg" id="addr-modal-title">Add Address</h3>
+      <button onclick="closeModal('modal-address')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="addr-form" onsubmit="submitAddress(event)" class="space-y-4">
+      <input type="hidden" id="addr-edit-id" value=""/>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Label</label>
+          <select id="addr-label" class="fi">
+            <option>Home</option><option>Work</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="fi-label">Phone</label>
+          <input id="addr-phone" class="fi" type="tel" placeholder="+91 98765 43210"/>
+        </div>
+      </div>
+      <div>
+        <label class="fi-label">Full Name *</label>
+        <input id="addr-name" class="fi" type="text" required placeholder="As on ID"/>
+      </div>
+      <div>
+        <label class="fi-label">Address Line 1 *</label>
+        <input id="addr-line1" class="fi" type="text" required placeholder="Flat / House No., Street"/>
+      </div>
+      <div>
+        <label class="fi-label">Address Line 2</label>
+        <input id="addr-line2" class="fi" type="text" placeholder="Area, Landmark (optional)"/>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="fi-label">City *</label>
+          <input id="addr-city" class="fi" type="text" required placeholder="Mumbai"/>
+        </div>
+        <div>
+          <label class="fi-label">State *</label>
+          <input id="addr-state" class="fi" type="text" required placeholder="Maharashtra"/>
+        </div>
+        <div>
+          <label class="fi-label">Pincode *</label>
+          <input id="addr-pin" class="fi" type="text" required placeholder="400001" maxlength="6"/>
+        </div>
+      </div>
+      <div id="addr-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary" id="addr-submit">Save Address</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Payment Method Modal -->
+<div id="modal-payment" class="modal-overlay" onclick="closeModal('modal-payment',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-on-surface font-bold text-lg">Add Payment Method</h3>
+      <button onclick="closeModal('modal-payment')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="pay-form" onsubmit="submitPayment(event)" class="space-y-4">
+      <div>
+        <label class="fi-label">Type</label>
+        <select id="pay-type" class="fi" onchange="updatePayFields()">
+          <option value="card">Credit / Debit Card</option>
+          <option value="upi">UPI</option>
+          <option value="wallet">Wallet</option>
+          <option value="netbanking">Net Banking</option>
+        </select>
+      </div>
+      <div>
+        <label class="fi-label" id="pay-label-lbl">Card Label</label>
+        <input id="pay-label" class="fi" type="text" required placeholder="e.g. HDFC Visa"/>
+      </div>
+      <div id="pay-last4-wrap">
+        <label class="fi-label">Last 4 Digits</label>
+        <input id="pay-last4" class="fi" type="text" maxlength="4" placeholder="4242" inputmode="numeric"/>
+      </div>
+      <div id="pay-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary">Add Method</button>
+    </form>
+  </div>
+</div>
+
+<!-- Request Refund Modal -->
+<div id="modal-refund" class="modal-overlay" onclick="closeModal('modal-refund',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-on-surface font-bold text-lg">Request Refund</h3>
+      <button onclick="closeModal('modal-refund')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="refund-form" onsubmit="submitRefund(event)" class="space-y-4">
+      <div>
+        <label class="fi-label">Select Order</label>
+        <select id="refund-order-id" class="fi" required></select>
+      </div>
+      <div>
+        <label class="fi-label">Reason</label>
+        <textarea id="refund-reason" class="fi" rows="3" placeholder="Briefly describe why you're requesting a refund…"></textarea>
+      </div>
+      <div id="refund-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[300] glass-panel px-6 py-3 rounded-full border flex items-center gap-2 opacity-0 translate-y-6 transition-all duration-400 pointer-events-none">
+  <span id="toast-icon" class="material-symbols-outlined text-primary" style="font-size:1.1rem;">check_circle</span>
+  <span id="toast-msg" class="text-sm font-semibold text-primary"></span>
+</div>
+
+<div id="site-footer"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+// State & helpers
+// ════════════════════════════════════════════════════════════════════
+const S = { profile: null, orders: [], activeSection: 'overview' };
+
+function fmt_date(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+function fmt_inr(n) {
+  return '₹' + Number(n).toLocaleString('en-IN');
+}
+function badge(status) {
+  return `<span class="badge badge-${status}">${status.replace('_',' ')}</span>`;
+}
+function empty(icon, msg, sub='') {
+  return `<div class="empty-state"><span class="material-symbols-outlined empty-icon">${icon}</span>
+    <p class="text-on-surface font-bold">${msg}</p>
+    ${sub ? `<p class="text-outline text-sm mt-1">${sub}</p>` : ''}</div>`;
+}
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  const txt  = document.getElementById('toast-msg');
+  icon.textContent = isError ? 'error' : 'check_circle';
+  icon.style.color = isError ? '#ffb4ab' : '#00dbe9';
+  txt.textContent  = msg;
+  txt.style.color  = isError ? '#ffb4ab' : '#00dbe9';
+  t.style.borderColor = (isError ? '#ffb4ab' : '#00dbe9') + '60';
+  t.classList.remove('opacity-0','translate-y-6');
+  t.classList.add('opacity-100','translate-y-0');
+  setTimeout(() => { t.classList.remove('opacity-100','translate-y-0'); t.classList.add('opacity-0','translate-y-6'); }, 3000);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Navigation
+// ════════════════════════════════════════════════════════════════════
+function showSection(name) {
+  S.activeSection = name;
+  // Hide all content sections
+  document.querySelectorAll('[id^="sec-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('sec-' + name)?.classList.remove('hidden');
+  // Update sidebar nav
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === name);
+  });
+  // Update mobile tabs
+  document.querySelectorAll('.mobile-tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === name);
+  });
+  // Load data lazily
+  const loaders = {
+    overview: loadOverview, orders: loadOrders, bookings: loadBookings,
+    tracking: loadTrackingSelector, refunds: loadRefunds,
+    payments: loadPayments, addresses: loadAddresses,
+    rewards: loadRewards, account: loadAccount,
+  };
+  loaders[name]?.();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Overview
+// ════════════════════════════════════════════════════════════════════
+async function loadOverview() {
+  try {
+    const res  = await fetch('/api/customer/overview');
+    const data = await res.json();
+    if (!data.ok) return;
+    const o = data.overview;
+    document.getElementById('ov-orders').textContent   = o.orders;
+    document.getElementById('ov-bookings').textContent = o.active_bookings;
+    document.getElementById('ov-points').textContent   = o.points.toLocaleString();
+    document.getElementById('ov-addr').textContent     = o.addresses;
+  } catch(_) {}
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Orders
+// ════════════════════════════════════════════════════════════════════
+async function loadOrders() {
+  const el = document.getElementById('orders-list');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/orders');
+  const data = await res.json();
+  S.orders = data.orders || [];
+  if (!S.orders.length) { el.innerHTML = empty('inventory_2','No orders yet','Your orders will appear here once you make a purchase.'); return; }
+  el.innerHTML = S.orders.map(o => `
+    <div class="data-card mb-3" id="order-card-${o.id}">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+        <div>
+          <span class="text-primary font-bold text-sm">${o.order_ref}</span>
+          <span class="text-outline text-xs ml-2">${fmt_date(o.created_at)}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          ${badge(o.status)}
+          ${o.tracking_status && o.status !== 'cancelled' ? badge(o.tracking_status) : ''}
+        </div>
+      </div>
+      <div class="space-y-1 mb-3">
+        ${(o.items||[]).map(it=>`
+          <div class="flex justify-between text-sm">
+            <span class="text-on-surface-variant">${it.name} × ${it.qty}</span>
+            <span class="text-on-surface font-semibold">${fmt_inr(it.price * it.qty)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-glass-stroke">
+        <span class="text-on-surface font-black">Total: ${fmt_inr(o.total_amount)}</span>
+        <div class="flex gap-2 flex-wrap">
+          ${o.tracking_number && o.status !== 'cancelled' ? `
+            <button class="btn-sm btn-sm-cyan" onclick="goTrack(${o.id})">
+              <span class="material-symbols-outlined" style="font-size:0.95rem;">local_shipping</span> Track
+            </button>` : ''}
+          ${['processing','confirmed'].includes(o.status) ? `
+            <button class="btn-sm btn-sm-red" onclick="cancelOrder(${o.id})">
+              <span class="material-symbols-outlined" style="font-size:0.95rem;">cancel</span> Cancel
+            </button>` : ''}
+          ${['cancelled','delivered'].includes(o.status) ? `
+            <button class="btn-sm btn-sm-ghost" onclick="prefillRefund(${o.id},'${o.order_ref}')">
+              <span class="material-symbols-outlined" style="font-size:0.95rem;">currency_rupee</span> Refund
+            </button>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function cancelOrder(id) {
+  if (!confirm('Cancel this order?')) return;
+  const res  = await fetch(`/api/customer/orders/${id}/cancel`, { method:'POST' });
+  const data = await res.json();
+  if (data.ok) { showToast('Order cancelled.'); loadOrders(); loadOverview(); }
+  else showToast(data.error || 'Failed to cancel.', true);
+}
+
+function goTrack(orderId) {
+  showSection('tracking');
+  setTimeout(() => selectTrackOrder(orderId), 100);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Bookings
+// ════════════════════════════════════════════════════════════════════
+async function loadBookings() {
+  const el = document.getElementById('bookings-list');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/bookings');
+  const data = await res.json();
+  const bks  = data.bookings || [];
+  if (!bks.length) { el.innerHTML = empty('calendar_month','No bookings yet','Your professional bookings will appear here.'); return; }
+  el.innerHTML = bks.map(b => `
+    <div class="data-card mb-3">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+        <div>
+          <p class="text-on-surface font-bold">${b.professional_name}</p>
+          <p class="text-on-surface-variant text-sm">${b.service}</p>
+        </div>
+        ${badge(b.status)}
+      </div>
+      <div class="flex flex-wrap gap-4 text-sm text-outline mb-3">
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;">event</span> ${fmt_date(b.booking_date)}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;">payments</span> ${fmt_inr(b.amount)}</span>
+      </div>
+      ${b.note ? `<p class="text-xs text-outline italic border-l-2 border-primary/30 pl-3 mb-3">"${b.note}"</p>` : ''}
+      <div class="flex justify-end">
+        ${['pending','confirmed'].includes(b.status) ? `
+          <button class="btn-sm btn-sm-red" onclick="cancelBooking(${b.id})">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;">cancel</span> Cancel Booking
+          </button>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Cancel this booking?')) return;
+  const res  = await fetch(`/api/customer/bookings/${id}/cancel`, { method:'POST' });
+  const data = await res.json();
+  if (data.ok) { showToast('Booking cancelled.'); loadBookings(); loadOverview(); }
+  else showToast(data.error || 'Failed to cancel.', true);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Order Tracking
+// ════════════════════════════════════════════════════════════════════
+const TRACK_STEPS = [
+  { key:'ordered',    label:'Order Placed',   icon:'shopping_cart' },
+  { key:'confirmed',  label:'Confirmed',      icon:'verified' },
+  { key:'processing', label:'Packed',         icon:'inventory' },
+  { key:'in_transit', label:'In Transit',     icon:'local_shipping' },
+  { key:'delivered',  label:'Delivered',      icon:'check_circle' },
+];
+const TRACK_ORDER = ['ordered','confirmed','processing','in_transit','delivered'];
+
+async function loadTrackingSelector() {
+  if (!S.orders.length) {
+    const res  = await fetch('/api/customer/orders');
+    const data = await res.json();
+    S.orders = data.orders || [];
+  }
+  const trackable = S.orders.filter(o => o.tracking_number && o.status !== 'cancelled');
+  const sel = document.getElementById('tracking-selector');
+  if (!trackable.length) {
+    sel.innerHTML = empty('local_shipping','No trackable orders','Orders with a tracking number will appear here.');
+    document.getElementById('tracking-timeline').innerHTML = '';
+    return;
+  }
+  sel.innerHTML = `
+    <label class="fi-label">Select Order to Track</label>
+    <select id="track-select" class="fi max-w-sm" onchange="selectTrackOrder(this.value)">
+      <option value="">— Choose an order —</option>
+      ${trackable.map(o=>`<option value="${o.id}">${o.order_ref} · ${fmt_inr(o.total_amount)} · ${badge(o.tracking_status||o.status)}</option>`).join('')}
+    </select>`;
+}
+
+function selectTrackOrder(id) {
+  const sel = document.getElementById('track-select');
+  if (sel) sel.value = id;
+  const order = S.orders.find(o => o.id == id);
+  if (!order) return;
+  renderTimeline(order);
+}
+
+function renderTimeline(order) {
+  const tl   = document.getElementById('tracking-timeline');
+  const cur  = order.tracking_status || order.status;
+  const curI = TRACK_ORDER.indexOf(cur);
+  tl.innerHTML = `
+    <div class="data-card max-w-lg">
+      <div class="flex justify-between mb-4 text-sm">
+        <span class="text-outline">Tracking #</span>
+        <span class="text-primary font-bold font-mono">${order.tracking_number}</span>
+      </div>
+      ${TRACK_STEPS.map((step, i) => {
+        const idx   = TRACK_ORDER.indexOf(step.key);
+        const done  = idx < curI;
+        const active= idx === curI;
+        return `<div class="timeline-step ${done?'done':''} ${active?'active':''}">
+          <div class="t-icon ${done?'done':''} ${active?'active':''}">
+            <span class="material-symbols-outlined" style="font-size:1rem;">${step.icon}</span>
+          </div>
+          <div class="pt-1">
+            <p class="text-sm font-bold ${active?'text-primary':done?'text-[#4ade80]':'text-outline'}">${step.label}</p>
+            ${active?'<p class="text-xs text-outline mt-0.5">Currently here</p>':''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Refunds
+// ════════════════════════════════════════════════════════════════════
+async function loadRefunds() {
+  const el = document.getElementById('refunds-list');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/refunds');
+  const data = await res.json();
+  const rfds = data.refunds || [];
+  if (!rfds.length) { el.innerHTML = empty('currency_rupee','No refund requests','Refund requests for your orders will appear here.'); return; }
+  el.innerHTML = rfds.map(r => `
+    <div class="data-card mb-3">
+      <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+        <div>
+          <p class="text-primary font-bold text-sm">${r.order_ref || 'Order #' + r.order_id}</p>
+          <p class="text-on-surface font-bold">${fmt_inr(r.amount)}</p>
+        </div>
+        ${badge(r.status)}
+      </div>
+      ${r.reason ? `<p class="text-sm text-on-surface-variant mb-1">Reason: ${r.reason}</p>` : ''}
+      <p class="text-xs text-outline">Requested on ${fmt_date(r.created_at)}</p>
+    </div>`).join('');
+}
+
+function openRefundModal() {
+  // Pre-populate order select
+  const sel = document.getElementById('refund-order-id');
+  const eligible = S.orders.filter(o => ['cancelled','delivered'].includes(o.status));
+  if (!eligible.length) { showToast('No eligible orders for a refund.', true); return; }
+  sel.innerHTML = eligible.map(o=>`<option value="${o.id}">${o.order_ref} · ${fmt_inr(o.total_amount)} · ${o.status}</option>`).join('');
+  document.getElementById('refund-err').classList.add('hidden');
+  document.getElementById('modal-refund').classList.add('open');
+}
+
+function prefillRefund(orderId, orderRef) {
+  showSection('refunds');
+  setTimeout(() => {
+    openRefundModal();
+    const sel = document.getElementById('refund-order-id');
+    if (sel) sel.value = orderId;
+  }, 100);
+}
+
+async function submitRefund(e) {
+  e.preventDefault();
+  const orderId = document.getElementById('refund-order-id').value;
+  const reason  = document.getElementById('refund-reason').value.trim();
+  const errEl   = document.getElementById('refund-err');
+  errEl.classList.add('hidden');
+  const res  = await fetch('/api/customer/refunds', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ order_id: parseInt(orderId), reason }),
+  });
+  const data = await res.json();
+  if (data.ok) {
+    closeModal('modal-refund');
+    showToast('Refund request submitted!');
+    loadRefunds();
+  } else {
+    errEl.textContent = data.error || 'Failed to submit refund.';
+    errEl.classList.remove('hidden');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Payment Methods
+// ════════════════════════════════════════════════════════════════════
+const PAY_ICONS = { card:'credit_card', upi:'account_balance', wallet:'account_balance_wallet', netbanking:'account_balance' };
+
+async function loadPayments() {
+  const el = document.getElementById('payments-list');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/payment-methods');
+  const data = await res.json();
+  const mths = data.methods || [];
+  if (!mths.length) {
+    el.innerHTML = empty('credit_card','No payment methods saved','Add a card, UPI ID, or wallet for faster checkout.'); return;
+  }
+  el.innerHTML = mths.map(m => `
+    <div class="data-card mb-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+             style="background:rgba(0,219,233,0.1);border:1px solid rgba(0,219,233,0.2);">
+          <span class="material-symbols-outlined text-primary" style="font-size:1.3rem;">${PAY_ICONS[m.type]||'payment'}</span>
+        </div>
+        <div>
+          <p class="text-on-surface font-bold text-sm">${m.label}${m.last4?' ···· '+m.last4:''}</p>
+          <p class="text-outline text-xs capitalize">${m.type}${m.is_default?' · <span style="color:#4ade80">Default</span>':''}</p>
+        </div>
+      </div>
+      <div class="flex gap-2 flex-wrap justify-end">
+        ${!m.is_default ? `<button onclick="setDefaultPayment(${m.id})" class="btn-sm btn-sm-cyan">Set Default</button>` : ''}
+        <button onclick="deletePayment(${m.id})" class="btn-sm btn-sm-red">Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function openAddPaymentModal() {
+  document.getElementById('pay-form').reset();
+  document.getElementById('pay-err').classList.add('hidden');
+  updatePayFields();
+  document.getElementById('modal-payment').classList.add('open');
+}
+
+function updatePayFields() {
+  const type = document.getElementById('pay-type').value;
+  const last4Wrap = document.getElementById('pay-last4-wrap');
+  const labelLbl  = document.getElementById('pay-label-lbl');
+  const placeholders = { card:'e.g. HDFC Visa', upi:'e.g. yourname@upi', wallet:'e.g. Paytm Wallet', netbanking:'e.g. SBI Net Banking' };
+  document.getElementById('pay-label').placeholder = placeholders[type] || '';
+  labelLbl.textContent = type === 'upi' ? 'UPI ID' : type === 'wallet' ? 'Wallet Name' : type === 'netbanking' ? 'Bank Name' : 'Card Label';
+  last4Wrap.style.display = type === 'card' ? '' : 'none';
+}
+
+async function submitPayment(e) {
+  e.preventDefault();
+  const type  = document.getElementById('pay-type').value;
+  const label = document.getElementById('pay-label').value.trim();
+  const last4 = document.getElementById('pay-last4').value.trim();
+  const errEl = document.getElementById('pay-err');
+  errEl.classList.add('hidden');
+  const res  = await fetch('/api/customer/payment-methods', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ type, label, last4 }),
+  });
+  const data = await res.json();
+  if (data.ok) {
+    closeModal('modal-payment');
+    showToast('Payment method added!');
+    loadPayments();
+  } else {
+    errEl.textContent = data.error || 'Failed to add.';
+    errEl.classList.remove('hidden');
+  }
+}
+
+async function deletePayment(id) {
+  if (!confirm('Remove this payment method?')) return;
+  const res  = await fetch(`/api/customer/payment-methods/${id}`, { method:'DELETE' });
+  const data = await res.json();
+  if (data.ok) { showToast('Payment method removed.'); loadPayments(); }
+  else showToast(data.error || 'Failed to remove.', true);
+}
+
+async function setDefaultPayment(id) {
+  const res  = await fetch(`/api/customer/payment-methods/${id}/default`, { method:'PATCH' });
+  const data = await res.json();
+  if (data.ok) { showToast('Default payment method updated.'); loadPayments(); }
+  else showToast(data.error || 'Failed.', true);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Addresses
+// ════════════════════════════════════════════════════════════════════
+let editAddressId = null;
+
+async function loadAddresses() {
+  const el = document.getElementById('addresses-list');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/addresses');
+  const data = await res.json();
+  const addrs = data.addresses || [];
+  if (!addrs.length) {
+    el.innerHTML = empty('location_on','No addresses saved','Add a delivery address to speed up checkout.'); return;
+  }
+  el.innerHTML = addrs.map(a => `
+    <div class="data-card mb-3">
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-processing text-xs">${a.label}</span>
+          ${a.is_default ? '<span class="badge badge-delivered text-xs">Default</span>' : ''}
+        </div>
+        <div class="flex gap-2">
+          ${!a.is_default ? `<button onclick="setDefaultAddress(${a.id})" class="btn-sm btn-sm-cyan">Set Default</button>` : ''}
+          <button onclick="openEditAddressModal(${a.id})" class="btn-sm btn-sm-ghost"><span class="material-symbols-outlined" style="font-size:0.9rem;">edit</span></button>
+          <button onclick="deleteAddress(${a.id})" class="btn-sm btn-sm-red"><span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span></button>
+        </div>
+      </div>
+      <p class="text-on-surface font-bold text-sm">${a.full_name}</p>
+      <p class="text-on-surface-variant text-sm">${a.line1}${a.line2 ? ', '+a.line2 : ''}</p>
+      <p class="text-on-surface-variant text-sm">${a.city}, ${a.state} – ${a.pincode}</p>
+      ${a.phone ? `<p class="text-outline text-xs mt-1"><span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;">call</span> ${a.phone}</p>` : ''}
+    </div>`).join('');
+}
+
+function openAddAddressModal() {
+  editAddressId = null;
+  document.getElementById('addr-form').reset();
+  document.getElementById('addr-edit-id').value = '';
+  document.getElementById('addr-err').classList.add('hidden');
+  document.getElementById('addr-modal-title').textContent = 'Add Address';
+  document.getElementById('modal-address').classList.add('open');
+}
+
+async function openEditAddressModal(id) {
+  const res  = await fetch('/api/customer/addresses');
+  const data = await res.json();
+  const addr = (data.addresses||[]).find(a => a.id === id);
+  if (!addr) return;
+  editAddressId = id;
+  document.getElementById('addr-edit-id').value = id;
+  document.getElementById('addr-label').value   = addr.label;
+  document.getElementById('addr-name').value    = addr.full_name;
+  document.getElementById('addr-line1').value   = addr.line1;
+  document.getElementById('addr-line2').value   = addr.line2 || '';
+  document.getElementById('addr-city').value    = addr.city;
+  document.getElementById('addr-state').value   = addr.state;
+  document.getElementById('addr-pin').value     = addr.pincode;
+  document.getElementById('addr-phone').value   = addr.phone || '';
+  document.getElementById('addr-err').classList.add('hidden');
+  document.getElementById('addr-modal-title').textContent = 'Edit Address';
+  document.getElementById('modal-address').classList.add('open');
+}
+
+async function submitAddress(e) {
+  e.preventDefault();
+  const id    = document.getElementById('addr-edit-id').value;
+  const body  = {
+    label:     document.getElementById('addr-label').value,
+    full_name: document.getElementById('addr-name').value.trim(),
+    line1:     document.getElementById('addr-line1').value.trim(),
+    line2:     document.getElementById('addr-line2').value.trim(),
+    city:      document.getElementById('addr-city').value.trim(),
+    state:     document.getElementById('addr-state').value.trim(),
+    pincode:   document.getElementById('addr-pin').value.trim(),
+    phone:     document.getElementById('addr-phone').value.trim(),
+  };
+  const url    = id ? `/api/customer/addresses/${id}` : '/api/customer/addresses';
+  const method = id ? 'PATCH' : 'POST';
+  const errEl  = document.getElementById('addr-err');
+  errEl.classList.add('hidden');
+  const res  = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (data.ok) {
+    closeModal('modal-address');
+    showToast(id ? 'Address updated.' : 'Address added.');
+    loadAddresses(); loadOverview();
+  } else {
+    errEl.textContent = data.error || 'Failed to save address.';
+    errEl.classList.remove('hidden');
+  }
+}
+
+async function deleteAddress(id) {
+  if (!confirm('Delete this address?')) return;
+  const res  = await fetch(`/api/customer/addresses/${id}`, { method:'DELETE' });
+  const data = await res.json();
+  if (data.ok) { showToast('Address deleted.'); loadAddresses(); loadOverview(); }
+  else showToast(data.error || 'Failed.', true);
+}
+
+async function setDefaultAddress(id) {
+  const res  = await fetch(`/api/customer/addresses/${id}/default`, { method:'PATCH' });
+  const data = await res.json();
+  if (data.ok) { showToast('Default address updated.'); loadAddresses(); }
+  else showToast(data.error || 'Failed.', true);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Rewards & Coupons
+// ════════════════════════════════════════════════════════════════════
+async function loadRewards() {
+  const el = document.getElementById('rewards-content');
+  el.innerHTML = '<p class="text-outline text-sm">Loading…</p>';
+  const res  = await fetch('/api/customer/rewards');
+  const data = await res.json();
+  if (!data.ok) { el.innerHTML = empty('redeem','Could not load rewards.'); return; }
+  const r = data.rewards;
+  const tierBadge = `<span class="badge badge-${r.tier.toLowerCase()}">${r.tier}</span>`;
+  const progressBar = r.next_tier
+    ? `<div class="mt-3">
+        <div class="flex justify-between text-xs text-outline mb-1.5">
+          <span>${r.points.toLocaleString()} pts</span>
+          <span>${r.next_tier_points?.toLocaleString()} pts to ${r.next_tier}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${r.progress}%"></div></div>
+      </div>`
+    : '<p class="text-xs text-[#ffd700] mt-2">🏆 You\'ve reached the highest tier!</p>';
+
+  el.innerHTML = `
+    <!-- Points card -->
+    <div class="data-card mb-5 flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <p class="text-outline text-xs uppercase tracking-widest font-bold mb-1">Reward Points</p>
+        <p class="text-4xl font-black text-on-surface">${r.points.toLocaleString()}</p>
+        <div class="mt-1">${tierBadge}</div>
+        ${progressBar}
+      </div>
+      <span class="material-symbols-outlined" style="font-size:4rem;color:rgba(255,215,0,0.3);">emoji_events</span>
+    </div>
+
+    <!-- Coupons -->
+    <p class="text-xs font-bold uppercase tracking-widest text-outline mb-3">Available Coupons</p>
+    ${r.coupons.length === 0
+      ? empty('local_offer','No coupons available','Complete orders to earn discount coupons.')
+      : r.coupons.map(c => `
+        <div class="data-card mb-3 flex items-center justify-between gap-3 flex-wrap">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                 style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);">
+              <span class="material-symbols-outlined" style="color:#ffd700;font-size:1.3rem;">local_offer</span>
+            </div>
+            <div>
+              <p class="text-primary font-black font-mono text-sm">${c.code}</p>
+              <p class="text-on-surface-variant text-xs">
+                ${c.discount_type === 'percent' ? c.discount_value+'% off' : fmt_inr(c.discount_value)+' flat off'}
+                ${c.min_order > 0 ? ' · Min order '+fmt_inr(c.min_order) : ''}
+              </p>
+            </div>
+          </div>
+          <div class="text-right">
+            ${c.expires_at ? `<p class="text-xs text-outline">Expires ${fmt_date(c.expires_at)}</p>` : ''}
+            <button onclick="copyCode('${c.code}')" class="btn-sm btn-sm-cyan mt-1">
+              <span class="material-symbols-outlined" style="font-size:0.9rem;">content_copy</span> Copy
+            </button>
+          </div>
+        </div>`).join('')}`;
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => showToast(`Coupon code "${code}" copied!`));
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Account Settings
+// ════════════════════════════════════════════════════════════════════
+function loadAccount() {
+  if (!S.profile) return;
+  document.getElementById('ac-name').value  = S.profile.display_name || '';
+  document.getElementById('ac-email').value = S.profile.email;
+  document.getElementById('ac-role').value  = S.profile.role.charAt(0).toUpperCase() + S.profile.role.slice(1);
+}
+
+async function saveAccount() {
+  const name = document.getElementById('ac-name').value.trim();
+  const msgEl = document.getElementById('ac-msg');
+  const btn   = document.getElementById('ac-save');
+  msgEl.classList.add('hidden');
+  btn.disabled = true; btn.style.opacity='0.7';
+  const res  = await fetch('/api/profile', {
+    method:'PATCH', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ display_name: name }),
+  });
+  const data = await res.json();
+  btn.disabled = false; btn.style.opacity='1';
+  if (data.ok) {
+    S.profile.display_name = name;
+    populateSidebar();
+    showToast('Profile saved!');
+  } else {
+    msgEl.textContent = data.error || 'Could not save.';
+    msgEl.style.color = '#ffb4ab';
+    msgEl.classList.remove('hidden');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Modals
+// ════════════════════════════════════════════════════════════════════
+function closeModal(id, event) {
+  if (event && event.target.id !== id) return; // only close on overlay click
+  document.getElementById(id).classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Bootstrap
+// ════════════════════════════════════════════════════════════════════
+function populateSidebar() {
+  if (!S.profile) return;
+  const p = S.profile;
+  const initial = (p.display_name || p.email).charAt(0).toUpperCase();
+  document.getElementById('sb-avatar').textContent = initial;
+  document.getElementById('sb-name').textContent   = p.display_name || p.email.split('@')[0];
+  document.getElementById('sb-email').textContent  = p.email;
+  document.getElementById('ov-name').textContent   = p.display_name || p.email.split('@')[0];
+}
+
+async function init() {
+  const res  = await fetch('/api/profile');
+  const data = await res.json();
+  if (!data.ok) {
+    document.getElementById('auth-gate').style.display = 'flex';
+    return;
+  }
+  S.profile = data.profile;
+  document.getElementById('dashboard').style.display = 'flex';
+  populateSidebar();
+
+  // Seed demo data for new users then show overview
+  await fetch('/api/customer/seed', { method:'POST' });
+  showSection('overview');
+}
+
+init();
+</script>
+<script src="header-loader.js"></script>
+<script src="footer-loader.js"></script>
+</body>
+</html>

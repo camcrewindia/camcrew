@@ -58,6 +58,143 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id          INTEGER NOT NULL,
+                order_ref        TEXT    NOT NULL,
+                status           TEXT    NOT NULL DEFAULT 'processing',
+                items_json       TEXT    NOT NULL DEFAULT '[]',
+                total_amount     REAL    NOT NULL DEFAULT 0,
+                tracking_number  TEXT,
+                tracking_status  TEXT,
+                created_at       TEXT    DEFAULT (datetime('now')),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS bookings (
+                id                INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id           INTEGER NOT NULL,
+                professional_name TEXT    NOT NULL,
+                service           TEXT    NOT NULL,
+                booking_date      TEXT    NOT NULL,
+                status            TEXT    NOT NULL DEFAULT 'pending',
+                amount            REAL    NOT NULL DEFAULT 0,
+                note              TEXT,
+                created_at        TEXT    DEFAULT (datetime('now')),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS payment_methods (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id    INTEGER NOT NULL,
+                type       TEXT    NOT NULL DEFAULT 'card',
+                label      TEXT    NOT NULL,
+                last4      TEXT,
+                is_default INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT    DEFAULT (datetime('now')),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS addresses (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id    INTEGER NOT NULL,
+                label      TEXT    NOT NULL DEFAULT 'Home',
+                full_name  TEXT    NOT NULL,
+                line1      TEXT    NOT NULL,
+                line2      TEXT,
+                city       TEXT    NOT NULL,
+                state      TEXT    NOT NULL,
+                pincode    TEXT    NOT NULL,
+                phone      TEXT,
+                is_default INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS rewards (
+                id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL UNIQUE,
+                points  INTEGER NOT NULL DEFAULT 0,
+                tier    TEXT    NOT NULL DEFAULT 'Bronze',
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS coupons (
+                id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id        INTEGER NOT NULL,
+                code           TEXT    NOT NULL,
+                discount_value REAL    NOT NULL,
+                discount_type  TEXT    NOT NULL DEFAULT 'percent',
+                min_order      REAL    NOT NULL DEFAULT 0,
+                expires_at     TEXT,
+                used           INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS refunds (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id   INTEGER,
+                user_id    INTEGER NOT NULL,
+                amount     REAL    NOT NULL,
+                reason     TEXT,
+                status     TEXT    NOT NULL DEFAULT 'pending',
+                created_at TEXT    DEFAULT (datetime('now')),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        conn.commit()
+
+
+def seed_demo_data(user_id):
+    """Populate sample orders/bookings/rewards for a user that has none yet."""
+    import json, random, string as _string
+    with get_db() as conn:
+        if conn.execute("SELECT COUNT(*) FROM orders WHERE user_id=?", (user_id,)).fetchone()[0]:
+            return  # already seeded
+        rnd = lambda n: ''.join(random.choices(_string.digits, k=n))
+        orders = [
+            (f"CC-{rnd(6)}", "delivered", json.dumps([
+                {"name": "Canon EOS R5 Body", "qty": 1, "price": 12999},
+                {"name": "EF 24-70mm f/2.8L Lens", "qty": 1, "price": 8499},
+            ]), 21498, f"CCTK{rnd(8)}", "delivered"),
+            (f"CC-{rnd(6)}", "processing", json.dumps([
+                {"name": "DJI Ronin-S Gimbal", "qty": 1, "price": 15999},
+            ]), 15999, f"CCTK{rnd(8)}", "in_transit"),
+            (f"CC-{rnd(6)}", "cancelled", json.dumps([
+                {"name": "LED Studio Light Kit", "qty": 2, "price": 3999},
+            ]), 7998, None, None),
+        ]
+        for ref, status, items, total, trk_num, trk_status in orders:
+            conn.execute(
+                "INSERT INTO orders (user_id,order_ref,status,items_json,total_amount,tracking_number,tracking_status) VALUES (?,?,?,?,?,?,?)",
+                (user_id, ref, status, items, total, trk_num, trk_status),
+            )
+        bookings = [
+            ("Arjun Mehta", "Wedding Photography", "2026-08-15", "confirmed", 25000, "Looking forward to your big day!"),
+            ("Studio Lumina", "Corporate Video Production", "2026-09-01", "pending", 45000, "Need a 2-minute brand film."),
+            ("Priya Sharma", "Portrait Session", "2026-07-10", "completed", 8000, None),
+        ]
+        for prof, svc, date, status, amt, note in bookings:
+            conn.execute(
+                "INSERT INTO bookings (user_id,professional_name,service,booking_date,status,amount,note) VALUES (?,?,?,?,?,?,?)",
+                (user_id, prof, svc, date, status, amt, note),
+            )
+        conn.execute("INSERT OR IGNORE INTO rewards (user_id,points,tier) VALUES (?,1250,'Silver')", (user_id,))
+        for code, val, dtype, minord, exp in [
+            ("CAMCREW10", 10, "percent", 1000, "2026-12-31"),
+            ("SAVE500",  500, "flat",    5000, "2026-09-30"),
+        ]:
+            if not conn.execute("SELECT id FROM coupons WHERE user_id=? AND code=?", (user_id, code)).fetchone():
+                conn.execute(
+                    "INSERT INTO coupons (user_id,code,discount_value,discount_type,min_order,expires_at) VALUES (?,?,?,?,?,?)",
+                    (user_id, code, val, dtype, minord, exp),
+                )
         conn.commit()
 
 
@@ -276,6 +413,343 @@ def update_profile():
         )
         conn.commit()
     return jsonify({"ok": True, "display_name": display_name})
+
+
+# ---------------------------------------------------------------------------
+# Customer dashboard API
+# ---------------------------------------------------------------------------
+
+def require_auth():
+    """Return user_id from session or None."""
+    return session.get("user_id")
+
+
+@app.route("/api/customer/seed", methods=["POST"])
+def customer_seed():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    seed_demo_data(uid)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/customer/overview", methods=["GET"])
+def customer_overview():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        orders_count   = conn.execute("SELECT COUNT(*) FROM orders   WHERE user_id=?", (uid,)).fetchone()[0]
+        bookings_count = conn.execute("SELECT COUNT(*) FROM bookings WHERE user_id=? AND status IN ('pending','confirmed')", (uid,)).fetchone()[0]
+        addr_count     = conn.execute("SELECT COUNT(*) FROM addresses WHERE user_id=?", (uid,)).fetchone()[0]
+        row            = conn.execute("SELECT points, tier FROM rewards WHERE user_id=?", (uid,)).fetchone()
+        points = row["points"] if row else 0
+        tier   = row["tier"]   if row else "Bronze"
+    return jsonify({"ok": True, "overview": {
+        "orders": orders_count, "active_bookings": bookings_count,
+        "addresses": addr_count, "points": points, "tier": tier,
+    }})
+
+
+# ── Orders ─────────────────────────────────────────────────────────────────
+
+@app.route("/api/customer/orders", methods=["GET"])
+def customer_orders():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    import json as _json
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM orders WHERE user_id=? ORDER BY created_at DESC", (uid,)
+        ).fetchall()
+    orders = []
+    for r in rows:
+        orders.append({
+            "id": r["id"], "order_ref": r["order_ref"], "status": r["status"],
+            "items": _json.loads(r["items_json"]), "total_amount": r["total_amount"],
+            "tracking_number": r["tracking_number"], "tracking_status": r["tracking_status"],
+            "created_at": r["created_at"],
+        })
+    return jsonify({"ok": True, "orders": orders})
+
+
+@app.route("/api/customer/orders/<int:order_id>/cancel", methods=["POST"])
+def cancel_order(order_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Order not found."}), 404
+        if row["status"] not in ("processing", "confirmed"):
+            return jsonify({"ok": False, "error": f"Cannot cancel an order with status '{row['status']}'."}), 400
+        conn.execute("UPDATE orders SET status='cancelled', tracking_status=NULL WHERE id=?", (order_id,))
+        conn.commit()
+    return jsonify({"ok": True, "message": "Order cancelled."})
+
+
+@app.route("/api/customer/orders/<int:order_id>/track", methods=["GET"])
+def track_order(order_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+    if not row:
+        return jsonify({"ok": False, "error": "Order not found."}), 404
+    return jsonify({"ok": True, "tracking": {
+        "order_ref": row["order_ref"], "tracking_number": row["tracking_number"],
+        "tracking_status": row["tracking_status"], "order_status": row["status"],
+    }})
+
+
+# ── Bookings ────────────────────────────────────────────────────────────────
+
+@app.route("/api/customer/bookings", methods=["GET"])
+def customer_bookings():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM bookings WHERE user_id=? ORDER BY booking_date DESC", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "bookings": [dict(r) for r in rows]})
+
+
+@app.route("/api/customer/bookings/<int:booking_id>/cancel", methods=["POST"])
+def cancel_booking(booking_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM bookings WHERE id=? AND user_id=?", (booking_id, uid)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Booking not found."}), 404
+        if row["status"] in ("cancelled", "completed"):
+            return jsonify({"ok": False, "error": f"Cannot cancel a booking with status '{row['status']}'."}), 400
+        conn.execute("UPDATE bookings SET status='cancelled' WHERE id=?", (booking_id,))
+        conn.commit()
+    return jsonify({"ok": True, "message": "Booking cancelled."})
+
+
+# ── Refunds ─────────────────────────────────────────────────────────────────
+
+@app.route("/api/customer/refunds", methods=["GET"])
+def customer_refunds():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT r.*, o.order_ref FROM refunds r LEFT JOIN orders o ON r.order_id=o.id WHERE r.user_id=? ORDER BY r.created_at DESC",
+            (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "refunds": [dict(r) for r in rows]})
+
+
+@app.route("/api/customer/refunds", methods=["POST"])
+def request_refund():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data     = request.get_json(force=True)
+    order_id = data.get("order_id")
+    reason   = (data.get("reason") or "").strip()
+    if not order_id:
+        return jsonify({"ok": False, "error": "order_id is required."}), 400
+    with get_db() as conn:
+        order = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+        if not order:
+            return jsonify({"ok": False, "error": "Order not found."}), 404
+        if order["status"] not in ("cancelled", "delivered"):
+            return jsonify({"ok": False, "error": "Refunds can only be requested for delivered or cancelled orders."}), 400
+        existing = conn.execute("SELECT id FROM refunds WHERE order_id=? AND user_id=? AND status!='rejected'", (order_id, uid)).fetchone()
+        if existing:
+            return jsonify({"ok": False, "error": "A refund request already exists for this order."}), 409
+        conn.execute(
+            "INSERT INTO refunds (order_id,user_id,amount,reason,status) VALUES (?,?,?,?,'pending')",
+            (order_id, uid, order["total_amount"], reason),
+        )
+        conn.commit()
+    return jsonify({"ok": True, "message": "Refund request submitted."})
+
+
+# ── Payment Methods ─────────────────────────────────────────────────────────
+
+@app.route("/api/customer/payment-methods", methods=["GET"])
+def get_payment_methods():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rows = conn.execute("SELECT * FROM payment_methods WHERE user_id=? ORDER BY is_default DESC, created_at DESC", (uid,)).fetchall()
+    return jsonify({"ok": True, "methods": [dict(r) for r in rows]})
+
+
+@app.route("/api/customer/payment-methods", methods=["POST"])
+def add_payment_method():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data  = request.get_json(force=True)
+    mtype = (data.get("type")  or "card").strip().lower()
+    label = (data.get("label") or "").strip()
+    last4 = (data.get("last4") or "").strip()
+    if not label:
+        return jsonify({"ok": False, "error": "Label is required."}), 400
+    with get_db() as conn:
+        count = conn.execute("SELECT COUNT(*) FROM payment_methods WHERE user_id=?", (uid,)).fetchone()[0]
+        is_default = 1 if count == 0 else 0
+        conn.execute(
+            "INSERT INTO payment_methods (user_id,type,label,last4,is_default) VALUES (?,?,?,?,?)",
+            (uid, mtype, label, last4, is_default),
+        )
+        conn.commit()
+    return jsonify({"ok": True, "message": "Payment method added."})
+
+
+@app.route("/api/customer/payment-methods/<int:method_id>", methods=["DELETE"])
+def delete_payment_method(method_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM payment_methods WHERE id=? AND user_id=?", (method_id, uid)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Payment method not found."}), 404
+        conn.execute("DELETE FROM payment_methods WHERE id=?", (method_id,))
+        if row["is_default"]:
+            conn.execute(
+                "UPDATE payment_methods SET is_default=1 WHERE user_id=? ORDER BY created_at DESC LIMIT 1", (uid,)
+            )
+        conn.commit()
+    return jsonify({"ok": True, "message": "Payment method removed."})
+
+
+@app.route("/api/customer/payment-methods/<int:method_id>/default", methods=["PATCH"])
+def set_default_payment(method_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        if not conn.execute("SELECT id FROM payment_methods WHERE id=? AND user_id=?", (method_id, uid)).fetchone():
+            return jsonify({"ok": False, "error": "Payment method not found."}), 404
+        conn.execute("UPDATE payment_methods SET is_default=0 WHERE user_id=?", (uid,))
+        conn.execute("UPDATE payment_methods SET is_default=1 WHERE id=?", (method_id,))
+        conn.commit()
+    return jsonify({"ok": True})
+
+
+# ── Addresses ───────────────────────────────────────────────────────────────
+
+@app.route("/api/customer/addresses", methods=["GET"])
+def get_addresses():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rows = conn.execute("SELECT * FROM addresses WHERE user_id=? ORDER BY is_default DESC, id DESC", (uid,)).fetchall()
+    return jsonify({"ok": True, "addresses": [dict(r) for r in rows]})
+
+
+@app.route("/api/customer/addresses", methods=["POST"])
+def add_address():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    d = request.get_json(force=True)
+    required = ["full_name", "line1", "city", "state", "pincode"]
+    for f in required:
+        if not (d.get(f) or "").strip():
+            return jsonify({"ok": False, "error": f"'{f}' is required."}), 400
+    with get_db() as conn:
+        count = conn.execute("SELECT COUNT(*) FROM addresses WHERE user_id=?", (uid,)).fetchone()[0]
+        is_default = 1 if count == 0 else int(bool(d.get("is_default")))
+        if is_default:
+            conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=?", (uid,))
+        conn.execute(
+            "INSERT INTO addresses (user_id,label,full_name,line1,line2,city,state,pincode,phone,is_default) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (uid, (d.get("label") or "Home").strip(), d["full_name"].strip(),
+             d["line1"].strip(), (d.get("line2") or "").strip(),
+             d["city"].strip(), d["state"].strip(), d["pincode"].strip(),
+             (d.get("phone") or "").strip(), is_default),
+        )
+        conn.commit()
+    return jsonify({"ok": True, "message": "Address added."})
+
+
+@app.route("/api/customer/addresses/<int:addr_id>", methods=["PATCH"])
+def update_address(addr_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    d = request.get_json(force=True)
+    with get_db() as conn:
+        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+            return jsonify({"ok": False, "error": "Address not found."}), 404
+        conn.execute("""UPDATE addresses SET label=?,full_name=?,line1=?,line2=?,city=?,state=?,pincode=?,phone=? WHERE id=?""",
+            ((d.get("label") or "Home").strip(), (d.get("full_name") or "").strip(),
+             (d.get("line1") or "").strip(), (d.get("line2") or "").strip(),
+             (d.get("city") or "").strip(), (d.get("state") or "").strip(),
+             (d.get("pincode") or "").strip(), (d.get("phone") or "").strip(), addr_id))
+        conn.commit()
+    return jsonify({"ok": True, "message": "Address updated."})
+
+
+@app.route("/api/customer/addresses/<int:addr_id>", methods=["DELETE"])
+def delete_address(addr_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+            return jsonify({"ok": False, "error": "Address not found."}), 404
+        conn.execute("DELETE FROM addresses WHERE id=?", (addr_id,))
+        conn.commit()
+    return jsonify({"ok": True, "message": "Address deleted."})
+
+
+@app.route("/api/customer/addresses/<int:addr_id>/default", methods=["PATCH"])
+def set_default_address(addr_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+            return jsonify({"ok": False, "error": "Address not found."}), 404
+        conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=?", (uid,))
+        conn.execute("UPDATE addresses SET is_default=1 WHERE id=?", (addr_id,))
+        conn.commit()
+    return jsonify({"ok": True})
+
+
+# ── Rewards & Coupons ───────────────────────────────────────────────────────
+
+@app.route("/api/customer/rewards", methods=["GET"])
+def customer_rewards():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rw  = conn.execute("SELECT * FROM rewards WHERE user_id=?", (uid,)).fetchone()
+        cps = conn.execute("SELECT * FROM coupons WHERE user_id=? AND used=0 ORDER BY expires_at ASC", (uid,)).fetchall()
+    points = rw["points"] if rw else 0
+    tier   = rw["tier"]   if rw else "Bronze"
+    tier_thresholds = {"Bronze": 0, "Silver": 1000, "Gold": 5000}
+    next_tier = {"Bronze": ("Silver", 1000), "Silver": ("Gold", 5000), "Gold": (None, None)}
+    nt_name, nt_pts = next_tier[tier]
+    progress = 0
+    if nt_pts:
+        cur_floor = tier_thresholds[tier]
+        progress = min(100, int((points - cur_floor) / (nt_pts - cur_floor) * 100))
+    return jsonify({"ok": True, "rewards": {
+        "points": points, "tier": tier,
+        "next_tier": nt_name, "next_tier_points": nt_pts, "progress": progress,
+        "coupons": [dict(c) for c in cps],
+    }})
 
 
 if __name__ == "__main__":
