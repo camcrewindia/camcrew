@@ -225,6 +225,18 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+/* ── Autofill override — prevent browser from forcing a white background ── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 9999px #080f10 inset !important;
+    box-shadow: 0 0 0 9999px #080f10 inset !important;
+    -webkit-text-fill-color: #dce4e5 !important;
+    caret-color: #dce4e5;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 .floating-label { transition: all 0.2s ease; }
 
 input:focus ~ .floating-label,
