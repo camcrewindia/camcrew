@@ -560,7 +560,7 @@
       <h2 style="font-size:1.5rem;font-weight:800;color:#dce4e5;margin-bottom:0.5rem;">Profile Complete!</h2>
       <p style="font-size:1rem;color:#849495;max-width:380px;margin:0 auto 2rem;">Your professional profile is live. Clients can now discover and book you on Camcrew Studio.</p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="profile.html" class="cc-btn-primary" style="width:auto;padding:0.9rem 2rem;">
+        <a href="professional-profile.html" class="cc-btn-primary" style="width:auto;padding:0.9rem 2rem;">
           <span class="material-symbols-outlined" style="font-size:1.1rem;">person</span> View My Profile
         </a>
         <a href="index.html" class="cc-btn-ghost" style="width:auto;padding:0.9rem 2rem;">
@@ -846,6 +846,46 @@ async function submitSetup() {
   const submitBtn = document.querySelector('#step-5 .cc-btn-primary');
   submitBtn.disabled = true;
   submitBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem;animation:spin 0.8s linear infinite;">progress_activity</span> Saving…`;
+
+  // Collect all selected categories
+  const selectedCats = Array.from(document.querySelectorAll('#cat-chips .cat-chip.selected'))
+    .map(b => b.dataset.cat);
+
+  // Collect social links
+  const socialInputs = document.querySelectorAll('.social-row input');
+  const socials = {
+    instagram: socialInputs[0] ? socialInputs[0].value.trim() : '',
+    facebook:  socialInputs[1] ? socialInputs[1].value.trim() : '',
+    tiktok:    socialInputs[2] ? socialInputs[2].value.trim() : '',
+  };
+
+  // Build portfolio items list (URL + type) from blob URLs
+  const portfolioItems = mediaFiles.map(m => ({
+    url:  m.url,
+    type: m.isVideo ? 'video' : 'image',
+    name: m.file ? m.file.name : '',
+  }));
+
+  // Build the profile data object
+  const proData = {
+    name,
+    title:      document.getElementById('inp-title').value.trim(),
+    categories: selectedCats,
+    bio:        document.getElementById('inp-bio').value.trim(),
+    phone:      document.getElementById('inp-phone').value.trim(),
+    website:    document.getElementById('inp-website').value.trim(),
+    socials,
+    portfolio:  portfolioItems,
+    services,
+    locations,
+    travelIntl,
+    savedAt:    new Date().toISOString(),
+  };
+
+  // Persist to localStorage so the profile page can read it
+  try {
+    localStorage.setItem('cc_pro_profile', JSON.stringify(proData));
+  } catch(_) {}
 
   try {
     const payload = {

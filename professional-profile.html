@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Professional Profile | Camcrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="tailwind-config.js"></script>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ── Cover hero ───────────────────────────────────────────────── */
+  .cover-hero {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    background: linear-gradient(135deg,
+      rgba(0,219,233,0.12) 0%,
+      rgba(22,22,24,0.9) 40%,
+      rgba(188,19,254,0.1) 100%);
+    overflow: hidden;
+  }
+  .cover-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(0,219,233,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 30%, rgba(188,19,254,0.14) 0%, transparent 55%);
+  }
+  .cover-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,219,233,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,219,233,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+  }
+
+  /* ── Profile avatar (large) ───────────────────────────────────── */
+  .prof-avatar-ring {
+    width: 8rem; height: 8rem;
+    background: conic-gradient(#00f0ff, #b600f8, #00f0ff);
+    border-radius: 50%;
+    padding: 3px;
+    animation: spin-ring 6s linear infinite;
+    flex-shrink: 0;
+  }
+  .prof-avatar-inner {
+    background: #0A0A0B;
+    border-radius: 50%;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .prof-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ── Category pill ────────────────────────────────────────────── */
+  .cat-pill {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.3rem 0.8rem; border-radius: 999px;
+    background: rgba(0,219,233,0.08);
+    border: 1px solid rgba(0,219,233,0.2);
+    color: #00dbe9; font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.03em;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Stat chip ────────────────────────────────────────────────── */
+  .stat-chip {
+    background: rgba(22,22,24,0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+  }
+  .stat-chip:hover {
+    border-color: rgba(0,240,255,0.25);
+    box-shadow: 0 0 20px rgba(0,240,255,0.06);
+  }
+
+  /* ── Service card ─────────────────────────────────────────────── */
+  .svc-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1rem;
+    padding: 1.1rem 1.25rem;
+    transition: border-color 0.2s ease;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  }
+  .svc-card:hover { border-color: rgba(0,219,233,0.22); }
+
+  /* ── Portfolio grid ───────────────────────────────────────────── */
+  .portfolio-thumb {
+    aspect-ratio: 1;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .portfolio-thumb:hover {
+    transform: scale(1.03);
+    border-color: rgba(0,219,233,0.35);
+  }
+  .portfolio-thumb img, .portfolio-thumb video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .portfolio-thumb .vid-badge {
+    position: absolute; bottom: 0.4rem; left: 0.4rem;
+    background: rgba(0,0,0,0.75); border-radius: 0.3rem;
+    padding: 1px 6px; font-size: 0.62rem; font-weight: 800;
+    color: #fff; letter-spacing: 0.08em;
+  }
+  .portfolio-thumb .play-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.25);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .portfolio-thumb:hover .play-overlay { opacity: 1; }
+
+  /* ── Location tag ─────────────────────────────────────────────── */
+  .loc-tag {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.35rem 0.75rem; border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #b9cacb; font-size: 0.82rem; font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Social link row ──────────────────────────────────────────── */
+  .social-link {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    text-decoration: none;
+    color: #b9cacb;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .social-link:last-child { border-bottom: none; }
+  .social-link:hover { color: #00dbe9; }
+  .social-icon {
+    width: 2rem; height: 2rem; border-radius: 0.45rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Section label ────────────────────────────────────────────── */
+  .section-label {
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #849495; margin-bottom: 1rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+
+  /* ── Empty state ──────────────────────────────────────────────── */
+  .empty-state {
+    text-align: center; padding: 2.5rem 1rem;
+    color: #475569; font-size: 0.88rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    border: 1px dashed rgba(255,255,255,0.08);
+    border-radius: 1rem;
+    background: rgba(255,255,255,0.01);
+  }
+
+  /* ── Neon number ──────────────────────────────────────────────── */
+  .neon-num {
+    font-size: 1.5rem; font-weight: 800;
+    background: linear-gradient(to right, #dbfcff, #00dbe9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+
+  /* ── Verified badge ───────────────────────────────────────────── */
+  .verified-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: rgba(0,219,233,0.1);
+    border: 1px solid rgba(0,219,233,0.25);
+    color: #00dbe9; padding: 0.2rem 0.6rem; border-radius: 999px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Travel badge ─────────────────────────────────────────────── */
+  .travel-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem; font-weight: 700;
+    padding: 0.4rem 0.85rem; border-radius: 999px;
+    background: rgba(188,19,254,0.08);
+    border: 1px solid rgba(188,19,254,0.2);
+    color: #ebb2ff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Lightbox ─────────────────────────────────────────────────── */
+  #lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.92);
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img, #lightbox video {
+    max-width: 90vw; max-height: 85vh;
+    border-radius: 1rem;
+    object-fit: contain;
+  }
+  #lightbox-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: rgba(22,22,24,0.9); border: 1px solid rgba(255,255,255,0.15);
+    color: #dce4e5; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; transition: border-color 0.2s;
+  }
+  #lightbox-close:hover { border-color: rgba(0,219,233,0.5); color: #00dbe9; }
+</style>
+</head>
+<body class="font-body-md antialiased min-h-screen flex flex-col">
+
+<!-- Animated Background -->
+<div class="fixed inset-0 z-[-1] overflow-hidden">
+  <div class="absolute inset-0 w-full h-full opacity-35">
+    <canvas id="shader-canvas" style="display:block;width:100%;height:100%"></canvas>
+    <script>
+    (function() {
+      const canvas = document.getElementById('shader-canvas');
+      function syncSize() {
+        const w = canvas.clientWidth || 1280, h = canvas.clientHeight || 720;
+        if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      }
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncSize).observe(canvas);
+      syncSize();
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return;
+      const vs = `attribute vec2 a_position; varying vec2 v_texCoord;
+        void main() { v_texCoord = a_position * 0.5 + 0.5; gl_Position = vec4(a_position,0.0,1.0); }`;
+      const fs = `precision highp float; varying vec2 v_texCoord; uniform float u_time; uniform vec2 u_resolution;
+        void main() {
+          vec2 uv = v_texCoord;
+          vec3 c1 = vec3(0.05,0.08,0.1); vec3 c2 = vec3(0.0,0.94,1.0); vec3 c3 = vec3(0.74,0.0,1.0);
+          float noise = sin(uv.x*10.0+u_time*0.5)*cos(uv.y*10.0+u_time*0.5);
+          float glow = smoothstep(0.4,0.6,sin(u_time*0.2+length(uv-0.5)*5.0)*0.5+0.5);
+          vec3 col = mix(c1,c2,glow*0.1); col = mix(col,c3,noise*0.05);
+          float p = pow(fract(sin(dot(uv+u_time*0.01,vec2(12.9898,78.233)))*43758.5453),20.0);
+          col += p*0.2; gl_FragColor = vec4(col,1.0);
+        }`;
+      function cs(type,src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+      const prog = gl.createProgram();
+      gl.attachShader(prog,cs(gl.VERTEX_SHADER,vs)); gl.attachShader(prog,cs(gl.FRAGMENT_SHADER,fs));
+      gl.linkProgram(prog); gl.useProgram(prog);
+      const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      const pos=gl.getAttribLocation(prog,'a_position');
+      gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+      const uTime=gl.getUniformLocation(prog,'u_time'), uRes=gl.getUniformLocation(prog,'u_resolution');
+      function render(t){
+        if(typeof ResizeObserver==='undefined') syncSize();
+        gl.viewport(0,0,canvas.width,canvas.height);
+        if(uTime) gl.uniform1f(uTime,t*0.001);
+        if(uRes) gl.uniform2f(uRes,canvas.width,canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(render);
+      }
+      render(0);
+    })();
+    </script>
+  </div>
+</div>
+
+<!-- Header -->
+<div id="site-header"></div>
+
+<!-- ── MAIN ──────────────────────────────────────────────────────── -->
+<main class="flex-grow pt-20 pb-stack-xl">
+
+  <!-- Auth gate -->
+  <div id="auth-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
+    <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">lock</span>
+    <p class="font-headline-md text-on-surface-variant mb-6">Sign in to view your professional profile</p>
+    <a href="signin.html" class="shimmer-btn inline-block relative overflow-hidden bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-bold py-4 px-8 rounded-full transition-transform hover:scale-105">Go to Sign In</a>
+  </div>
+
+  <!-- Not-a-professional gate -->
+  <div id="role-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
+    <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">work_off</span>
+    <p class="font-headline-md text-on-surface-variant mb-3">This page is for professional accounts</p>
+    <p class="text-on-surface-variant text-sm mb-6 max-w-sm">Your account role is <span id="role-display" class="text-primary font-bold"></span>. Only professionals have a dedicated profile page.</p>
+    <a href="profile.html" class="cc-btn-ghost" style="width:auto;padding:0.9rem 2rem;">View My Account</a>
+  </div>
+
+  <!-- ── Setup required notice ─────────────────────────────────── -->
+  <div id="setup-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
+    <div style="width:5rem;height:5rem;border-radius:50%;background:rgba(0,219,233,0.08);border:1px solid rgba(0,219,233,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <span class="material-symbols-outlined text-primary" style="font-size:2rem;">edit_note</span>
+    </div>
+    <p class="font-headline-md text-on-surface mb-2">Complete your profile setup</p>
+    <p class="text-on-surface-variant text-sm mb-6 max-w-sm">You haven't finished your professional profile yet. Set it up so clients can discover and book you.</p>
+    <a href="professionalsetup.html" class="cc-btn-primary" style="width:auto;padding:0.9rem 2rem;">
+      <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span> Set Up Profile
+    </a>
+  </div>
+
+  <!-- ── PROFILE CONTENT ────────────────────────────────────────── -->
+  <div id="profile-content" class="hidden">
+
+    <!-- ── COVER HERO ──────────────────────────────────────────── -->
+    <div class="cover-hero">
+      <div class="cover-grid"></div>
+      <!-- Floating orbs -->
+      <div class="absolute top-8 left-[15%] w-32 h-32 rounded-full opacity-20 blur-[60px]" style="background:rgba(0,219,233,0.6);"></div>
+      <div class="absolute bottom-4 right-[20%] w-24 h-24 rounded-full opacity-15 blur-[50px]" style="background:rgba(188,19,254,0.7);"></div>
+      <!-- Edit button (top right) -->
+      <div class="absolute top-4 right-4 md:top-6 md:right-8">
+        <a href="professionalsetup.html" class="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full glass-panel border border-glass-stroke text-on-surface-variant hover:text-primary hover:border-primary/40 transition-all" style="backdrop-filter:blur(12px);">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">edit</span> Edit Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- ── IDENTITY BAR (overlaps cover) ────────────────────────── -->
+    <div class="px-margin-mobile md:px-margin-desktop">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="flex flex-col md:flex-row md:items-end gap-5 -mt-16 mb-8 relative z-10">
+          <!-- Avatar -->
+          <div class="prof-avatar-ring flex-shrink-0">
+            <div class="prof-avatar-inner">
+              <img id="prof-avatar-img" src="" alt="Avatar" style="display:none;">
+              <span id="prof-avatar-initial" class="text-4xl font-bold" style="color:#00dbe9;text-shadow:0 0 24px rgba(0,240,255,0.8);"></span>
+            </div>
+          </div>
+
+          <!-- Name block -->
+          <div class="flex-1 min-w-0 pb-1">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <h1 id="prof-name" class="font-display-lg text-display-lg-mobile md:text-display-lg gradient-text leading-none truncate"></h1>
+              <span class="verified-badge"><span class="material-symbols-outlined" style="font-size:0.85rem;">verified</span> Pro</span>
+            </div>
+            <p id="prof-title" class="text-on-surface-variant font-semibold text-base mb-2"></p>
+            <div id="prof-cats" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- CTA -->
+          <div class="flex gap-2 pb-1 flex-shrink-0">
+            <button onclick="copyContact()" class="cc-btn-ghost" style="width:auto;padding:0.65rem 1.25rem;font-size:0.85rem;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">share</span> Share
+            </button>
+            <button onclick="scrollToContact()" class="cc-btn-primary" style="width:auto;padding:0.65rem 1.4rem;font-size:0.85rem;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">send</span> Contact
+            </button>
+          </div>
+        </div>
+
+        <!-- ── STATS ROW ──────────────────────────────────────── -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <div class="stat-chip">
+            <div class="neon-num" id="stat-since">—</div>
+            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Member Since</div>
+          </div>
+          <div class="stat-chip">
+            <div class="neon-num" id="stat-portfolio">0</div>
+            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Portfolio Items</div>
+          </div>
+          <div class="stat-chip">
+            <div class="neon-num" id="stat-services">0</div>
+            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Services Offered</div>
+          </div>
+          <div class="stat-chip">
+            <div class="neon-num" id="stat-locations">0</div>
+            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Locations</div>
+          </div>
+        </div>
+
+        <!-- ── TWO-COLUMN LAYOUT ──────────────────────────────── -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+          <!-- LEFT: Bio + Portfolio + Services ────────────────── -->
+          <div class="lg:col-span-2 space-y-6">
+
+            <!-- Bio card -->
+            <div id="bio-card" class="glass-panel rounded-2xl p-6 reveal">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">auto_stories</span>
+                About
+              </div>
+              <p id="prof-bio" class="text-on-surface leading-relaxed text-base"></p>
+            </div>
+
+            <!-- Portfolio -->
+            <div class="glass-panel rounded-2xl p-6 reveal">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">photo_library</span>
+                Portfolio
+              </div>
+              <div id="portfolio-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3"></div>
+              <div id="portfolio-empty" class="empty-state hidden">
+                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">image_not_supported</span>
+                No portfolio items yet
+              </div>
+            </div>
+
+            <!-- Services & Rates -->
+            <div class="glass-panel rounded-2xl p-6 reveal">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">sell</span>
+                Services &amp; Rates
+              </div>
+              <div id="services-list" class="space-y-3"></div>
+              <div id="services-empty" class="empty-state hidden">
+                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">receipt_long</span>
+                No services listed yet
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Contact + Locations ──────────────────────── -->
+          <div class="space-y-6">
+
+            <!-- Contact card -->
+            <div class="glass-panel rounded-2xl p-6 reveal" id="contact-section">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">contact_page</span>
+                Contact
+              </div>
+
+              <!-- Email -->
+              <div class="flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
+                <div class="social-icon" style="background:rgba(0,219,233,0.08);border-color:rgba(0,219,233,0.15);">
+                  <span class="material-symbols-outlined" style="font-size:1rem;color:#00dbe9;">alternate_email</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Email</div>
+                  <div id="prof-email" class="text-on-surface text-sm font-medium truncate"></div>
+                </div>
+              </div>
+
+              <!-- Phone -->
+              <div id="phone-row" class="hidden flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
+                <div class="social-icon">
+                  <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;">phone_iphone</span>
+                </div>
+                <div>
+                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Phone</div>
+                  <div id="prof-phone" class="text-on-surface text-sm font-medium"></div>
+                </div>
+              </div>
+
+              <!-- Website -->
+              <div id="website-row" class="hidden flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
+                <div class="social-icon">
+                  <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;">open_in_new</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Website</div>
+                  <a id="prof-website" href="#" target="_blank" rel="noopener" class="text-primary text-sm font-medium hover:text-primary-fixed-dim truncate block transition-colors"></a>
+                </div>
+              </div>
+
+              <!-- Social links -->
+              <div id="socials-wrap" class="space-y-0"></div>
+
+              <!-- Book button -->
+              <button onclick="scrollToContact()" class="cc-btn-primary mt-5" style="font-size:0.9rem;">
+                <span class="material-symbols-outlined" style="font-size:1rem;">calendar_month</span> Request Booking
+              </button>
+            </div>
+
+            <!-- Locations card -->
+            <div class="glass-panel rounded-2xl p-6 reveal">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">location_on</span>
+                Work Locations
+              </div>
+              <div id="loc-tags" class="flex flex-wrap gap-2"></div>
+              <div id="loc-empty" class="empty-state hidden">
+                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">location_off</span>
+                No locations listed
+              </div>
+              <div id="travel-badge-wrap" class="hidden mt-3">
+                <span class="travel-badge">
+                  <span class="material-symbols-outlined" style="font-size:1rem;">flight</span>
+                  Available for international travel
+                </span>
+              </div>
+            </div>
+
+            <!-- Quick info card -->
+            <div class="glass-panel rounded-2xl p-6 reveal">
+              <div class="section-label">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">info</span>
+                Quick Info
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-on-surface-variant text-sm">Account type</span>
+                  <span class="text-on-surface text-sm font-bold capitalize" id="qi-role"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-on-surface-variant text-sm">Member since</span>
+                  <span class="text-on-surface text-sm font-bold" id="qi-since"></span>
+                </div>
+                <div class="flex items-center justify-between" id="qi-cats-row">
+                  <span class="text-on-surface-variant text-sm">Specialties</span>
+                  <span class="text-primary text-sm font-bold" id="qi-cats"></span>
+                </div>
+                <div class="flex items-center justify-between" id="qi-travel-row">
+                  <span class="text-on-surface-variant text-sm">International</span>
+                  <span id="qi-travel" class="text-sm font-bold"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /two-col -->
+
+      </div>
+    </div><!-- /px-wrapper -->
+  </div><!-- /profile-content -->
+
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button id="lightbox-close" onclick="closeLightbox()">
+    <span class="material-symbols-outlined" style="font-size:1.25rem;">close</span>
+  </button>
+  <div id="lightbox-media"></div>
+</div>
+
+<!-- Footer -->
+<div id="site-footer"></div>
+
+<!-- Toast -->
+<div id="success-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass-panel px-8 py-4 rounded-full border border-primary/50 flex items-center space-x-3 opacity-0 translate-y-10 transition-all duration-500 pointer-events-none z-[100]">
+  <span id="toast-icon" class="material-symbols-outlined text-primary">check_circle</span>
+  <span id="toast-text" class="font-body-md text-primary text-sm font-semibold"></span>
+</div>
+
+<script>
+// ── Scroll reveal ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const obs = new IntersectionObserver(entries =>
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }), { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+});
+
+// ── Escape helper ─────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Show/hide helpers ─────────────────────────────────────────────────
+function show(id) { const el = document.getElementById(id); if(el) el.classList.remove('hidden'); }
+function hide(id) { const el = document.getElementById(id); if(el) el.classList.add('hidden'); }
+
+// ── Load profile ──────────────────────────────────────────────────────
+async function loadProfile() {
+  let apiProfile = null;
+  try {
+    const res  = await fetch('/api/profile');
+    const data = await res.json();
+    if (!data.ok) { show('auth-gate'); return; }
+    apiProfile = data.profile;
+  } catch(_) { show('auth-gate'); return; }
+
+  // Role check
+  if (apiProfile.role !== 'professional') {
+    document.getElementById('role-display').textContent = apiProfile.role;
+    show('role-gate'); return;
+  }
+
+  // Load professional setup data from localStorage
+  const raw = localStorage.getItem('cc_pro_profile');
+  const pro  = raw ? JSON.parse(raw) : null;
+
+  // If no setup data, show setup gate (but show basic info)
+  if (!pro || !pro.name) {
+    show('setup-gate'); return;
+  }
+
+  // ── Populate UI ───────────────────────────────────────────────────
+  show('profile-content');
+
+  // Avatar
+  const avatarImg = document.getElementById('prof-avatar-img');
+  const avatarInitial = document.getElementById('prof-avatar-initial');
+  if (pro.avatarUrl) {
+    avatarImg.src = pro.avatarUrl;
+    avatarImg.style.display = 'block';
+    avatarInitial.style.display = 'none';
+  } else {
+    avatarInitial.textContent = (pro.name || apiProfile.email).charAt(0).toUpperCase();
+  }
+
+  // Name & title
+  const displayName = pro.name || apiProfile.display_name || apiProfile.email.split('@')[0];
+  document.getElementById('prof-name').textContent = displayName;
+  document.getElementById('prof-title').textContent = pro.title || '';
+
+  // Categories
+  const catsWrap = document.getElementById('prof-cats');
+  const cats = pro.categories || [];
+  cats.forEach(cat => {
+    const pill = document.createElement('span');
+    pill.className = 'cat-pill';
+    pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.75rem;">category</span>${esc(cat)}`;
+    catsWrap.appendChild(pill);
+  });
+
+  // Bio
+  const bio = pro.bio || '';
+  const bioCard = document.getElementById('bio-card');
+  if (bio) {
+    document.getElementById('prof-bio').textContent = bio;
+  } else {
+    bioCard.style.display = 'none';
+  }
+
+  // Stats
+  const memberDate = new Date(apiProfile.created_at);
+  const memberSince = memberDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  document.getElementById('stat-since').textContent = memberSince;
+  document.getElementById('stat-portfolio').textContent = (pro.portfolio || []).length;
+  document.getElementById('stat-services').textContent = (pro.services || []).length;
+  document.getElementById('stat-locations').textContent = (pro.locations || []).length;
+
+  // Quick info
+  document.getElementById('qi-role').textContent = 'Professional';
+  document.getElementById('qi-since').textContent = memberSince;
+  const qiCats = document.getElementById('qi-cats');
+  if (cats.length) {
+    qiCats.textContent = cats.slice(0, 2).join(', ') + (cats.length > 2 ? ` +${cats.length - 2}` : '');
+  } else {
+    document.getElementById('qi-cats-row').style.display = 'none';
+  }
+  const travelEl = document.getElementById('qi-travel');
+  if (pro.travelIntl) {
+    travelEl.textContent = 'Yes';
+    travelEl.style.color = '#00dbe9';
+  } else {
+    travelEl.textContent = 'No';
+    travelEl.style.color = '#849495';
+  }
+
+  // Email
+  document.getElementById('prof-email').textContent = apiProfile.email;
+
+  // Phone
+  if (pro.phone) {
+    document.getElementById('prof-phone').textContent = pro.phone;
+    document.getElementById('phone-row').classList.remove('hidden');
+  }
+
+  // Website
+  if (pro.website) {
+    const wLink = document.getElementById('prof-website');
+    wLink.href    = pro.website;
+    wLink.textContent = pro.website.replace(/^https?:\/\//, '');
+    document.getElementById('website-row').classList.remove('hidden');
+  }
+
+  // Socials
+  const socialsWrap = document.getElementById('socials-wrap');
+  const socialDefs = [
+    { key: 'instagram', label: 'Instagram', icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>` },
+    { key: 'facebook',  label: 'Facebook',  icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>` },
+    { key: 'tiktok',   label: 'TikTok',    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>` },
+  ];
+  socialDefs.forEach(def => {
+    const val = pro.socials && pro.socials[def.key];
+    if (!val) return;
+    const href = val.startsWith('http') ? val : 'https://' + val;
+    const a = document.createElement('a');
+    a.className = 'social-link';
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = `
+      <div class="social-icon">${def.icon}</div>
+      <span class="truncate">${esc(val.replace(/^https?:\/\//,''))}</span>
+      <span class="material-symbols-outlined ml-auto flex-shrink-0" style="font-size:0.9rem;color:#849495;">open_in_new</span>`;
+    socialsWrap.appendChild(a);
+  });
+
+  // Portfolio
+  const portfolio = pro.portfolio || [];
+  const pgrid = document.getElementById('portfolio-grid');
+  if (portfolio.length === 0) {
+    show('portfolio-empty');
+  } else {
+    portfolio.forEach((item, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'portfolio-thumb';
+      const isVid = item.type === 'video';
+      thumb.innerHTML = isVid
+        ? `<video src="${esc(item.url)}" muted playsinline></video>
+           <div class="vid-badge">VIDEO</div>
+           <div class="play-overlay"><span class="material-symbols-outlined" style="font-size:2rem;color:rgba(255,255,255,0.9);">play_circle</span></div>`
+        : `<img src="${esc(item.url)}" alt="Portfolio item ${i+1}" loading="lazy">
+           <div class="play-overlay"><span class="material-symbols-outlined" style="font-size:1.5rem;color:rgba(255,255,255,0.9);">zoom_in</span></div>`;
+      thumb.addEventListener('click', () => openLightbox(item));
+      pgrid.appendChild(thumb);
+    });
+  }
+
+  // Services
+  const services = pro.services || [];
+  const sList = document.getElementById('services-list');
+  if (services.length === 0) {
+    show('services-empty');
+  } else {
+    services.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'svc-card';
+      card.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <p style="font-size:0.97rem;font-weight:700;color:#dce4e5;margin-bottom:2px;">${esc(s.name)}</p>
+          ${s.desc ? `<p style="font-size:0.8rem;color:#849495;">${esc(s.desc)}</p>` : ''}
+        </div>
+        <div class="text-right flex-shrink-0">
+          <p style="font-size:1.1rem;font-weight:800;color:#00dbe9;line-height:1.2;">$${Number(s.price).toLocaleString()}</p>
+          <p style="font-size:0.72rem;color:#849495;margin-top:1px;">${esc(s.unit || '')}</p>
+        </div>`;
+      sList.appendChild(card);
+    });
+  }
+
+  // Locations
+  const locations = pro.locations || [];
+  const locWrap = document.getElementById('loc-tags');
+  if (locations.length === 0) {
+    show('loc-empty');
+  } else {
+    locations.forEach(loc => {
+      const tag = document.createElement('span');
+      tag.className = 'loc-tag';
+      tag.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.85rem;">location_on</span>${esc(loc)}`;
+      locWrap.appendChild(tag);
+    });
+  }
+
+  // Travel
+  if (pro.travelIntl) {
+    show('travel-badge-wrap');
+  }
+
+  // Nav update
+  showNavLoggedIn({ email: apiProfile.email, role: apiProfile.role });
+
+  // Trigger reveal
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+  });
+}
+
+// ── Nav helpers ───────────────────────────────────────────────────────
+function showNavLoggedIn(user) {
+  try {
+    const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    const dArea = document.getElementById('desktop-user-area');
+    if (dArea) {
+      dArea.style.display = 'flex';
+      const dIcon = document.getElementById('desktop-account-icon');
+      const dSign = document.getElementById('desktop-signin-link');
+      if(dIcon) dIcon.style.display = 'none';
+      if(dSign) dSign.style.display = 'none';
+      const dEmail = document.getElementById('desktop-user-email');
+      const dRole  = document.getElementById('desktop-user-role');
+      if(dEmail) dEmail.textContent = user.email.split('@')[0];
+      if(dRole)  dRole.textContent  = roleLabel;
+    }
+  } catch(_) {}
+}
+
+// ── Lightbox ──────────────────────────────────────────────────────────
+function openLightbox(item) {
+  const lb  = document.getElementById('lightbox');
+  const med = document.getElementById('lightbox-media');
+  if (item.type === 'video') {
+    med.innerHTML = `<video src="${esc(item.url)}" controls autoplay style="max-width:90vw;max-height:85vh;border-radius:1rem;"></video>`;
+  } else {
+    med.innerHTML = `<img src="${esc(item.url)}" alt="Portfolio" style="max-width:90vw;max-height:85vh;border-radius:1rem;object-fit:contain;">`;
+  }
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !document.getElementById('lightbox-close').contains(e.target)) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-media').innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+// ── Actions ───────────────────────────────────────────────────────────
+function scrollToContact() {
+  document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function copyContact() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => showToast('Profile link copied!', 'link', '#00dbe9'));
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────
+function showToast(msg, icon, color) {
+  const toast = document.getElementById('success-toast');
+  document.getElementById('toast-text').textContent = msg;
+  const ico = document.getElementById('toast-icon');
+  ico.textContent = icon; ico.style.color = color;
+  document.getElementById('toast-text').style.color = color;
+  toast.style.borderColor = color + '80';
+  toast.classList.remove('opacity-0','translate-y-10');
+  toast.classList.add('opacity-100','translate-y-0');
+  setTimeout(() => {
+    toast.classList.remove('opacity-100','translate-y-0');
+    toast.classList.add('opacity-0','translate-y-10');
+  }, 3000);
+}
+
+loadProfile();
+</script>
+
+<script src="header-loader.js"></script>
+<script src="footer-loader.js"></script>
+</body>
+</html>
