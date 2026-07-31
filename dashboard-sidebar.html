@@ -2,23 +2,43 @@
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden hidden" onclick="closeSidebar()"></div>
 
 <!-- Mobile Toggle -->
-<button id="sidebar-toggle" onclick="openSidebar()" class="fixed top-4 left-4 z-[60] lg:hidden p-2.5 rounded-xl transition-colors" style="background:var(--neu-bg);box-shadow:4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light);border:none;color:#0f172a;cursor:pointer;">
+<button id="sidebar-toggle" onclick="openSidebar()" class="fixed top-4 left-4 z-[60] lg:hidden p-2.5 rounded-xl transition-colors" style="background:var(--neu-bg);box-shadow:4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light);border:none;color:var(--neu-text-muted);cursor:pointer;">
   <span class="material-symbols-outlined">menu</span>
 </button>
 
 <style>
-  :root {
-    --neu-bg: #e0e5ec;
-    --neu-shadow-dark: #b8bec7;
+  /* ── Tesla Cybertruck sidebar — dark/light theme-aware ── */
+  /* Dark mode (default) */
+  :root, [data-theme="dark"] {
+    --neu-bg:         #16161e;
+    --neu-shadow-dark: #0d0d16;
+    --neu-shadow-light: #1f1f2c;
+    --neu-accent:     #1a8aff;
+    --neu-text:       #e4e8f6;
+    --neu-text-muted: #7a8599;
+    --sb-border:      rgba(255,255,255,0.07);
+    --sb-label:       #4a5568;
+    --sb-icon:        #7a8599;
+    --sb-badge-text:  #fff;
+  }
+  /* Light mode overrides */
+  [data-theme="light"] {
+    --neu-bg:         #eef1f8;
+    --neu-shadow-dark: #c5cad8;
     --neu-shadow-light: #ffffff;
-    --neu-accent: #006970;
-    --neu-text: #0f172a;
-    --neu-text-muted: #334155;
+    --neu-accent:     #0060cc;
+    --neu-text:       #1a1a2e;
+    --neu-text-muted: #5a6880;
+    --sb-border:      rgba(0,0,0,0.08);
+    --sb-label:       #64748b;
+    --sb-icon:        #64748b;
+    --sb-badge-text:  #fff;
   }
 
   #sidebar {
     background: var(--neu-bg);
     box-shadow: 6px 0 24px var(--neu-shadow-dark), -2px 0 8px var(--neu-shadow-light);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
   .sidebar-section-label {
@@ -26,8 +46,9 @@
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--sb-label);
     padding: 1rem 0.85rem 0.4rem;
+    transition: color 0.3s;
   }
 
   .sidebar-link {
@@ -48,17 +69,13 @@
     color: var(--neu-text);
     box-shadow: 4px 4px 9px var(--neu-shadow-dark), -4px -4px 9px var(--neu-shadow-light);
   }
-  .sidebar-link:hover .sidebar-icon {
-    color: var(--neu-accent);
-  }
+  .sidebar-link:hover .sidebar-icon { color: var(--neu-accent); }
   .sidebar-link.active {
     box-shadow: inset 3px 3px 7px var(--neu-shadow-dark), inset -3px -3px 7px var(--neu-shadow-light);
     color: var(--neu-accent);
     font-weight: 700;
   }
-  .sidebar-link.active .sidebar-icon {
-    color: var(--neu-accent);
-  }
+  .sidebar-link.active .sidebar-icon { color: var(--neu-accent); }
   .sidebar-link.active::before {
     content: '';
     position: absolute;
@@ -70,7 +87,7 @@
 
   .sidebar-icon {
     font-size: 1.25rem;
-    color: #475569;
+    color: var(--sb-icon);
     transition: color 0.18s;
     flex-shrink: 0;
   }
@@ -99,31 +116,44 @@
     color: var(--neu-text);
   }
   .sidebar-bottom-link:hover .sidebar-icon { color: var(--neu-accent); }
-  .sidebar-bottom-link.signout:hover { color: #b71c1c; }
-  .sidebar-bottom-link.signout:hover .sidebar-icon { color: #b71c1c; }
+  .sidebar-bottom-link.signout:hover { color: #ff6464; }
+  .sidebar-bottom-link.signout:hover .sidebar-icon { color: #ff6464; }
+
+  /* Sidebar logo area border */
+  .sb-logo-area { border-bottom: 1px solid var(--sb-border); }
+  .sb-badge-area { border-bottom: 1px solid var(--sb-border); }
+  .sb-bottom-area { border-top: 1px solid var(--sb-border); }
+
+  /* Admin name text inherits theme */
+  #sidebar-admin-name { color: var(--neu-text); }
+  .sb-admin-label { color: var(--neu-text-muted); }
+  .sb-panel-label { color: var(--neu-text-muted); }
 
   #sidebar .custom-scrollbar::-webkit-scrollbar { width: 3px; }
   #sidebar .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
   #sidebar .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--neu-shadow-dark); border-radius: 10px; }
+
+  /* Mobile toggle button */
+  #sidebar-toggle { color: var(--neu-text-muted); }
 </style>
 
 <!-- Sidebar -->
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300" style="font-family:'Plus Jakarta Sans',sans-serif;">
 
   <!-- Logo -->
-  <div style="padding:1.35rem 1.25rem 1.1rem;border-bottom:1px solid rgba(0,0,0,0.07);display:flex;align-items:center;justify-content:space-between;">
+  <div class="sb-logo-area" style="padding:1.35rem 1.25rem 1.1rem;display:flex;align-items:center;justify-content:space-between;">
     <div>
       <img alt="Camcrew Studio" style="height:2rem;width:auto;object-fit:contain;"
         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz6zzbSEDvH32qGIjTAg0L9PqA6N71_7AsFGJX0tUFBKziGjG93-Y3BRMuHXxiZxMknFjzmdmeelCCF7jlKdA4FMg7YSfEhrZG8AZf1BtsqnSw_xCAEj3j2mkHYx9iFr6aJGFSNbi7A2FDAZVQQ2mu93tR6eJtVkf6FZ3i0SM2OuL9d1cE-W_WXVvFKqsE6omGWJMY0otQHs_8VnjsUq7rbUOVh1DorhOQUrU3K7zhFrL5rgRFVeEXfSLVBRZvnga1OlJc3qmRyUmK7g">
-      <p style="font-size:0.65rem;font-weight:800;letter-spacing:0.22em;color:#475569;margin-top:4px;text-transform:uppercase;">ADMIN PANEL</p>
+      <p class="sb-panel-label" style="font-size:0.65rem;font-weight:800;letter-spacing:0.22em;margin-top:4px;text-transform:uppercase;">ADMIN PANEL</p>
     </div>
-    <button onclick="closeSidebar()" class="lg:hidden" style="background:none;border:none;cursor:pointer;color:#475569;display:flex;align-items:center;">
+    <button onclick="closeSidebar()" class="lg:hidden" style="background:none;border:none;cursor:pointer;color:var(--neu-text-muted);display:flex;align-items:center;">
       <span class="material-symbols-outlined">close</span>
     </button>
   </div>
 
   <!-- Admin Badge -->
-  <div style="padding:0.9rem 1.25rem;border-bottom:1px solid rgba(0,0,0,0.07);">
+  <div class="sb-badge-area" style="padding:0.9rem 1.25rem;">
     <div style="
       display:flex;align-items:center;gap:0.75rem;
       background:var(--neu-bg);
@@ -139,8 +169,8 @@
         <span class="material-symbols-outlined" style="font-size:1.2rem;color:var(--neu-accent);">admin_panel_settings</span>
       </div>
       <div style="min-width:0;">
-        <p id="sidebar-admin-name" style="font-size:0.95rem;font-weight:800;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Admin</p>
-        <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;color:#475569;text-transform:uppercase;margin-top:1px;">ADMINISTRATOR</p>
+        <p id="sidebar-admin-name" style="font-size:0.95rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Admin</p>
+        <p class="sb-admin-label" style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-top:1px;">ADMINISTRATOR</p>
       </div>
     </div>
   </div>
@@ -180,7 +210,7 @@
   </nav>
 
   <!-- Bottom -->
-  <div style="padding:0.75rem;border-top:1px solid rgba(0,0,0,0.07);">
+  <div class="sb-bottom-area" style="padding:0.75rem;">
     <a href="index.html" class="sidebar-bottom-link">
       <span class="material-symbols-outlined sidebar-icon">public</span>
       <span>View Site</span>

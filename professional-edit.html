@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="dark" lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -8,6 +8,91 @@
 <script src="tailwind-config.js"></script>
 <link rel="stylesheet" href="styles.css">
 <style>
+  /* ── Tesla Cybertruck Theme System ──────────────────────────── */
+  :root, [data-theme="dark"] {
+    --pe-bg:     #16161e;
+    --pe-dark:   #0d0d16;
+    --pe-light:  #1f1f2c;
+    --pe-accent: #1a8aff;
+    --pe-accent-glow: rgba(26,138,255,0.28);
+    --pe-text:   #e4e8f6;
+    --pe-muted:  #7a8599;
+    --pe-border: rgba(255,255,255,0.1);
+    --pe-card:   rgba(22,22,30,0.8);
+  }
+  [data-theme="light"] {
+    --pe-bg:     #eef1f8;
+    --pe-dark:   #c5cad8;
+    --pe-light:  #ffffff;
+    --pe-accent: #0060cc;
+    --pe-accent-glow: rgba(0,96,204,0.2);
+    --pe-text:   #1a1a2e;
+    --pe-muted:  #5a6880;
+    --pe-border: rgba(0,0,0,0.1);
+    --pe-card:   rgba(238,241,248,0.9);
+  }
+  [data-theme="light"] body { background-color: var(--pe-bg) !important; color: var(--pe-text) !important; }
+  [data-theme="light"] .edit-section { background: var(--pe-card); border-color: var(--pe-border); }
+  [data-theme="light"] .section-title { color: #1a1a2e; }
+  [data-theme="light"] .section-subtitle { color: var(--pe-muted); }
+  [data-theme="light"] .cc-label { color: var(--pe-muted); }
+  [data-theme="light"] .cc-input { color: var(--pe-text) !important; border-bottom-color: rgba(0,0,0,0.15) !important; }
+  [data-theme="light"] .cc-input:focus { border-bottom-color: var(--pe-accent) !important; }
+  [data-theme="light"] .cc-input::placeholder { color: rgba(90,104,128,0.5) !important; }
+  [data-theme="light"] .cc-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.12); color: var(--pe-text); }
+  [data-theme="light"] .cc-textarea:focus { border-color: var(--pe-accent); }
+  [data-theme="light"] .cat-chip { border-color: rgba(0,0,0,0.15); color: var(--pe-muted); }
+  [data-theme="light"] .cat-chip.selected { background: rgba(0,96,204,0.1); border-color: var(--pe-accent); color: var(--pe-accent); }
+  [data-theme="light"] .service-item { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); }
+  [data-theme="light"] .service-item:hover { border-color: rgba(0,96,204,0.3); }
+  [data-theme="light"] .loc-tag { background: rgba(0,96,204,0.08); border-color: rgba(0,96,204,0.25); color: var(--pe-accent); }
+  [data-theme="light"] .social-row { border-bottom-color: rgba(0,0,0,0.1); }
+  [data-theme="light"] .social-icon-wrap { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
+  [data-theme="light"] #save-bar { background: rgba(238,241,248,0.95); border-color: rgba(0,96,204,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  [data-theme="light"] #save-bar-text { color: var(--pe-muted); }
+  [data-theme="light"] #save-bar-text.dirty { color: var(--pe-text); }
+  [data-theme="light"] .media-thumb { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+  [data-theme="light"] .section-divider-icon { background: rgba(0,96,204,0.08); border-color: rgba(0,96,204,0.2); }
+  [data-theme="light"] #avatar-ring { border-color: rgba(0,96,204,0.4); background: rgba(0,96,204,0.04); }
+  [data-theme="light"] #avatar-ring:hover { border-color: var(--pe-accent); box-shadow: 0 0 0 6px rgba(0,96,204,0.1); }
+  [data-theme="light"] .fixed.inset-0 div[style*="rgba(0,219,233"] { opacity: 0.08; }
+
+  /* ── Dark mode accent update ── */
+  [data-theme="dark"] .cc-input { color: var(--pe-text) !important; }
+  [data-theme="dark"] .cc-input:focus { border-bottom-color: var(--pe-accent) !important; }
+  [data-theme="dark"] .drag-over { border-color: var(--pe-accent) !important; }
+  [data-theme="dark"] .cat-chip.selected { background: rgba(26,138,255,0.1); border-color: var(--pe-accent); color: var(--pe-accent); }
+  [data-theme="dark"] .loc-tag { background: rgba(26,138,255,0.08); border-color: rgba(26,138,255,0.25); color: var(--pe-accent); }
+  [data-theme="dark"] .loc-tag button:hover { color: #ff5252; }
+  [data-theme="dark"] #save-bar { border-color: rgba(26,138,255,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(26,138,255,0.1); }
+  [data-theme="dark"] #avatar-ring { border-color: rgba(26,138,255,0.4); background: rgba(26,138,255,0.04); }
+  [data-theme="dark"] #avatar-ring:hover { border-color: var(--pe-accent); box-shadow: 0 0 0 6px rgba(26,138,255,0.1); }
+  [data-theme="dark"] .section-divider-icon { background: rgba(26,138,255,0.08); border-color: rgba(26,138,255,0.2); }
+  [data-theme="dark"] .service-item:hover { border-color: rgba(26,138,255,0.25); }
+  [data-theme="dark"] p[style*="color:#849495"] { color: var(--pe-muted) !important; }
+
+  /* ── Theme toggle button ── */
+  #theme-toggle {
+    position: fixed; top: 1.1rem; right: 4.5rem; z-index: 600;
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    border: none; cursor: pointer;
+    background: rgba(22,22,30,0.92);
+    box-shadow: 3px 3px 8px #0d0d16, -3px -3px 8px #1f1f2c;
+    color: #1a8aff;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease; backdrop-filter: blur(8px);
+  }
+  [data-theme="light"] #theme-toggle {
+    background: rgba(238,241,248,0.92);
+    box-shadow: 3px 3px 8px #c5cad8, -3px -3px 8px #ffffff;
+    color: #0060cc;
+  }
+  #theme-toggle:hover { transform: scale(1.1); box-shadow: 4px 4px 12px var(--pe-dark), -4px -4px 12px var(--pe-light), 0 0 14px var(--pe-accent-glow); }
+  #theme-toggle:active { transform: scale(1.0); }
+
+  /* ── Background blobs in light mode ── */
+  [data-theme="light"] .fixed.inset-0 { opacity: 0.4; }
+
   /* ── Inputs ───────────────────────────────────────────────────── */
   .cc-input {
     width: 100%;
@@ -214,6 +299,11 @@
 </style>
 </head>
 <body class="font-body-md antialiased min-h-screen flex flex-col">
+
+<!-- Theme Toggle (fixed) -->
+<button id="theme-toggle" onclick="toggleTheme()" title="Switch to Light Mode">
+  <span class="material-symbols-outlined t-icon" style="font-size:1.15rem;">light_mode</span>
+</button>
 
 <!-- Background -->
 <div class="fixed inset-0 z-[-1] overflow-hidden">
@@ -1031,5 +1121,34 @@ boot();
 
 <script src="header-loader.js"></script>
 <script src="footer-loader.js"></script>
+<script>
+/* ── Tesla Cybertruck Theme Toggle ─────────────────────────── */
+(function () {
+  function initTheme() {
+    var t = localStorage.getItem('cc-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    updateBtn(t);
+  }
+  function updateBtn(t) {
+    document.querySelectorAll('.t-icon').forEach(function(ic) {
+      ic.textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
+    });
+    var btn = document.getElementById('theme-toggle');
+    if (btn) btn.title = t === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+  }
+  window.toggleTheme = function () {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('cc-theme', next);
+    updateBtn(next);
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+  } else {
+    initTheme();
+  }
+})();
+</script>
 </body>
 </html>
