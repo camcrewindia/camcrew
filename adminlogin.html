@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -7,23 +7,137 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script src="tailwind-config.js"></script>
   <link rel="stylesheet" href="styles.css">
-</head>
+  <style>
+    /* ── Admin Login — Dark / Light Theme ── */
+    :root, [data-theme="dark"] {
+      --al-bg:            #0e0e16;
+      --al-card-bg:       rgba(22, 22, 24, 0.85);
+      --al-card-border:   rgba(255,255,255,0.12);
+      --al-text:          #dce4e5;
+      --al-text-muted:    #b9cacb;
+      --al-text-faint:    rgba(185,202,203,0.55);
+      --al-input-bg:      #d8dfe8;
+      --al-input-border:  rgba(255,255,255,0.12);
+      --al-accent:        #00dbe9;
+      --al-blob1:         rgba(0,133,143,0.07);
+      --al-blob2:         rgba(123,31,162,0.07);
+      --al-btn-bg:        rgba(22,22,24,0.96);
+      --al-btn-border:    rgba(255,255,255,0.14);
+      --al-btn-text:      #dce4e5;
+      --al-footer-text:   rgba(185,202,203,0.55);
+      --al-shadow:        0 25px 60px rgba(0,0,0,0.5);
+    }
+    [data-theme="light"] {
+      --al-bg:            #eef1f8;
+      --al-card-bg:       rgba(255,255,255,0.92);
+      --al-card-border:   rgba(0,0,0,0.08);
+      --al-text:          #1a1a2e;
+      --al-text-muted:    #5a6880;
+      --al-text-faint:    rgba(90,104,128,0.7);
+      --al-input-bg:      #e4e9f2;
+      --al-input-border:  rgba(0,0,0,0.12);
+      --al-accent:        #0060cc;
+      --al-blob1:         rgba(0,96,204,0.06);
+      --al-blob2:         rgba(123,31,162,0.06);
+      --al-btn-bg:        #f0f3fb;
+      --al-btn-border:    rgba(0,0,0,0.1);
+      --al-btn-text:      #374263;
+      --al-footer-text:   rgba(90,104,128,0.7);
+      --al-shadow:        0 25px 60px rgba(0,0,0,0.12);
+    }
+
+    /* Theme-aware body */
+    html[data-theme="light"] body { background-color: var(--al-bg) !important; }
+    html[data-theme="dark"]  body { background-color: var(--al-bg) !important; }
+
+    /* Card */
+    .al-card {
+      background: var(--al-card-bg) !important;
+      border-color: var(--al-card-border) !important;
+      box-shadow: var(--al-shadow);
+    }
+
+    /* Headings / body text inside card */
+    .al-heading { color: var(--al-text) !important; }
+    .al-body    { color: var(--al-text-muted) !important; }
+    .al-faint   { color: var(--al-text-faint) !important; }
+
+    /* Input underline borders */
+    [data-theme="light"] .border-glass-stroke { border-color: var(--al-input-border); }
+    [data-theme="light"] .text-on-surface { color: var(--al-text); }
+    [data-theme="light"] input { color: var(--al-text); }
+    [data-theme="light"] input::placeholder { color: rgba(90,104,128,0.4); }
+
+    /* Autofill override for light mode */
+    [data-theme="light"] input:-webkit-autofill,
+    [data-theme="light"] input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 9999px #eef1f8 inset !important;
+      -webkit-text-fill-color: #1a1a2e !important;
+    }
+
+    /* OTP inputs */
+    [data-theme="light"] .otp-input {
+      background: var(--al-input-bg) !important;
+      border-color: var(--al-input-border) !important;
+      color: var(--al-text) !important;
+    }
+
+    /* Ambient blobs */
+    .al-blob-1 { background: var(--al-blob1) !important; }
+    .al-blob-2 { background: var(--al-blob2) !important; }
+
+    /* Links and labels */
+    [data-theme="light"] .text-on-surface-variant { color: var(--al-text-muted); }
+    [data-theme="light"] .hover\:text-primary:hover { color: var(--al-accent); }
+    [data-theme="light"] .text-primary { color: var(--al-accent); }
+
+    /* Footer links */
+    [data-theme="light"] .al-footer a { color: var(--al-text-muted); }
+    [data-theme="light"] .al-footer a:hover { color: var(--al-accent); }
+
+    /* Theme toggle button */
+    #al-theme-toggle {
+      width: 2.2rem; height: 2.2rem;
+      border-radius: 50%;
+      border: 1px solid var(--al-card-border);
+      cursor: pointer;
+      background: var(--al-btn-bg);
+      color: var(--al-accent);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    #al-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 0 12px rgba(0,219,233,0.2); }
+
+    /* Admin badge in light mode */
+    [data-theme="light"] #admin-user-badge {
+      background: rgba(0,96,204,0.06);
+      border-color: rgba(0,96,204,0.2);
+    }
+    [data-theme="light"] #admin-user-badge span { color: var(--al-accent); }
+  </style>
 <body class="bg-obsidian-base min-h-screen flex flex-col font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container">
 
   <!-- Ambient Background -->
   <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary-container/10 blur-[120px] rounded-full"></div>
-    <div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary-container/10 blur-[100px] rounded-full"></div>
+    <div class="al-blob-1 absolute -top-[20%] -left-[10%] w-[60%] h-[60%] blur-[120px] rounded-full"></div>
+    <div class="al-blob-2 absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] blur-[100px] rounded-full"></div>
   </div>
 
   <!-- Header -->
   <header class="relative z-10 w-full flex justify-center py-8">
     <div class="flex flex-col items-center gap-2">
-      <img
-        alt="Camcrew Studio"
-        class="h-10 md:h-12 w-auto object-contain brightness-110"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
-      >
+      <!-- Logo: white for dark, coloured for light -->
+      <div class="relative flex items-center gap-3">
+        <img alt="Camcrew Studio" class="cc-logo-dark h-10 md:h-12 w-auto object-contain brightness-110"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
+        <img alt="Camcrew Studio" class="cc-logo-light h-10 md:h-12 w-auto object-contain"
+          src="attached_assets/camcrew_studio_logo_cop_1785515916927.png">
+        <!-- Theme toggle -->
+        <button id="al-theme-toggle" onclick="toggleTheme()" title="Switch to Light Mode">
+          <span class="material-symbols-outlined t-icon" style="font-size:1.1rem;">light_mode</span>
+        </button>
+      </div>
       <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-[0.2em]">Admin Control Center</span>
       <!-- Shown after successful login -->
       <div id="admin-user-badge" class="hidden items-center gap-2 mt-1 glass-panel px-4 py-2 rounded-full border border-primary/30">
@@ -39,7 +153,7 @@
     <div class="w-full max-w-lg perspective-lg">
 
       <!-- Login Card -->
-      <div class="glass-panel rounded-xl p-8 md:p-12 shadow-neon-blue-glow relative overflow-hidden group" id="login-container">
+      <div class="al-card glass-panel rounded-xl p-8 md:p-12 shadow-neon-blue-glow relative overflow-hidden group" id="login-container">
 
         <!-- Inner Light Simulation -->
         <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
@@ -48,8 +162,8 @@
         <!-- ── STAGE 1: Credentials ──────────────────────────────────── -->
         <div id="form-stage-1">
           <div class="mb-8">
-            <h1 class="font-headline-md text-headline-md text-on-surface mb-2" style="font-size:1.5rem;font-weight:800;color:#dce4e5;">Admin Access</h1>
-            <p style="font-size:1rem;color:#b9cacb;line-height:1.6;">Enter your credentials to access the dashboard and site management tools.</p>
+            <h1 class="al-heading font-headline-md text-headline-md text-on-surface mb-2" style="font-size:1.5rem;font-weight:800;">Admin Access</h1>
+            <p class="al-body" style="font-size:1rem;line-height:1.6;">Enter your credentials to access the dashboard and site management tools.</p>
           </div>
 
           <form class="space-y-6" id="admin-login-form" onsubmit="handleAdminLogin(event)">
@@ -117,8 +231,8 @@
               <span class="material-symbols-outlined text-[18px]">arrow_back</span>
               <span class="font-label-caps text-label-caps">BACK TO LOGIN</span>
             </button>
-            <h1 style="font-size:1.5rem;font-weight:800;color:#dce4e5;margin-bottom:0.5rem;">OTP Verification</h1>
-            <p style="font-size:1rem;color:#b9cacb;line-height:1.6;">We've sent a 6-digit security code to your registered device.</p>
+            <h1 class="al-heading" style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;">OTP Verification</h1>
+            <p class="al-body" style="font-size:1rem;line-height:1.6;">We've sent a 6-digit security code to your registered device.</p>
           </div>
 
           <form class="space-y-8" onsubmit="handleOtpSubmit(event)">
@@ -144,8 +258,8 @@
         </div>
 
         <!-- Bottom note -->
-        <div class="mt-8 text-center">
-          <p style="font-size:0.78rem;font-weight:600;letter-spacing:0.1em;color:rgba(185,202,203,0.55);">
+        <div class="mt-8 text-center al-footer">
+          <p class="al-faint" style="font-size:0.78rem;font-weight:600;letter-spacing:0.1em;">
             Encrypted Session · AES-256 Compliant
           </p>
           <div class="flex justify-center gap-6 mt-4">
@@ -355,5 +469,35 @@
   </script>
 
   <script src="footer-loader.js"></script>
+
+  <!-- Theme init/toggle (same localStorage key as admindashboard) -->
+  <script>
+    (function () {
+      function initTheme() {
+        var t = localStorage.getItem('cc-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+        updateBtn(t);
+      }
+      function updateBtn(t) {
+        var btn = document.getElementById('al-theme-toggle');
+        if (!btn) return;
+        var ic = btn.querySelector('.t-icon');
+        if (ic) ic.textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
+        btn.title = t === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+      }
+      window.toggleTheme = function () {
+        var current = document.documentElement.getAttribute('data-theme');
+        var next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('cc-theme', next);
+        updateBtn(next);
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTheme);
+      } else {
+        initTheme();
+      }
+    })();
+  </script>
 </body>
 </html>
