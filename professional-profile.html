@@ -1,840 +1,1667 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Professional Profile | Camcrew Studio</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pro Dashboard | Camcrew Studio</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="tailwind-config.js"></script>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css"/>
 <style>
-  /* ── Cover hero ───────────────────────────────────────────────── */
-  .cover-hero {
-    position: relative;
-    width: 100%;
-    height: 260px;
-    background: linear-gradient(135deg,
-      rgba(0,219,233,0.12) 0%,
-      rgba(22,22,24,0.9) 40%,
-      rgba(188,19,254,0.1) 100%);
-    overflow: hidden;
-  }
-  .cover-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(0,219,233,0.18) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 30%, rgba(188,19,254,0.14) 0%, transparent 55%);
-  }
-  .cover-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(0,219,233,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,219,233,0.06) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+  /* ══════════════════════════════════════════════════════
+     DARK NEUMORPHISM — shared with customer-profile
+     Base: #141414  |  Dark shadow: #000  |  Light shadow: #1e1e1e
+  ══════════════════════════════════════════════════════ */
+  :root {
+    --nb:  #141414;
+    --ns:  #000000;
+    --nl:  #1e1e1e;
+    --nr:  6px 6px 14px var(--ns), -6px -6px 14px var(--nl);
+    --nr-s:3px 3px 8px  var(--ns), -3px -3px 8px  var(--nl);
+    --ni:  inset 4px 4px 10px var(--ns), inset -4px -4px 10px var(--nl);
+    --ni-s:inset 2px 2px 6px  var(--ns), inset -2px -2px 6px  var(--nl);
+    --ac:  #00dbe9;
+    --ac2: #ebb2ff;
   }
 
-  /* ── Profile avatar (large) ───────────────────────────────────── */
-  .prof-avatar-ring {
-    width: 8rem; height: 8rem;
-    background: conic-gradient(#00f0ff, #b600f8, #00f0ff);
-    border-radius: 50%;
-    padding: 3px;
-    animation: spin-ring 6s linear infinite;
-    flex-shrink: 0;
+  /* ── Layout ── */
+  #dashboard { display:none; min-height:100vh; }
+  .cp-sidebar {
+    width:272px; flex-shrink:0; background:var(--nb);
+    box-shadow: 4px 0 18px var(--ns), 1px 0 0 var(--nl);
+    position:sticky; top:0; height:100vh;
+    overflow-y:auto; display:flex; flex-direction:column;
+    scrollbar-width:thin; scrollbar-color:rgba(0,219,233,0.2) transparent;
   }
-  .prof-avatar-inner {
-    background: #0A0A0B;
-    border-radius: 50%;
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .prof-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+  .cp-content { flex:1; overflow-y:auto; padding:2rem 2.5rem 2rem 2rem; min-width:0; background:var(--nb); }
 
-  /* ── Category pill ────────────────────────────────────────────── */
-  .cat-pill {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.3rem 0.8rem; border-radius: 999px;
-    background: rgba(0,219,233,0.08);
-    border: 1px solid rgba(0,219,233,0.2);
-    color: #00dbe9; font-size: 0.78rem; font-weight: 700;
-    letter-spacing: 0.03em;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  /* ── Nav Items ── */
+  .nav-item {
+    display:flex; align-items:center; gap:0.75rem;
+    padding:0.65rem 1.1rem; border-radius:0.75rem; cursor:pointer;
+    color:#849495; font-size:0.9rem; font-weight:600;
+    transition:all 0.2s; margin:0.15rem 0.6rem;
+    background:var(--nb); box-shadow:none; border:none;
   }
-
-  /* ── Stat chip ────────────────────────────────────────────────── */
-  .stat-chip {
-    background: rgba(22,22,24,0.7);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 1.25rem;
-    padding: 1rem 1.25rem;
-    text-align: center;
-    backdrop-filter: blur(12px);
-    transition: all 0.3s ease;
-  }
-  .stat-chip:hover {
-    border-color: rgba(0,240,255,0.25);
-    box-shadow: 0 0 20px rgba(0,240,255,0.06);
+  .nav-item:hover { color:#dce4e5; box-shadow: var(--nr-s); }
+  .nav-item.active { color:var(--ac); box-shadow: var(--ni-s); background:var(--nb); }
+  .nav-item .material-symbols-outlined { font-size:1.2rem; }
+  .nav-item .nav-badge {
+    margin-left:auto; background:var(--ac); color:#001f22;
+    font-size:0.65rem; font-weight:900; border-radius:999px;
+    padding:0.1rem 0.45rem; min-width:1.2rem; text-align:center;
   }
 
-  /* ── Service card ─────────────────────────────────────────────── */
-  .svc-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 1rem;
-    padding: 1.1rem 1.25rem;
-    transition: border-color 0.2s ease;
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
-  }
-  .svc-card:hover { border-color: rgba(0,219,233,0.22); }
+  /* ── Divider ── */
+  .nav-divider { height:1px; background:var(--ns); margin:0.5rem 1rem; box-shadow:0 1px 0 var(--nl); }
 
-  /* ── Portfolio grid ───────────────────────────────────────────── */
-  .portfolio-thumb {
-    aspect-ratio: 1;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .portfolio-thumb:hover {
-    transform: scale(1.03);
-    border-color: rgba(0,219,233,0.35);
-  }
-  .portfolio-thumb img, .portfolio-thumb video {
-    width: 100%; height: 100%; object-fit: cover;
-  }
-  .portfolio-thumb .vid-badge {
-    position: absolute; bottom: 0.4rem; left: 0.4rem;
-    background: rgba(0,0,0,0.75); border-radius: 0.3rem;
-    padding: 1px 6px; font-size: 0.62rem; font-weight: 800;
-    color: #fff; letter-spacing: 0.08em;
-  }
-  .portfolio-thumb .play-overlay {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.25);
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .portfolio-thumb:hover .play-overlay { opacity: 1; }
+  /* ── Section titles ── */
+  .sec-title { font-size:1.35rem; font-weight:800; color:#dce4e5; margin-bottom:0.25rem; }
+  .sec-sub   { font-size:0.87rem; color:#849495; margin-bottom:1.5rem; }
 
-  /* ── Location tag ─────────────────────────────────────────────── */
-  .loc-tag {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    padding: 0.35rem 0.75rem; border-radius: 999px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #b9cacb; font-size: 0.82rem; font-weight: 600;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  /* ── Badges ── */
+  .badge {
+    display:inline-flex; align-items:center; gap:0.3rem;
+    padding:0.22rem 0.7rem; border-radius:999px;
+    font-size:0.73rem; font-weight:700; letter-spacing:0.04em;
+    text-transform:uppercase;
+    box-shadow: 2px 2px 5px var(--ns), -1px -1px 3px var(--nl);
   }
+  .badge-pending    { background:#1f1a0d; color:#fbbf24; }
+  .badge-confirmed  { background:#0e1f1e; color:#63cab7; }
+  .badge-active     { background:#0e1f20; color:#00dbe9; }
+  .badge-completed  { background:#0d1f16; color:#4ade80; }
+  .badge-cancelled  { background:#1f0e0e; color:#ff6464; }
+  .badge-declined   { background:#1f0e0e; color:#ff6464; }
+  .badge-in_transit { background:#160d1f; color:#a855f7; }
+  .badge-delivered  { background:#0d1f16; color:#4ade80; }
+  .badge-processing { background:#0e1f20; color:#00dbe9; }
+  .badge-paid       { background:#0d1f16; color:#4ade80; }
+  .badge-unpaid     { background:#1f1a0d; color:#fbbf24; }
+  .badge-overdue    { background:#1f0e0e; color:#ff6464; }
 
-  /* ── Social link row ──────────────────────────────────────────── */
-  .social-link {
-    display: flex; align-items: center; gap: 0.65rem;
-    padding: 0.7rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    text-decoration: none;
-    color: #b9cacb;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.9rem; font-weight: 500;
-    transition: color 0.2s;
+  /* ── Data Cards ── */
+  .data-card {
+    background:var(--nb); border:none;
+    border-radius:1.1rem; padding:1.3rem 1.4rem;
+    box-shadow: var(--nr);
+    transition:box-shadow 0.25s;
   }
-  .social-link:last-child { border-bottom: none; }
-  .social-link:hover { color: #00dbe9; }
-  .social-icon {
-    width: 2rem; height: 2rem; border-radius: 0.45rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+  .data-card:hover {
+    box-shadow: 8px 8px 20px var(--ns), -8px -8px 20px var(--nl),
+                inset 0 0 0 1px rgba(0,219,233,0.12);
   }
+  button.data-card:active, a.data-card:active { box-shadow: var(--ni); }
 
-  /* ── Section label ────────────────────────────────────────────── */
-  .section-label {
-    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em;
-    text-transform: uppercase; color: #849495; margin-bottom: 1rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    display: flex; align-items: center; gap: 0.5rem;
+  /* ── Stat Cards ── */
+  .stat-card {
+    background:var(--nb); border-radius:1rem; padding:1.2rem;
+    box-shadow: var(--nr);
+    display:flex; flex-direction:column; gap:0.5rem;
+    transition:box-shadow 0.25s;
   }
-  .section-label::after {
-    content: ''; flex: 1; height: 1px;
-    background: rgba(255,255,255,0.07);
-  }
+  .stat-card:hover { box-shadow: 8px 8px 20px var(--ns), -8px -8px 20px var(--nl); }
 
-  /* ── Empty state ──────────────────────────────────────────────── */
-  .empty-state {
-    text-align: center; padding: 2.5rem 1rem;
-    color: #475569; font-size: 0.88rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    border: 1px dashed rgba(255,255,255,0.08);
-    border-radius: 1rem;
-    background: rgba(255,255,255,0.01);
+  /* ── Progress bar ── */
+  .progress-bar { height:7px; border-radius:999px; overflow:hidden; box-shadow: var(--ni-s); background:var(--nb); }
+  .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#00dbe9,#ebb2ff); transition:width 0.6s ease; }
+
+  /* ── Timeline ── */
+  .timeline-step { display:flex; align-items:flex-start; gap:1rem; padding-bottom:1.5rem; position:relative; }
+  .timeline-step:not(:last-child)::after {
+    content:''; position:absolute; left:14px; top:32px;
+    width:2px; height:calc(100% - 16px);
+    background:var(--ns); box-shadow:1px 0 0 var(--nl);
+  }
+  .timeline-step.done::after   { background:rgba(74,222,128,0.35); box-shadow:none; }
+  .timeline-step.active::after { background:rgba(0,219,233,0.3);   box-shadow:none; }
+  .t-icon {
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; background:var(--nb); z-index:1;
+    box-shadow: var(--nr-s);
+  }
+  .t-icon.done   { box-shadow:inset 2px 2px 6px #04180f, inset -2px -2px 6px #163023; color:#4ade80; }
+  .t-icon.active { box-shadow:inset 2px 2px 6px #04181c, inset -2px -2px 6px #12323a; color:#00dbe9; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:200;
+    background:rgba(0,0,0,0.78); backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; padding:1rem;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal-box {
+    background:var(--nb);
+    border-radius:1.5rem; padding:2rem; width:100%; max-width:500px;
+    max-height:90vh; overflow-y:auto;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.75);
   }
 
-  /* ── Neon number ──────────────────────────────────────────────── */
-  .neon-num {
-    font-size: 1.5rem; font-weight: 800;
-    background: linear-gradient(to right, #dbfcff, #00dbe9);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+  /* ── Form inputs ── */
+  .fi {
+    width:100%; background-color:var(--nb) !important; border:none;
+    border-radius:0.6rem; padding:0.75rem 1rem; color:#dce4e5 !important;
+    font-size:0.9rem; outline:none;
+    box-shadow: var(--ni-s);
+    transition:box-shadow 0.2s;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    color-scheme: dark;
+    -webkit-text-fill-color: #dce4e5;
+  }
+  .fi:focus { box-shadow: inset 3px 3px 8px var(--ns), inset -3px -3px 8px var(--nl), 0 0 0 2px rgba(0,219,233,0.3); }
+  .fi:-webkit-autofill, .fi:-webkit-autofill:hover, .fi:-webkit-autofill:focus {
+    -webkit-box-shadow: inset 2px 2px 6px var(--ns), inset -2px -2px 6px var(--nl), 0 0 0 9999px var(--nb) inset !important;
+    -webkit-text-fill-color: #dce4e5 !important;
+  }
+  .fi.readonly-fi { opacity:0.55; cursor:not-allowed; }
+  .fi-label { font-size:0.78rem; font-weight:700; letter-spacing:0.08em; color:#849495; text-transform:uppercase; margin-bottom:0.4rem; display:block; }
+
+  /* ── Empty state ── */
+  .empty-state { text-align:center; padding:3rem 2rem; }
+  .empty-icon  { font-size:3rem; color:rgba(255,255,255,0.1); margin-bottom:1rem; display:block; }
+
+  /* ── Buttons ── */
+  .btn-sm {
+    display:inline-flex; align-items:center; gap:0.35rem;
+    padding:0.42rem 0.95rem; border-radius:0.6rem; font-size:0.78rem; font-weight:700;
+    cursor:pointer; transition:all 0.18s; border:none;
+    background:var(--nb); box-shadow: var(--nr-s);
+    font-family:inherit;
+  }
+  .btn-sm:active { box-shadow: var(--ni-s); }
+  .btn-sm-cyan  { color:var(--ac); }
+  .btn-sm-cyan:hover  { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(0,219,233,0.2); }
+  .btn-sm-green { color:#4ade80; }
+  .btn-sm-green:hover { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(74,222,128,0.2); }
+  .btn-sm-red   { color:#ff6464; }
+  .btn-sm-red:hover   { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(255,100,100,0.2); }
+  .btn-sm-ghost { color:#849495; }
+  .btn-sm-ghost:hover { color:#dce4e5; }
+
+  /* ── Primary CTA ── */
+  .cc-btn-primary {
+    background: linear-gradient(135deg, #007d87, #00dbe9) !important;
+    box-shadow: 4px 4px 12px var(--ns), -2px -2px 8px var(--nl), 0 4px 20px rgba(0,219,233,0.25) !important;
+    border:none !important;
+    transition: box-shadow 0.2s, transform 0.15s !important;
+    display:inline-flex; align-items:center; justify-content:center; gap:0.45rem;
+    padding:0.75rem 1.75rem; border-radius:0.85rem; font-weight:800; cursor:pointer;
+    color:#001f22; font-size:0.9rem; font-family:inherit; width:100%;
+  }
+  .cc-btn-primary:hover { box-shadow: 6px 6px 16px var(--ns), -3px -3px 10px var(--nl), 0 6px 28px rgba(0,219,233,0.35) !important; transform: translateY(-1px) !important; }
+  .cc-btn-primary:active { box-shadow: inset 3px 3px 8px rgba(0,0,0,0.4), 0 2px 10px rgba(0,219,233,0.2) !important; transform: translateY(0) !important; }
+
+  /* ── Sign-out ── */
+  .nm-signout {
+    width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding:0.65rem; border-radius:0.75rem; font-size:0.88rem; font-weight:700;
+    color:#849495; cursor:pointer; background:var(--nb); border:none;
+    box-shadow: var(--nr-s); transition:all 0.2s;
+  }
+  .nm-signout:hover { color:#ff6464; box-shadow:4px 4px 10px var(--ns),-4px -4px 10px var(--nl),0 0 8px rgba(255,100,100,0.15); }
+
+  /* ── Auth gate card ── */
+  .nm-auth-card {
+    background:var(--nb); border-radius:1.5rem; padding:2.5rem;
+    box-shadow: var(--nr); text-align:center; max-width:360px; width:100%;
+  }
+  .nm-icon-circle {
+    width:4rem; height:4rem; border-radius:50%; background:var(--nb);
+    display:inline-flex; align-items:center; justify-content:center; margin-bottom:1rem;
+    box-shadow: var(--nr);
   }
 
-  /* ── Verified badge ───────────────────────────────────────────── */
-  .verified-badge {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: rgba(0,219,233,0.1);
-    border: 1px solid rgba(0,219,233,0.25);
-    color: #00dbe9; padding: 0.2rem 0.6rem; border-radius: 999px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  /* ── Mobile header ── */
+  .mobile-header {
+    display:none; align-items:center; justify-content:space-between;
+    padding:0.75rem 1rem; background:var(--nb);
+    box-shadow:0 2px 10px var(--ns), 0 1px 0 var(--nl);
+    position:sticky; top:0; z-index:100; flex-shrink:0;
+  }
+  .mobile-header-back {
+    width:2.2rem; height:2.2rem; border-radius:50%; background:var(--nb);
+    display:flex; align-items:center; justify-content:center;
+    color:#849495; cursor:pointer; border:none; box-shadow: var(--nr-s);
+    transition:all 0.18s;
+  }
+  .mobile-header-back:hover { color:#dce4e5; }
+
+  /* ── Mobile tabs ── */
+  .mobile-tabs {
+    display:none; overflow-x:auto; gap:0.4rem; padding:0.65rem 1rem;
+    background:var(--nb); border-bottom:1px solid var(--ns);
+    scrollbar-width:none; flex-shrink:0;
+  }
+  .mobile-tabs::-webkit-scrollbar { display:none; }
+  .mobile-tab {
+    display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap;
+    padding:0.45rem 0.85rem; border-radius:999px; font-size:0.77rem; font-weight:700;
+    color:#849495; cursor:pointer; background:var(--nb);
+    box-shadow: var(--nr-s); transition:all 0.2s; border:none;
+  }
+  .mobile-tab.active { color:var(--ac); box-shadow: var(--ni-s); }
+  .mobile-tab .material-symbols-outlined { font-size:0.95rem; }
+
+  /* ── Close button ── */
+  #close-btn {
+    background:var(--nb) !important; box-shadow: var(--nr-s) !important; border:none !important;
+  }
+  #close-btn:hover { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl) !important; color:#dce4e5 !important; }
+  #close-btn:active { box-shadow: var(--ni-s) !important; }
+
+  /* ── File Vault ── */
+  .file-item {
+    display:flex; align-items:center; gap:0.9rem;
+    background:var(--nb); border-radius:0.9rem; padding:0.85rem 1rem;
+    box-shadow: var(--nr-s); transition:box-shadow 0.2s; cursor:default;
+  }
+  .file-item:hover { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl), inset 0 0 0 1px rgba(0,219,233,0.1); }
+  .file-icon {
+    width:2.6rem; height:2.6rem; border-radius:0.7rem; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--nr-s);
+  }
+  .file-icon-img    { background:#1a0e1f; }
+  .file-icon-video  { background:#0e101f; }
+  .file-icon-doc    { background:#0e1a1f; }
+  .file-icon-pdf    { background:#1f100e; }
+  .file-icon-zip    { background:#1a1108; }
+  .file-icon-other  { background:#131413; }
+
+  .vault-folder {
+    background:var(--nb); border-radius:0.9rem; padding:1rem;
+    box-shadow: var(--nr-s); cursor:pointer; text-align:center;
+    transition:box-shadow 0.2s;
+  }
+  .vault-folder:hover { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl), 0 0 0 1px rgba(0,219,233,0.2); }
+  .vault-folder:active { box-shadow: var(--ni-s); }
+  .vault-drop-zone {
+    border-radius:1rem; background:var(--nb); box-shadow: var(--ni);
+    padding:2rem; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:0.5rem;
+    cursor:pointer; transition:box-shadow 0.2s;
+  }
+  .vault-drop-zone:hover, .vault-drop-zone.drag-over {
+    box-shadow: inset 4px 4px 10px var(--ns), inset -4px -4px 10px var(--nl), 0 0 0 2px rgba(0,219,233,0.4);
   }
 
-  /* ── Travel badge ─────────────────────────────────────────────── */
-  .travel-badge {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-size: 0.8rem; font-weight: 700;
-    padding: 0.4rem 0.85rem; border-radius: 999px;
-    background: rgba(188,19,254,0.08);
-    border: 1px solid rgba(188,19,254,0.2);
-    color: #ebb2ff;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  /* ── Request card accent ── */
+  .request-card-new {
+    box-shadow: var(--nr), inset 0 0 0 1.5px rgba(0,219,233,0.25) !important;
   }
 
-  /* ── Lightbox ─────────────────────────────────────────────────── */
-  #lightbox {
-    display: none;
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(0,0,0,0.92);
-    align-items: center; justify-content: center;
-    backdrop-filter: blur(8px);
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:var(--nb); }
+  ::-webkit-scrollbar-thumb { background:var(--ns); border-radius:999px; }
+
+  /* ── Sidebar logo ── */
+  .cp-sidebar-logo {
+    padding:1.1rem 1.2rem 0.9rem;
+    display:flex; align-items:center;
+    border-bottom:1px solid var(--ns); flex-shrink:0;
   }
-  #lightbox.open { display: flex; }
-  #lightbox img, #lightbox video {
-    max-width: 90vw; max-height: 85vh;
-    border-radius: 1rem;
-    object-fit: contain;
+
+  @media (max-width:768px) {
+    .cp-sidebar    { display:none; }
+    .mobile-header { display:flex; }
+    .mobile-tabs   { display:flex; }
+    .cp-content    { padding:1.1rem; }
+    #close-btn     { display:none !important; }
   }
-  #lightbox-close {
-    position: absolute; top: 1.5rem; right: 1.5rem;
-    width: 2.5rem; height: 2.5rem; border-radius: 50%;
-    background: rgba(22,22,24,0.9); border: 1px solid rgba(255,255,255,0.15);
-    color: #dce4e5; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem; transition: border-color 0.2s;
-  }
-  #lightbox-close:hover { border-color: rgba(0,219,233,0.5); color: #00dbe9; }
 </style>
 </head>
-<body class="font-body-md antialiased min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col font-body-md antialiased" style="background:#141414;">
 
-<!-- Animated Background -->
-<div class="fixed inset-0 z-[-1] overflow-hidden">
-  <div class="absolute inset-0 w-full h-full opacity-35">
-    <canvas id="shader-canvas" style="display:block;width:100%;height:100%"></canvas>
-    <script>
-    (function() {
-      const canvas = document.getElementById('shader-canvas');
-      function syncSize() {
-        const w = canvas.clientWidth || 1280, h = canvas.clientHeight || 720;
-        if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-      }
-      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncSize).observe(canvas);
-      syncSize();
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      if (!gl) return;
-      const vs = `attribute vec2 a_position; varying vec2 v_texCoord;
-        void main() { v_texCoord = a_position * 0.5 + 0.5; gl_Position = vec4(a_position,0.0,1.0); }`;
-      const fs = `precision highp float; varying vec2 v_texCoord; uniform float u_time; uniform vec2 u_resolution;
-        void main() {
-          vec2 uv = v_texCoord;
-          vec3 c1 = vec3(0.05,0.08,0.1); vec3 c2 = vec3(0.0,0.94,1.0); vec3 c3 = vec3(0.74,0.0,1.0);
-          float noise = sin(uv.x*10.0+u_time*0.5)*cos(uv.y*10.0+u_time*0.5);
-          float glow = smoothstep(0.4,0.6,sin(u_time*0.2+length(uv-0.5)*5.0)*0.5+0.5);
-          vec3 col = mix(c1,c2,glow*0.1); col = mix(col,c3,noise*0.05);
-          float p = pow(fract(sin(dot(uv+u_time*0.01,vec2(12.9898,78.233)))*43758.5453),20.0);
-          col += p*0.2; gl_FragColor = vec4(col,1.0);
-        }`;
-      function cs(type,src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
-      const prog = gl.createProgram();
-      gl.attachShader(prog,cs(gl.VERTEX_SHADER,vs)); gl.attachShader(prog,cs(gl.FRAGMENT_SHADER,fs));
-      gl.linkProgram(prog); gl.useProgram(prog);
-      const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-      const pos=gl.getAttribLocation(prog,'a_position');
-      gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
-      const uTime=gl.getUniformLocation(prog,'u_time'), uRes=gl.getUniformLocation(prog,'u_resolution');
-      function render(t){
-        if(typeof ResizeObserver==='undefined') syncSize();
-        gl.viewport(0,0,canvas.width,canvas.height);
-        if(uTime) gl.uniform1f(uTime,t*0.001);
-        if(uRes) gl.uniform2f(uRes,canvas.width,canvas.height);
-        gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(render);
-      }
-      render(0);
-    })();
-    </script>
+<!-- Close / back button -->
+<button onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
+  id="close-btn" title="Close"
+  style="position:fixed;top:1.1rem;right:1.25rem;z-index:500;
+         width:2.4rem;height:2.4rem;border-radius:50%;
+         display:flex;align-items:center;justify-content:center;
+         color:#849495;cursor:pointer;transition:all 0.18s;"
+  onmouseover="this.style.color='#dce4e5'"
+  onmouseout="this.style.color='#849495'">
+  <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+</button>
+
+<!-- Auth Gate -->
+<div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
+  <div class="nm-auth-card">
+    <div class="mb-5">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+             alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
+      </a>
+    </div>
+    <div class="nm-icon-circle mx-auto">
+      <span class="material-symbols-outlined" style="font-size:2rem;color:var(--ac);">work</span>
+    </div>
+    <h2 style="color:#dce4e5;font-weight:800;font-size:1.2rem;margin-bottom:0.4rem;">Sign in to access your dashboard</h2>
+    <p style="color:#849495;font-size:0.88rem;margin-bottom:1.5rem;">Manage bookings, client requests, and your file vault.</p>
+    <a href="signin.html" class="cc-btn-primary" style="text-decoration:none;">Sign In</a>
+    <p style="font-size:0.85rem;color:#849495;margin-top:1rem;">No account? <a href="signup.html" style="color:var(--ac);font-weight:700;">Sign up</a></p>
   </div>
 </div>
 
-<!-- Header -->
-<div id="site-header"></div>
-
-<!-- ── MAIN ──────────────────────────────────────────────────────── -->
-<main class="flex-grow pt-20 pb-stack-xl">
-
-  <!-- Auth gate -->
-  <div id="auth-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
-    <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">lock</span>
-    <p class="font-headline-md text-on-surface-variant mb-6">Sign in to view your professional profile</p>
-    <a href="signin.html" class="shimmer-btn inline-block relative overflow-hidden bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-bold py-4 px-8 rounded-full transition-transform hover:scale-105">Go to Sign In</a>
-  </div>
-
-  <!-- Not-a-professional gate -->
-  <div id="role-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
-    <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">work_off</span>
-    <p class="font-headline-md text-on-surface-variant mb-3">This page is for professional accounts</p>
-    <p class="text-on-surface-variant text-sm mb-6 max-w-sm">Your account role is <span id="role-display" class="text-primary font-bold"></span>. Only professionals have a dedicated profile page.</p>
-    <a href="profile.html" class="cc-btn-ghost" style="width:auto;padding:0.9rem 2rem;">View My Account</a>
-  </div>
-
-  <!-- ── Setup required notice ─────────────────────────────────── -->
-  <div id="setup-gate" class="hidden flex flex-col items-center justify-center py-32 px-8 text-center">
-    <div style="width:5rem;height:5rem;border-radius:50%;background:rgba(0,219,233,0.08);border:1px solid rgba(0,219,233,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
-      <span class="material-symbols-outlined text-primary" style="font-size:2rem;">edit_note</span>
+<!-- Role Gate (not a professional) -->
+<div id="role-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
+  <div class="nm-auth-card">
+    <div class="nm-icon-circle mx-auto">
+      <span class="material-symbols-outlined" style="font-size:2rem;color:#849495;">work_off</span>
     </div>
-    <p class="font-headline-md text-on-surface mb-2">Complete your profile setup</p>
-    <p class="text-on-surface-variant text-sm mb-6 max-w-sm">You haven't finished your professional profile yet. Set it up so clients can discover and book you.</p>
-    <a href="professionalsetup.html" class="cc-btn-primary" style="width:auto;padding:0.9rem 2rem;">
-      <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span> Set Up Profile
-    </a>
+    <h2 style="color:#dce4e5;font-weight:800;font-size:1.2rem;margin-bottom:0.4rem;">Professional accounts only</h2>
+    <p style="color:#849495;font-size:0.88rem;margin-bottom:1.5rem;">Your account role is <span id="role-display" style="color:var(--ac);font-weight:700;"></span>. Only professionals have this dashboard.</p>
+    <a href="customer-profile.html" class="cc-btn-primary" style="text-decoration:none;">Go to My Account</a>
   </div>
+</div>
 
-  <!-- ── PROFILE CONTENT ────────────────────────────────────────── -->
-  <div id="profile-content" class="hidden">
+<!-- Dashboard -->
+<div id="dashboard" class="flex flex-1" style="display:none;">
 
-    <!-- ── COVER HERO ──────────────────────────────────────────── -->
-    <div class="cover-hero">
-      <div class="cover-grid"></div>
-      <!-- Floating orbs -->
-      <div class="absolute top-8 left-[15%] w-32 h-32 rounded-full opacity-20 blur-[60px]" style="background:rgba(0,219,233,0.6);"></div>
-      <div class="absolute bottom-4 right-[20%] w-24 h-24 rounded-full opacity-15 blur-[50px]" style="background:rgba(188,19,254,0.7);"></div>
-      <!-- Edit button (top right) -->
-      <div class="absolute top-4 right-4 md:top-6 md:right-8">
-        <a href="professional-edit.html" class="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full glass-panel border border-glass-stroke text-on-surface-variant hover:text-primary hover:border-primary/40 transition-all" style="backdrop-filter:blur(12px);">
-          <span class="material-symbols-outlined" style="font-size:0.9rem;">edit</span> Edit Profile
-        </a>
+  <!-- ── Sidebar ────────────────────────────────────────────── -->
+  <aside class="cp-sidebar">
+    <div class="cp-sidebar-logo">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+             alt="Camcrew Studio" style="height:3rem;width:auto;"/>
+      </a>
+    </div>
+
+    <!-- Profile summary -->
+    <div class="p-5 pb-3">
+      <div class="flex items-center gap-3 mb-3">
+        <div id="sb-avatar" style="width:2.75rem;height:2.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#001f22;flex-shrink:0;background:linear-gradient(135deg,#00dbe9,#ebb2ff);box-shadow:var(--nr-s);">?</div>
+        <div class="min-w-0">
+          <p id="sb-name" style="color:#dce4e5;font-weight:800;font-size:0.9rem;" class="truncate">Loading…</p>
+          <p id="sb-email" style="color:#849495;font-size:0.75rem;" class="truncate">…</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.4rem;">
+        <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(0,219,233,0.1);color:#00dbe9;padding:0.18rem 0.55rem;border-radius:999px;">Pro</span>
+        <a href="professionalsetup.html" style="font-size:0.65rem;font-weight:700;color:#849495;background:var(--nb);box-shadow:var(--nr-s);padding:0.18rem 0.55rem;border-radius:999px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.15s;" onmouseover="this.style.color='#dce4e5'" onmouseout="this.style.color='#849495'">Edit Profile</a>
       </div>
     </div>
+    <div class="nav-divider"></div>
 
-    <!-- ── IDENTITY BAR (overlaps cover) ────────────────────────── -->
-    <div class="px-margin-mobile md:px-margin-desktop">
-      <div class="max-w-6xl mx-auto">
+    <!-- Nav -->
+    <nav class="py-2 flex-1">
+      <div class="nav-item active" data-section="overview" onclick="showSection('overview')">
+        <span class="material-symbols-outlined">dashboard</span> Overview
+      </div>
+      <div class="nav-divider" style="margin:0.4rem 1rem 0.3rem;"></div>
+      <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;color:#5a7475;text-transform:uppercase;padding:0 1.2rem 0.3rem;">Work</p>
+      <div class="nav-item" data-section="requests" onclick="showSection('requests')">
+        <span class="material-symbols-outlined">inbox</span> Client Requests
+        <span class="nav-badge" id="nb-requests" style="display:none;">0</span>
+      </div>
+      <div class="nav-item" data-section="jobs" onclick="showSection('jobs')">
+        <span class="material-symbols-outlined">work_history</span> My Jobs
+      </div>
+      <div class="nav-item" data-section="rentals" onclick="showSection('rentals')">
+        <span class="material-symbols-outlined">videocam</span> Rentals
+      </div>
+      <div class="nav-item" data-section="tracking" onclick="showSection('tracking')">
+        <span class="material-symbols-outlined">local_shipping</span> Job Tracking
+      </div>
+      <div class="nav-divider" style="margin:0.4rem 1rem 0.3rem;"></div>
+      <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;color:#5a7475;text-transform:uppercase;padding:0 1.2rem 0.3rem;">Files & Money</p>
+      <div class="nav-item" data-section="vault" onclick="showSection('vault')">
+        <span class="material-symbols-outlined">cloud</span> File Vault
+      </div>
+      <div class="nav-item" data-section="earnings" onclick="showSection('earnings')">
+        <span class="material-symbols-outlined">payments</span> Earnings
+      </div>
+      <div class="nav-divider" style="margin:0.4rem 1rem 0.3rem;"></div>
+      <div class="nav-item" data-section="account" onclick="showSection('account')">
+        <span class="material-symbols-outlined">manage_accounts</span> Account Settings
+      </div>
+    </nav>
 
-        <div class="flex flex-col md:flex-row md:items-end gap-5 -mt-16 mb-8 relative z-10">
-          <!-- Avatar -->
-          <div class="prof-avatar-ring flex-shrink-0">
-            <div class="prof-avatar-inner">
-              <img id="prof-avatar-img" src="" alt="Avatar" style="display:none;">
-              <span id="prof-avatar-initial" class="text-4xl font-bold" style="color:#00dbe9;text-shadow:0 0 24px rgba(0,240,255,0.8);"></span>
-            </div>
+    <div class="p-4 pt-2">
+      <button onclick="window.signOut && window.signOut()" class="nm-signout">
+        <span class="material-symbols-outlined" style="font-size:1.1rem;">logout</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Mobile header -->
+    <div class="mobile-header">
+      <a href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+             alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
+      </a>
+      <button class="mobile-header-back" onclick="history.length>1?history.back():window.location.href='index.html'">
+        <span class="material-symbols-outlined" style="font-size:1.15rem;">arrow_back</span>
+      </button>
+    </div>
+
+    <!-- Mobile tabs -->
+    <div class="mobile-tabs">
+      <div class="mobile-tab active" data-section="overview"  onclick="showSection('overview')"><span class="material-symbols-outlined">dashboard</span>Overview</div>
+      <div class="mobile-tab" data-section="requests"  onclick="showSection('requests')"><span class="material-symbols-outlined">inbox</span>Requests</div>
+      <div class="mobile-tab" data-section="jobs"      onclick="showSection('jobs')"><span class="material-symbols-outlined">work_history</span>Jobs</div>
+      <div class="mobile-tab" data-section="rentals"   onclick="showSection('rentals')"><span class="material-symbols-outlined">videocam</span>Rentals</div>
+      <div class="mobile-tab" data-section="tracking"  onclick="showSection('tracking')"><span class="material-symbols-outlined">local_shipping</span>Tracking</div>
+      <div class="mobile-tab" data-section="vault"     onclick="showSection('vault')"><span class="material-symbols-outlined">cloud</span>Vault</div>
+      <div class="mobile-tab" data-section="earnings"  onclick="showSection('earnings')"><span class="material-symbols-outlined">payments</span>Earnings</div>
+      <div class="mobile-tab" data-section="account"   onclick="showSection('account')"><span class="material-symbols-outlined">manage_accounts</span>Account</div>
+    </div>
+
+    <div class="cp-content">
+
+      <!-- ═══ OVERVIEW ══════════════════════════════════════════════ -->
+      <div id="sec-overview">
+        <p class="sec-title">Welcome back, <span id="ov-name">…</span> 👋</p>
+        <p class="sec-sub">Your professional dashboard — manage work, clients, and deliverables.</p>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:var(--ac);">inbox</span>
+            <p id="ov-requests" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">New Requests</p>
           </div>
-
-          <!-- Name block -->
-          <div class="flex-1 min-w-0 pb-1">
-            <div class="flex flex-wrap items-center gap-2 mb-1">
-              <h1 id="prof-name" class="font-display-lg text-display-lg-mobile md:text-display-lg gradient-text leading-none truncate"></h1>
-              <span class="verified-badge"><span class="material-symbols-outlined" style="font-size:0.85rem;">verified</span> Pro</span>
-            </div>
-            <p id="prof-title" class="text-on-surface-variant font-semibold text-base mb-2"></p>
-            <div id="prof-cats" class="flex flex-wrap gap-1.5"></div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:#4ade80;">work_history</span>
+            <p id="ov-jobs" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Active Jobs</p>
           </div>
-
-          <!-- CTA -->
-          <div class="flex gap-2 pb-1 flex-shrink-0">
-            <button onclick="copyContact()" class="cc-btn-ghost" style="width:auto;padding:0.65rem 1.25rem;font-size:0.85rem;">
-              <span class="material-symbols-outlined" style="font-size:1rem;">share</span> Share
-            </button>
-            <button onclick="scrollToContact()" class="cc-btn-primary" style="width:auto;padding:0.65rem 1.4rem;font-size:0.85rem;">
-              <span class="material-symbols-outlined" style="font-size:1rem;">send</span> Contact
-            </button>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:#fbbf24;">payments</span>
+            <p id="ov-earnings" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Pending Payout</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.6rem;color:#a855f7;">cloud</span>
+            <p id="ov-files" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Vault Files</p>
           </div>
         </div>
 
-        <!-- ── STATS ROW ──────────────────────────────────────── -->
+        <!-- Quick actions -->
+        <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#849495;margin-bottom:0.75rem;">Quick Actions</p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          <div class="stat-chip">
-            <div class="neon-num" id="stat-since">—</div>
-            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Member Since</div>
-          </div>
-          <div class="stat-chip">
-            <div class="neon-num" id="stat-portfolio">0</div>
-            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Portfolio Items</div>
-          </div>
-          <div class="stat-chip">
-            <div class="neon-num" id="stat-services">0</div>
-            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Services Offered</div>
-          </div>
-          <div class="stat-chip">
-            <div class="neon-num" id="stat-locations">0</div>
-            <div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mt-1">Locations</div>
-          </div>
+          <button onclick="showSection('requests')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:var(--ac);">inbox</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Client Requests</span>
+          </button>
+          <button onclick="showSection('jobs')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#4ade80;">work_history</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">My Jobs</span>
+          </button>
+          <button onclick="showSection('vault')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#a855f7;">cloud_upload</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Upload Files</span>
+          </button>
+          <button onclick="showSection('earnings')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#fbbf24;">account_balance_wallet</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Earnings</span>
+          </button>
         </div>
 
-        <!-- ── TWO-COLUMN LAYOUT ──────────────────────────────── -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-
-          <!-- LEFT: Bio + Portfolio + Services ────────────────── -->
-          <div class="lg:col-span-2 space-y-6">
-
-            <!-- Bio card -->
-            <div id="bio-card" class="glass-panel rounded-2xl p-6 reveal">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">auto_stories</span>
-                About
-              </div>
-              <p id="prof-bio" class="text-on-surface leading-relaxed text-base"></p>
-            </div>
-
-            <!-- Portfolio -->
-            <div class="glass-panel rounded-2xl p-6 reveal">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">photo_library</span>
-                Portfolio
-              </div>
-              <div id="portfolio-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3"></div>
-              <div id="portfolio-empty" class="empty-state hidden">
-                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">image_not_supported</span>
-                No portfolio items yet
-              </div>
-            </div>
-
-            <!-- Services & Rates -->
-            <div class="glass-panel rounded-2xl p-6 reveal">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">sell</span>
-                Services &amp; Rates
-              </div>
-              <div id="services-list" class="space-y-3"></div>
-              <div id="services-empty" class="empty-state hidden">
-                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">receipt_long</span>
-                No services listed yet
-              </div>
-            </div>
-
-          </div>
-
-          <!-- RIGHT: Contact + Locations ──────────────────────── -->
-          <div class="space-y-6">
-
-            <!-- Contact card -->
-            <div class="glass-panel rounded-2xl p-6 reveal" id="contact-section">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">contact_page</span>
-                Contact
-              </div>
-
-              <!-- Email -->
-              <div class="flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
-                <div class="social-icon" style="background:rgba(0,219,233,0.08);border-color:rgba(0,219,233,0.15);">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#00dbe9;">alternate_email</span>
-                </div>
-                <div class="min-w-0">
-                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Email</div>
-                  <div id="prof-email" class="text-on-surface text-sm font-medium truncate"></div>
-                </div>
-              </div>
-
-              <!-- Phone -->
-              <div id="phone-row" class="hidden flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
-                <div class="social-icon">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;">phone_iphone</span>
-                </div>
-                <div>
-                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Phone</div>
-                  <div id="prof-phone" class="text-on-surface text-sm font-medium"></div>
-                </div>
-              </div>
-
-              <!-- Website -->
-              <div id="website-row" class="hidden flex items-center gap-3 mb-4 pb-4 border-b border-glass-stroke">
-                <div class="social-icon">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;">open_in_new</span>
-                </div>
-                <div class="min-w-0">
-                  <div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-0.5">Website</div>
-                  <a id="prof-website" href="#" target="_blank" rel="noopener" class="text-primary text-sm font-medium hover:text-primary-fixed-dim truncate block transition-colors"></a>
-                </div>
-              </div>
-
-              <!-- Social links -->
-              <div id="socials-wrap" class="space-y-0"></div>
-
-              <!-- Book button -->
-              <button onclick="scrollToContact()" class="cc-btn-primary mt-5" style="font-size:0.9rem;">
-                <span class="material-symbols-outlined" style="font-size:1rem;">calendar_month</span> Request Booking
-              </button>
-            </div>
-
-            <!-- Locations card -->
-            <div class="glass-panel rounded-2xl p-6 reveal">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">location_on</span>
-                Work Locations
-              </div>
-              <div id="loc-tags" class="flex flex-wrap gap-2"></div>
-              <div id="loc-empty" class="empty-state hidden">
-                <span class="material-symbols-outlined block text-3xl mb-2" style="color:#475569;">location_off</span>
-                No locations listed
-              </div>
-              <div id="travel-badge-wrap" class="hidden mt-3">
-                <span class="travel-badge">
-                  <span class="material-symbols-outlined" style="font-size:1rem;">flight</span>
-                  Available for international travel
-                </span>
-              </div>
-            </div>
-
-            <!-- Quick info card -->
-            <div class="glass-panel rounded-2xl p-6 reveal">
-              <div class="section-label">
-                <span class="material-symbols-outlined" style="font-size:0.9rem;color:#00dbe9;">info</span>
-                Quick Info
-              </div>
-              <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-on-surface-variant text-sm">Account type</span>
-                  <span class="text-on-surface text-sm font-bold capitalize" id="qi-role"></span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-on-surface-variant text-sm">Member since</span>
-                  <span class="text-on-surface text-sm font-bold" id="qi-since"></span>
-                </div>
-                <div class="flex items-center justify-between" id="qi-cats-row">
-                  <span class="text-on-surface-variant text-sm">Specialties</span>
-                  <span class="text-primary text-sm font-bold" id="qi-cats"></span>
-                </div>
-                <div class="flex items-center justify-between" id="qi-travel-row">
-                  <span class="text-on-surface-variant text-sm">International</span>
-                  <span id="qi-travel" class="text-sm font-bold"></span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div><!-- /two-col -->
-
+        <!-- Recent requests preview -->
+        <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#849495;margin-bottom:0.75rem;">Recent Client Requests</p>
+        <div id="ov-requests-preview"></div>
       </div>
-    </div><!-- /px-wrapper -->
-  </div><!-- /profile-content -->
 
-</main>
+      <!-- ═══ CLIENT REQUESTS ════════════════════════════════════════ -->
+      <div id="sec-requests" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">Client Requests</p>
+          <div style="display:flex;gap:0.5rem;">
+            <select id="req-filter" class="fi" style="width:auto;padding:0.4rem 0.7rem;font-size:0.8rem;" onchange="renderRequests()">
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+        </div>
+        <p class="sec-sub">Incoming booking requests from clients. Accept or decline each request.</p>
+        <div id="requests-list"></div>
+      </div>
 
-<!-- Lightbox -->
-<div id="lightbox" onclick="closeLightbox(event)">
-  <button id="lightbox-close" onclick="closeLightbox()">
-    <span class="material-symbols-outlined" style="font-size:1.25rem;">close</span>
-  </button>
-  <div id="lightbox-media"></div>
+      <!-- ═══ MY JOBS ════════════════════════════════════════════════ -->
+      <div id="sec-jobs" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">My Jobs</p>
+          <button onclick="openAddJobModal()" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Job
+          </button>
+        </div>
+        <p class="sec-sub">Active and completed jobs you've been booked for.</p>
+        <div id="jobs-list"></div>
+      </div>
+
+      <!-- ═══ RENTALS ════════════════════════════════════════════════ -->
+      <div id="sec-rentals" class="hidden">
+        <div class="flex items-center justify-between mb-1">
+          <p class="sec-title" style="margin:0">Rentals</p>
+          <button onclick="openAddRentalModal()" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Log Rental
+          </button>
+        </div>
+        <p class="sec-sub">Equipment rentals — gear you've rented in for jobs.</p>
+        <div id="rentals-list"></div>
+      </div>
+
+      <!-- ═══ JOB TRACKING ═══════════════════════════════════════════ -->
+      <div id="sec-tracking" class="hidden">
+        <p class="sec-title">Job Tracking</p>
+        <p class="sec-sub">Track the status of active jobs and rental shipments in real-time.</p>
+        <div id="tracking-selector" class="mb-6"></div>
+        <div id="tracking-timeline"></div>
+      </div>
+
+      <!-- ═══ FILE VAULT ═════════════════════════════════════════════ -->
+      <div id="sec-vault" class="hidden">
+        <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
+          <p class="sec-title" style="margin:0">File Vault</p>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button onclick="openNewFolderModal()" class="btn-sm btn-sm-ghost">
+              <span class="material-symbols-outlined" style="font-size:1rem;">create_new_folder</span> New Folder
+            </button>
+            <button onclick="document.getElementById('vault-upload-input').click()" class="btn-sm btn-sm-cyan">
+              <span class="material-symbols-outlined" style="font-size:1rem;">upload</span> Upload
+            </button>
+            <button onclick="toggleVaultView()" id="vault-view-btn" class="btn-sm btn-sm-ghost" title="Toggle view">
+              <span class="material-symbols-outlined" style="font-size:1rem;" id="vault-view-icon">view_list</span>
+            </button>
+          </div>
+        </div>
+        <p class="sec-sub">Store and share deliverables with clients. Generate shareable links for any file.</p>
+
+        <input type="file" id="vault-upload-input" multiple class="hidden" onchange="handleVaultUpload(this.files)">
+
+        <!-- Breadcrumb -->
+        <div id="vault-breadcrumb" style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1rem;flex-wrap:wrap;"></div>
+
+        <!-- Drop zone (shown when empty) -->
+        <div id="vault-drop-zone" class="vault-drop-zone mb-4"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleVaultDrop(event)"
+          onclick="document.getElementById('vault-upload-input').click()">
+          <span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--ac);opacity:0.7;">cloud_upload</span>
+          <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;">Drop files here or <span style="color:var(--ac);">browse</span></p>
+          <p style="font-size:0.8rem;color:#849495;">Any file type · Share with clients after upload</p>
+        </div>
+
+        <!-- Storage bar -->
+        <div style="margin-bottom:1.25rem;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+            <span style="font-size:0.75rem;font-weight:700;color:#849495;">Storage Used</span>
+            <span id="vault-storage-text" style="font-size:0.75rem;font-weight:700;color:#dce4e5;">0 MB of 5 GB</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="vault-storage-bar" style="width:0%;"></div></div>
+        </div>
+
+        <!-- Folders row -->
+        <div id="vault-folders" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.75rem;margin-bottom:1.25rem;"></div>
+
+        <!-- Files list/grid -->
+        <div id="vault-files"></div>
+      </div>
+
+      <!-- ═══ EARNINGS ═══════════════════════════════════════════════ -->
+      <div id="sec-earnings" class="hidden">
+        <p class="sec-title">Earnings</p>
+        <p class="sec-sub">Your payment history, pending payouts, and completed transactions.</p>
+
+        <!-- Summary cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#4ade80;">account_balance_wallet</span>
+            <p id="earn-total" class="text-2xl font-black" style="color:#dce4e5;">$0</p>
+            <p style="font-size:0.75rem;font-weight:700;color:#849495;">Total Earned</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#fbbf24;">pending</span>
+            <p id="earn-pending" class="text-2xl font-black" style="color:#dce4e5;">$0</p>
+            <p style="font-size:0.75rem;font-weight:700;color:#849495;">Pending Payout</p>
+          </div>
+          <div class="stat-card">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:var(--ac);">trending_up</span>
+            <p id="earn-month" class="text-2xl font-black" style="color:#dce4e5;">$0</p>
+            <p style="font-size:0.75rem;font-weight:700;color:#849495;">This Month</p>
+          </div>
+        </div>
+        <div id="earnings-list"></div>
+      </div>
+
+      <!-- ═══ ACCOUNT ════════════════════════════════════════════════ -->
+      <div id="sec-account" class="hidden">
+        <p class="sec-title">Account Settings</p>
+        <p class="sec-sub">Manage your professional account details and security.</p>
+        <div class="data-card max-w-lg" style="display:flex;flex-direction:column;gap:1.1rem;">
+          <div>
+            <label class="fi-label">Display Name</label>
+            <input id="ac-name" class="fi" type="text" placeholder="Your display name"/>
+          </div>
+          <div>
+            <label class="fi-label">Email Address</label>
+            <input id="ac-email" class="fi readonly-fi" type="email" readonly/>
+          </div>
+          <div>
+            <label class="fi-label">Role</label>
+            <input id="ac-role" class="fi readonly-fi" type="text" readonly/>
+          </div>
+          <div id="ac-msg" class="hidden text-sm"></div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button onclick="saveAccount()" class="cc-btn-primary" style="width:auto;padding:0.7rem 1.8rem;">Save Changes</button>
+            <a href="forgot-password.html" class="btn-sm btn-sm-ghost" style="padding:0.7rem 1.2rem;text-decoration:none;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">lock_reset</span> Change Password
+            </a>
+            <a href="professionalsetup.html" class="btn-sm btn-sm-cyan" style="padding:0.7rem 1.2rem;text-decoration:none;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">edit</span> Edit Pro Profile
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cp-content -->
+  </div><!-- /flex-1 -->
+</div><!-- /dashboard -->
+
+<!-- ═══ MODALS ═══════════════════════════════════════════════════════ -->
+
+<!-- Respond to Request Modal -->
+<div id="modal-request" class="modal-overlay" onclick="closeModal('modal-request',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;" id="req-modal-title">Client Request</h3>
+      <button onclick="closeModal('modal-request')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div id="req-modal-body" class="mb-5"></div>
+    <div style="display:flex;gap:0.65rem;">
+      <button onclick="respondRequest('confirmed')" class="btn-sm btn-sm-green" style="flex:1;justify-content:center;padding:0.7rem;">
+        <span class="material-symbols-outlined" style="font-size:1rem;">check_circle</span> Accept
+      </button>
+      <button onclick="respondRequest('declined')" class="btn-sm btn-sm-red" style="flex:1;justify-content:center;padding:0.7rem;">
+        <span class="material-symbols-outlined" style="font-size:1rem;">cancel</span> Decline
+      </button>
+    </div>
+    <div style="margin-top:0.75rem;">
+      <label class="fi-label">Message to client (optional)</label>
+      <textarea id="req-message" class="fi" rows="2" placeholder="Add a note for the client…" style="resize:none;"></textarea>
+    </div>
+  </div>
 </div>
 
-<!-- Footer -->
-<div id="site-footer"></div>
+<!-- Add Job Modal -->
+<div id="modal-job" class="modal-overlay" onclick="closeModal('modal-job',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Add Job</h3>
+      <button onclick="closeModal('modal-job')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="job-form" onsubmit="submitJob(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Client Name *</label>
+          <input id="job-client" class="fi" type="text" required placeholder="e.g. Acme Corp"/>
+        </div>
+        <div>
+          <label class="fi-label">Service *</label>
+          <input id="job-service" class="fi" type="text" required placeholder="e.g. Wedding Video"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Date *</label>
+          <input id="job-date" class="fi" type="date" required/>
+        </div>
+        <div>
+          <label class="fi-label">Amount ($)</label>
+          <input id="job-amount" class="fi" type="number" min="0" placeholder="0"/>
+        </div>
+      </div>
+      <div>
+        <label class="fi-label">Status</label>
+        <select id="job-status" class="fi">
+          <option value="pending">Pending</option>
+          <option value="confirmed" selected>Confirmed</option>
+          <option value="active">Active / In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div>
+        <label class="fi-label">Notes</label>
+        <textarea id="job-notes" class="fi" rows="2" style="resize:none;" placeholder="Any details, location, special requirements…"></textarea>
+      </div>
+      <div id="job-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary">Save Job</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Rental Modal -->
+<div id="modal-rental" class="modal-overlay" onclick="closeModal('modal-rental',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Log Equipment Rental</h3>
+      <button onclick="closeModal('modal-rental')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="rental-form" onsubmit="submitRental(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <div>
+        <label class="fi-label">Equipment Name *</label>
+        <input id="rental-name" class="fi" type="text" required placeholder="e.g. Sony FX6 Camera"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Rental From *</label>
+          <input id="rental-from" class="fi" type="date" required/>
+        </div>
+        <div>
+          <label class="fi-label">Rental To *</label>
+          <input id="rental-to" class="fi" type="date" required/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Cost ($)</label>
+          <input id="rental-cost" class="fi" type="number" min="0" placeholder="0"/>
+        </div>
+        <div>
+          <label class="fi-label">Vendor / Source</label>
+          <input id="rental-vendor" class="fi" type="text" placeholder="e.g. BorrowLenses"/>
+        </div>
+      </div>
+      <div>
+        <label class="fi-label">Status</label>
+        <select id="rental-status" class="fi">
+          <option value="processing">Processing</option>
+          <option value="in_transit" selected>In Transit</option>
+          <option value="active">Active / In Use</option>
+          <option value="returned">Returned</option>
+        </select>
+      </div>
+      <div>
+        <label class="fi-label">Tracking Number</label>
+        <input id="rental-tracking" class="fi" type="text" placeholder="Optional tracking #"/>
+      </div>
+      <div id="rental-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary">Save Rental</button>
+    </form>
+  </div>
+</div>
+
+<!-- New Folder Modal -->
+<div id="modal-folder" class="modal-overlay" onclick="closeModal('modal-folder',event)">
+  <div class="modal-box" style="max-width:360px;" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">New Folder</h3>
+      <button onclick="closeModal('modal-folder')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form onsubmit="submitNewFolder(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <div>
+        <label class="fi-label">Folder Name *</label>
+        <input id="folder-name" class="fi" type="text" required placeholder="e.g. Wedding – Smith 2026"/>
+      </div>
+      <button type="submit" class="cc-btn-primary">Create Folder</button>
+    </form>
+  </div>
+</div>
+
+<!-- Share File Modal -->
+<div id="modal-share" class="modal-overlay" onclick="closeModal('modal-share',event)">
+  <div class="modal-box" style="max-width:420px;" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Share File</h3>
+      <button onclick="closeModal('modal-share')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div id="share-file-name" style="font-size:0.9rem;font-weight:700;color:#dce4e5;margin-bottom:1rem;padding:0.75rem 1rem;background:var(--nb);border-radius:0.65rem;box-shadow:var(--ni-s);word-break:break-all;"></div>
+    <div style="margin-bottom:1rem;">
+      <label class="fi-label">Shareable Link</label>
+      <div style="display:flex;gap:0.5rem;">
+        <input id="share-link" class="fi" type="text" readonly style="flex:1;font-size:0.82rem;"/>
+        <button onclick="copyShareLink()" class="btn-sm btn-sm-cyan" style="flex-shrink:0;">
+          <span class="material-symbols-outlined" style="font-size:1rem;">content_copy</span>
+        </button>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label class="fi-label">Share via Email</label>
+      <div style="display:flex;gap:0.5rem;">
+        <input id="share-email" class="fi" type="email" placeholder="client@example.com" style="flex:1;"/>
+        <button onclick="shareViaEmail()" class="btn-sm btn-sm-cyan" style="flex-shrink:0;">
+          <span class="material-symbols-outlined" style="font-size:1rem;">send</span>
+        </button>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:#849495;">Links are read-only. Anyone with the link can view/download this file.</p>
+  </div>
+</div>
 
 <!-- Toast -->
-<div id="success-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass-panel px-8 py-4 rounded-full border border-primary/50 flex items-center space-x-3 opacity-0 translate-y-10 transition-all duration-500 pointer-events-none z-[100]">
-  <span id="toast-icon" class="material-symbols-outlined text-primary">check_circle</span>
-  <span id="toast-text" class="font-body-md text-primary text-sm font-semibold"></span>
+<div id="toast" style="
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(1.5rem);
+  display:flex;align-items:center;gap:0.65rem;
+  background:var(--nb);border-radius:999px;padding:0.65rem 1.4rem;
+  font-size:0.88rem;font-weight:700;
+  box-shadow:6px 6px 16px var(--ns),-4px -4px 10px var(--nl),0 0 0 1px rgba(0,219,233,0.2);
+  opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;z-index:300;
+  font-family:inherit;">
+  <span class="material-symbols-outlined" id="toast-icon" style="font-size:1.05rem;color:var(--ac);">check_circle</span>
+  <span id="toast-msg" style="color:var(--ac);">Saved</span>
 </div>
 
 <script>
-// ── Scroll reveal ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const obs = new IntersectionObserver(entries =>
-    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }), { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-});
+// ════════════════════════════════════════════════════════════════════
+// State
+// ════════════════════════════════════════════════════════════════════
+const S = {
+  profile: null,
+  requests: [],
+  jobs: [],
+  rentals: [],
+  vault: { currentFolder: null, folders: [], files: [] },
+  vaultViewGrid: false,
+  activeRequestId: null,
+};
 
-// ── Escape helper ─────────────────────────────────────────────────────
+// ── Seed demo data in localStorage ──────────────────────────────────
+function seedDemoData() {
+  if (!localStorage.getItem('pro_requests')) {
+    localStorage.setItem('pro_requests', JSON.stringify([
+      { id:1, client:'Sarah Johnson', service:'Wedding Videography', date:'2026-08-15', amount:2800, status:'pending', note:'Full day coverage, church + reception', created_at: new Date(Date.now()-2*3600000).toISOString() },
+      { id:2, client:'Bright Agency', service:'Corporate Video — Q3 Launch', date:'2026-08-22', amount:3500, status:'pending', note:'Half-day shoot, 3 testimonials + b-roll', created_at: new Date(Date.now()-86400000).toISOString() },
+      { id:3, client:'Marcus Lee',    service:'Portrait Photography', date:'2026-07-30', amount:450, status:'confirmed', note:'Outdoor session, 2 outfits', created_at: new Date(Date.now()-3*86400000).toISOString() },
+      { id:4, client:'TechConf 2026', service:'Event Photography',   date:'2026-07-28', amount:1200, status:'completed', note:'Full day conference coverage', created_at: new Date(Date.now()-7*86400000).toISOString() },
+    ]));
+  }
+  if (!localStorage.getItem('pro_jobs')) {
+    localStorage.setItem('pro_jobs', JSON.stringify([
+      { id:1, client:'Marcus Lee',    service:'Portrait Photography',     date:'2026-07-30', amount:450,  status:'confirmed', notes:'Outdoor session' },
+      { id:2, client:'TechConf 2026', service:'Event Photography',        date:'2026-07-28', amount:1200, status:'completed', notes:'Full day conference' },
+      { id:3, client:'Nova Films',    service:'Cinematic Brand Video',    date:'2026-08-10', amount:5000, status:'active',    notes:'3-day shoot, downtown LA' },
+    ]));
+  }
+  if (!localStorage.getItem('pro_rentals')) {
+    localStorage.setItem('pro_rentals', JSON.stringify([
+      { id:1, name:'Sony FX6 Body',         from:'2026-08-08', to:'2026-08-12', cost:420, vendor:'BorrowLenses',  status:'in_transit', tracking:'BL-293847' },
+      { id:2, name:'Aputure 600D Pro Light', from:'2026-08-08', to:'2026-08-09', cost:85,  vendor:'Local Grip Co', status:'active',     tracking:'' },
+      { id:3, name:'DJI Ronin RS3 Pro',     from:'2026-07-28', to:'2026-07-28', cost:60,  vendor:'LensRentals',  status:'returned',   tracking:'LR-118823' },
+    ]));
+  }
+  if (!localStorage.getItem('pro_vault')) {
+    localStorage.setItem('pro_vault', JSON.stringify({
+      folders: [
+        { id:'f1', name:'Wedding – Smith 2026', color:'#00dbe9' },
+        { id:'f2', name:'TechConf 2026',        color:'#ebb2ff' },
+      ],
+      files: [
+        { id:'v1', name:'smith_wedding_highlight.mp4', type:'video', size:284000000, folder:'f1', uploaded: new Date(Date.now()-86400000).toISOString(), shareId:'shr_abc123' },
+        { id:'v2', name:'smith_wedding_photos.zip',    type:'zip',   size:912000000, folder:'f1', uploaded: new Date(Date.now()-3600000).toISOString(),  shareId:'shr_def456' },
+        { id:'v3', name:'techconf_gallery.zip',        type:'zip',   size:450000000, folder:'f2', uploaded: new Date(Date.now()-2*86400000).toISOString(), shareId:'shr_ghi789' },
+        { id:'v4', name:'contract_nova_films.pdf',     type:'pdf',   size:540000,   folder:null, uploaded: new Date(Date.now()-5*86400000).toISOString(), shareId:'shr_jkl012' },
+      ]
+    }));
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Helpers
+// ════════════════════════════════════════════════════════════════════
+function fmt_date(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+}
+function fmt_usd(n) { return '$' + Number(n||0).toLocaleString(); }
+function fmt_bytes(b) {
+  if (b >= 1e9) return (b/1e9).toFixed(1) + ' GB';
+  if (b >= 1e6) return (b/1e6).toFixed(1) + ' MB';
+  if (b >= 1e3) return (b/1e3).toFixed(0) + ' KB';
+  return b + ' B';
+}
+function badge(status) {
+  return `<span class="badge badge-${status}">${status.replace('_',' ')}</span>`;
+}
+function empty(icon, msg, sub='') {
+  return `<div class="empty-state">
+    <span class="material-symbols-outlined empty-icon">${icon}</span>
+    <p style="color:#dce4e5;font-weight:700;">${msg}</p>
+    ${sub ? `<p style="color:#849495;font-size:0.85rem;margin-top:0.3rem;">${sub}</p>` : ''}
+  </div>`;
+}
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function showToast(msg, isError=false) {
+  const t  = document.getElementById('toast');
+  const ic = document.getElementById('toast-icon');
+  const tx = document.getElementById('toast-msg');
+  ic.textContent = isError ? 'error' : 'check_circle';
+  ic.style.color = tx.style.color = isError ? '#ffb4ab' : '#00dbe9';
+  tx.textContent = msg;
+  t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(1.5rem)'; }, 3000);
+}
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id, e) {
+  if (e && !document.getElementById(id).querySelector('.modal-box').contains(e.target) === false) return;
+  document.getElementById(id).classList.remove('open');
+}
 
-// ── Show/hide helpers ─────────────────────────────────────────────────
-function show(id) { const el = document.getElementById(id); if(el) el.classList.remove('hidden'); }
-function hide(id) { const el = document.getElementById(id); if(el) el.classList.add('hidden'); }
+// ════════════════════════════════════════════════════════════════════
+// Navigation
+// ════════════════════════════════════════════════════════════════════
+function showSection(name) {
+  document.querySelectorAll('[id^="sec-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('sec-' + name)?.classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+  document.querySelectorAll('.mobile-tab').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+  const loaders = {
+    overview: loadOverview,
+    requests: loadRequests,
+    jobs: loadJobs,
+    rentals: loadRentals,
+    tracking: loadTrackingSelector,
+    vault: renderVault,
+    earnings: loadEarnings,
+    account: loadAccount,
+  };
+  loaders[name]?.();
+}
 
-// ── Load profile ──────────────────────────────────────────────────────
-async function loadProfile() {
-  let apiProfile = null;
+// ════════════════════════════════════════════════════════════════════
+// Bootstrap
+// ════════════════════════════════════════════════════════════════════
+async function init() {
+  seedDemoData();
   try {
-    const res  = await fetch('/api/profile');
+    const res  = await fetch('/api/me');
     const data = await res.json();
-    if (!data.ok) { show('auth-gate'); return; }
-    apiProfile = data.profile;
-  } catch(_) { show('auth-gate'); return; }
+    if (!data.ok) { document.getElementById('auth-gate').style.display='flex'; return; }
+    S.profile = data.user;
 
-  // Role check
-  if (apiProfile.role !== 'professional') {
-    document.getElementById('role-display').textContent = apiProfile.role;
-    show('role-gate'); return;
-  }
-
-  // Load professional setup data from localStorage
-  const raw = localStorage.getItem('cc_pro_profile');
-  const pro  = raw ? JSON.parse(raw) : null;
-
-  // If no setup data, show setup gate (but show basic info)
-  if (!pro || !pro.name) {
-    show('setup-gate'); return;
-  }
-
-  // ── Populate UI ───────────────────────────────────────────────────
-  show('profile-content');
-
-  // Avatar
-  const avatarImg = document.getElementById('prof-avatar-img');
-  const avatarInitial = document.getElementById('prof-avatar-initial');
-  if (pro.avatarUrl) {
-    avatarImg.src = pro.avatarUrl;
-    avatarImg.style.display = 'block';
-    avatarInitial.style.display = 'none';
-  } else {
-    avatarInitial.textContent = (pro.name || apiProfile.email).charAt(0).toUpperCase();
-  }
-
-  // Name & title
-  const displayName = pro.name || apiProfile.display_name || apiProfile.email.split('@')[0];
-  document.getElementById('prof-name').textContent = displayName;
-  document.getElementById('prof-title').textContent = pro.title || '';
-
-  // Categories
-  const catsWrap = document.getElementById('prof-cats');
-  const cats = pro.categories || [];
-  cats.forEach(cat => {
-    const pill = document.createElement('span');
-    pill.className = 'cat-pill';
-    pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.75rem;">category</span>${esc(cat)}`;
-    catsWrap.appendChild(pill);
-  });
-
-  // Bio
-  const bio = pro.bio || '';
-  const bioCard = document.getElementById('bio-card');
-  if (bio) {
-    document.getElementById('prof-bio').textContent = bio;
-  } else {
-    bioCard.style.display = 'none';
-  }
-
-  // Stats
-  const memberDate = new Date(apiProfile.created_at);
-  const memberSince = memberDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-  document.getElementById('stat-since').textContent = memberSince;
-  document.getElementById('stat-portfolio').textContent = (pro.portfolio || []).length;
-  document.getElementById('stat-services').textContent = (pro.services || []).length;
-  document.getElementById('stat-locations').textContent = (pro.locations || []).length;
-
-  // Quick info
-  document.getElementById('qi-role').textContent = 'Professional';
-  document.getElementById('qi-since').textContent = memberSince;
-  const qiCats = document.getElementById('qi-cats');
-  if (cats.length) {
-    qiCats.textContent = cats.slice(0, 2).join(', ') + (cats.length > 2 ? ` +${cats.length - 2}` : '');
-  } else {
-    document.getElementById('qi-cats-row').style.display = 'none';
-  }
-  const travelEl = document.getElementById('qi-travel');
-  if (pro.travelIntl) {
-    travelEl.textContent = 'Yes';
-    travelEl.style.color = '#00dbe9';
-  } else {
-    travelEl.textContent = 'No';
-    travelEl.style.color = '#849495';
-  }
-
-  // Email
-  document.getElementById('prof-email').textContent = apiProfile.email;
-
-  // Phone
-  if (pro.phone) {
-    document.getElementById('prof-phone').textContent = pro.phone;
-    document.getElementById('phone-row').classList.remove('hidden');
-  }
-
-  // Website
-  if (pro.website) {
-    const wLink = document.getElementById('prof-website');
-    wLink.href    = pro.website;
-    wLink.textContent = pro.website.replace(/^https?:\/\//, '');
-    document.getElementById('website-row').classList.remove('hidden');
-  }
-
-  // Socials
-  const socialsWrap = document.getElementById('socials-wrap');
-  const socialDefs = [
-    { key: 'instagram', label: 'Instagram', icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>` },
-    { key: 'facebook',  label: 'Facebook',  icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>` },
-    { key: 'tiktok',   label: 'TikTok',    icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>` },
-  ];
-  socialDefs.forEach(def => {
-    const val = pro.socials && pro.socials[def.key];
-    if (!val) return;
-    const href = val.startsWith('http') ? val : 'https://' + val;
-    const a = document.createElement('a');
-    a.className = 'social-link';
-    a.href = href;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.innerHTML = `
-      <div class="social-icon">${def.icon}</div>
-      <span class="truncate">${esc(val.replace(/^https?:\/\//,''))}</span>
-      <span class="material-symbols-outlined ml-auto flex-shrink-0" style="font-size:0.9rem;color:#849495;">open_in_new</span>`;
-    socialsWrap.appendChild(a);
-  });
-
-  // Portfolio
-  const portfolio = pro.portfolio || [];
-  const pgrid = document.getElementById('portfolio-grid');
-  if (portfolio.length === 0) {
-    show('portfolio-empty');
-  } else {
-    portfolio.forEach((item, i) => {
-      const thumb = document.createElement('div');
-      thumb.className = 'portfolio-thumb';
-      const isVid = item.type === 'video';
-      thumb.innerHTML = isVid
-        ? `<video src="${esc(item.url)}" muted playsinline></video>
-           <div class="vid-badge">VIDEO</div>
-           <div class="play-overlay"><span class="material-symbols-outlined" style="font-size:2rem;color:rgba(255,255,255,0.9);">play_circle</span></div>`
-        : `<img src="${esc(item.url)}" alt="Portfolio item ${i+1}" loading="lazy">
-           <div class="play-overlay"><span class="material-symbols-outlined" style="font-size:1.5rem;color:rgba(255,255,255,0.9);">zoom_in</span></div>`;
-      thumb.addEventListener('click', () => openLightbox(item));
-      pgrid.appendChild(thumb);
-    });
-  }
-
-  // Services
-  const services = pro.services || [];
-  const sList = document.getElementById('services-list');
-  if (services.length === 0) {
-    show('services-empty');
-  } else {
-    services.forEach(s => {
-      const card = document.createElement('div');
-      card.className = 'svc-card';
-      card.innerHTML = `
-        <div class="flex-1 min-w-0">
-          <p style="font-size:0.97rem;font-weight:700;color:#dce4e5;margin-bottom:2px;">${esc(s.name)}</p>
-          ${s.desc ? `<p style="font-size:0.8rem;color:#849495;">${esc(s.desc)}</p>` : ''}
-        </div>
-        <div class="text-right flex-shrink-0">
-          <p style="font-size:1.1rem;font-weight:800;color:#00dbe9;line-height:1.2;">$${Number(s.price).toLocaleString()}</p>
-          <p style="font-size:0.72rem;color:#849495;margin-top:1px;">${esc(s.unit || '')}</p>
-        </div>`;
-      sList.appendChild(card);
-    });
-  }
-
-  // Locations
-  const locations = pro.locations || [];
-  const locWrap = document.getElementById('loc-tags');
-  if (locations.length === 0) {
-    show('loc-empty');
-  } else {
-    locations.forEach(loc => {
-      const tag = document.createElement('span');
-      tag.className = 'loc-tag';
-      tag.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.85rem;">location_on</span>${esc(loc)}`;
-      locWrap.appendChild(tag);
-    });
-  }
-
-  // Travel
-  if (pro.travelIntl) {
-    show('travel-badge-wrap');
-  }
-
-  // Nav update
-  showNavLoggedIn({ email: apiProfile.email, role: apiProfile.role });
-
-  // Trigger reveal
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-  });
-}
-
-// ── Nav helpers ───────────────────────────────────────────────────────
-function showNavLoggedIn(user) {
-  try {
-    const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-    const dArea = document.getElementById('desktop-user-area');
-    if (dArea) {
-      dArea.style.display = 'flex';
-      const dIcon = document.getElementById('desktop-account-icon');
-      const dSign = document.getElementById('desktop-signin-link');
-      if(dIcon) dIcon.style.display = 'none';
-      if(dSign) dSign.style.display = 'none';
-      const dEmail = document.getElementById('desktop-user-email');
-      const dRole  = document.getElementById('desktop-user-role');
-      if(dEmail) dEmail.textContent = user.email.split('@')[0];
-      if(dRole)  dRole.textContent  = roleLabel;
+    if (S.profile.role !== 'professional') {
+      document.getElementById('role-display').textContent = S.profile.role;
+      document.getElementById('role-gate').style.display = 'flex';
+      return;
     }
-  } catch(_) {}
-}
 
-// ── Lightbox ──────────────────────────────────────────────────────────
-function openLightbox(item) {
-  const lb  = document.getElementById('lightbox');
-  const med = document.getElementById('lightbox-media');
-  if (item.type === 'video') {
-    med.innerHTML = `<video src="${esc(item.url)}" controls autoplay style="max-width:90vw;max-height:85vh;border-radius:1rem;"></video>`;
-  } else {
-    med.innerHTML = `<img src="${esc(item.url)}" alt="Portfolio" style="max-width:90vw;max-height:85vh;border-radius:1rem;object-fit:contain;">`;
+    // Populate sidebar
+    const initial = (S.profile.display_name || S.profile.email).charAt(0).toUpperCase();
+    document.getElementById('sb-avatar').textContent = initial;
+    document.getElementById('sb-name').textContent   = S.profile.display_name || S.profile.email.split('@')[0];
+    document.getElementById('sb-email').textContent  = S.profile.email;
+
+    document.getElementById('dashboard').style.display = 'flex';
+    showSection('overview');
+  } catch(_) {
+    // Fallback demo mode — show dashboard without auth
+    S.profile = { email: 'demo@camcrew.studio', display_name: 'Demo Pro', role: 'professional' };
+    document.getElementById('sb-avatar').textContent = 'D';
+    document.getElementById('sb-name').textContent   = 'Demo Pro';
+    document.getElementById('sb-email').textContent  = 'demo@camcrew.studio';
+    document.getElementById('dashboard').style.display = 'flex';
+    showSection('overview');
   }
-  lb.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeLightbox(e) {
-  if (e && e.target !== document.getElementById('lightbox') && !document.getElementById('lightbox-close').contains(e.target)) return;
-  document.getElementById('lightbox').classList.remove('open');
-  document.getElementById('lightbox-media').innerHTML = '';
-  document.body.style.overflow = '';
 }
 
-// ── Actions ───────────────────────────────────────────────────────────
-function scrollToContact() {
-  document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-function copyContact() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url).then(() => showToast('Profile link copied!', 'link', '#00dbe9'));
+// ════════════════════════════════════════════════════════════════════
+// Overview
+// ════════════════════════════════════════════════════════════════════
+function loadOverview() {
+  const requests = JSON.parse(localStorage.getItem('pro_requests') || '[]');
+  const jobs     = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  const vault    = JSON.parse(localStorage.getItem('pro_vault') || '{"files":[]}');
+  const pending  = requests.filter(r => r.status === 'pending');
+  const active   = jobs.filter(j => j.status === 'active' || j.status === 'confirmed');
+  const earnings = jobs.filter(j => j.status === 'completed').reduce((a,j) => a + Number(j.amount||0), 0);
+
+  document.getElementById('ov-name').textContent     = S.profile?.display_name || S.profile?.email?.split('@')[0] || '…';
+  document.getElementById('ov-requests').textContent = pending.length;
+  document.getElementById('ov-jobs').textContent     = active.length;
+  document.getElementById('ov-earnings').textContent = fmt_usd(earnings);
+  document.getElementById('ov-files').textContent    = vault.files.length;
+
+  // Badge
+  const nb = document.getElementById('nb-requests');
+  if (pending.length > 0) { nb.textContent = pending.length; nb.style.display = 'inline-block'; }
+
+  // Recent requests preview
+  const el = document.getElementById('ov-requests-preview');
+  const recent = requests.slice(0, 3);
+  if (!recent.length) { el.innerHTML = empty('inbox', 'No requests yet', 'When clients request your services, they\'ll appear here.'); return; }
+  el.innerHTML = recent.map(r => renderRequestCard(r, true)).join('');
 }
 
-// ── Toast ─────────────────────────────────────────────────────────────
-function showToast(msg, icon, color) {
-  const toast = document.getElementById('success-toast');
-  document.getElementById('toast-text').textContent = msg;
-  const ico = document.getElementById('toast-icon');
-  ico.textContent = icon; ico.style.color = color;
-  document.getElementById('toast-text').style.color = color;
-  toast.style.borderColor = color + '80';
-  toast.classList.remove('opacity-0','translate-y-10');
-  toast.classList.add('opacity-100','translate-y-0');
+// ════════════════════════════════════════════════════════════════════
+// Client Requests
+// ════════════════════════════════════════════════════════════════════
+function loadRequests() {
+  S.requests = JSON.parse(localStorage.getItem('pro_requests') || '[]');
+  renderRequests();
+}
+
+function renderRequests() {
+  const el     = document.getElementById('requests-list');
+  const filter = document.getElementById('req-filter')?.value || 'all';
+  const list   = filter === 'all' ? S.requests : S.requests.filter(r => r.status === filter);
+  if (!list.length) { el.innerHTML = empty('inbox', 'No requests', 'New client requests will appear here.'); return; }
+  el.innerHTML = list.map(r => renderRequestCard(r, false)).join('');
+}
+
+function renderRequestCard(r, compact) {
+  const isNew = r.status === 'pending';
+  return `<div class="data-card mb-3 ${isNew ? 'request-card-new' : ''}">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.75rem;">
+      <div>
+        <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(r.client)}</p>
+        <p style="font-size:0.85rem;color:#849495;">${esc(r.service)}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        ${badge(r.status)}
+        <span style="font-size:0.75rem;color:#849495;">${fmt_date(r.created_at)}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:1.25rem;font-size:0.82rem;color:#849495;margin-bottom:0.75rem;">
+      <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">event</span>${fmt_date(r.date)}</span>
+      <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span>${fmt_usd(r.amount)}</span>
+    </div>
+    ${r.note ? `<p style="font-size:0.82rem;color:#849495;font-style:italic;border-left:2px solid rgba(0,219,233,0.3);padding-left:0.65rem;margin-bottom:0.75rem;">"${esc(r.note)}"</p>` : ''}
+    ${!compact && r.status === 'pending' ? `
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        <button onclick="openRequestModal(${r.id})" class="btn-sm btn-sm-cyan">
+          <span class="material-symbols-outlined" style="font-size:0.95rem;">reply</span> Respond
+        </button>
+      </div>` : ''}
+    ${compact && r.status === 'pending' ? `<div style="margin-top:0.5rem;"><button onclick="showSection('requests')" class="btn-sm btn-sm-cyan"><span class="material-symbols-outlined" style="font-size:0.9rem;">arrow_forward</span> View & Respond</button></div>` : ''}
+  </div>`;
+}
+
+function openRequestModal(id) {
+  S.activeRequestId = id;
+  const r = S.requests.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('req-modal-title').textContent = `Request — ${r.client}`;
+  document.getElementById('req-modal-body').innerHTML = `
+    <div style="display:grid;gap:0.6rem;font-size:0.88rem;">
+      <div style="display:flex;justify-content:space-between;"><span style="color:#849495;">Client</span><span style="color:#dce4e5;font-weight:700;">${esc(r.client)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#849495;">Service</span><span style="color:#dce4e5;font-weight:700;">${esc(r.service)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#849495;">Date</span><span style="color:#dce4e5;font-weight:700;">${fmt_date(r.date)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#849495;">Quote</span><span style="color:#00dbe9;font-weight:800;">${fmt_usd(r.amount)}</span></div>
+      ${r.note ? `<div style="border-left:2px solid rgba(0,219,233,0.3);padding-left:0.65rem;color:#849495;font-style:italic;">"${esc(r.note)}"</div>` : ''}
+    </div>`;
+  document.getElementById('req-message').value = '';
+  openModal('modal-request');
+}
+
+function respondRequest(newStatus) {
+  const id = S.activeRequestId;
+  if (!id) return;
+  S.requests = S.requests.map(r => r.id === id ? { ...r, status: newStatus } : r);
+  localStorage.setItem('pro_requests', JSON.stringify(S.requests));
+
+  // If accepting, also create a job
+  if (newStatus === 'confirmed') {
+    const r = S.requests.find(x => x.id === id);
+    const jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+    jobs.push({ id: Date.now(), client: r.client, service: r.service, date: r.date, amount: r.amount, status: 'confirmed', notes: r.note || '' });
+    localStorage.setItem('pro_jobs', JSON.stringify(jobs));
+  }
+
+  closeModal('modal-request');
+  showToast(newStatus === 'confirmed' ? 'Request accepted — job created!' : 'Request declined.');
+  renderRequests();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Jobs
+// ════════════════════════════════════════════════════════════════════
+function loadJobs() {
+  S.jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  const el = document.getElementById('jobs-list');
+  if (!S.jobs.length) { el.innerHTML = empty('work_history','No jobs yet','Add jobs manually or accept client requests.'); return; }
+  el.innerHTML = S.jobs.map(j => `
+    <div class="data-card mb-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.6rem;">
+        <div>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(j.client)}</p>
+          <p style="font-size:0.85rem;color:#849495;">${esc(j.service)}</p>
+        </div>
+        ${badge(j.status)}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1.25rem;font-size:0.82rem;color:#849495;margin-bottom:0.65rem;">
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">event</span>${fmt_date(j.date)}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span>${fmt_usd(j.amount)}</span>
+      </div>
+      ${j.notes ? `<p style="font-size:0.8rem;color:#849495;margin-bottom:0.65rem;">${esc(j.notes)}</p>` : ''}
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        ${j.status !== 'completed' ? `
+          <button onclick="updateJobStatus(${j.id},'completed')" class="btn-sm btn-sm-green">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">check_circle</span> Mark Complete
+          </button>` : ''}
+        <button onclick="shareJobFiles(${j.id})" class="btn-sm btn-sm-cyan">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">cloud_upload</span> Share Files
+        </button>
+        <button onclick="removeJob(${j.id})" class="btn-sm btn-sm-red">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function updateJobStatus(id, status) {
+  S.jobs = S.jobs.map(j => j.id === id ? { ...j, status } : j);
+  localStorage.setItem('pro_jobs', JSON.stringify(S.jobs));
+  showToast('Job marked as ' + status);
+  loadJobs();
+}
+
+function removeJob(id) {
+  if (!confirm('Remove this job?')) return;
+  S.jobs = S.jobs.filter(j => j.id !== id);
+  localStorage.setItem('pro_jobs', JSON.stringify(S.jobs));
+  showToast('Job removed.');
+  loadJobs();
+}
+
+function shareJobFiles(jobId) {
+  showSection('vault');
+  setTimeout(() => showToast('Upload files here and use the Share button to send them to your client.'), 300);
+}
+
+function openAddJobModal() {
+  document.getElementById('job-form').reset();
+  document.getElementById('job-err').classList.add('hidden');
+  openModal('modal-job');
+}
+
+function submitJob(e) {
+  e.preventDefault();
+  const jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  jobs.push({
+    id: Date.now(),
+    client:  document.getElementById('job-client').value.trim(),
+    service: document.getElementById('job-service').value.trim(),
+    date:    document.getElementById('job-date').value,
+    amount:  document.getElementById('job-amount').value || 0,
+    status:  document.getElementById('job-status').value,
+    notes:   document.getElementById('job-notes').value.trim(),
+  });
+  localStorage.setItem('pro_jobs', JSON.stringify(jobs));
+  closeModal('modal-job');
+  showToast('Job saved!');
+  loadJobs();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Rentals
+// ════════════════════════════════════════════════════════════════════
+function loadRentals() {
+  S.rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
+  const el = document.getElementById('rentals-list');
+  if (!S.rentals.length) { el.innerHTML = empty('videocam','No rentals logged','Track gear you rent for shoots.'); return; }
+  el.innerHTML = S.rentals.map(r => `
+    <div class="data-card mb-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.6rem;">
+        <div>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(r.name)}</p>
+          <p style="font-size:0.82rem;color:#849495;">${esc(r.vendor||'—')}</p>
+        </div>
+        ${badge(r.status)}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1.25rem;font-size:0.82rem;color:#849495;margin-bottom:0.65rem;">
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">date_range</span>${fmt_date(r.from)} → ${fmt_date(r.to)}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span>${fmt_usd(r.cost)}</span>
+        ${r.tracking ? `<span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">local_shipping</span><span style="font-family:monospace;">${esc(r.tracking)}</span></span>` : ''}
+      </div>
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        ${r.status === 'in_transit' || r.status === 'active' ? `
+          <button onclick="goTrackRental(${r.id})" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">local_shipping</span> Track
+          </button>` : ''}
+        ${r.status !== 'returned' ? `
+          <button onclick="updateRentalStatus(${r.id},'returned')" class="btn-sm btn-sm-ghost">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">keyboard_return</span> Return
+          </button>` : ''}
+        <button onclick="removeRental(${r.id})" class="btn-sm btn-sm-red">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function updateRentalStatus(id, status) {
+  S.rentals = S.rentals.map(r => r.id === id ? { ...r, status } : r);
+  localStorage.setItem('pro_rentals', JSON.stringify(S.rentals));
+  showToast('Rental updated.');
+  loadRentals();
+}
+
+function removeRental(id) {
+  if (!confirm('Remove this rental?')) return;
+  S.rentals = S.rentals.filter(r => r.id !== id);
+  localStorage.setItem('pro_rentals', JSON.stringify(S.rentals));
+  showToast('Rental removed.');
+  loadRentals();
+}
+
+function goTrackRental(id) {
+  showSection('tracking');
   setTimeout(() => {
-    toast.classList.remove('opacity-100','translate-y-0');
-    toast.classList.add('opacity-0','translate-y-10');
-  }, 3000);
+    const r = S.rentals.find(x => x.id === id);
+    if (r) renderRentalTimeline(r);
+  }, 100);
 }
 
-loadProfile();
-</script>
+function openAddRentalModal() {
+  document.getElementById('rental-form').reset();
+  document.getElementById('rental-err').classList.add('hidden');
+  openModal('modal-rental');
+}
 
-<script src="header-loader.js"></script>
+function submitRental(e) {
+  e.preventDefault();
+  const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
+  rentals.push({
+    id: Date.now(),
+    name:     document.getElementById('rental-name').value.trim(),
+    from:     document.getElementById('rental-from').value,
+    to:       document.getElementById('rental-to').value,
+    cost:     document.getElementById('rental-cost').value || 0,
+    vendor:   document.getElementById('rental-vendor').value.trim(),
+    status:   document.getElementById('rental-status').value,
+    tracking: document.getElementById('rental-tracking').value.trim(),
+  });
+  localStorage.setItem('pro_rentals', JSON.stringify(rentals));
+  closeModal('modal-rental');
+  showToast('Rental logged!');
+  loadRentals();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Job Tracking
+// ════════════════════════════════════════════════════════════════════
+const JOB_STEPS = [
+  { key:'pending',    label:'Request Received', icon:'inbox' },
+  { key:'confirmed',  label:'Confirmed',        icon:'verified' },
+  { key:'active',     label:'In Progress',      icon:'movie' },
+  { key:'completed',  label:'Completed',        icon:'check_circle' },
+];
+const JOB_ORDER = ['pending','confirmed','active','completed'];
+
+const RENTAL_STEPS = [
+  { key:'processing', label:'Order Placed',   icon:'shopping_cart' },
+  { key:'in_transit', label:'In Transit',     icon:'local_shipping' },
+  { key:'active',     label:'In Use',         icon:'videocam' },
+  { key:'returned',   label:'Returned',       icon:'keyboard_return' },
+];
+const RENTAL_ORDER = ['processing','in_transit','active','returned'];
+
+function loadTrackingSelector() {
+  const jobs    = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
+  const sel = document.getElementById('tracking-selector');
+  const tl  = document.getElementById('tracking-timeline');
+
+  const jobOpts    = jobs.map(j    => `<option value="job-${j.id}"    data-type="job">Job: ${j.client} — ${j.service} (${j.status})</option>`).join('');
+  const rentalOpts = rentals.filter(r => r.status !== 'returned').map(r => `<option value="rental-${r.id}" data-type="rental">Rental: ${r.name} (${r.status})</option>`).join('');
+
+  if (!jobOpts && !rentalOpts) {
+    sel.innerHTML = empty('local_shipping', 'Nothing to track', 'Add jobs or rentals to track their progress.');
+    tl.innerHTML = '';
+    return;
+  }
+
+  sel.innerHTML = `
+    <label class="fi-label">Select Item to Track</label>
+    <select id="track-select" class="fi max-w-sm" onchange="selectTrackItem(this.value)" style="max-width:400px;">
+      <option value="">— Choose a job or rental —</option>
+      ${jobOpts ? `<optgroup label="Jobs">${jobOpts}</optgroup>` : ''}
+      ${rentalOpts ? `<optgroup label="Rentals">${rentalOpts}</optgroup>` : ''}
+    </select>`;
+}
+
+function selectTrackItem(val) {
+  if (!val) return;
+  const [type, id] = val.split('-');
+  if (type === 'job') {
+    const jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+    const job  = jobs.find(j => j.id == id);
+    if (job) renderJobTimeline(job);
+  } else {
+    const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
+    const rental  = rentals.find(r => r.id == id);
+    if (rental) renderRentalTimeline(rental);
+  }
+}
+
+function renderTimeline(steps, order, currentStatus, meta) {
+  const tl   = document.getElementById('tracking-timeline');
+  const curI = order.indexOf(currentStatus);
+  tl.innerHTML = `
+    <div class="data-card max-w-lg">
+      ${meta}
+      <div style="margin-top:1rem;">
+        ${steps.map((step, i) => {
+          const idx   = order.indexOf(step.key);
+          const done  = idx < curI;
+          const active= idx === curI;
+          return `<div class="timeline-step ${done?'done':''} ${active?'active':''}">
+            <div class="t-icon ${done?'done':''} ${active?'active':''}">
+              <span class="material-symbols-outlined" style="font-size:1rem;">${step.icon}</span>
+            </div>
+            <div class="pt-1">
+              <p style="font-size:0.88rem;font-weight:700;color:${active?'#00dbe9':done?'#4ade80':'#849495'};">${step.label}</p>
+              ${active ? '<p style="font-size:0.75rem;color:#849495;margin-top:1px;">Currently here</p>' : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function renderJobTimeline(job) {
+  renderTimeline(JOB_STEPS, JOB_ORDER, job.status, `
+    <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+      <span style="color:#849495;">Client</span><span style="color:#dce4e5;font-weight:700;">${esc(job.client)}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+      <span style="color:#849495;">Service</span><span style="color:#dce4e5;font-weight:700;">${esc(job.service)}</span>
+    </div>`);
+}
+
+function renderRentalTimeline(rental) {
+  renderTimeline(RENTAL_STEPS, RENTAL_ORDER, rental.status, `
+    <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+      <span style="color:#849495;">Equipment</span><span style="color:#dce4e5;font-weight:700;">${esc(rental.name)}</span>
+    </div>
+    ${rental.tracking ? `<div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+      <span style="color:#849495;">Tracking #</span><span style="color:#00dbe9;font-weight:700;font-family:monospace;">${esc(rental.tracking)}</span>
+    </div>` : ''}`);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// File Vault
+// ════════════════════════════════════════════════════════════════════
+function getVaultData() { return JSON.parse(localStorage.getItem('pro_vault') || '{"folders":[],"files":[]}'); }
+function saveVaultData(d) { localStorage.setItem('pro_vault', JSON.stringify(d)); }
+
+function renderVault() {
+  const vault = getVaultData();
+  const folder = S.vault.currentFolder;
+
+  // Breadcrumb
+  const bc = document.getElementById('vault-breadcrumb');
+  if (folder) {
+    const f = vault.folders.find(x => x.id === folder);
+    bc.innerHTML = `
+      <button onclick="S.vault.currentFolder=null;renderVault();" style="font-size:0.8rem;font-weight:700;color:var(--ac);background:var(--nb);border:none;cursor:pointer;padding:0.3rem 0.7rem;border-radius:999px;box-shadow:var(--nr-s);">
+        <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;">cloud</span> Vault
+      </button>
+      <span style="color:#849495;font-size:0.8rem;">/</span>
+      <span style="font-size:0.8rem;font-weight:700;color:#dce4e5;padding:0.3rem 0.7rem;background:var(--nb);border-radius:999px;box-shadow:var(--ni-s);">
+        <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;color:#fbbf24;">folder</span> ${esc(f?.name||'Folder')}
+      </span>`;
+  } else {
+    bc.innerHTML = `<span style="font-size:0.8rem;font-weight:700;color:#dce4e5;padding:0.3rem 0.7rem;background:var(--nb);border-radius:999px;box-shadow:var(--ni-s);">
+      <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;color:var(--ac);">cloud</span> All Files
+    </span>`;
+  }
+
+  // Files in current view
+  const files = vault.files.filter(f => folder ? f.folder === folder : true);
+
+  // Storage
+  const totalBytes = vault.files.reduce((a, f) => a + (f.size||0), 0);
+  const maxBytes   = 5 * 1e9;
+  document.getElementById('vault-storage-text').textContent = `${fmt_bytes(totalBytes)} of 5 GB`;
+  document.getElementById('vault-storage-bar').style.width  = Math.min(100, (totalBytes/maxBytes)*100) + '%';
+
+  // Drop zone visibility
+  document.getElementById('vault-drop-zone').style.display = files.length === 0 ? 'flex' : 'none';
+
+  // Folders (only on root)
+  const foldersEl = document.getElementById('vault-folders');
+  if (!folder) {
+    foldersEl.innerHTML = vault.folders.map(f => `
+      <div class="vault-folder" onclick="S.vault.currentFolder='${f.id}';renderVault();">
+        <span class="material-symbols-outlined" style="font-size:2rem;color:#fbbf24;display:block;margin-bottom:0.4rem;">folder</span>
+        <p style="font-size:0.78rem;font-weight:700;color:#dce4e5;word-break:break-word;line-height:1.3;">${esc(f.name)}</p>
+        <p style="font-size:0.68rem;color:#849495;margin-top:0.2rem;">${vault.files.filter(x=>x.folder===f.id).length} files</p>
+      </div>`).join('');
+  } else {
+    foldersEl.innerHTML = '';
+  }
+
+  // Files
+  const filesEl = document.getElementById('vault-files');
+  if (!files.length) {
+    filesEl.innerHTML = folder ? `<p style="font-size:0.85rem;color:#849495;text-align:center;padding:1.5rem 0;">No files in this folder yet. Upload some!</p>` : '';
+    return;
+  }
+
+  if (S.vaultViewGrid) {
+    filesEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.75rem;">${files.map(f => renderFileGrid(f)).join('')}</div>`;
+  } else {
+    filesEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:0.5rem;">${files.map(f => renderFileRow(f)).join('')}</div>`;
+  }
+}
+
+const FILE_ICONS = {
+  image: { icon:'image', cls:'file-icon-img', color:'#ebb2ff' },
+  video: { icon:'videocam', cls:'file-icon-video', color:'#00dbe9' },
+  doc:   { icon:'description', cls:'file-icon-doc', color:'#63cab7' },
+  pdf:   { icon:'picture_as_pdf', cls:'file-icon-pdf', color:'#ff6464' },
+  zip:   { icon:'folder_zip', cls:'file-icon-zip', color:'#fbbf24' },
+  other: { icon:'insert_drive_file', cls:'file-icon-other', color:'#849495' },
+};
+
+function getFileIconInfo(type) { return FILE_ICONS[type] || FILE_ICONS.other; }
+
+function renderFileRow(f) {
+  const ic = getFileIconInfo(f.type);
+  return `<div class="file-item">
+    <div class="file-icon ${ic.cls}">
+      <span class="material-symbols-outlined" style="font-size:1.3rem;color:${ic.color};">${ic.icon}</span>
+    </div>
+    <div style="flex:1;min-width:0;">
+      <p style="font-size:0.88rem;font-weight:700;color:#dce4e5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.name)}</p>
+      <p style="font-size:0.72rem;color:#849495;">${fmt_bytes(f.size)} · ${fmt_date(f.uploaded)}</p>
+    </div>
+    <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+      <button onclick="openShareModal('${f.id}')" class="btn-sm btn-sm-cyan" title="Share">
+        <span class="material-symbols-outlined" style="font-size:0.9rem;">share</span>
+      </button>
+      <button onclick="deleteVaultFile('${f.id}')" class="btn-sm btn-sm-red" title="Delete">
+        <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderFileGrid(f) {
+  const ic = getFileIconInfo(f.type);
+  return `<div style="background:var(--nb);border-radius:0.9rem;padding:0.85rem;box-shadow:var(--nr-s);text-align:center;position:relative;">
+    <span class="material-symbols-outlined" style="font-size:2.5rem;color:${ic.color};display:block;margin-bottom:0.5rem;">${ic.icon}</span>
+    <p style="font-size:0.72rem;font-weight:700;color:#dce4e5;word-break:break-word;line-height:1.3;margin-bottom:0.25rem;">${esc(f.name)}</p>
+    <p style="font-size:0.65rem;color:#849495;">${fmt_bytes(f.size)}</p>
+    <div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.6rem;">
+      <button onclick="openShareModal('${f.id}')" class="btn-sm btn-sm-cyan" style="padding:0.3rem 0.5rem;" title="Share">
+        <span class="material-symbols-outlined" style="font-size:0.85rem;">share</span>
+      </button>
+      <button onclick="deleteVaultFile('${f.id}')" class="btn-sm btn-sm-red" style="padding:0.3rem 0.5rem;" title="Delete">
+        <span class="material-symbols-outlined" style="font-size:0.85rem;">delete</span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function toggleVaultView() {
+  S.vaultViewGrid = !S.vaultViewGrid;
+  document.getElementById('vault-view-icon').textContent = S.vaultViewGrid ? 'view_module' : 'view_list';
+  renderVault();
+}
+
+function handleVaultUpload(files) {
+  const vault = getVaultData();
+  Array.from(files).forEach(file => {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const type = ['jpg','jpeg','png','gif','webp','heic'].includes(ext) ? 'image'
+               : ['mp4','mov','avi','mkv','webm'].includes(ext)         ? 'video'
+               : ['pdf'].includes(ext)                                  ? 'pdf'
+               : ['zip','rar','7z','tar','gz'].includes(ext)            ? 'zip'
+               : ['doc','docx','txt','pages'].includes(ext)             ? 'doc'
+               : 'other';
+    vault.files.push({
+      id: 'v' + Date.now() + Math.random().toString(36).slice(2,6),
+      name: file.name,
+      type,
+      size: file.size,
+      folder: S.vault.currentFolder,
+      uploaded: new Date().toISOString(),
+      shareId: 'shr_' + Math.random().toString(36).slice(2, 10),
+    });
+  });
+  saveVaultData(vault);
+  showToast(`${files.length} file${files.length>1?'s':''} uploaded!`);
+  renderVault();
+}
+
+function handleVaultDrop(e) {
+  e.preventDefault();
+  document.getElementById('vault-drop-zone').classList.remove('drag-over');
+  handleVaultUpload(e.dataTransfer.files);
+}
+
+function deleteVaultFile(id) {
+  if (!confirm('Delete this file?')) return;
+  const vault = getVaultData();
+  vault.files = vault.files.filter(f => f.id !== id);
+  saveVaultData(vault);
+  showToast('File deleted.');
+  renderVault();
+}
+
+function openShareModal(fileId) {
+  const vault = getVaultData();
+  const file  = vault.files.find(f => f.id === fileId);
+  if (!file) return;
+  document.getElementById('share-file-name').textContent = file.name;
+  document.getElementById('share-link').value = `${window.location.origin}/shared/${file.shareId}`;
+  document.getElementById('share-email').value = '';
+  openModal('modal-share');
+}
+
+function copyShareLink() {
+  const link = document.getElementById('share-link').value;
+  navigator.clipboard.writeText(link).then(() => showToast('Link copied to clipboard!')).catch(() => {
+    document.getElementById('share-link').select();
+    document.execCommand('copy');
+    showToast('Link copied!');
+  });
+}
+
+function shareViaEmail() {
+  const email = document.getElementById('share-email').value.trim();
+  const link  = document.getElementById('share-link').value;
+  if (!email) { showToast('Enter an email address.', true); return; }
+  const subject = encodeURIComponent('Your files from Camcrew Studio');
+  const body    = encodeURIComponent(`Hi,\n\nHere's your file link:\n${link}\n\nBest,\n${S.profile?.display_name||'Your Camcrew Pro'}`);
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+  showToast('Email client opened!');
+}
+
+function openNewFolderModal() {
+  document.getElementById('folder-name').value = '';
+  openModal('modal-folder');
+}
+
+function submitNewFolder(e) {
+  e.preventDefault();
+  const name  = document.getElementById('folder-name').value.trim();
+  if (!name) return;
+  const vault = getVaultData();
+  vault.folders.push({ id:'f' + Date.now(), name });
+  saveVaultData(vault);
+  closeModal('modal-folder');
+  showToast('Folder created!');
+  renderVault();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Earnings
+// ════════════════════════════════════════════════════════════════════
+function loadEarnings() {
+  const jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  const completed = jobs.filter(j => j.status === 'completed');
+  const pending   = jobs.filter(j => j.status === 'active' || j.status === 'confirmed');
+  const thisMonth = completed.filter(j => {
+    const d = new Date(j.date);
+    const n = new Date();
+    return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
+  });
+
+  const total   = completed.reduce((a,j) => a + Number(j.amount||0), 0);
+  const pend    = pending.reduce((a,j) => a + Number(j.amount||0), 0);
+  const month   = thisMonth.reduce((a,j) => a + Number(j.amount||0), 0);
+
+  document.getElementById('earn-total').textContent   = fmt_usd(total);
+  document.getElementById('earn-pending').textContent = fmt_usd(pend);
+  document.getElementById('earn-month').textContent   = fmt_usd(month);
+
+  const el = document.getElementById('earnings-list');
+  if (!jobs.length) { el.innerHTML = empty('payments','No earnings yet','Completed jobs will appear here.'); return; }
+  el.innerHTML = `<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#849495;margin-bottom:0.75rem;">Job History</p>` +
+    jobs.slice().reverse().map(j => `
+      <div class="data-card mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;">${esc(j.client)}</p>
+          <p style="font-size:0.82rem;color:#849495;">${esc(j.service)} · ${fmt_date(j.date)}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <p style="font-size:1.05rem;font-weight:800;color:${j.status==='completed'?'#4ade80':'#fbbf24'};">${fmt_usd(j.amount)}</p>
+          ${badge(j.status)}
+        </div>
+      </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Account
+// ════════════════════════════════════════════════════════════════════
+function loadAccount() {
+  if (!S.profile) return;
+  document.getElementById('ac-name').value  = S.profile.display_name || '';
+  document.getElementById('ac-email').value = S.profile.email || '';
+  document.getElementById('ac-role').value  = 'Professional';
+}
+
+async function saveAccount() {
+  const name = document.getElementById('ac-name').value.trim();
+  const msg  = document.getElementById('ac-msg');
+  msg.classList.add('hidden');
+  try {
+    const res  = await fetch('/api/profile', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ display_name: name }) });
+    const data = await res.json();
+    if (data.ok) {
+      S.profile.display_name = name;
+      document.getElementById('sb-name').textContent = name;
+      showToast('Account updated!');
+    } else throw new Error(data.error);
+  } catch (_) {
+    // demo fallback
+    S.profile.display_name = name;
+    document.getElementById('sb-name').textContent = name;
+    showToast('Account updated!');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Boot
+// ════════════════════════════════════════════════════════════════════
+init();
+</script>
 <script src="footer-loader.js"></script>
 </body>
 </html>
