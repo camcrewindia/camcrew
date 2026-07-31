@@ -293,74 +293,92 @@
 
   /* ══════════════════════════════════════════════════════
      LIGHT NEUMORPHISM
-     Base: #e8edf0  |  Dark shadow: #c5cace  |  Light shadow: #ffffff
+     Base: #e3e8ec  |  Dark shadow: #a2adb8  |  Light shadow: #ffffff
+     High-contrast shadows for strong depth.
   ══════════════════════════════════════════════════════ */
   html.light {
-    --nb:  #e8edf0;
-    --ns:  #c5cace;
+    --nb:  #e3e8ec;
+    --ns:  #a2adb8;
     --nl:  #ffffff;
-    --nr:  6px 6px 14px var(--ns), -6px -6px 14px var(--nl);
-    --nr-s:3px 3px 8px  var(--ns), -3px -3px 8px  var(--nl);
-    --ni:  inset 4px 4px 10px var(--ns), inset -4px -4px 10px var(--nl);
-    --ni-s:inset 2px 2px 6px  var(--ns), inset -2px -2px 6px  var(--nl);
-    --ac:  #009aad;
-    --ac2: #c07aee;
+    --nr:  8px 8px 18px var(--ns), -8px -8px 18px var(--nl);
+    --nr-s:4px 4px 10px var(--ns), -4px -4px 10px var(--nl);
+    --ni:  inset 5px 5px 12px var(--ns), inset -5px -5px 12px var(--nl);
+    --ni-s:inset 3px 3px 8px  var(--ns), inset -3px -3px 8px  var(--nl);
+    --ac:  #007d8e;
+    --ac2: #a855f7;
   }
-  html.light body { background:#e8edf0 !important; }
+  html.light body { background:#e3e8ec !important; }
 
-  /* Text overrides — main text */
+  /* ── Light sidebar separator ── */
+  html.light .cp-sidebar {
+    box-shadow: 4px 0 20px var(--ns), 1px 0 0 var(--nl);
+  }
+
+  /* ── Text — primary ── */
   html.light .sec-title,
   html.light #ov-name,
-  html.light #sb-name { color:#0f1e1f !important; }
-  html.light .sec-sub  { color:#3a5455 !important; }
-  html.light #sb-email { color:#3a5455 !important; }
+  html.light #sb-name,
+  html.light #cp-hdr-title { color:#0a1618 !important; }
+  html.light .sec-sub       { color:#1e3a3c !important; }
+  html.light #sb-email      { color:#2a5052 !important; }
 
-  /* Inline-style color overrides — dark text on light bg */
-  html.light [style*="color:#dce4e5"] { color:#0f1e1f !important; }
-  html.light [style*="color:#849495"] { color:#3a5455 !important; }
-  html.light [style*="color:#5a7475"] { color:#3a5455 !important; }
-  html.light [style*="color:#001f22"] { color:#0f1e1f !important; }
+  /* ── Inline-style overrides ── */
+  html.light [style*="color:#dce4e5"] { color:#0a1618 !important; }
+  html.light [style*="color:#849495"] { color:#1e3a3c !important; }
+  html.light [style*="color:#5a7475"] { color:#2a5052 !important; }
+  html.light [style*="color:#001f22"] { color:#0a1618 !important; }
 
-  /* Stat card values */
-  html.light .stat-card p { color:#0f1e1f !important; }
+  /* ── Stat cards ── */
+  html.light .stat-card p { color:#0a1618 !important; }
+  html.light .stat-card .text-xs { color:#1e3a3c !important; }
 
-  /* Data card text */
+  /* ── Data cards ── */
   html.light .data-card p,
-  html.light .data-card span { color:#0f1e1f; }
+  html.light .data-card span { color:#0a1618 !important; }
 
-  /* Section nav labels */
-  html.light nav p[style*="color:#5a7475"] { color:#5a8080 !important; }
+  /* ── File vault items — filename & meta ── */
+  html.light .file-item p,
+  html.light .file-item span { color:#0a1618 !important; }
+  html.light .file-item [style*="color:#849495"],
+  html.light .file-item [style*="color:#dce4e5"] { color:#1e3a3c !important; }
 
-  /* fi-label */
-  html.light .fi-label { color:#3a5455 !important; }
+  /* ── Vault folders ── */
+  html.light .vault-folder p,
+  html.light .vault-folder span { color:#0a1618 !important; }
 
-  /* Pro badge chip */
+  /* ── Section nav labels (WORK / FILES & MONEY) ── */
+  html.light nav p { color:#2a5052 !important; }
+
+  /* ── fi-label ── */
+  html.light .fi-label { color:#1e3a3c !important; }
+
+  /* ── Pro badge chip ── */
   html.light span[style*="background:rgba(0,219,233,0.1)"] {
-    background:rgba(0,154,173,0.12) !important; color:#006e7d !important;
+    background:rgba(0,125,142,0.14) !important; color:#005a67 !important;
   }
-  /* Edit profile chip */
-  html.light a[style*="background:var(--nb)"][style*="box-shadow:var(--nr-s)"] { color:#3a5455 !important; }
+  /* ── Edit profile chip ── */
+  html.light a[style*="background:var(--nb)"][style*="box-shadow:var(--nr-s)"] { color:#2a5052 !important; }
 
-  /* Modal heading / body text */
+  /* ── Modal ── */
   html.light .modal-box h3,
   html.light .modal-box p,
-  html.light .modal-box label { color:#0f1e1f !important; }
+  html.light .modal-box label { color:#0a1618 !important; }
 
-  /* Auth-gate headings / body */
-  html.light .nm-auth-card h2 { color:#0f1e1f !important; }
-  html.light .nm-auth-card p  { color:#3a5455 !important; }
+  /* ── Auth-gate ── */
+  html.light .nm-auth-card h2 { color:#0a1618 !important; }
+  html.light .nm-auth-card p  { color:#1e3a3c !important; }
 
-  /* Earnings/job inline colors that use hex */
-  html.light [style*="font-weight:700;color:#dce4e5"] { color:#0f1e1f !important; }
-  html.light [style*="font-weight:800;color:#dce4e5"] { color:#0f1e1f !important; }
+  /* ── Inline bold/heavy color overrides ── */
+  html.light [style*="font-weight:700;color:#dce4e5"] { color:#0a1618 !important; }
+  html.light [style*="font-weight:800;color:#dce4e5"] { color:#0a1618 !important; }
 
-  /* Nav */
-  html.light .nav-item           { color:#5a7475; }
-  html.light .nav-item:hover     { color:#1a2a2b; }
+  /* ── Nav items ── */
+  html.light .nav-item           { color:#1e3a3c; }
+  html.light .nav-item:hover     { color:#0a1618; box-shadow: var(--nr-s); }
   html.light .nav-item.active    { color:var(--ac); }
-  html.light .nav-divider        { background:var(--ns); box-shadow:0 1px 0 var(--nl); }
+  html.light .nav-divider        { background:var(--ns); box-shadow:0 1px 0 var(--nl); opacity:0.45; }
   html.light .mobile-tabs        { border-bottom-color:var(--ns); }
-  html.light .mobile-tab         { color:#5a7475; }
+  html.light .mobile-tab         { color:#1e3a3c; }
   html.light .mobile-tab.active  { color:var(--ac); }
 
   /* Badges — light variants */
@@ -1824,7 +1842,7 @@ function applyTheme(theme) {
   const isLight = theme === 'light';
   document.documentElement.classList.toggle('light', isLight);
   document.documentElement.classList.toggle('dark',  !isLight);
-  document.body.style.background = isLight ? '#e8edf0' : '#141414';
+  document.body.style.background = isLight ? '#e3e8ec' : '#141414';
 
   // Toggle icon
   const icon = isLight ? 'dark_mode' : 'light_mode';
