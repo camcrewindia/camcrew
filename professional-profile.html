@@ -314,16 +314,51 @@
   }
   html.light body { background:#e8edf0 !important; }
 
-  /* Text overrides */
+  /* Text overrides — main text */
   html.light .sec-title,
   html.light #ov-name,
-  html.light #sb-name,
-  html.light #sb-email { color:#1a2a2b !important; }
-  html.light .sec-sub  { color:#5a7475 !important; }
+  html.light #sb-name { color:#0f1e1f !important; }
+  html.light .sec-sub  { color:#3a5455 !important; }
+  html.light #sb-email { color:#3a5455 !important; }
 
-  html.light [style*="color:#dce4e5"] { color:#1a2a2b !important; }
-  html.light [style*="color:#849495"] { color:#5a7475 !important; }
-  html.light [style*="color:#5a7475"] { color:#7a9495 !important; }
+  /* Inline-style color overrides — dark text on light bg */
+  html.light [style*="color:#dce4e5"] { color:#0f1e1f !important; }
+  html.light [style*="color:#849495"] { color:#3a5455 !important; }
+  html.light [style*="color:#5a7475"] { color:#3a5455 !important; }
+  html.light [style*="color:#001f22"] { color:#0f1e1f !important; }
+
+  /* Stat card values */
+  html.light .stat-card p { color:#0f1e1f !important; }
+
+  /* Data card text */
+  html.light .data-card p,
+  html.light .data-card span { color:#0f1e1f; }
+
+  /* Section nav labels */
+  html.light nav p[style*="color:#5a7475"] { color:#5a8080 !important; }
+
+  /* fi-label */
+  html.light .fi-label { color:#3a5455 !important; }
+
+  /* Pro badge chip */
+  html.light span[style*="background:rgba(0,219,233,0.1)"] {
+    background:rgba(0,154,173,0.12) !important; color:#006e7d !important;
+  }
+  /* Edit profile chip */
+  html.light a[style*="background:var(--nb)"][style*="box-shadow:var(--nr-s)"] { color:#3a5455 !important; }
+
+  /* Modal heading / body text */
+  html.light .modal-box h3,
+  html.light .modal-box p,
+  html.light .modal-box label { color:#0f1e1f !important; }
+
+  /* Auth-gate headings / body */
+  html.light .nm-auth-card h2 { color:#0f1e1f !important; }
+  html.light .nm-auth-card p  { color:#3a5455 !important; }
+
+  /* Earnings/job inline colors that use hex */
+  html.light [style*="font-weight:700;color:#dce4e5"] { color:#0f1e1f !important; }
+  html.light [style*="font-weight:800;color:#dce4e5"] { color:#0f1e1f !important; }
 
   /* Nav */
   html.light .nav-item           { color:#5a7475; }
@@ -446,7 +481,7 @@
   <div class="nm-auth-card">
     <div class="mb-5">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+        <img class="site-logo" src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png"
              alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
       </a>
     </div>
@@ -479,7 +514,7 @@
   <aside class="cp-sidebar">
     <div class="cp-sidebar-logo">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+        <img class="site-logo" src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png"
              alt="Camcrew Studio" style="height:3rem;width:auto;"/>
       </a>
     </div>
@@ -553,7 +588,7 @@
     <!-- Mobile header -->
     <div class="mobile-header">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
+        <img class="site-logo" src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png"
              alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
       </a>
       <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -1785,13 +1820,33 @@ async function saveAccount() {
 // ════════════════════════════════════════════════════════════════════
 // Theme Toggle
 // ════════════════════════════════════════════════════════════════════
+const LOGO_DARK  = 'attached_assets/camcrew_studio_logo_cop_y_1785515916927.png'; // white logo
+const LOGO_LIGHT = 'attached_assets/camcrew_studio_logo_cop_1785515916927.png';   // black logo
+
 function applyTheme(theme) {
   const isLight = theme === 'light';
   document.documentElement.classList.toggle('light', isLight);
   document.documentElement.classList.toggle('dark',  !isLight);
   document.body.style.background = isLight ? '#e8edf0' : '#141414';
+
+  // Toggle icon
   const icon = isLight ? 'dark_mode' : 'light_mode';
   document.querySelectorAll('#theme-icon, .theme-icon-mobile').forEach(el => el.textContent = icon);
+
+  // Swap logos
+  const logoSrc = isLight ? LOGO_LIGHT : LOGO_DARK;
+  document.querySelectorAll('.site-logo').forEach(img => img.src = logoSrc);
+
+  // Fix hover handlers for global-theme-btn close-btn in light mode
+  const hoverText = isLight ? '#0f1e1f' : '#dce4e5';
+  const restText  = isLight ? '#3a5455' : '#849495';
+  ['global-theme-btn', 'close-btn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.color = restText;
+    el.onmouseover = () => el.style.color = hoverText;
+    el.onmouseout  = () => el.style.color = restText;
+  });
 }
 
 function toggleTheme() {
