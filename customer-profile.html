@@ -422,6 +422,12 @@
     filter: drop-shadow(0 4px 16px rgba(255,215,0,0.2));
   }
 
+  /* ── Theme-aware logo switching ── */
+  .cc-logo-dark  { display: block; }
+  .cc-logo-light { display: none;  }
+  [data-theme="light"] .cc-logo-dark  { display: none;  }
+  [data-theme="light"] .cc-logo-light { display: block; }
+
   /* ── Close button ── */
   #close-btn {
     background:var(--nb) !important;
@@ -479,8 +485,8 @@
   <div class="nm-auth-card">
     <div class="mb-5">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
-             alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png" class="cc-logo-dark"  alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_1785515916927.png"   class="cc-logo-light" alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
       </a>
     </div>
     <div class="nm-icon-circle mx-auto">
@@ -501,8 +507,8 @@
     <!-- Logo -->
     <div class="cp-sidebar-logo">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
-             alt="Camcrew Studio" class="cp-sidebar-logo" style="height:3.5rem;width:auto;"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png" class="cc-logo-dark  cp-sidebar-logo" alt="Camcrew Studio" style="height:2rem;width:auto;"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_1785515916927.png"   class="cc-logo-light cp-sidebar-logo" alt="Camcrew Studio" style="height:2rem;width:auto;"/>
       </a>
     </div>
 
@@ -572,8 +578,8 @@
     <!-- Mobile header -->
     <div class="mobile-header">
       <a href="index.html">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnwzcl0nTzPzeaRPSAb9ApCbd81vCrir4-res7sxkF8MtOzxVmZSFQlNRhPEyx_YEY3447vadrqnBHigSk8A6tlwYYDhOTXE6NMlmbXoCRawORVT92nLZHhOG85-_Ms8UrkH9IwpVRbqBOm_9xjPxmsHCMWvamAcYmqlq9xXtmyaJd1-fdWkT2YRmQqXqVmg-YT3j-C41jD7tls5iOEOLAl0UOLks2iWLnpsVZPbmZHZtzP2xVsx5sKUPJIlEQnLmwq5lAojsvijIjw"
-             alt="Camcrew Studio" class="mobile-header-logo"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png" class="cc-logo-dark  mobile-header-logo" alt="Camcrew Studio"/>
+        <img src="attached_assets/camcrew_studio_logo_cop_1785515916927.png"   class="cc-logo-light mobile-header-logo" alt="Camcrew Studio"/>
       </a>
       <div class="flex items-center gap-2">
         <div id="mob-user-pill" class="mobile-user-pill" style="display:none">

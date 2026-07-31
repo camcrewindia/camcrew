@@ -51,6 +51,12 @@
   [data-theme="light"] .nm-toggle.on .nm-toggle-thumb { background: var(--nm-accent); box-shadow: 2px 2px 5px var(--nm-dark), 0 0 6px rgba(0,96,204,0.4); }
   [data-theme="light"] .nm-drop-zone:hover, [data-theme="light"] .nm-drop-zone.drag-over { box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,96,204,0.4); }
 
+  /* ── Theme-aware logo switching ── */
+  .cc-logo-dark  { display: block; }
+  .cc-logo-light { display: none;  }
+  [data-theme="light"] .cc-logo-dark  { display: none;  }
+  [data-theme="light"] .cc-logo-light { display: block; }
+
   /* ── Theme toggle button ── */
   #theme-toggle {
     width: 2.2rem; height: 2.2rem; border-radius: 50%;
@@ -542,8 +548,9 @@
 
   <!-- ── Header ─────────────────────────────────────────────────── -->
   <header class="nm-header">
-    <img alt="Camcrew Studio" style="height:1.9rem;width:auto;object-fit:contain;"
-      src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
+    <!-- White logo for dark bg, black logo for light bg -->
+    <img alt="Camcrew Studio" class="cc-logo-dark"  style="height:1.9rem;width:auto;object-fit:contain;" src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png">
+    <img alt="Camcrew Studio" class="cc-logo-light" style="height:1.9rem;width:auto;object-fit:contain;" src="attached_assets/camcrew_studio_logo_cop_1785515916927.png">
     <div style="display:flex;align-items:center;gap:0.75rem;">
       <div style="display:flex;align-items:center;gap:0.55rem;">
         <div style="width:0.45rem;height:0.45rem;border-radius:50%;background:var(--nm-accent);animation:pulse 2s infinite;"></div>

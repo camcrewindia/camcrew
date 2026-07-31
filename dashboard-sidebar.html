@@ -135,6 +135,12 @@
 
   /* Mobile toggle button */
   #sidebar-toggle { color: var(--neu-text-muted); }
+
+  /* ── Theme-aware logo switching ── */
+  .cc-logo-dark  { display: block; }
+  .cc-logo-light { display: none;  }
+  [data-theme="light"] .cc-logo-dark  { display: none;  }
+  [data-theme="light"] .cc-logo-light { display: block; }
 </style>
 
 <!-- Sidebar -->
@@ -143,8 +149,9 @@
   <!-- Logo -->
   <div class="sb-logo-area" style="padding:1.35rem 1.25rem 1.1rem;display:flex;align-items:center;justify-content:space-between;">
     <div>
-      <img alt="Camcrew Studio" style="height:2rem;width:auto;object-fit:contain;"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz6zzbSEDvH32qGIjTAg0L9PqA6N71_7AsFGJX0tUFBKziGjG93-Y3BRMuHXxiZxMknFjzmdmeelCCF7jlKdA4FMg7YSfEhrZG8AZf1BtsqnSw_xCAEj3j2mkHYx9iFr6aJGFSNbi7A2FDAZVQQ2mu93tR6eJtVkf6FZ3i0SM2OuL9d1cE-W_WXVvFKqsE6omGWJMY0otQHs_8VnjsUq7rbUOVh1DorhOQUrU3K7zhFrL5rgRFVeEXfSLVBRZvnga1OlJc3qmRyUmK7g">
+      <!-- White logo for dark bg, black logo for light bg -->
+      <img alt="Camcrew Studio" class="cc-logo-dark"  style="height:2rem;width:auto;object-fit:contain;" src="attached_assets/camcrew_studio_logo_cop_y_1785515916927.png">
+      <img alt="Camcrew Studio" class="cc-logo-light" style="height:2rem;width:auto;object-fit:contain;" src="attached_assets/camcrew_studio_logo_cop_1785515916927.png">
       <p class="sb-panel-label" style="font-size:0.65rem;font-weight:800;letter-spacing:0.22em;margin-top:4px;text-transform:uppercase;">ADMIN PANEL</p>
     </div>
     <button onclick="closeSidebar()" class="lg:hidden" style="background:none;border:none;cursor:pointer;color:var(--neu-text-muted);display:flex;align-items:center;">
