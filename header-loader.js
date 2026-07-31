@@ -76,9 +76,11 @@
     const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
 
     // Route profile links to the right page based on role
-    const profileHref = user.role === 'professional'
-      ? 'professional-profile.html'
-      : 'customer-profile.html';
+    const profileHref = user.role === 'admin'
+      ? 'admindashboard.html'
+      : user.role === 'professional'
+        ? 'professional-profile.html'
+        : 'customer-profile.html';
 
     // Desktop
     const userArea    = document.getElementById('desktop-user-area');
