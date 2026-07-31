@@ -297,6 +297,110 @@
   ::-webkit-scrollbar-track { background:var(--nb); }
   ::-webkit-scrollbar-thumb { background:var(--ns); border-radius:999px; }
 
+  /* ══════════════════════════════════════════════════════
+     LIGHT NEUMORPHISM
+     Base: #e8edf0  |  Dark shadow: #c5cace  |  Light shadow: #ffffff
+  ══════════════════════════════════════════════════════ */
+  html.light {
+    --nb:  #e8edf0;
+    --ns:  #c5cace;
+    --nl:  #ffffff;
+    --nr:  6px 6px 14px var(--ns), -6px -6px 14px var(--nl);
+    --nr-s:3px 3px 8px  var(--ns), -3px -3px 8px  var(--nl);
+    --ni:  inset 4px 4px 10px var(--ns), inset -4px -4px 10px var(--nl);
+    --ni-s:inset 2px 2px 6px  var(--ns), inset -2px -2px 6px  var(--nl);
+    --ac:  #009aad;
+    --ac2: #c07aee;
+  }
+  html.light body { background:#e8edf0 !important; }
+
+  /* Text overrides */
+  html.light .sec-title,
+  html.light #ov-name,
+  html.light #sb-name,
+  html.light #sb-email { color:#1a2a2b !important; }
+  html.light .sec-sub  { color:#5a7475 !important; }
+
+  html.light [style*="color:#dce4e5"] { color:#1a2a2b !important; }
+  html.light [style*="color:#849495"] { color:#5a7475 !important; }
+  html.light [style*="color:#5a7475"] { color:#7a9495 !important; }
+
+  /* Nav */
+  html.light .nav-item           { color:#5a7475; }
+  html.light .nav-item:hover     { color:#1a2a2b; }
+  html.light .nav-item.active    { color:var(--ac); }
+  html.light .nav-divider        { background:var(--ns); box-shadow:0 1px 0 var(--nl); }
+  html.light .mobile-tabs        { border-bottom-color:var(--ns); }
+  html.light .mobile-tab         { color:#5a7475; }
+  html.light .mobile-tab.active  { color:var(--ac); }
+
+  /* Badges — light variants */
+  html.light .badge-pending    { background:#fef3c7; color:#b45309; }
+  html.light .badge-confirmed  { background:#d1fae5; color:#065f46; }
+  html.light .badge-active     { background:#cffafe; color:#0e7490; }
+  html.light .badge-completed  { background:#dcfce7; color:#15803d; }
+  html.light .badge-cancelled,
+  html.light .badge-declined   { background:#fee2e2; color:#b91c1c; }
+  html.light .badge-in_transit { background:#f3e8ff; color:#7c3aed; }
+  html.light .badge-delivered  { background:#dcfce7; color:#15803d; }
+  html.light .badge-processing { background:#cffafe; color:#0e7490; }
+  html.light .badge-paid       { background:#dcfce7; color:#15803d; }
+  html.light .badge-unpaid     { background:#fef3c7; color:#b45309; }
+  html.light .badge-overdue    { background:#fee2e2; color:#b91c1c; }
+
+  /* File icon backgrounds */
+  html.light .file-icon-img    { background:#ede9f7; }
+  html.light .file-icon-video  { background:#e8eaf7; }
+  html.light .file-icon-doc    { background:#e7f1f7; }
+  html.light .file-icon-pdf    { background:#fce8e8; }
+  html.light .file-icon-zip    { background:#faf0e0; }
+  html.light .file-icon-other  { background:#eaeceb; }
+
+  /* Empty icon */
+  html.light .empty-icon { color:rgba(0,0,0,0.15) !important; }
+
+  /* Form inputs */
+  html.light .fi {
+    color:#1a2a2b !important;
+    -webkit-text-fill-color:#1a2a2b !important;
+    color-scheme:light !important;
+  }
+  html.light .fi:-webkit-autofill,
+  html.light .fi:-webkit-autofill:hover,
+  html.light .fi:-webkit-autofill:focus {
+    -webkit-box-shadow: inset 2px 2px 6px var(--ns), inset -2px -2px 6px var(--nl), 0 0 0 9999px var(--nb) inset !important;
+    -webkit-text-fill-color:#1a2a2b !important;
+  }
+  html.light .fi-label { color:#5a7475; }
+
+  /* Sign-out */
+  html.light .nm-signout { color:#5a7475; }
+  html.light .nm-signout:hover { color:#dc2626; }
+
+  /* Modal */
+  html.light .modal-overlay { background:rgba(0,0,0,0.45); }
+  html.light .modal-box { border-color:rgba(0,0,0,0.08); box-shadow:0 24px 64px rgba(0,0,0,0.18); }
+
+  /* Close btn */
+  html.light #close-btn { color:#5a7475 !important; }
+
+  /* Avatar label */
+  html.light #sb-avatar { color:#001f22 !important; }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    display:flex; align-items:center; justify-content:center;
+    width:2rem; height:2rem; border-radius:50%;
+    background:var(--nb); border:none; cursor:pointer;
+    box-shadow: var(--nr-s);
+    color:#849495; transition:all 0.2s;
+    flex-shrink:0;
+  }
+  .theme-toggle:hover { color:#dce4e5; box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl); }
+  .theme-toggle:active { box-shadow: var(--ni-s); }
+  html.light .theme-toggle { color:#5a7475; }
+  html.light .theme-toggle:hover { color:#1a2a2b; }
+
   /* ── Sidebar logo ── */
   .cp-sidebar-logo {
     padding:1.1rem 1.2rem 0.9rem;
@@ -315,17 +419,27 @@
 </head>
 <body class="min-h-screen flex flex-col font-body-md antialiased" style="background:#141414;">
 
-<!-- Close / back button -->
-<button onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
-  id="close-btn" title="Close"
-  style="position:fixed;top:1.1rem;right:1.25rem;z-index:500;
-         width:2.4rem;height:2.4rem;border-radius:50%;
-         display:flex;align-items:center;justify-content:center;
-         color:#849495;cursor:pointer;transition:all 0.18s;"
-  onmouseover="this.style.color='#dce4e5'"
-  onmouseout="this.style.color='#849495'">
-  <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
-</button>
+<!-- Top-right fixed controls -->
+<div style="position:fixed;top:1.1rem;right:1.25rem;z-index:500;display:flex;align-items:center;gap:0.5rem;">
+  <button onclick="toggleTheme()" title="Toggle light/dark theme"
+    id="global-theme-btn"
+    style="width:2.4rem;height:2.4rem;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#849495;cursor:pointer;transition:all 0.18s;
+           background:var(--nb);border:none;box-shadow:var(--nr-s);"
+    onmouseover="this.style.color='#dce4e5'" onmouseout="this.style.color='#849495'">
+    <span class="material-symbols-outlined theme-icon-mobile" style="font-size:1.2rem;">light_mode</span>
+  </button>
+  <button onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
+    id="close-btn" title="Close"
+    style="width:2.4rem;height:2.4rem;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#849495;cursor:pointer;transition:all 0.18s;"
+    onmouseover="this.style.color='#dce4e5'"
+    onmouseout="this.style.color='#849495'">
+    <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+  </button>
+</div>
 
 <!-- Auth Gate -->
 <div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
@@ -420,7 +534,13 @@
       </div>
     </nav>
 
-    <div class="p-4 pt-2">
+    <div class="p-4 pt-2" style="display:flex;flex-direction:column;gap:0.6rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#849495;">Theme</span>
+        <button id="theme-toggle-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">
+          <span class="material-symbols-outlined" id="theme-icon" style="font-size:1.1rem;">light_mode</span>
+        </button>
+      </div>
       <button onclick="window.signOut && window.signOut()" class="nm-signout">
         <span class="material-symbols-outlined" style="font-size:1.1rem;">logout</span> Sign Out
       </button>
@@ -436,9 +556,14 @@
         <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg"
              alt="Camcrew Studio" style="height:1.5rem;width:auto;"/>
       </a>
-      <button class="mobile-header-back" onclick="history.length>1?history.back():window.location.href='index.html'">
-        <span class="material-symbols-outlined" style="font-size:1.15rem;">arrow_back</span>
-      </button>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">
+          <span class="material-symbols-outlined theme-icon-mobile" style="font-size:1.1rem;">light_mode</span>
+        </button>
+        <button class="mobile-header-back" onclick="history.length>1?history.back():window.location.href='index.html'">
+          <span class="material-symbols-outlined" style="font-size:1.15rem;">arrow_back</span>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile tabs -->
@@ -1656,6 +1781,31 @@ async function saveAccount() {
     showToast('Account updated!');
   }
 }
+
+// ════════════════════════════════════════════════════════════════════
+// Theme Toggle
+// ════════════════════════════════════════════════════════════════════
+function applyTheme(theme) {
+  const isLight = theme === 'light';
+  document.documentElement.classList.toggle('light', isLight);
+  document.documentElement.classList.toggle('dark',  !isLight);
+  document.body.style.background = isLight ? '#e8edf0' : '#141414';
+  const icon = isLight ? 'dark_mode' : 'light_mode';
+  document.querySelectorAll('#theme-icon, .theme-icon-mobile').forEach(el => el.textContent = icon);
+}
+
+function toggleTheme() {
+  const current = localStorage.getItem('pp_theme') || 'dark';
+  const next    = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('pp_theme', next);
+  applyTheme(next);
+}
+
+// Apply saved theme immediately
+(function() {
+  const saved = localStorage.getItem('pp_theme') || 'dark';
+  applyTheme(saved);
+})();
 
 // ════════════════════════════════════════════════════════════════════
 // Boot
