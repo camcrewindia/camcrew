@@ -8,587 +8,850 @@
 <script src="tailwind-config.js"></script>
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* ── Step transitions ─────────────────────────────────────────── */
+  /* ── Neumorphism base ─────────────────────────────────────────── */
+  :root {
+    --nm-bg:       #1c1f2e;
+    --nm-light:    #252840;
+    --nm-dark:     #13151e;
+    --nm-accent:   #00dbe9;
+    --nm-text:     #c8d0e7;
+    --nm-muted:    #6b7295;
+    --nm-radius:   1.25rem;
+    --nm-shadow-out: 6px 6px 14px var(--nm-dark), -6px -6px 14px var(--nm-light);
+    --nm-shadow-in:  inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light);
+    --nm-shadow-sm:  3px 3px 8px var(--nm-dark), -3px -3px 8px var(--nm-light);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%; width: 100%;
+    overflow: hidden;
+    background: var(--nm-bg);
+    color: var(--nm-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Page scaffold — fixed 100vh, no scroll ───────────────────── */
+  .page-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  .nm-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 2rem;
+    background: var(--nm-bg);
+    box-shadow: 0 4px 12px var(--nm-dark);
+    z-index: 10;
+  }
+
+  /* ── Center card ──────────────────────────────────────────────── */
+  .nm-card-wrap {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0.75rem 1rem 0.75rem;
+    overflow: hidden;
+  }
+
+  .nm-card {
+    width: 100%;
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    background: var(--nm-bg);
+    border-radius: 2rem;
+    box-shadow: var(--nm-shadow-out);
+    overflow: hidden;
+  }
+
+  /* ── Progress strip ───────────────────────────────────────────── */
+  .nm-progress {
+    flex-shrink: 0;
+    padding: 1rem 1.75rem 0.6rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nm-step-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .nm-dot {
+    width: 2.1rem; height: 2.1rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 800;
+    color: var(--nm-muted);
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-sm);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative; z-index: 1;
+  }
+  .nm-dot.active {
+    color: var(--nm-accent);
+    box-shadow: 0 0 0 2px var(--nm-accent), var(--nm-shadow-sm);
+  }
+  .nm-dot.done {
+    background: var(--nm-accent);
+    color: #001f22;
+    box-shadow: 3px 3px 8px var(--nm-dark), -1px -1px 6px rgba(0,219,233,0.2);
+  }
+
+  .nm-line {
+    flex: 1;
+    height: 3px;
+    background: var(--nm-bg);
+    box-shadow: inset 1px 1px 3px var(--nm-dark), inset -1px -1px 3px var(--nm-light);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0 0.35rem;
+  }
+  .nm-line-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--nm-accent);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 6px var(--nm-accent);
+  }
+  .nm-line.done .nm-line-fill { width: 100%; }
+
+  .nm-step-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    padding: 0 0.1rem;
+  }
+  .nm-step-labels span {
+    font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--nm-muted);
+    min-width: 2.1rem; text-align: center;
+  }
+  .nm-step-labels span.active-label { color: var(--nm-accent); }
+
+  /* ── Step content panels ──────────────────────────────────────── */
+  .step-panels {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
   .step-panel {
     display: none;
-    animation: stepIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.2rem 1.75rem 1rem;
+    animation: nmSlideIn 0.3s cubic-bezier(0.4,0,0.2,1);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,219,233,0.2) transparent;
   }
   .step-panel.active { display: block; }
-  @keyframes stepIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .step-panel::-webkit-scrollbar { width: 4px; }
+  .step-panel::-webkit-scrollbar-thumb { background: rgba(0,219,233,0.2); border-radius: 2px; }
+
+  @keyframes nmSlideIn {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
-  /* ── Progress bar ─────────────────────────────────────────────── */
-  .step-dot {
-    width: 2rem; height: 2rem; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.78rem; font-weight: 800;
-    border: 2px solid rgba(255,255,255,0.12);
-    color: #849495; background: rgba(22,22,24,0.8);
-    transition: all 0.3s ease; flex-shrink: 0; position: relative; z-index: 1;
-  }
-  .step-dot.done   { background: #00dbe9; border-color: #00dbe9; color: #001f22; }
-  .step-dot.active { border-color: #00dbe9; color: #00dbe9; box-shadow: 0 0 0 4px rgba(0,219,233,0.15); }
-  .step-line {
-    flex: 1; height: 2px;
-    background: rgba(255,255,255,0.08);
-    transition: background 0.4s ease;
-  }
-  .step-line.done { background: #00dbe9; }
-
-  /* ── Input style ──────────────────────────────────────────────── */
-  .cc-input {
-    width: 100%;
-    background: transparent !important;
-    background-color: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.12) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    color: #dce4e5 !important;
-    padding: 0.75rem 0;
-    font-size: 1rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.2s ease;
-    -webkit-appearance: none;
-  }
-  .cc-input:focus {
-    border-bottom-color: #00dbe9 !important;
-    box-shadow: none !important;
-    outline: none !important;
-    background: transparent !important;
-  }
-  .cc-input::placeholder { color: rgba(185,202,203,0.35) !important; }
-  .cc-input:read-only { opacity: 0.5; cursor: not-allowed; }
-
-  .cc-label {
-    display: block;
-    font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: #849495; margin-bottom: 0.35rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  .cc-textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
+  /* ── Neumorphic form elements ─────────────────────────────────── */
+  .nm-input-wrap {
+    background: var(--nm-bg);
     border-radius: 0.75rem;
-    color: #dce4e5;
-    padding: 0.85rem 1rem;
-    font-size: 1rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    outline: none; resize: none;
-    transition: border-color 0.2s ease;
+    box-shadow: var(--nm-shadow-in);
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  .cc-textarea:focus { border-color: #00dbe9; }
-  .cc-textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .nm-input-wrap:focus-within {
+    box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,219,233,0.3);
+  }
+  .nm-input-wrap input,
+  .nm-input-wrap textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--nm-text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+  .nm-input-wrap input::placeholder,
+  .nm-input-wrap textarea::placeholder { color: rgba(107,114,149,0.6); }
+  .nm-input-wrap input[readonly] { opacity: 0.5; cursor: not-allowed; }
+  .nm-input-icon { color: var(--nm-muted); font-size: 1.05rem; flex-shrink: 0; }
 
-  /* ── Avatar upload ring ───────────────────────────────────────── */
+  .nm-textarea {
+    background: var(--nm-bg);
+    border-radius: 0.75rem;
+    box-shadow: var(--nm-shadow-in);
+    padding: 0.7rem 0.9rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: var(--nm-text);
+    font-size: 0.88rem;
+    font-family: inherit;
+    resize: none;
+    display: block;
+  }
+  .nm-textarea::placeholder { color: rgba(107,114,149,0.6); }
+  .nm-textarea:focus-within,
+  .nm-textarea:focus {
+    box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,219,233,0.3);
+  }
+
+  .nm-label {
+    font-size: 0.65rem; font-weight: 800;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--nm-muted);
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────────────── */
+  .nm-btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.85rem;
+    background: var(--nm-accent);
+    color: #001f22;
+    font-size: 0.88rem; font-weight: 800;
+    border: none; cursor: pointer;
+    box-shadow: 4px 4px 10px var(--nm-dark), -2px -2px 6px rgba(0,219,233,0.15);
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+    font-family: inherit;
+  }
+  .nm-btn-primary:hover {
+    box-shadow: 5px 5px 14px var(--nm-dark), -3px -3px 8px rgba(0,219,233,0.2), 0 0 16px rgba(0,219,233,0.25);
+    transform: translateY(-1px);
+  }
+  .nm-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3), inset -1px -1px 3px rgba(0,219,233,0.1);
+  }
+
+  .nm-btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: 0.85rem;
+    background: var(--nm-bg);
+    color: var(--nm-muted);
+    font-size: 0.88rem; font-weight: 700;
+    border: none; cursor: pointer;
+    box-shadow: var(--nm-shadow-sm);
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+  .nm-btn-ghost:hover { color: var(--nm-text); }
+  .nm-btn-ghost:active { box-shadow: var(--nm-shadow-in); }
+
+  .nm-btn-add {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 0.75rem;
+    background: var(--nm-bg);
+    color: var(--nm-accent);
+    font-size: 0.82rem; font-weight: 700;
+    border: none; cursor: pointer;
+    box-shadow: var(--nm-shadow-sm);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .nm-btn-add:hover { box-shadow: 3px 3px 8px var(--nm-dark), -3px -3px 8px var(--nm-light), 0 0 8px rgba(0,219,233,0.15); }
+  .nm-btn-add:active { box-shadow: var(--nm-shadow-in); }
+
+  /* ── Category / unit chips ────────────────────────────────────── */
+  .nm-chip {
+    padding: 0.38rem 0.8rem;
+    border-radius: 999px;
+    background: var(--nm-bg);
+    color: var(--nm-muted);
+    font-size: 0.78rem; font-weight: 700;
+    border: none; cursor: pointer;
+    box-shadow: var(--nm-shadow-sm);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .nm-chip.selected {
+    background: var(--nm-accent);
+    color: #001f22;
+    box-shadow: 3px 3px 8px var(--nm-dark), -1px -1px 5px rgba(0,219,233,0.15);
+  }
+  .nm-chip:not(.selected):hover { color: var(--nm-accent); }
+
+  /* ── Avatar ring ──────────────────────────────────────────────── */
   #avatar-ring {
-    width: 7rem; height: 7rem;
+    width: 5rem; height: 5rem;
     border-radius: 50%;
-    border: 2px dashed rgba(0,219,233,0.4);
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-out);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; position: relative; overflow: hidden;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    background: rgba(0,219,233,0.04);
+    transition: box-shadow 0.2s;
+    flex-shrink: 0;
   }
-  #avatar-ring:hover { border-color: #00dbe9; box-shadow: 0 0 0 4px rgba(0,219,233,0.1); }
+  #avatar-ring:hover {
+    box-shadow: 6px 6px 14px var(--nm-dark), -6px -6px 14px var(--nm-light), 0 0 0 2px var(--nm-accent);
+  }
   #avatar-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-  /* ── Portfolio grid ───────────────────────────────────────────── */
-  .media-thumb {
-    aspect-ratio: 1;
-    border-radius: 0.65rem;
-    overflow: hidden;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    position: relative;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-  }
-  .media-thumb img, .media-thumb video {
-    width: 100%; height: 100%; object-fit: cover;
-  }
-  .media-thumb .remove-btn {
-    position: absolute; top: 0.4rem; right: 0.4rem;
-    width: 1.5rem; height: 1.5rem; border-radius: 50%;
-    background: rgba(0,0,0,0.7); border: none;
-    color: #fff; font-size: 0.8rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .media-thumb:hover .remove-btn { opacity: 1; }
-  .upload-placeholder {
-    aspect-ratio: 1;
-    border-radius: 0.65rem;
-    border: 2px dashed rgba(0,219,233,0.3);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 0.4rem;
-    cursor: pointer; color: #849495; font-size: 0.82rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    transition: all 0.2s;
-    background: rgba(0,219,233,0.02);
-  }
-  .upload-placeholder:hover { border-color: #00dbe9; color: #00dbe9; background: rgba(0,219,233,0.05); }
-
-  /* ── Service item card ────────────────────────────────────────── */
+  /* ── Service card ─────────────────────────────────────────────── */
   .service-item {
     display: grid; grid-template-columns: 1fr auto auto;
-    align-items: center; gap: 0.75rem;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 0.75rem; padding: 0.85rem 1rem;
-    transition: border-color 0.2s;
+    align-items: center; gap: 0.5rem;
+    background: var(--nm-bg);
+    border-radius: 0.75rem;
+    box-shadow: var(--nm-shadow-sm);
+    padding: 0.6rem 0.75rem;
   }
-  .service-item:hover { border-color: rgba(0,219,233,0.25); }
 
   /* ── Location tag ─────────────────────────────────────────────── */
   .loc-tag {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.4rem 0.85rem; border-radius: 999px;
-    background: rgba(0,219,233,0.08);
-    border: 1px solid rgba(0,219,233,0.25);
-    color: #00dbe9; font-size: 0.85rem; font-weight: 600;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-sm);
+    color: var(--nm-accent);
+    font-size: 0.78rem; font-weight: 700;
+    font-family: inherit;
   }
   .loc-tag button {
-    background: none; border: none; color: rgba(0,219,233,0.6);
+    background: none; border: none; color: var(--nm-muted);
     cursor: pointer; line-height: 1; padding: 0;
-    font-size: 1rem; display: flex; align-items: center;
+    font-size: 0.9rem; display: flex; align-items: center;
     transition: color 0.15s;
   }
   .loc-tag button:hover { color: #ff5252; }
 
-  /* ── Social link row ──────────────────────────────────────────── */
-  .social-row {
-    display: flex; align-items: center; gap: 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 0.75rem;
-  }
+  /* ── Social row ───────────────────────────────────────────────── */
   .social-icon-wrap {
-    width: 2.25rem; height: 2.25rem; border-radius: 0.5rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    width: 2rem; height: 2rem; border-radius: 0.5rem;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-sm);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
 
-  /* ── Category chip ────────────────────────────────────────────── */
-  .cat-chip {
-    padding: 0.45rem 0.9rem; border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #849495; font-size: 0.85rem; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
-    font-family: 'Plus Jakarta Sans', sans-serif; background: none;
+  /* ── Drop zone ────────────────────────────────────────────────── */
+  .nm-drop-zone {
+    border-radius: 1rem;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-in);
+    padding: 1.1rem;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.35rem; cursor: pointer;
+    transition: box-shadow 0.2s;
   }
-  .cat-chip.selected {
-    background: rgba(0,219,233,0.1);
-    border-color: #00dbe9; color: #00dbe9;
+  .nm-drop-zone:hover,
+  .nm-drop-zone.drag-over {
+    box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,219,233,0.4);
   }
 
-  /* ── Drag-over highlight ──────────────────────────────────────── */
-  .drag-over { border-color: #00dbe9 !important; background: rgba(0,219,233,0.06) !important; }
+  /* ── Toggle ───────────────────────────────────────────────────── */
+  .nm-toggle {
+    width: 2.8rem; height: 1.55rem;
+    border-radius: 999px;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-in);
+    position: relative;
+    cursor: pointer;
+    border: none;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .nm-toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 1.1rem; height: 1.1rem;
+    border-radius: 50%;
+    background: var(--nm-muted);
+    box-shadow: 2px 2px 4px var(--nm-dark);
+    transition: all 0.25s;
+  }
+  .nm-toggle.on { box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,219,233,0.4); }
+  .nm-toggle.on .nm-toggle-thumb {
+    background: var(--nm-accent);
+    left: calc(100% - 1.38rem);
+    box-shadow: 2px 2px 5px var(--nm-dark), 0 0 6px rgba(0,219,233,0.4);
+  }
 
   /* ── Char counter ─────────────────────────────────────────────── */
-  .char-count { font-size: 0.72rem; color: #849495; text-align: right; }
+  .char-count { font-size: 0.68rem; color: var(--nm-muted); text-align: right; margin-top: 0.2rem; }
   .char-count.warn { color: #ffb4ab; }
+
+  /* ── Media thumb ──────────────────────────────────────────────── */
+  .media-thumb {
+    aspect-ratio: 1;
+    border-radius: 0.65rem;
+    overflow: hidden;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-sm);
+    position: relative; cursor: pointer;
+  }
+  .media-thumb img, .media-thumb video { width: 100%; height: 100%; object-fit: cover; }
+  .media-thumb .remove-btn {
+    position: absolute; top: 0.3rem; right: 0.3rem;
+    width: 1.3rem; height: 1.3rem; border-radius: 50%;
+    background: rgba(0,0,0,0.7); border: none;
+    color: #fff; font-size: 0.7rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .media-thumb:hover .remove-btn { opacity: 1; }
+
+  /* ── Toast ────────────────────────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(1rem);
+    display: flex; align-items: center; gap: 0.6rem;
+    background: var(--nm-bg);
+    border-radius: 999px; padding: 0.65rem 1.4rem;
+    font-size: 0.88rem; font-weight: 700;
+    color: var(--nm-accent);
+    box-shadow: 6px 6px 16px var(--nm-dark), -4px -4px 10px var(--nm-light), 0 0 0 1px rgba(0,219,233,0.25);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 200;
+    font-family: inherit;
+  }
+
+  /* ── Section title ────────────────────────────────────────────── */
+  .step-title {
+    font-size: 1rem; font-weight: 800;
+    color: var(--nm-text); margin-bottom: 0.15rem;
+  }
+  .step-sub {
+    font-size: 0.8rem; color: var(--nm-muted); margin-bottom: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* ── Inset panel (for add-service form) ──────────────────────── */
+  .nm-inset {
+    background: var(--nm-bg);
+    border-radius: 1rem;
+    box-shadow: var(--nm-shadow-in);
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── Loc suggestions dropdown ─────────────────────────────────── */
+  #loc-suggestions {
+    display: none;
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 30;
+    background: var(--nm-bg);
+    border-radius: 0.85rem;
+    box-shadow: var(--nm-shadow-out);
+    overflow: hidden;
+  }
+
+  /* ── Complete screen ──────────────────────────────────────────── */
+  .complete-ring {
+    width: 4.5rem; height: 4.5rem;
+    border-radius: 50%;
+    background: var(--nm-bg);
+    box-shadow: var(--nm-shadow-out);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  /* ── Pulse dot ────────────────────────────────────────────────── */
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  @keyframes nmSlideIn {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Responsive tweaks ────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .nm-card-wrap { padding: 0.5rem; }
+    .step-panel { padding: 0.9rem 1rem; }
+    .nm-header { padding: 0.75rem 1rem; }
+  }
 </style>
 </head>
-<body class="font-body-md antialiased min-h-screen">
+<body>
 
-<!-- Ambient bg glow -->
-<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-  <div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary-container/8 blur-[140px] rounded-full"></div>
-  <div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary-container/8 blur-[120px] rounded-full"></div>
-</div>
+<div class="page-shell">
 
-<!-- Header -->
-<header class="relative z-10 w-full flex items-center justify-between px-margin-mobile md:px-margin-desktop py-5">
-  <img alt="Camcrew Studio" class="h-8 w-auto object-contain"
-    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
-  <div style="display:flex;align-items:center;gap:0.6rem;">
-    <div style="width:0.5rem;height:0.5rem;border-radius:50%;background:#00dbe9;animation:pulse 2s infinite;"></div>
-    <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:#849495;text-transform:uppercase;">Profile Setup</span>
-  </div>
-</header>
-
-<!-- Main -->
-<main class="relative z-10 flex justify-center px-margin-mobile md:px-margin-desktop pb-20">
-  <div class="w-full max-w-2xl">
-
-    <!-- Page title -->
-    <div class="text-center mb-8 mt-2">
-      <h1 style="font-size:1.75rem;font-weight:800;color:#dce4e5;line-height:1.2;">Set up your professional profile</h1>
-      <p style="font-size:1rem;color:#849495;margin-top:0.4rem;">Tell clients who you are and what you bring to every production.</p>
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header class="nm-header">
+    <img alt="Camcrew Studio" style="height:1.9rem;width:auto;object-fit:contain;"
+      src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg">
+    <div style="display:flex;align-items:center;gap:0.55rem;">
+      <div style="width:0.45rem;height:0.45rem;border-radius:50%;background:#00dbe9;animation:pulse 2s infinite;"></div>
+      <span style="font-size:0.65rem;font-weight:800;letter-spacing:0.12em;color:var(--nm-muted);text-transform:uppercase;">Profile Setup</span>
     </div>
+  </header>
 
-    <!-- ── Step Progress ─────────────────────────────────────────── -->
-    <div class="flex items-center mb-10 px-1" id="step-progress">
-      <div class="step-dot active" id="dot-1" title="Profile">1</div>
-      <div class="step-line" id="line-1"></div>
-      <div class="step-dot" id="dot-2" title="Contact">2</div>
-      <div class="step-line" id="line-2"></div>
-      <div class="step-dot" id="dot-3" title="Portfolio">3</div>
-      <div class="step-line" id="line-3"></div>
-      <div class="step-dot" id="dot-4" title="Services">4</div>
-      <div class="step-line" id="line-4"></div>
-      <div class="step-dot" id="dot-5" title="Locations">5</div>
-    </div>
+  <!-- ── Card ───────────────────────────────────────────────────── -->
+  <div class="nm-card-wrap">
+    <div class="nm-card">
 
-    <!-- Step labels (below dots) -->
-    <div class="flex justify-between mb-8 -mt-6 px-0">
-      <span style="font-size:0.68rem;font-weight:700;color:#849495;text-align:center;min-width:2rem;">Profile</span>
-      <span style="font-size:0.68rem;font-weight:700;color:#849495;text-align:center;min-width:2rem;">Contact</span>
-      <span style="font-size:0.68rem;font-weight:700;color:#849495;text-align:center;min-width:2rem;">Portfolio</span>
-      <span style="font-size:0.68rem;font-weight:700;color:#849495;text-align:center;min-width:2rem;">Services</span>
-      <span style="font-size:0.68rem;font-weight:700;color:#849495;text-align:center;min-width:2rem;">Locations</span>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         STEP 1 — PROFILE IDENTITY
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel active glass-panel rounded-3xl p-8 md:p-10" id="step-1">
-
-      <!-- Avatar -->
-      <div class="flex flex-col items-center mb-8">
-        <div id="avatar-ring" onclick="document.getElementById('avatar-file').click()">
-          <img id="avatar-preview" alt="Profile photo">
-          <div id="avatar-placeholder" class="flex flex-col items-center gap-1 text-center px-2">
-            <span class="material-symbols-outlined" style="font-size:2rem;color:#00dbe9;">add_photo_alternate</span>
-            <span style="font-size:0.72rem;font-weight:700;color:#849495;line-height:1.3;">Upload photo</span>
-          </div>
+      <!-- ── Progress ─────────────────────────────────────────── -->
+      <div class="nm-progress">
+        <div class="nm-step-row" id="step-progress">
+          <div class="nm-dot active" id="dot-1">1</div>
+          <div class="nm-line" id="line-1"><div class="nm-line-fill"></div></div>
+          <div class="nm-dot" id="dot-2">2</div>
+          <div class="nm-line" id="line-2"><div class="nm-line-fill"></div></div>
+          <div class="nm-dot" id="dot-3">3</div>
+          <div class="nm-line" id="line-3"><div class="nm-line-fill"></div></div>
+          <div class="nm-dot" id="dot-4">4</div>
+          <div class="nm-line" id="line-4"><div class="nm-line-fill"></div></div>
+          <div class="nm-dot" id="dot-5">5</div>
         </div>
-        <input type="file" id="avatar-file" accept="image/*" class="hidden">
-        <p style="font-size:0.78rem;color:#849495;margin-top:0.75rem;">JPG, PNG or WEBP · Max 5 MB</p>
-      </div>
-
-      <!-- Name -->
-      <div class="mb-6">
-        <label class="cc-label" for="inp-name">Full Name</label>
-        <input class="cc-input" id="inp-name" type="text" placeholder="e.g. Jordan Rivera" maxlength="60" autocomplete="name">
-      </div>
-
-      <!-- Professional Title -->
-      <div class="mb-6">
-        <label class="cc-label" for="inp-title">Professional Title</label>
-        <input class="cc-input" id="inp-title" type="text" placeholder="e.g. Cinematic Videographer · Director of Photography" maxlength="80">
-        <p style="font-size:0.75rem;color:#849495;margin-top:0.35rem;">Shown under your name on your public profile.</p>
-      </div>
-
-      <!-- Category chips -->
-      <div class="mb-6">
-        <label class="cc-label">Your Category</label>
-        <div class="flex flex-wrap gap-2 mt-2" id="cat-chips">
-          <button class="cat-chip" data-cat="Videographer">Videographer</button>
-          <button class="cat-chip" data-cat="Photographer">Photographer</button>
-          <button class="cat-chip" data-cat="Director">Director</button>
-          <button class="cat-chip" data-cat="Editor">Editor</button>
-          <button class="cat-chip" data-cat="Colorist">Colorist</button>
-          <button class="cat-chip" data-cat="Sound Designer">Sound Designer</button>
-          <button class="cat-chip" data-cat="Drone Pilot">Drone Pilot</button>
-          <button class="cat-chip" data-cat="Lighting Tech">Lighting Tech</button>
-          <button class="cat-chip" data-cat="Motion Designer">Motion Designer</button>
-          <button class="cat-chip" data-cat="Producer">Producer</button>
+        <div class="nm-step-labels">
+          <span id="lbl-1" class="active-label">Profile</span>
+          <span id="lbl-2">Contact</span>
+          <span id="lbl-3">Portfolio</span>
+          <span id="lbl-4">Services</span>
+          <span id="lbl-5">Locations</span>
         </div>
       </div>
 
-      <!-- Bio -->
-      <div class="mb-8">
-        <label class="cc-label" for="inp-bio">Bio</label>
-        <textarea class="cc-textarea" id="inp-bio" rows="4"
-          placeholder="Tell clients about your style, experience, and what makes your work unique…"
-          maxlength="300" oninput="updateCharCount(this,'bio-count',300)"></textarea>
-        <p class="char-count mt-1" id="bio-count">0 / 300</p>
-      </div>
+      <!-- ── Step panels ─────────────────────────────────────── -->
+      <div class="step-panels">
 
-      <button class="cc-btn-primary" onclick="goStep(2)">
-        Continue <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span>
-      </button>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         STEP 2 — CONTACT DETAILS
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel glass-panel rounded-3xl p-8 md:p-10" id="step-2">
-
-      <h2 style="font-size:1.2rem;font-weight:800;color:#dce4e5;margin-bottom:0.35rem;">Contact Details</h2>
-      <p style="font-size:0.95rem;color:#849495;margin-bottom:2rem;">How clients can reach you. Your email won't be shown publicly unless you allow it.</p>
-
-      <!-- Email (pre-filled, locked) -->
-      <div class="mb-6">
-        <label class="cc-label" for="inp-email">
-          Email Address
-          <span style="margin-left:0.5rem;font-size:0.65rem;padding:0.15rem 0.5rem;background:rgba(0,219,233,0.1);color:#00dbe9;border-radius:999px;letter-spacing:0.05em;text-transform:none;font-weight:700;">Verified</span>
-        </label>
-        <div style="position:relative;">
-          <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">alternate_email</span>
-          <input class="cc-input" style="padding-left:1.75rem;" id="inp-email" type="email" readonly placeholder="Loaded from your account…">
-        </div>
-      </div>
-
-      <!-- Mobile -->
-      <div class="mb-6">
-        <label class="cc-label" for="inp-phone">Mobile Number</label>
-        <div style="position:relative;">
-          <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">phone_iphone</span>
-          <input class="cc-input" style="padding-left:1.75rem;" id="inp-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel">
-        </div>
-      </div>
-
-      <!-- Website -->
-      <div class="mb-6">
-        <label class="cc-label" for="inp-website">Website / Portfolio URL</label>
-        <div style="position:relative;">
-          <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">link</span>
-          <input class="cc-input" style="padding-left:1.75rem;" id="inp-website" type="url" placeholder="https://yourportfolio.com">
-        </div>
-      </div>
-
-      <!-- Social Links -->
-      <div class="mb-8">
-        <label class="cc-label" style="margin-bottom:0.75rem;">Social Profiles <span style="text-transform:none;letter-spacing:0;font-weight:400;color:#849495;"> (optional)</span></label>
-
-        <div class="space-y-4">
-          <div class="social-row">
-            <div class="social-icon-wrap">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>
+        <!-- ══ STEP 1 — PROFILE ════════════════════════════════ -->
+        <div class="step-panel active" id="step-1">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.85rem;">
+            <!-- Avatar -->
+            <div id="avatar-ring" onclick="document.getElementById('avatar-file').click()" title="Upload photo">
+              <img id="avatar-preview" alt="Profile photo">
+              <div id="avatar-placeholder">
+                <span class="material-symbols-outlined" style="font-size:1.6rem;color:var(--nm-accent);">add_photo_alternate</span>
+              </div>
             </div>
-            <input class="cc-input" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="instagram.com/yourhandle">
-          </div>
-          <div class="social-row">
-            <div class="social-icon-wrap">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>
-            </div>
-            <input class="cc-input" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="facebook.com/yourpage">
-          </div>
-          <div class="social-row" style="border-bottom:none;">
-            <div class="social-icon-wrap">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
-            </div>
-            <input class="cc-input" style="border-bottom:none;" type="text" placeholder="tiktok.com/@yourhandle">
-          </div>
-        </div>
-      </div>
-
-      <div class="flex gap-3">
-        <button class="cc-btn-ghost" style="width:auto;padding:0.9rem 1.5rem;" onclick="goStep(1)">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_back</span> Back
-        </button>
-        <button class="cc-btn-primary" onclick="goStep(3)">
-          Continue <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         STEP 3 — PORTFOLIO
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel glass-panel rounded-3xl p-8 md:p-10" id="step-3">
-
-      <h2 style="font-size:1.2rem;font-weight:800;color:#dce4e5;margin-bottom:0.35rem;">Portfolio</h2>
-      <p style="font-size:0.95rem;color:#849495;margin-bottom:0.5rem;">Upload up to 12 photos or videos. Your best work goes first.</p>
-      <p style="font-size:0.82rem;color:#475569;margin-bottom:1.75rem;">JPG · PNG · WEBP · MP4 · MOV &nbsp;·&nbsp; Max 50 MB per file</p>
-
-      <!-- Drop zone + grid -->
-      <div id="portfolio-drop-zone"
-        style="border:2px dashed rgba(0,219,233,0.25);border-radius:1rem;padding:2rem;margin-bottom:1.5rem;transition:all 0.2s;min-height:8rem;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;cursor:pointer;"
-        onclick="document.getElementById('portfolio-file').click()"
-        ondragover="event.preventDefault();this.classList.add('drag-over')"
-        ondragleave="this.classList.remove('drag-over')"
-        ondrop="handlePortfolioDrop(event)">
-        <span class="material-symbols-outlined" style="font-size:2.5rem;color:#00dbe9;opacity:0.7;">cloud_upload</span>
-        <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;">Drop files here or <span style="color:#00dbe9;">browse</span></p>
-        <p style="font-size:0.8rem;color:#849495;">Drag & drop photos or videos</p>
-      </div>
-      <input type="file" id="portfolio-file" accept="image/*,video/*" multiple class="hidden" onchange="handlePortfolioFiles(this.files)">
-
-      <!-- Thumbnail grid -->
-      <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="portfolio-grid"></div>
-
-      <!-- Cover photo note -->
-      <p style="font-size:0.78rem;color:#849495;margin-top:1rem;">
-        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;">info</span>
-        The first item will be used as your profile cover.
-      </p>
-
-      <div class="flex gap-3 mt-8">
-        <button class="cc-btn-ghost" style="width:auto;padding:0.9rem 1.5rem;" onclick="goStep(2)">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_back</span> Back
-        </button>
-        <button class="cc-btn-primary" onclick="goStep(4)">
-          Continue <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════════
-         STEP 4 — SERVICES & RATES
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel glass-panel rounded-3xl p-8 md:p-10" id="step-4">
-
-      <h2 style="font-size:1.2rem;font-weight:800;color:#dce4e5;margin-bottom:0.35rem;">Services & Rates</h2>
-      <p style="font-size:0.95rem;color:#849495;margin-bottom:2rem;">List the services you offer so clients know what to book you for.</p>
-
-      <!-- Add service form -->
-      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:1rem;padding:1.25rem;margin-bottom:1.5rem;">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          <div class="sm:col-span-2">
-            <label class="cc-label" for="svc-name">Service Name</label>
-            <input class="cc-input" id="svc-name" type="text" placeholder="e.g. Full-Day Video Shoot" maxlength="60">
-          </div>
-          <div>
-            <label class="cc-label" for="svc-price">Rate</label>
-            <div style="position:relative;">
-              <span style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-weight:700;">$</span>
-              <input class="cc-input" style="padding-left:1rem;" id="svc-price" type="number" min="0" placeholder="0">
+            <div style="flex:1;">
+              <p class="step-title">Professional Profile</p>
+              <p class="step-sub">Set your identity and how clients see you.</p>
+              <p style="font-size:0.68rem;color:var(--nm-muted);">JPG/PNG/WEBP · Max 5 MB</p>
             </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="cc-label" for="svc-unit">Pricing Unit</label>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.35rem;" id="svc-unit-chips">
-            <button class="cat-chip selected" data-unit="per day" onclick="selectUnit(this)">per day</button>
-            <button class="cat-chip" data-unit="per hour" onclick="selectUnit(this)">per hour</button>
-            <button class="cat-chip" data-unit="per project" onclick="selectUnit(this)">per project</button>
-            <button class="cat-chip" data-unit="per event" onclick="selectUnit(this)">per event</button>
-            <button class="cat-chip" data-unit="custom" onclick="selectUnit(this)">custom</button>
+          <input type="file" id="avatar-file" accept="image/*" class="hidden">
+
+          <!-- 2-col row: Name + Title -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.65rem;">
+            <div>
+              <label class="nm-label">Full Name</label>
+              <div class="nm-input-wrap">
+                <input id="inp-name" type="text" placeholder="Jordan Rivera" maxlength="60" autocomplete="name">
+              </div>
+            </div>
+            <div>
+              <label class="nm-label">Professional Title</label>
+              <div class="nm-input-wrap">
+                <input id="inp-title" type="text" placeholder="Cinematic Videographer" maxlength="80">
+              </div>
+            </div>
+          </div>
+
+          <!-- Category chips -->
+          <div style="margin-bottom:0.65rem;">
+            <label class="nm-label">Your Category <span style="text-transform:none;letter-spacing:0;font-weight:400;">(pick all that apply)</span></label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem;" id="cat-chips">
+              <button class="nm-chip" data-cat="Videographer">Videographer</button>
+              <button class="nm-chip" data-cat="Photographer">Photographer</button>
+              <button class="nm-chip" data-cat="Director">Director</button>
+              <button class="nm-chip" data-cat="Editor">Editor</button>
+              <button class="nm-chip" data-cat="Colorist">Colorist</button>
+              <button class="nm-chip" data-cat="Sound Designer">Sound Designer</button>
+              <button class="nm-chip" data-cat="Drone Pilot">Drone Pilot</button>
+              <button class="nm-chip" data-cat="Lighting Tech">Lighting Tech</button>
+              <button class="nm-chip" data-cat="Motion Designer">Motion Designer</button>
+              <button class="nm-chip" data-cat="Producer">Producer</button>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div style="margin-bottom:0.8rem;">
+            <label class="nm-label">Bio</label>
+            <textarea class="nm-textarea" id="inp-bio" rows="3"
+              placeholder="Tell clients about your style, experience, and what makes your work unique…"
+              maxlength="300" oninput="updateCharCount(this,'bio-count',300)"></textarea>
+            <p class="char-count" id="bio-count">0 / 300</p>
+          </div>
+
+          <!-- Nav -->
+          <div style="display:flex;gap:0.65rem;">
+            <button class="nm-btn-primary" onclick="goStep(2)">
+              Continue <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
           </div>
         </div>
-        <div id="svc-desc-wrap" class="mb-4">
-          <label class="cc-label" for="svc-desc">Short Description <span style="text-transform:none;letter-spacing:0;font-weight:400;color:#849495;">(optional)</span></label>
-          <input class="cc-input" id="svc-desc" type="text" placeholder="What's included in this service…" maxlength="120">
+
+        <!-- ══ STEP 2 — CONTACT ════════════════════════════════ -->
+        <div class="step-panel" id="step-2">
+          <p class="step-title">Contact Details</p>
+          <p class="step-sub">How clients can reach you. Email is private unless you allow it.</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.65rem;">
+            <div>
+              <label class="nm-label">Email
+                <span style="margin-left:0.4rem;font-size:0.6rem;padding:0.1rem 0.45rem;background:rgba(0,219,233,0.12);color:var(--nm-accent);border-radius:999px;text-transform:none;letter-spacing:0;font-weight:700;">Verified</span>
+              </label>
+              <div class="nm-input-wrap">
+                <span class="material-symbols-outlined nm-input-icon">alternate_email</span>
+                <input id="inp-email" type="email" readonly placeholder="Loaded from account…">
+              </div>
+            </div>
+            <div>
+              <label class="nm-label">Mobile Number</label>
+              <div class="nm-input-wrap">
+                <span class="material-symbols-outlined nm-input-icon">phone_iphone</span>
+                <input id="inp-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:0.75rem;">
+            <label class="nm-label">Website / Portfolio URL</label>
+            <div class="nm-input-wrap">
+              <span class="material-symbols-outlined nm-input-icon">link</span>
+              <input id="inp-website" type="url" placeholder="https://yourportfolio.com">
+            </div>
+          </div>
+
+          <!-- Social links -->
+          <div style="margin-bottom:0.85rem;">
+            <label class="nm-label">Social Profiles <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.35rem;">
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                <div class="social-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>
+                </div>
+                <div class="nm-input-wrap" style="flex:1;">
+                  <input type="text" placeholder="instagram.com/yourhandle">
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                <div class="social-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>
+                </div>
+                <div class="nm-input-wrap" style="flex:1;">
+                  <input type="text" placeholder="facebook.com/yourpage">
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                <div class="social-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+                </div>
+                <div class="nm-input-wrap" style="flex:1;">
+                  <input type="text" placeholder="tiktok.com/@yourhandle">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.65rem;">
+            <button class="nm-btn-ghost" onclick="goStep(1)">
+              <span class="material-symbols-outlined" style="font-size:1rem;">arrow_back</span> Back
+            </button>
+            <button class="nm-btn-primary" onclick="goStep(3)">
+              Continue <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
+          </div>
         </div>
-        <button onclick="addService()" style="
-          display:inline-flex;align-items:center;gap:0.4rem;
-          padding:0.6rem 1.25rem;border-radius:0.65rem;border:1px solid rgba(0,219,233,0.4);
-          background:rgba(0,219,233,0.07);color:#00dbe9;
-          font-size:0.88rem;font-weight:700;cursor:pointer;
-          font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;
-        " onmouseover="this.style.background='rgba(0,219,233,0.14)'" onmouseout="this.style.background='rgba(0,219,233,0.07)'">
-          <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Service
-        </button>
-      </div>
 
-      <!-- Services list -->
-      <div class="space-y-2 mb-8" id="services-list">
-        <!-- populated by JS -->
-      </div>
-      <p id="services-empty" style="font-size:0.9rem;color:#475569;text-align:center;padding:1.5rem 0;">No services added yet. Add at least one to continue.</p>
+        <!-- ══ STEP 3 — PORTFOLIO ══════════════════════════════ -->
+        <div class="step-panel" id="step-3">
+          <p class="step-title">Portfolio</p>
+          <p class="step-sub">Upload up to 12 photos or videos · JPG · PNG · MP4 · MOV · Max 50 MB each</p>
 
-      <div class="flex gap-3">
-        <button class="cc-btn-ghost" style="width:auto;padding:0.9rem 1.5rem;" onclick="goStep(3)">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_back</span> Back
-        </button>
-        <button class="cc-btn-primary" onclick="goStep(5)">
-          Continue <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span>
-        </button>
-      </div>
-    </div>
+          <!-- Drop zone -->
+          <div class="nm-drop-zone" style="margin-bottom:0.75rem;"
+            onclick="document.getElementById('portfolio-file').click()"
+            ondragover="event.preventDefault();this.classList.add('drag-over')"
+            ondragleave="this.classList.remove('drag-over')"
+            ondrop="handlePortfolioDrop(event)">
+            <span class="material-symbols-outlined" style="font-size:2rem;color:var(--nm-accent);opacity:0.8;">cloud_upload</span>
+            <p style="font-size:0.85rem;font-weight:700;color:var(--nm-text);">Drop files here or <span style="color:var(--nm-accent);">browse</span></p>
+            <p style="font-size:0.73rem;color:var(--nm-muted);">Drag & drop photos or videos</p>
+          </div>
+          <input type="file" id="portfolio-file" accept="image/*,video/*" multiple class="hidden" onchange="handlePortfolioFiles(this.files)">
 
-    <!-- ══════════════════════════════════════════════════════════
-         STEP 5 — LOCATIONS
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel glass-panel rounded-3xl p-8 md:p-10" id="step-5">
+          <!-- Thumbnail grid -->
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:0.5rem;" id="portfolio-grid"></div>
 
-      <h2 style="font-size:1.2rem;font-weight:800;color:#dce4e5;margin-bottom:0.35rem;">Work Locations</h2>
-      <p style="font-size:0.95rem;color:#849495;margin-bottom:2rem;">Add cities or regions where you're available to work. Clients will filter by location.</p>
+          <p style="font-size:0.72rem;color:var(--nm-muted);margin-bottom:0.85rem;">
+            <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;">info</span>
+            First item used as your profile cover.
+          </p>
 
-      <!-- Search + add -->
-      <div style="position:relative;margin-bottom:1rem;">
-        <span class="material-symbols-outlined" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">location_on</span>
-        <input id="loc-input" class="cc-input"
-          style="border:1px solid rgba(255,255,255,0.1);border-radius:0.75rem;padding:0.85rem 1rem 0.85rem 2.75rem;background:rgba(255,255,255,0.03);"
-          type="text" placeholder="Type a city or region and press Enter…"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();addLocation();}">
-        <!-- Suggestions dropdown -->
-        <div id="loc-suggestions" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;background:#161618;border:1px solid rgba(255,255,255,0.12);border-radius:0.75rem;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);"></div>
-      </div>
-
-      <!-- Quick-add popular cities -->
-      <div class="mb-6">
-        <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;margin-bottom:0.6rem;">Quick Add</p>
-        <div class="flex flex-wrap gap-2" id="quick-cities">
-          <button class="cat-chip" onclick="quickAddLoc('Los Angeles, CA')">Los Angeles</button>
-          <button class="cat-chip" onclick="quickAddLoc('New York, NY')">New York</button>
-          <button class="cat-chip" onclick="quickAddLoc('Chicago, IL')">Chicago</button>
-          <button class="cat-chip" onclick="quickAddLoc('Miami, FL')">Miami</button>
-          <button class="cat-chip" onclick="quickAddLoc('Austin, TX')">Austin</button>
-          <button class="cat-chip" onclick="quickAddLoc('Atlanta, GA')">Atlanta</button>
-          <button class="cat-chip" onclick="quickAddLoc('Las Vegas, NV')">Las Vegas</button>
-          <button class="cat-chip" onclick="quickAddLoc('London, UK')">London</button>
-          <button class="cat-chip" onclick="quickAddLoc('Toronto, CA')">Toronto</button>
-          <button class="cat-chip" onclick="quickAddLoc('Remote / Virtual')">Remote</button>
+          <div style="display:flex;gap:0.65rem;">
+            <button class="nm-btn-ghost" onclick="goStep(2)">
+              <span class="material-symbols-outlined" style="font-size:1rem;">arrow_back</span> Back
+            </button>
+            <button class="nm-btn-primary" onclick="goStep(4)">
+              Continue <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Travel willingness -->
-      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:1rem;padding:1rem 1.25rem;margin-bottom:1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-        <div>
-          <p style="font-size:0.92rem;font-weight:700;color:#dce4e5;">Willing to travel internationally</p>
-          <p style="font-size:0.82rem;color:#849495;margin-top:2px;">Additional travel fees may apply</p>
+        <!-- ══ STEP 4 — SERVICES ═══════════════════════════════ -->
+        <div class="step-panel" id="step-4">
+          <p class="step-title">Services & Rates</p>
+          <p class="step-sub">List what you offer so clients know what to book you for.</p>
+
+          <!-- Add service form -->
+          <div class="nm-inset">
+            <div style="display:grid;grid-template-columns:1fr auto;gap:0.55rem;margin-bottom:0.5rem;">
+              <div>
+                <label class="nm-label">Service Name</label>
+                <div class="nm-input-wrap">
+                  <input id="svc-name" type="text" placeholder="e.g. Full-Day Video Shoot" maxlength="60">
+                </div>
+              </div>
+              <div>
+                <label class="nm-label">Rate ($)</label>
+                <div class="nm-input-wrap" style="width:6rem;">
+                  <input id="svc-price" type="number" min="0" placeholder="0" style="width:100%;">
+                </div>
+              </div>
+            </div>
+            <div style="margin-bottom:0.5rem;">
+              <label class="nm-label">Pricing Unit</label>
+              <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.3rem;" id="svc-unit-chips">
+                <button class="nm-chip selected" data-unit="per day" onclick="selectUnit(this)">per day</button>
+                <button class="nm-chip" data-unit="per hour" onclick="selectUnit(this)">per hour</button>
+                <button class="nm-chip" data-unit="per project" onclick="selectUnit(this)">per project</button>
+                <button class="nm-chip" data-unit="per event" onclick="selectUnit(this)">per event</button>
+                <button class="nm-chip" data-unit="custom" onclick="selectUnit(this)">custom</button>
+              </div>
+            </div>
+            <div style="margin-bottom:0.55rem;">
+              <label class="nm-label">Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+              <div class="nm-input-wrap">
+                <input id="svc-desc" type="text" placeholder="What's included…" maxlength="120">
+              </div>
+            </div>
+            <button class="nm-btn-add" onclick="addService()">
+              <span class="material-symbols-outlined" style="font-size:0.95rem;">add</span> Add Service
+            </button>
+          </div>
+
+          <!-- Services list -->
+          <div style="display:flex;flex-direction:column;gap:0.45rem;margin-bottom:0.55rem;" id="services-list"></div>
+          <p id="services-empty" style="font-size:0.82rem;color:var(--nm-muted);text-align:center;padding:0.5rem 0;">No services added yet.</p>
+
+          <div style="display:flex;gap:0.65rem;">
+            <button class="nm-btn-ghost" onclick="goStep(3)">
+              <span class="material-symbols-outlined" style="font-size:1rem;">arrow_back</span> Back
+            </button>
+            <button class="nm-btn-primary" onclick="goStep(5)">
+              Continue <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
+          </div>
         </div>
-        <button id="travel-toggle" onclick="toggleTravel()" role="switch" aria-checked="false"
-          style="width:3rem;height:1.75rem;border-radius:999px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);position:relative;cursor:pointer;transition:all 0.25s;flex-shrink:0;">
-          <span id="travel-thumb" style="position:absolute;top:3px;left:3px;width:1.25rem;height:1.25rem;border-radius:50%;background:#849495;transition:all 0.25s;"></span>
-        </button>
-      </div>
 
-      <!-- Location tags -->
-      <div class="flex flex-wrap gap-2 mb-8 min-h-[2.5rem]" id="loc-tags"></div>
-      <p id="loc-empty" style="font-size:0.9rem;color:#475569;text-align:center;padding:1rem 0;">No locations added yet.</p>
+        <!-- ══ STEP 5 — LOCATIONS ══════════════════════════════ -->
+        <div class="step-panel" id="step-5">
+          <p class="step-title">Work Locations</p>
+          <p class="step-sub">Add cities or regions where you're available. Clients filter by location.</p>
 
-      <div class="flex gap-3">
-        <button class="cc-btn-ghost" style="width:auto;padding:0.9rem 1.5rem;" onclick="goStep(4)">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_back</span> Back
-        </button>
-        <button class="cc-btn-primary" onclick="submitSetup()">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">check_circle</span> Complete Setup
-        </button>
-      </div>
-    </div>
+          <!-- Search input -->
+          <div style="position:relative;margin-bottom:0.65rem;">
+            <div class="nm-input-wrap">
+              <span class="material-symbols-outlined nm-input-icon">location_on</span>
+              <input id="loc-input" type="text" placeholder="Type a city and press Enter…"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addLocation();}">
+            </div>
+            <div id="loc-suggestions"></div>
+          </div>
 
-    <!-- ══════════════════════════════════════════════════════════
-         COMPLETE STATE
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="step-panel glass-panel rounded-3xl p-10 text-center" id="step-complete">
-      <div style="width:5rem;height:5rem;border-radius:50%;background:rgba(0,219,233,0.1);border:2px solid rgba(0,219,233,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
-        <span class="material-symbols-outlined" style="font-size:2.5rem;color:#00dbe9;">verified</span>
-      </div>
-      <h2 style="font-size:1.5rem;font-weight:800;color:#dce4e5;margin-bottom:0.5rem;">Profile Complete!</h2>
-      <p style="font-size:1rem;color:#849495;max-width:380px;margin:0 auto 2rem;">Your professional profile is live. Clients can now discover and book you on Camcrew Studio.</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="professional-profile.html" class="cc-btn-primary" style="width:auto;padding:0.9rem 2rem;">
-          <span class="material-symbols-outlined" style="font-size:1.1rem;">person</span> View My Profile
-        </a>
-        <a href="index.html" class="cc-btn-ghost" style="width:auto;padding:0.9rem 2rem;">
-          Go to Home
-        </a>
-      </div>
-    </div>
+          <!-- Quick add -->
+          <div style="margin-bottom:0.7rem;">
+            <label class="nm-label">Quick Add</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem;" id="quick-cities">
+              <button class="nm-chip" onclick="quickAddLoc('Los Angeles, CA')">Los Angeles</button>
+              <button class="nm-chip" onclick="quickAddLoc('New York, NY')">New York</button>
+              <button class="nm-chip" onclick="quickAddLoc('Chicago, IL')">Chicago</button>
+              <button class="nm-chip" onclick="quickAddLoc('Miami, FL')">Miami</button>
+              <button class="nm-chip" onclick="quickAddLoc('Austin, TX')">Austin</button>
+              <button class="nm-chip" onclick="quickAddLoc('Atlanta, GA')">Atlanta</button>
+              <button class="nm-chip" onclick="quickAddLoc('Las Vegas, NV')">Las Vegas</button>
+              <button class="nm-chip" onclick="quickAddLoc('London, UK')">London</button>
+              <button class="nm-chip" onclick="quickAddLoc('Toronto, CA')">Toronto</button>
+              <button class="nm-chip" onclick="quickAddLoc('Remote / Virtual')">Remote</button>
+            </div>
+          </div>
 
-  </div>
-</main>
+          <!-- Travel toggle -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:0.7rem;background:var(--nm-bg);border-radius:0.85rem;box-shadow:var(--nm-shadow-sm);padding:0.7rem 0.9rem;">
+            <div>
+              <p style="font-size:0.85rem;font-weight:700;color:var(--nm-text);">Willing to travel internationally</p>
+              <p style="font-size:0.72rem;color:var(--nm-muted);margin-top:1px;">Additional travel fees may apply</p>
+            </div>
+            <button id="travel-toggle" class="nm-toggle" onclick="toggleTravel()" role="switch" aria-checked="false">
+              <span id="travel-thumb" class="nm-toggle-thumb"></span>
+            </button>
+          </div>
+
+          <!-- Location tags -->
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;min-height:2rem;margin-bottom:0.7rem;" id="loc-tags"></div>
+          <p id="loc-empty" style="font-size:0.8rem;color:var(--nm-muted);padding:0.3rem 0;">No locations added yet.</p>
+
+          <div style="display:flex;gap:0.65rem;">
+            <button class="nm-btn-ghost" onclick="goStep(4)">
+              <span class="material-symbols-outlined" style="font-size:1rem;">arrow_back</span> Back
+            </button>
+            <button class="nm-btn-primary" onclick="submitSetup()">
+              <span class="material-symbols-outlined" style="font-size:1rem;">check_circle</span> Complete Setup
+            </button>
+          </div>
+        </div>
+
+        <!-- ══ COMPLETE ════════════════════════════════════════ -->
+        <div class="step-panel" id="step-complete" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;">
+          <div class="complete-ring">
+            <span class="material-symbols-outlined" style="font-size:2.2rem;color:var(--nm-accent);">verified</span>
+          </div>
+          <h2 style="font-size:1.3rem;font-weight:800;color:var(--nm-text);margin-bottom:0.4rem;">Profile Complete!</h2>
+          <p style="font-size:0.88rem;color:var(--nm-muted);max-width:320px;margin-bottom:1.5rem;line-height:1.5;">Your professional profile is live. Clients can now discover and book you on Camcrew Studio.</p>
+          <div style="display:flex;gap:0.65rem;flex-wrap:wrap;justify-content:center;">
+            <a href="professional-profile.html" class="nm-btn-primary" style="text-decoration:none;flex:unset;padding:0.7rem 1.5rem;">
+              <span class="material-symbols-outlined" style="font-size:1rem;">person</span> View My Profile
+            </a>
+            <a href="index.html" class="nm-btn-ghost" style="text-decoration:none;">Go to Home</a>
+          </div>
+        </div>
+
+      </div><!-- /step-panels -->
+    </div><!-- /nm-card -->
+  </div><!-- /nm-card-wrap -->
+</div><!-- /page-shell -->
 
 <!-- Toast -->
-<div id="toast" style="
-  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(1rem);
-  display:flex;align-items:center;gap:0.75rem;
-  background:rgba(22,22,24,0.95);border:1px solid rgba(0,219,233,0.3);
-  border-radius:999px;padding:0.75rem 1.5rem;
-  font-size:0.92rem;font-weight:600;color:#00dbe9;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  box-shadow:0 8px 28px rgba(0,0,0,0.5);
-  opacity:0;pointer-events:none;
-  transition:opacity 0.3s ease,transform 0.3s ease;z-index:200;">
-  <span class="material-symbols-outlined" id="toast-icon" style="font-size:1.1rem;">check_circle</span>
+<div id="toast">
+  <span class="material-symbols-outlined" id="toast-icon" style="font-size:1rem;">check_circle</span>
   <span id="toast-text">Saved</span>
 </div>
 
 <script>
-/* ── State ──────────────────────────────────────────────────────── */
+/* ── State ───────────────────────────────────────────────────────── */
 let currentStep = 1;
 const TOTAL = 5;
 let services   = [];
@@ -597,33 +860,33 @@ let mediaFiles = [];
 let travelIntl = false;
 let selectedUnit = 'per day';
 
-/* ── Step navigation ────────────────────────────────────────────── */
+/* ── Step navigation ─────────────────────────────────────────────── */
 function goStep(n) {
   document.getElementById(`step-${currentStep}`).classList.remove('active');
 
-  // Mark dots
   for (let i = 1; i <= TOTAL; i++) {
     const dot  = document.getElementById(`dot-${i}`);
     const line = document.getElementById(`line-${i}`);
+    const lbl  = document.getElementById(`lbl-${i}`);
     dot.classList.remove('active','done');
     if (line) line.classList.remove('done');
-    if (i < n)      { dot.classList.add('done'); if (line) line.classList.add('done'); }
-    else if (i === n) dot.classList.add('active');
+    if (lbl)  lbl.classList.remove('active-label');
+    if (i < n)        { dot.classList.add('done');   if (line) line.classList.add('done'); }
+    else if (i === n) { dot.classList.add('active'); if (lbl) lbl.classList.add('active-label'); }
   }
 
   currentStep = n;
   document.getElementById(`step-${n}`).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── Char counter ───────────────────────────────────────────────── */
+/* ── Char counter ────────────────────────────────────────────────── */
 function updateCharCount(el, countId, max) {
   const el2 = document.getElementById(countId);
   el2.textContent = `${el.value.length} / ${max}`;
   el2.classList.toggle('warn', el.value.length > max * 0.9);
 }
 
-/* ── Avatar upload ──────────────────────────────────────────────── */
+/* ── Avatar upload ───────────────────────────────────────────────── */
 document.getElementById('avatar-file').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
@@ -635,14 +898,14 @@ document.getElementById('avatar-file').addEventListener('change', function() {
   placeholder.style.display = 'none';
 });
 
-/* ── Category chips ─────────────────────────────────────────────── */
+/* ── Category chips ──────────────────────────────────────────────── */
 document.getElementById('cat-chips').addEventListener('click', e => {
-  const btn = e.target.closest('.cat-chip');
+  const btn = e.target.closest('.nm-chip');
   if (!btn) return;
   btn.classList.toggle('selected');
 });
 
-/* ── Portfolio ──────────────────────────────────────────────────── */
+/* ── Portfolio ───────────────────────────────────────────────────── */
 function handlePortfolioFiles(files) {
   const grid = document.getElementById('portfolio-grid');
   Array.from(files).forEach(file => {
@@ -659,10 +922,10 @@ function handlePortfolioFiles(files) {
       ? `<video src="${url}" muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`
       : `<img src="${url}" alt="portfolio item">`;
     thumb.innerHTML += `<button class="remove-btn" onclick="removeMedia(${id},this.closest('.media-thumb'))">
-      <span class="material-symbols-outlined" style="font-size:0.85rem;">close</span></button>`;
+      <span class="material-symbols-outlined" style="font-size:0.75rem;">close</span></button>`;
     if (isVideo) {
       const badge = document.createElement('div');
-      badge.style.cssText = 'position:absolute;bottom:0.4rem;left:0.4rem;background:rgba(0,0,0,0.7);border-radius:0.35rem;padding:1px 5px;font-size:0.65rem;font-weight:700;color:#fff;';
+      badge.style.cssText = 'position:absolute;bottom:0.3rem;left:0.3rem;background:rgba(0,0,0,0.7);border-radius:0.3rem;padding:1px 4px;font-size:0.6rem;font-weight:800;color:#fff;';
       badge.textContent = 'VIDEO';
       thumb.appendChild(badge);
     }
@@ -672,7 +935,8 @@ function handlePortfolioFiles(files) {
 
 function handlePortfolioDrop(e) {
   e.preventDefault();
-  document.getElementById('portfolio-drop-zone').classList.remove('drag-over');
+  document.getElementById('portfolio-drop-zone')?.classList.remove('drag-over');
+  e.currentTarget.classList.remove('drag-over');
   handlePortfolioFiles(e.dataTransfer.files);
 }
 
@@ -681,9 +945,9 @@ function removeMedia(id, el) {
   el.remove();
 }
 
-/* ── Services ───────────────────────────────────────────────────── */
+/* ── Services ────────────────────────────────────────────────────── */
 function selectUnit(btn) {
-  document.querySelectorAll('#svc-unit-chips .cat-chip').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#svc-unit-chips .nm-chip').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedUnit = btn.dataset.unit;
 }
@@ -692,13 +956,12 @@ function addService() {
   const name  = document.getElementById('svc-name').value.trim();
   const price = document.getElementById('svc-price').value.trim();
   const desc  = document.getElementById('svc-desc').value.trim();
-  if (!name) { showToast('Enter a service name','error','#ffb4ab'); return; }
+  if (!name)  { showToast('Enter a service name','error','#ffb4ab'); return; }
   if (!price) { showToast('Enter a rate','error','#ffb4ab'); return; }
 
   const id = Date.now();
   services.push({ id, name, price, unit: selectedUnit, desc });
   renderServices();
-
   document.getElementById('svc-name').value  = '';
   document.getElementById('svc-price').value = '';
   document.getElementById('svc-desc').value  = '';
@@ -720,22 +983,22 @@ function renderServices() {
     el.className = 'service-item';
     el.innerHTML = `
       <div>
-        <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;">${esc(s.name)}</p>
-        ${s.desc ? `<p style="font-size:0.8rem;color:#849495;margin-top:2px;">${esc(s.desc)}</p>` : ''}
+        <p style="font-size:0.88rem;font-weight:700;color:var(--nm-text);">${esc(s.name)}</p>
+        ${s.desc ? `<p style="font-size:0.73rem;color:var(--nm-muted);margin-top:1px;">${esc(s.desc)}</p>` : ''}
       </div>
       <div style="text-align:right;flex-shrink:0;">
-        <p style="font-size:0.95rem;font-weight:800;color:#00dbe9;">$${Number(s.price).toLocaleString()}</p>
-        <p style="font-size:0.72rem;color:#849495;">${esc(s.unit)}</p>
+        <p style="font-size:0.9rem;font-weight:800;color:var(--nm-accent);">$${Number(s.price).toLocaleString()}</p>
+        <p style="font-size:0.68rem;color:var(--nm-muted);">${esc(s.unit)}</p>
       </div>
-      <button onclick="removeService(${s.id})" style="background:none;border:none;cursor:pointer;color:#475569;display:flex;align-items:center;transition:color 0.15s;flex-shrink:0;"
-        onmouseover="this.style.color='#ffb4ab'" onmouseout="this.style.color='#475569'">
-        <span class="material-symbols-outlined" style="font-size:1.1rem;">delete</span>
+      <button onclick="removeService(${s.id})" style="background:none;border:none;cursor:pointer;color:var(--nm-muted);display:flex;align-items:center;transition:color 0.15s;"
+        onmouseover="this.style.color='#ffb4ab'" onmouseout="this.style.color='var(--nm-muted)'">
+        <span class="material-symbols-outlined" style="font-size:1rem;">delete</span>
       </button>`;
     list.appendChild(el);
   });
 }
 
-/* ── Locations ──────────────────────────────────────────────────── */
+/* ── Locations ───────────────────────────────────────────────────── */
 const CITY_SUGGESTIONS = [
   'Los Angeles, CA','New York, NY','Chicago, IL','Houston, TX','Phoenix, AZ',
   'Philadelphia, PA','San Antonio, TX','San Diego, CA','Dallas, TX','San Jose, CA',
@@ -755,14 +1018,14 @@ const locSugg  = document.getElementById('loc-suggestions');
 locInput.addEventListener('input', () => {
   const q = locInput.value.trim().toLowerCase();
   if (!q) { locSugg.style.display = 'none'; return; }
-  const matches = CITY_SUGGESTIONS.filter(c => c.toLowerCase().includes(q) && !locations.includes(c)).slice(0, 6);
+  const matches = CITY_SUGGESTIONS.filter(c => c.toLowerCase().includes(q) && !locations.includes(c)).slice(0,6);
   if (!matches.length) { locSugg.style.display = 'none'; return; }
   locSugg.innerHTML = matches.map(c =>
     `<button onclick="pickSuggestion('${c.replace(/'/g,"\\'")}');return false;"
-      style="display:block;width:100%;text-align:left;padding:0.7rem 1rem;font-size:0.92rem;font-weight:500;
-        color:#dce4e5;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.15s;"
-      onmouseover="this.style.background='rgba(0,219,233,0.08)'" onmouseout="this.style.background='none'">
-      <span class="material-symbols-outlined" style="font-size:0.95rem;vertical-align:middle;color:#849495;margin-right:6px;">location_on</span>${c}
+      style="display:block;width:100%;text-align:left;padding:0.6rem 0.9rem;font-size:0.88rem;font-weight:500;
+        color:var(--nm-text);background:none;border:none;cursor:pointer;font-family:inherit;transition:background 0.1s;"
+      onmouseover="this.style.background='rgba(0,219,233,0.07)'" onmouseout="this.style.background='none'">
+      <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;color:var(--nm-muted);margin-right:5px;">location_on</span>${c}
     </button>`).join('');
   locSugg.style.display = 'block';
 });
@@ -785,9 +1048,7 @@ function addLocation() {
   locSugg.style.display = 'none';
 }
 
-function quickAddLoc(city) {
-  addLocTag(city);
-}
+function quickAddLoc(city) { addLocTag(city); }
 
 function addLocTag(city) {
   if (locations.includes(city)) { showToast('Already added','info','#849495'); return; }
@@ -809,135 +1070,85 @@ function renderLocations() {
     const tag = document.createElement('div');
     tag.className = 'loc-tag';
     tag.innerHTML = `
-      <span class="material-symbols-outlined" style="font-size:0.9rem;">location_on</span>
+      <span class="material-symbols-outlined" style="font-size:0.8rem;">location_on</span>
       ${esc(loc)}
       <button onclick="removeLocation('${loc.replace(/'/g,"\\'")}')">
-        <span class="material-symbols-outlined" style="font-size:0.9rem;">close</span>
+        <span class="material-symbols-outlined" style="font-size:0.8rem;">close</span>
       </button>`;
     wrap.appendChild(tag);
   });
 }
 
-/* ── Travel toggle ──────────────────────────────────────────────── */
+/* ── Travel toggle ───────────────────────────────────────────────── */
 function toggleTravel() {
   travelIntl = !travelIntl;
-  const thumb = document.getElementById('travel-thumb');
-  const btn   = document.getElementById('travel-toggle');
-  if (travelIntl) {
-    btn.style.background = 'rgba(0,219,233,0.2)';
-    btn.style.borderColor = '#00dbe9';
-    thumb.style.background = '#00dbe9';
-    thumb.style.left = 'calc(100% - 1.5rem)';
-  } else {
-    btn.style.background = 'rgba(255,255,255,0.1)';
-    btn.style.borderColor = 'rgba(255,255,255,0.15)';
-    thumb.style.background = '#849495';
-    thumb.style.left = '3px';
-  }
+  const btn = document.getElementById('travel-toggle');
+  btn.classList.toggle('on', travelIntl);
+  btn.setAttribute('aria-checked', travelIntl);
 }
 
-/* ── Submit ─────────────────────────────────────────────────────── */
+/* ── Submit ──────────────────────────────────────────────────────── */
 async function submitSetup() {
   const name  = document.getElementById('inp-name').value.trim();
   const email = document.getElementById('inp-email').value.trim();
   if (!name)  { showToast('Please enter your name first','error','#ffb4ab'); goStep(1); return; }
   if (!email) { showToast('Email not loaded — please sign in again','error','#ffb4ab'); return; }
 
-  const submitBtn = document.querySelector('#step-5 .cc-btn-primary');
+  const submitBtn = document.querySelector('#step-5 .nm-btn-primary');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem;animation:spin 0.8s linear infinite;">progress_activity</span> Saving…`;
+  submitBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1rem;animation:spin 0.8s linear infinite;">progress_activity</span> Saving…`;
 
-  // Collect all selected categories
-  const selectedCats = Array.from(document.querySelectorAll('#cat-chips .cat-chip.selected'))
-    .map(b => b.dataset.cat);
-
-  // Collect social links
-  const socialInputs = document.querySelectorAll('.social-row input');
+  const selectedCats = Array.from(document.querySelectorAll('#cat-chips .nm-chip.selected')).map(b => b.dataset.cat);
+  const socialInputs = document.querySelectorAll('.nm-input-wrap input[type=text]');
   const socials = {
     instagram: socialInputs[0] ? socialInputs[0].value.trim() : '',
     facebook:  socialInputs[1] ? socialInputs[1].value.trim() : '',
     tiktok:    socialInputs[2] ? socialInputs[2].value.trim() : '',
   };
+  const portfolioItems = mediaFiles.map(m => ({ url: m.url, type: m.isVideo ? 'video' : 'image', name: m.file ? m.file.name : '' }));
 
-  // Build portfolio items list (URL + type) from blob URLs
-  const portfolioItems = mediaFiles.map(m => ({
-    url:  m.url,
-    type: m.isVideo ? 'video' : 'image',
-    name: m.file ? m.file.name : '',
-  }));
-
-  // Build the profile data object
   const proData = {
-    name,
-    title:      document.getElementById('inp-title').value.trim(),
-    categories: selectedCats,
-    bio:        document.getElementById('inp-bio').value.trim(),
-    phone:      document.getElementById('inp-phone').value.trim(),
-    website:    document.getElementById('inp-website').value.trim(),
-    socials,
-    portfolio:  portfolioItems,
-    services,
-    locations,
-    travelIntl,
-    savedAt:    new Date().toISOString(),
+    name, title: document.getElementById('inp-title').value.trim(),
+    categories: selectedCats, bio: document.getElementById('inp-bio').value.trim(),
+    phone: document.getElementById('inp-phone').value.trim(),
+    website: document.getElementById('inp-website').value.trim(),
+    socials, portfolio: portfolioItems, services, locations, travelIntl,
+    savedAt: new Date().toISOString(),
   };
 
-  // Persist to localStorage so the profile page can read it
-  try {
-    localStorage.setItem('cc_pro_profile', JSON.stringify(proData));
-  } catch(_) {}
+  try { localStorage.setItem('cc_pro_profile', JSON.stringify(proData)); } catch(_) {}
 
   try {
-    const payload = {
-      display_name: name,
-      bio: document.getElementById('inp-bio').value.trim(),
-      phone: document.getElementById('inp-phone').value.trim(),
-      website: document.getElementById('inp-website').value.trim(),
-      services,
-      locations,
-      travel_international: travelIntl,
-    };
     const res  = await fetch('/api/profile', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ display_name: name, bio: proData.bio, phone: proData.phone, website: proData.website, services, locations, travel_international: travelIntl }),
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.error || 'Save failed');
-  } catch (_) {
-    // Continue to success even if API not wired — UI demo
-  }
+  } catch(_) {}
 
   document.getElementById('step-5').classList.remove('active');
   document.getElementById('step-progress').style.display = 'none';
-  document.querySelectorAll('.step-dot, .step-line').forEach(el => {
-    el.classList.remove('active');
-    if (el.classList.contains('step-dot')) el.classList.add('done');
-    if (el.classList.contains('step-line')) el.classList.add('done');
-  });
+  document.getElementById('step-complete').style.display = 'flex';
   document.getElementById('step-complete').classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── Load email from session ────────────────────────────────────── */
+/* ── Load email ──────────────────────────────────────────────────── */
 (async () => {
   try {
     const res  = await fetch('/api/me');
     const data = await res.json();
-    if (data.ok) {
-      document.getElementById('inp-email').value = data.user.email;
-    }
-  } catch (_) {}
+    if (data.ok) document.getElementById('inp-email').value = data.user.email;
+  } catch(_) {}
 })();
 
-/* ── Toast helper ───────────────────────────────────────────────── */
+/* ── Toast ───────────────────────────────────────────────────────── */
 function showToast(msg, icon, color) {
   const t = document.getElementById('toast');
   document.getElementById('toast-text').textContent = msg;
   document.getElementById('toast-icon').textContent = icon;
   document.getElementById('toast-icon').style.color = color;
   t.style.color = color;
-  t.style.borderColor = color + '55';
   t.style.opacity = '1';
   t.style.transform = 'translateX(-50%) translateY(0)';
   clearTimeout(t._timer);
@@ -947,15 +1158,10 @@ function showToast(msg, icon, color) {
   }, 2500);
 }
 
-/* ── Util ───────────────────────────────────────────────────────── */
+/* ── Util ────────────────────────────────────────────────────────── */
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-/* ── Spin keyframe for loading ──────────────────────────────────── */
-const spinStyle = document.createElement('style');
-spinStyle.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
-document.head.appendChild(spinStyle);
 </script>
 
 <script src="footer-loader.js"></script>
