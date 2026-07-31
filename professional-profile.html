@@ -244,12 +244,6 @@
   .mobile-tab.active { color:var(--ac); box-shadow: var(--ni-s); }
   .mobile-tab .material-symbols-outlined { font-size:0.95rem; }
 
-  /* ── Close button ── */
-  #close-btn {
-    background:var(--nb) !important; box-shadow: var(--nr-s) !important; border:none !important;
-  }
-  #close-btn:hover { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl) !important; color:#dce4e5 !important; }
-  #close-btn:active { box-shadow: var(--ni-s) !important; }
 
   /* ── File Vault ── */
   .file-item {
@@ -416,9 +410,6 @@
   html.light .modal-overlay { background:rgba(0,0,0,0.45); }
   html.light .modal-box { border-color:rgba(0,0,0,0.08); box-shadow:0 24px 64px rgba(0,0,0,0.18); }
 
-  /* Close btn */
-  html.light #close-btn { color:#5a7475 !important; }
-
   /* Avatar label */
   html.light #sb-avatar { color:#001f22 !important; }
 
@@ -454,27 +445,6 @@
 </head>
 <body class="min-h-screen flex flex-col font-body-md antialiased" style="background:#141414;">
 
-<!-- Top-right fixed controls -->
-<div style="position:fixed;top:1.1rem;right:1.25rem;z-index:500;display:flex;align-items:center;gap:0.5rem;">
-  <button onclick="toggleTheme()" title="Toggle light/dark theme"
-    id="global-theme-btn"
-    style="width:2.4rem;height:2.4rem;border-radius:50%;
-           display:flex;align-items:center;justify-content:center;
-           color:#849495;cursor:pointer;transition:all 0.18s;
-           background:var(--nb);border:none;box-shadow:var(--nr-s);"
-    onmouseover="this.style.color='#dce4e5'" onmouseout="this.style.color='#849495'">
-    <span class="material-symbols-outlined theme-icon-mobile" style="font-size:1.2rem;">light_mode</span>
-  </button>
-  <button onclick="history.length > 1 ? history.back() : window.location.href='index.html'"
-    id="close-btn" title="Close"
-    style="width:2.4rem;height:2.4rem;border-radius:50%;
-           display:flex;align-items:center;justify-content:center;
-           color:#849495;cursor:pointer;transition:all 0.18s;"
-    onmouseover="this.style.color='#dce4e5'"
-    onmouseout="this.style.color='#849495'">
-    <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
-  </button>
-</div>
 
 <!-- Auth Gate -->
 <div id="auth-gate" style="display:none" class="flex-1 flex items-center justify-center px-4">
@@ -615,9 +585,25 @@
 
     <div class="cp-content">
 
+      <!-- ═══ STICKY CONTENT HEADER ═════════════════════════════════ -->
+      <div id="cp-hdr" style="position:sticky;top:0;z-index:90;background:var(--nb);
+                               display:flex;align-items:center;justify-content:space-between;
+                               gap:1rem;padding-bottom:1rem;margin-bottom:0.25rem;">
+        <p id="cp-hdr-title" class="sec-title" style="margin:0;">Overview</p>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;flex-wrap:nowrap;">
+          <div id="cp-hdr-actions" style="display:flex;align-items:center;gap:0.5rem;"></div>
+          <button class="btn-sm btn-sm-ghost" onclick="toggleTheme()" title="Toggle theme">
+            <span class="material-symbols-outlined theme-icon-mobile" style="font-size:1rem;">light_mode</span>
+          </button>
+          <button id="close-btn" class="btn-sm btn-sm-ghost" title="Close"
+            onclick="history.length>1?history.back():window.location.href='index.html'">
+            <span class="material-symbols-outlined" style="font-size:1rem;">close</span>
+          </button>
+        </div>
+      </div>
+
       <!-- ═══ OVERVIEW ══════════════════════════════════════════════ -->
       <div id="sec-overview">
-        <p class="sec-title">Welcome back, <span id="ov-name">…</span> 👋</p>
         <p class="sec-sub">Your professional dashboard — manage work, clients, and deliverables.</p>
 
         <!-- Stats -->
@@ -672,48 +658,24 @@
 
       <!-- ═══ CLIENT REQUESTS ════════════════════════════════════════ -->
       <div id="sec-requests" class="hidden">
-        <div class="flex items-center justify-between mb-1">
-          <p class="sec-title" style="margin:0">Client Requests</p>
-          <div style="display:flex;gap:0.5rem;">
-            <select id="req-filter" class="fi" style="width:auto;padding:0.4rem 0.7rem;font-size:0.8rem;" onchange="renderRequests()">
-              <option value="all">All</option>
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="declined">Declined</option>
-            </select>
-          </div>
-        </div>
         <p class="sec-sub">Incoming booking requests from clients. Accept or decline each request.</p>
         <div id="requests-list"></div>
       </div>
 
       <!-- ═══ MY JOBS ════════════════════════════════════════════════ -->
       <div id="sec-jobs" class="hidden">
-        <div class="flex items-center justify-between mb-1">
-          <p class="sec-title" style="margin:0">My Jobs</p>
-          <button onclick="openAddJobModal()" class="btn-sm btn-sm-cyan">
-            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Job
-          </button>
-        </div>
         <p class="sec-sub">Active and completed jobs you've been booked for.</p>
         <div id="jobs-list"></div>
       </div>
 
       <!-- ═══ RENTALS ════════════════════════════════════════════════ -->
       <div id="sec-rentals" class="hidden">
-        <div class="flex items-center justify-between mb-1">
-          <p class="sec-title" style="margin:0">Rentals</p>
-          <button onclick="openAddRentalModal()" class="btn-sm btn-sm-cyan">
-            <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Log Rental
-          </button>
-        </div>
         <p class="sec-sub">Equipment rentals — gear you've rented in for jobs.</p>
         <div id="rentals-list"></div>
       </div>
 
       <!-- ═══ JOB TRACKING ═══════════════════════════════════════════ -->
       <div id="sec-tracking" class="hidden">
-        <p class="sec-title">Job Tracking</p>
         <p class="sec-sub">Track the status of active jobs and rental shipments in real-time.</p>
         <div id="tracking-selector" class="mb-6"></div>
         <div id="tracking-timeline"></div>
@@ -721,20 +683,6 @@
 
       <!-- ═══ FILE VAULT ═════════════════════════════════════════════ -->
       <div id="sec-vault" class="hidden">
-        <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
-          <p class="sec-title" style="margin:0">File Vault</p>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            <button onclick="openNewFolderModal()" class="btn-sm btn-sm-ghost">
-              <span class="material-symbols-outlined" style="font-size:1rem;">create_new_folder</span> New Folder
-            </button>
-            <button onclick="document.getElementById('vault-upload-input').click()" class="btn-sm btn-sm-cyan">
-              <span class="material-symbols-outlined" style="font-size:1rem;">upload</span> Upload
-            </button>
-            <button onclick="toggleVaultView()" id="vault-view-btn" class="btn-sm btn-sm-ghost" title="Toggle view">
-              <span class="material-symbols-outlined" style="font-size:1rem;" id="vault-view-icon">view_list</span>
-            </button>
-          </div>
-        </div>
         <p class="sec-sub">Store and share deliverables with clients. Generate shareable links for any file.</p>
 
         <input type="file" id="vault-upload-input" multiple class="hidden" onchange="handleVaultUpload(this.files)">
@@ -771,7 +719,6 @@
 
       <!-- ═══ EARNINGS ═══════════════════════════════════════════════ -->
       <div id="sec-earnings" class="hidden">
-        <p class="sec-title">Earnings</p>
         <p class="sec-sub">Your payment history, pending payouts, and completed transactions.</p>
 
         <!-- Summary cards -->
@@ -797,7 +744,6 @@
 
       <!-- ═══ ACCOUNT ════════════════════════════════════════════════ -->
       <div id="sec-account" class="hidden">
-        <p class="sec-title">Account Settings</p>
         <p class="sec-sub">Manage your professional account details and security.</p>
         <div class="data-card max-w-lg" style="display:flex;flex-direction:column;gap:1.1rem;">
           <div>
@@ -1113,11 +1059,62 @@ function closeModal(id, e) {
 // ════════════════════════════════════════════════════════════════════
 // Navigation
 // ════════════════════════════════════════════════════════════════════
+const SECTION_CFG = {
+  overview: {
+    title: () => `Welcome back, <span id="ov-name">…</span> 👋`,
+    actions: ''
+  },
+  requests: {
+    title: () => 'Client Requests',
+    actions: `<select id="req-filter" class="fi" style="width:auto;padding:0.4rem 0.7rem;font-size:0.8rem;" onchange="renderRequests()">
+      <option value="all">All</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="declined">Declined</option>
+    </select>`
+  },
+  jobs: {
+    title: () => 'My Jobs',
+    actions: `<button onclick="openAddJobModal()" class="btn-sm btn-sm-cyan">
+      <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Job
+    </button>`
+  },
+  rentals: {
+    title: () => 'Rentals',
+    actions: `<button onclick="openAddRentalModal()" class="btn-sm btn-sm-cyan">
+      <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Log Rental
+    </button>`
+  },
+  tracking: { title: () => 'Job Tracking', actions: '' },
+  vault: {
+    title: () => 'File Vault',
+    actions: `<button onclick="openNewFolderModal()" class="btn-sm btn-sm-ghost">
+        <span class="material-symbols-outlined" style="font-size:1rem;">create_new_folder</span> New Folder
+      </button>
+      <button onclick="document.getElementById('vault-upload-input').click()" class="btn-sm btn-sm-cyan">
+        <span class="material-symbols-outlined" style="font-size:1rem;">upload</span> Upload
+      </button>
+      <button onclick="toggleVaultView()" id="vault-view-btn" class="btn-sm btn-sm-ghost" title="Toggle view">
+        <span class="material-symbols-outlined" style="font-size:1rem;" id="vault-view-icon">view_list</span>
+      </button>`
+  },
+  earnings: { title: () => 'Earnings', actions: '' },
+  account:  { title: () => 'Account Settings', actions: '' },
+};
+
 function showSection(name) {
   document.querySelectorAll('[id^="sec-"]').forEach(el => el.classList.add('hidden'));
   document.getElementById('sec-' + name)?.classList.remove('hidden');
   document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.section === name));
   document.querySelectorAll('.mobile-tab').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+
+  // Update sticky header
+  const cfg = SECTION_CFG[name];
+  if (cfg) {
+    document.getElementById('cp-hdr-title').innerHTML = cfg.title();
+    document.getElementById('cp-hdr-actions').innerHTML = cfg.actions;
+  }
+
   const loaders = {
     overview: loadOverview,
     requests: loadRequests,
@@ -1837,16 +1834,6 @@ function applyTheme(theme) {
   const logoSrc = isLight ? LOGO_LIGHT : LOGO_DARK;
   document.querySelectorAll('.site-logo').forEach(img => img.src = logoSrc);
 
-  // Fix hover handlers for global-theme-btn close-btn in light mode
-  const hoverText = isLight ? '#0f1e1f' : '#dce4e5';
-  const restText  = isLight ? '#3a5455' : '#849495';
-  ['global-theme-btn', 'close-btn'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.style.color = restText;
-    el.onmouseover = () => el.style.color = hoverText;
-    el.onmouseout  = () => el.style.color = restText;
-  });
 }
 
 function toggleTheme() {
