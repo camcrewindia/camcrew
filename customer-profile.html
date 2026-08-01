@@ -874,6 +874,19 @@
   </div>
 </div>
 
+<!-- Order Tracking Modal -->
+<div id="modal-tracking" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="track-modal-title">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:520px;">
+    <div class="flex items-center justify-between mb-5">
+      <h3 id="track-modal-title" style="color:#dce4e5;font-weight:700;font-size:1.1rem;">Order Tracking</h3>
+      <button id="track-modal-close" onclick="closeTrackModal()" class="modal-close-btn" aria-label="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div id="track-modal-body"></div>
+  </div>
+</div>
+
 <!-- Request Refund Modal -->
 <div id="modal-refund" class="modal-overlay" onclick="closeModal('modal-refund',event)">
   <div class="modal-box" onclick="event.stopPropagation()">
@@ -1023,7 +1036,7 @@ async function loadOrders() {
         <span style="color:#dce4e5;font-weight:900;">Total: ${fmt_inr(o.total_amount)}</span>
         <div class="flex gap-2 flex-wrap">
           ${o.tracking_number && o.status !== 'cancelled' ? `
-            <button class="btn-sm btn-sm-cyan" onclick="goTrack(${o.id})">
+            <button class="btn-sm btn-sm-cyan" id="track-btn-${o.id}" onclick="openTrackModal(${o.id})">
               <span class="material-symbols-outlined" style="font-size:0.95rem;">local_shipping</span> Track
             </button>` : ''}
           ${['processing','confirmed'].includes(o.status) ? `
@@ -1047,6 +1060,138 @@ async function cancelOrder(id) {
   else showToast(data.error || 'Failed to cancel.', true);
 }
 
+// ── Track modal ──────────────────────────────────────────────────────
+let _trackLastFocus = null;
+
+function openTrackModal(orderId) {
+  _trackLastFocus = document.getElementById('track-btn-' + orderId) || document.activeElement;
+  const modal = document.getElementById('modal-tracking');
+  const body  = document.getElementById('track-modal-body');
+
+  // Loading state
+  body.innerHTML = `
+    <div class="flex flex-col items-center gap-4 py-8">
+      <span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--ac);animation:spin 1s linear infinite;">progress_activity</span>
+      <p style="color:#849495;font-size:0.88rem;">Loading tracking information…</p>
+    </div>`;
+  modal.classList.add('open');
+
+  // Move focus into modal
+  const closeBtn = document.getElementById('track-modal-close');
+  if (closeBtn) closeBtn.focus();
+
+  // Fetch from API
+  fetch(`/api/customer/orders/${orderId}/track`, { credentials: 'include' })
+    .then(res => {
+      if (res.status === 401) throw Object.assign(new Error('auth'), { status: 401 });
+      if (res.status === 404) throw Object.assign(new Error('notfound'), { status: 404 });
+      if (!res.ok) throw new Error('unknown');
+      return res.json();
+    })
+    .then(data => {
+      if (!data.ok) throw new Error('unknown');
+      renderTrackModal(data.tracking);
+    })
+    .catch(err => {
+      let msg = 'Unable to load tracking information.<br>Please try again.';
+      if (err.status === 401) msg = 'Please sign in again.';
+      if (err.status === 404) msg = 'Tracking information could not be found.';
+      body.innerHTML = `
+        <div class="flex flex-col items-center gap-3 py-8 text-center">
+          <span class="material-symbols-outlined" style="font-size:2.5rem;color:#ffb4ab;">error_outline</span>
+          <p style="color:#ffb4ab;font-size:0.88rem;line-height:1.5;">${msg}</p>
+        </div>`;
+    });
+}
+
+function renderTrackModal(t) {
+  const body  = document.getElementById('track-modal-body');
+  const cur   = t.tracking_status || t.order_status;
+  const curI  = TRACK_ORDER.indexOf(cur);
+
+  const metaRows = [
+    ['Order Ref',        t.order_ref || '—'],
+    ['Status',           t.order_status || '—'],
+    ['Tracking Number',  t.tracking_number || '—'],
+    ['Courier',          t.courier || '—'],
+  ];
+
+  const timelineHTML = TRACK_STEPS.map((step, i) => {
+    const idx    = TRACK_ORDER.indexOf(step.key);
+    const done   = idx < curI;
+    const active = idx === curI;
+    const color  = active ? 'var(--ac)' : done ? '#4ade80' : '#849495';
+    return `
+      <div class="flex items-start gap-3 mb-4">
+        <div style="
+          width:2rem; height:2rem; border-radius:50%; flex-shrink:0;
+          display:flex; align-items:center; justify-content:center;
+          background:${active ? 'rgba(0,219,233,0.15)' : done ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.05)'};
+          border:2px solid ${color};
+        ">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;color:${color};">${step.icon}</span>
+        </div>
+        <div class="pt-0.5 flex-1">
+          <p style="font-size:0.875rem;font-weight:700;color:${color};">${step.label}</p>
+          ${active ? '<p style="font-size:0.75rem;color:#849495;margin-top:0.1rem;">Currently here</p>' : ''}
+        </div>
+        <div style="padding-top:0.45rem;">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;color:${done || active ? color : 'rgba(255,255,255,0.1)'};">
+            ${done ? 'check_circle' : active ? 'radio_button_checked' : 'radio_button_unchecked'}
+          </span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const hasTimeline = curI >= 0;
+
+  body.innerHTML = `
+    <div class="space-y-4 mb-5" style="font-size:0.875rem;">
+      ${metaRows.map(([label, val]) => `
+        <div class="flex justify-between items-center gap-4">
+          <span style="color:#849495;">${label}</span>
+          <span style="color:#dce4e5;font-weight:700;font-family:${label === 'Tracking Number' ? 'monospace' : 'inherit'};">${val}</span>
+        </div>`).join('')}
+    </div>
+    <div style="border-top:1px solid var(--ns);margin-bottom:1.25rem;"></div>
+    ${hasTimeline
+      ? `<div>${timelineHTML}</div>`
+      : `<div class="flex flex-col items-center gap-2 py-6 text-center">
+           <span class="material-symbols-outlined" style="font-size:2rem;color:rgba(255,255,255,0.1);">local_shipping</span>
+           <p style="color:#849495;font-size:0.85rem;">Tracking information is not yet available.</p>
+         </div>`}`;
+}
+
+function closeTrackModal() {
+  document.getElementById('modal-tracking').classList.remove('open');
+  if (_trackLastFocus) { _trackLastFocus.focus(); _trackLastFocus = null; }
+}
+
+// Close tracking modal on backdrop click
+document.getElementById('modal-tracking').addEventListener('click', function(e) {
+  if (e.target === this) closeTrackModal();
+});
+
+// Keyboard: Escape closes, Tab traps focus inside tracking modal
+document.addEventListener('keydown', function(e) {
+  const modal = document.getElementById('modal-tracking');
+  if (!modal.classList.contains('open')) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeTrackModal(); return; }
+  if (e.key === 'Tab') {
+    const focusable = Array.from(modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )).filter(el => !el.disabled);
+    if (!focusable.length) { e.preventDefault(); return; }
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+});
+
+// Keep goTrack for the sidebar Tracking nav (navigates to the tracking section as before)
 function goTrack(orderId) {
   showSection('tracking');
   setTimeout(() => selectTrackOrder(orderId), 100);
