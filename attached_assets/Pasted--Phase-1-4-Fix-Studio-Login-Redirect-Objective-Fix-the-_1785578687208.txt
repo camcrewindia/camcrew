@@ -1,0 +1,146 @@
+# Phase 1.4 — Fix Studio Login Redirect
+
+## Objective
+
+Fix the incorrect post-login redirect for users with the `studio` role.
+
+Currently, `signin.html` redirects studio users back to `studiosignup.html`, causing them to enter a signup loop even after successfully logging in.
+
+This should instead redirect them to the appropriate authenticated destination.
+
+---
+
+## Existing Behavior
+
+Current logic:
+
+```javascript
+if (role === "customer") {
+    window.location.href = "customer-profile.html";
+} else if (role === "professional") {
+    window.location.href = "professional-profile.html";
+} else if (role === "studio") {
+    window.location.href = "studiosignup.html";   // Incorrect
+} else if (role === "admin") {
+    window.location.href = "admindashboard.html";
+}
+```
+
+---
+
+## Required Changes
+
+### 1. Remove the redirect to `studiosignup.html`
+
+A logged-in user must never be redirected to a registration page.
+
+---
+
+### 2. Redirect studio users to their dashboard
+
+If a dedicated studio dashboard already exists, redirect there.
+
+Example:
+
+```javascript
+window.location.href = "studiodashboard.html";
+```
+
+If no dashboard exists yet, temporarily redirect to:
+
+```javascript
+window.location.href = "admindashboard.html";
+```
+
+or another authenticated studio landing page already present in the project.
+
+---
+
+### 3. Preserve all existing role redirects
+
+Customer:
+
+```text
+customer-profile.html
+```
+
+Professional:
+
+```text
+professional-profile.html
+```
+
+Admin:
+
+```text
+admindashboard.html
+```
+
+Only the studio redirect should change.
+
+---
+
+### 4. Verify `/api/login`
+
+Ensure the backend continues returning the user's role in the login response.
+
+Example:
+
+```json
+{
+    "success": true,
+    "role": "studio"
+}
+```
+
+No backend API changes should be necessary if this already exists.
+
+---
+
+### 5. Test Cases
+
+Verify the following:
+
+✓ Customer logs in → customer dashboard
+
+✓ Professional logs in → professional dashboard
+
+✓ Studio logs in → studio dashboard (not signup)
+
+✓ Admin logs in → admin dashboard
+
+✓ Invalid credentials still display the existing error
+
+✓ Existing session handling remains unchanged
+
+---
+
+## Expected Result
+
+Studio users should complete the following flow:
+
+```
+Studio Login
+
+↓
+
+POST /api/login
+
+↓
+
+Backend validates credentials
+
+↓
+
+role == "studio"
+
+↓
+
+Studio dashboard
+
+✓ No redirect loop
+✓ No signup page
+✓ Authenticated session preserved
+```
+
+Only modify the redirect logic. Do not alter authentication, session handling, or registration behavior in this task.
