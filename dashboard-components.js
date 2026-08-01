@@ -56,9 +56,21 @@
       if (sidebar)  sidebar.classList.add('-translate-x-full');
       if (overlay)  overlay.classList.add('hidden');
     };
-    window.adminSignOut = function () {
+    window.adminSignOut = async function () {
       showToast('Signing out…', 'info');
-      setTimeout(() => { window.location.href = 'adminlogin.html'; }, 1200);
+      try {
+        const res = await fetch('/api/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        if (res.ok || res.status === 401 || res.status === 403) {
+          window.location.href = 'adminlogin.html';
+        } else {
+          showToast('Logout failed. Please try again.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error. Please check your connection.', 'error');
+      }
     };
   }
 
