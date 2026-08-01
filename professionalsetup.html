@@ -232,6 +232,9 @@
   .nm-input-wrap:focus-within {
     box-shadow: inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light), 0 0 0 2px rgba(0,219,233,0.3);
   }
+  /* ── Remove browser focus outline on all form controls ── */
+  input:focus, textarea:focus, select:focus { outline: none; }
+
   .nm-input-wrap input,
   .nm-input-wrap textarea {
     flex: 1;
