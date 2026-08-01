@@ -140,7 +140,12 @@
   }
 
   /* ── Remove browser focus outline on all form controls ── */
-  input:focus, textarea:focus, select:focus { outline: none; }
+  input:focus, input:focus-visible,
+  textarea:focus, textarea:focus-visible,
+  select:focus, select:focus-visible {
+    outline: none !important;
+    box-shadow: none;
+  }
 
   /* ── Form inputs ── */
   .fi {
