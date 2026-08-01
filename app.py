@@ -198,6 +198,20 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS portfolio_items (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                title           TEXT,
+                description     TEXT,
+                file_url        TEXT,
+                file_type       TEXT,
+                share_id        TEXT UNIQUE,
+                is_public       BOOLEAN NOT NULL DEFAULT TRUE,
+                created_at      TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
 
 
 def seed_demo_data(user_id):
@@ -250,6 +264,92 @@ def seed_demo_data(user_id):
 
 
 init_db()
+
+# ---------------------------------------------------------------------------
+# Public portfolio sharing
+# ---------------------------------------------------------------------------
+
+import re as _re
+
+_SHARE_ID_RE = _re.compile(r'^[A-Za-z0-9_\-]{4,64}$')
+
+
+@app.route("/shared/<share_id>")
+def shared_portfolio_page(share_id):
+    """Serve the public portfolio viewer for a given share_id."""
+    return send_from_directory(".", "shared.html")
+
+
+@app.route("/api/shared/<share_id>", methods=["GET"])
+def shared_portfolio_data(share_id):
+    """Return JSON data for a public portfolio item — no auth required."""
+    if not _SHARE_ID_RE.match(share_id):
+        return jsonify({"ok": False, "error": "Invalid share link."}), 400
+
+    with get_db() as conn:
+        row = conn.execute(
+            """SELECT pi.*, u.display_name
+               FROM portfolio_items pi
+               JOIN users u ON u.id = pi.professional_id
+               WHERE pi.share_id = %s""",
+            (share_id,),
+        ).fetchone()
+
+    if not row:
+        return jsonify({"ok": False, "error": "Portfolio not found."}), 404
+    if not row["is_public"]:
+        return jsonify({"ok": False, "error": "This portfolio is no longer publicly available."}), 404
+
+    return jsonify({"ok": True, "item": {
+        "title":        row["title"],
+        "description":  row["description"],
+        "file_url":     row["file_url"],
+        "file_type":    row["file_type"],
+        "created_at":   row["created_at"],
+    }, "professional": {
+        "display_name": row["display_name"] or "CamCrew Professional",
+    }})
+
+
+@app.route("/api/portfolio/share", methods=["POST"])
+def portfolio_share():
+    """Create or retrieve a share_id for a vault file. Requires auth."""
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+
+    data        = request.get_json(force=True)
+    title       = (data.get("title")       or "").strip() or None
+    description = (data.get("description") or "").strip() or None
+    file_url    = (data.get("file_url")    or "").strip() or None
+    file_type   = (data.get("file_type")   or "").strip() or None
+    hint_id     = (data.get("shareId")     or "").strip()
+
+    # If the caller supplies its existing share_id, honour it if already in DB
+    if hint_id and _SHARE_ID_RE.match(hint_id):
+        with get_db() as conn:
+            existing = conn.execute(
+                "SELECT share_id FROM portfolio_items WHERE share_id=%s AND professional_id=%s",
+                (hint_id, uid),
+            ).fetchone()
+        if existing:
+            url = f"{request.host_url.rstrip('/')}shared/{hint_id}"
+            return jsonify({"ok": True, "shareId": hint_id, "url": url})
+
+    # Generate a fresh URL-safe share_id
+    new_id = secrets.token_hex(8)          # 16 hex chars, e.g. 3f9d8ab712ce4a01
+    with get_db() as conn:
+        conn.execute(
+            """INSERT INTO portfolio_items
+               (professional_id, title, description, file_url, file_type, share_id, is_public)
+               VALUES (%s, %s, %s, %s, %s, %s, TRUE)
+               ON CONFLICT (share_id) DO NOTHING""",
+            (uid, title, description, file_url, file_type, new_id),
+        )
+
+    url = f"{request.host_url.rstrip('/')}shared/{new_id}"
+    return jsonify({"ok": True, "shareId": new_id, "url": url})
+
 
 # ---------------------------------------------------------------------------
 # Static page routes

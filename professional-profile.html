@@ -2008,14 +2008,46 @@ function deleteVaultFile(id) {
   renderVault();
 }
 
-function openShareModal(fileId) {
+async function openShareModal(fileId) {
   const vault = getVaultData();
   const file  = vault.files.find(f => f.id === fileId);
   if (!file) return;
+
   document.getElementById('share-file-name').textContent = file.name;
-  document.getElementById('share-link').value = `${window.location.origin}/shared/${file.shareId}`;
+  const linkInput = document.getElementById('share-link');
+  linkInput.value = 'Generating link…';
+  linkInput.disabled = true;
   document.getElementById('share-email').value = '';
   openModal('modal-share');
+
+  try {
+    const res  = await fetch('/api/portfolio/share', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title:    file.name,
+        file_type: file.type,
+        file_url:  file.url || null,
+        shareId:   file.shareId || null,
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      // Persist the server share_id back into vault so future opens reuse it
+      const v = getVaultData();
+      const f = v.files.find(f => f.id === fileId);
+      if (f) { f.shareId = data.shareId; saveVaultData(v); }
+      linkInput.value = data.url;
+    } else {
+      // Fallback: use the locally-generated shareId if API fails (e.g. not logged in)
+      linkInput.value = `${window.location.origin}/shared/${file.shareId || fileId}`;
+    }
+  } catch (_) {
+    linkInput.value = `${window.location.origin}/shared/${file.shareId || fileId}`;
+  } finally {
+    linkInput.disabled = false;
+  }
 }
 
 function copyShareLink() {
