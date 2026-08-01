@@ -527,6 +527,22 @@
   html.light .theme-toggle { color:#2a5052; }
   html.light .theme-toggle:hover { color:#0a1618; }
 
+  /* ── Rental tabs ── */
+  .rental-tab {
+    display:inline-flex; align-items:center; gap:0.35rem;
+    padding:0.45rem 0.9rem; border-radius:0.55rem; border:none;
+    background:var(--nb); box-shadow:var(--nr-s);
+    font-size:0.78rem; font-weight:700; color:#849495;
+    cursor:pointer; transition:all 0.18s; letter-spacing:0.02em;
+  }
+  .rental-tab:hover { color:#dce4e5; box-shadow:var(--nr); }
+  .rental-tab.active {
+    box-shadow:var(--ni-s); color:var(--ac);
+  }
+  html.light .rental-tab        { color:#2a5052; }
+  html.light .rental-tab:hover  { color:#0a1618; }
+  html.light .rental-tab.active { color:var(--ac); }
+
   /* ── Edit Profile chip (sidebar) ── */
   .edit-profile-chip {
     font-size:0.65rem; font-weight:700; color:#849495;
@@ -792,8 +808,28 @@
 
       <!-- ═══ RENTALS ════════════════════════════════════════════════ -->
       <div id="sec-rentals" class="hidden">
-        <p class="sec-sub">Equipment rentals — gear you've rented in for jobs.</p>
-        <div id="rentals-list"></div>
+        <p class="sec-sub">List your gear for hire — accept client requests and manage active loans.</p>
+
+        <!-- Rental tabs -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;">
+          <button id="rtab-equipment" class="rental-tab active" onclick="switchRentalTab('equipment')">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;vertical-align:middle;">videocam</span> My Equipment
+          </button>
+          <button id="rtab-orders" class="rental-tab" onclick="switchRentalTab('orders')">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;vertical-align:middle;">inbox</span> Rental Requests
+            <span id="rental-orders-badge" class="hidden" style="display:inline-flex;align-items:center;justify-content:center;min-width:1.1rem;height:1.1rem;padding:0 0.25rem;border-radius:999px;background:var(--ac);color:#fff;font-size:0.62rem;font-weight:800;margin-left:0.35rem;vertical-align:middle;"></span>
+          </button>
+        </div>
+
+        <!-- Equipment panel -->
+        <div id="rental-equipment-panel">
+          <div id="equipment-list"></div>
+        </div>
+
+        <!-- Orders panel -->
+        <div id="rental-orders-panel" class="hidden">
+          <div id="rental-orders-list"></div>
+        </div>
       </div>
 
       <!-- ═══ JOB TRACKING ═══════════════════════════════════════════ -->
@@ -973,49 +1009,44 @@
 <div id="modal-rental" class="modal-overlay" onclick="closeModal('modal-rental',event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
-      <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Log Equipment Rental</h3>
+      <h3 id="modal-rental-title" style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Add Equipment</h3>
       <button onclick="closeModal('modal-rental')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
-    <form id="rental-form" onsubmit="submitRental(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+    <form id="rental-form" onsubmit="submitEquipment(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <input type="hidden" id="rental-equip-id"/>
       <div>
         <label class="fi-label">Equipment Name *</label>
-        <input id="rental-name" class="fi" type="text" required placeholder="e.g. Sony FX6 Camera"/>
+        <input id="rental-name" class="fi" type="text" required placeholder="e.g. Sony FX6 Body"/>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="fi-label">Rental From *</label>
-          <input id="rental-from" class="fi" type="date" required/>
+          <label class="fi-label">Category</label>
+          <select id="rental-category" class="fi">
+            <option value="Camera">Camera</option>
+            <option value="Lens">Lens</option>
+            <option value="Lighting">Lighting</option>
+            <option value="Audio">Audio</option>
+            <option value="Stabilizer">Stabilizer</option>
+            <option value="Drone">Drone</option>
+            <option value="Grip">Grip</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div>
-          <label class="fi-label">Rental To *</label>
-          <input id="rental-to" class="fi" type="date" required/>
+          <label class="fi-label">Price per Day ($) *</label>
+          <input id="rental-price" class="fi" type="number" min="0" step="0.01" required placeholder="0.00"/>
         </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="fi-label">Cost ($)</label>
-          <input id="rental-cost" class="fi" type="number" min="0" placeholder="0"/>
-        </div>
-        <div>
-          <label class="fi-label">Vendor / Source</label>
-          <input id="rental-vendor" class="fi" type="text" placeholder="e.g. BorrowLenses"/>
-        </div>
-      </div>
-      <div>
-        <label class="fi-label">Status</label>
-        <select id="rental-status" class="fi">
-          <option value="processing">Processing</option>
-          <option value="in_transit" selected>In Transit</option>
-          <option value="active">Active / In Use</option>
-          <option value="returned">Returned</option>
-        </select>
       </div>
       <div>
-        <label class="fi-label">Tracking Number</label>
-        <input id="rental-tracking" class="fi" type="text" placeholder="Optional tracking #"/>
+        <label class="fi-label">Description</label>
+        <input id="rental-description" class="fi" type="text" placeholder="What's included, condition notes…" maxlength="140"/>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.85rem;background:var(--nb);border-radius:0.6rem;box-shadow:var(--ni-s);">
+        <input id="rental-available" type="checkbox" checked style="width:1.1rem;height:1.1rem;accent-color:var(--ac);cursor:pointer;"/>
+        <label for="rental-available" style="font-size:0.85rem;font-weight:600;color:#dce4e5;cursor:pointer;">Available for rent right now</label>
       </div>
       <div id="rental-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
-      <button type="submit" class="cc-btn-primary">Save Rental</button>
+      <button type="submit" class="cc-btn-primary">Save Equipment</button>
     </form>
   </div>
 </div>
@@ -1088,7 +1119,9 @@ const S = {
   profile: null,
   requests: [],
   jobs: [],
-  rentals: [],
+  equipment: [],
+  rentalOrders: [],
+  rentalTab: 'equipment',
   vault: { currentFolder: null, folders: [], files: [] },
   vaultViewGrid: false,
   activeRequestId: null,
@@ -1111,11 +1144,18 @@ function seedDemoData() {
       { id:3, client:'Nova Films',    service:'Cinematic Brand Video',    date:'2026-08-10', amount:5000, status:'active',    notes:'3-day shoot, downtown LA' },
     ]));
   }
-  if (!localStorage.getItem('pro_rentals')) {
-    localStorage.setItem('pro_rentals', JSON.stringify([
-      { id:1, name:'Sony FX6 Body',         from:'2026-08-08', to:'2026-08-12', cost:420, vendor:'BorrowLenses',  status:'in_transit', tracking:'BL-293847' },
-      { id:2, name:'Aputure 600D Pro Light', from:'2026-08-08', to:'2026-08-09', cost:85,  vendor:'Local Grip Co', status:'active',     tracking:'' },
-      { id:3, name:'DJI Ronin RS3 Pro',     from:'2026-07-28', to:'2026-07-28', cost:60,  vendor:'LensRentals',  status:'returned',   tracking:'LR-118823' },
+  if (!localStorage.getItem('pro_equipment')) {
+    localStorage.setItem('pro_equipment', JSON.stringify([
+      { id:1, name:'Sony FX6 Body',     category:'Camera',     description:'Full-frame cinema camera — battery & charger included', pricePerDay:150, available:true },
+      { id:2, name:'Aputure 600D Pro',  category:'Lighting',   description:'Bi-colour COB LED, Fresnel & barn doors included',      pricePerDay:65,  available:true },
+      { id:3, name:'DJI Ronin RS3 Pro', category:'Stabilizer', description:'3-axis gimbal, supports up to 4.5 kg payload',          pricePerDay:45,  available:false },
+    ]));
+  }
+  if (!localStorage.getItem('pro_rental_orders')) {
+    localStorage.setItem('pro_rental_orders', JSON.stringify([
+      { id:1, equipmentId:1, equipmentName:'Sony FX6 Body',     clientName:'Alex Rivera', clientEmail:'alex@example.com',  fromDate:'2026-08-10', toDate:'2026-08-13', days:3, totalCost:450, status:'pending',   notes:'Need it for a music video shoot.',   createdAt: new Date(Date.now()-3600000).toISOString() },
+      { id:2, equipmentId:2, equipmentName:'Aputure 600D Pro',  clientName:'Lena Park',   clientEmail:'lena@studio.io',    fromDate:'2026-08-07', toDate:'2026-08-08', days:1, totalCost:65,  status:'accepted',  notes:'Interview lighting setup.',          createdAt: new Date(Date.now()-2*86400000).toISOString() },
+      { id:3, equipmentId:3, equipmentName:'DJI Ronin RS3 Pro', clientName:'Marcus Webb', clientEmail:'marcus@film.co',    fromDate:'2026-07-25', toDate:'2026-07-27', days:2, totalCost:90,  status:'completed', notes:'Short film project.',                 createdAt: new Date(Date.now()-10*86400000).toISOString() },
     ]));
   }
   if (!localStorage.getItem('pro_vault')) {
@@ -1206,8 +1246,8 @@ const SECTION_CFG = {
   },
   rentals: {
     title: () => 'Rentals',
-    actions: `<button onclick="openAddRentalModal()" class="btn-sm btn-sm-cyan">
-      <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Log Rental
+    actions: `<button onclick="openAddEquipmentModal()" class="btn-sm btn-sm-cyan">
+      <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Equipment
     </button>`
   },
   tracking: { title: () => 'Job Tracking', actions: '' },
@@ -1478,88 +1518,228 @@ function submitJob(e) {
 }
 
 // ════════════════════════════════════════════════════════════════════
-// Rentals
+// Rentals — Equipment Listing + Client Orders
 // ════════════════════════════════════════════════════════════════════
 function loadRentals() {
-  S.rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
-  const el = document.getElementById('rentals-list');
-  if (!S.rentals.length) { el.innerHTML = empty('videocam','No rentals logged','Track gear you rent for shoots.'); return; }
-  el.innerHTML = S.rentals.map(r => `
+  S.equipment    = JSON.parse(localStorage.getItem('pro_equipment')     || '[]');
+  S.rentalOrders = JSON.parse(localStorage.getItem('pro_rental_orders') || '[]');
+  // Restore last active tab
+  switchRentalTab(S.rentalTab || 'equipment');
+}
+
+function switchRentalTab(tab) {
+  S.rentalTab = tab;
+  document.getElementById('rental-equipment-panel').classList.toggle('hidden', tab !== 'equipment');
+  document.getElementById('rental-orders-panel').classList.toggle('hidden',    tab !== 'orders');
+  document.getElementById('rtab-equipment').classList.toggle('active', tab === 'equipment');
+  document.getElementById('rtab-orders').classList.toggle('active',    tab === 'orders');
+
+  // Update pending badge
+  const pending = S.rentalOrders.filter(o => o.status === 'pending').length;
+  const badge   = document.getElementById('rental-orders-badge');
+  if (badge) { badge.textContent = pending; badge.classList.toggle('hidden', pending === 0); }
+
+  // Update sticky header action button
+  const actEl = document.getElementById('cp-hdr-actions');
+  if (actEl) {
+    actEl.innerHTML = tab === 'equipment'
+      ? `<button onclick="openAddEquipmentModal()" class="btn-sm btn-sm-cyan">
+           <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Equipment
+         </button>`
+      : `<span style="font-size:0.78rem;font-weight:700;color:#849495;">${pending} pending</span>`;
+  }
+
+  if (tab === 'equipment') renderEquipmentList();
+  else renderRentalOrders();
+}
+
+/* ── Equipment listing ──────────────────────────────────────────── */
+function renderEquipmentList() {
+  const el = document.getElementById('equipment-list');
+  if (!S.equipment.length) {
+    el.innerHTML = empty('videocam', 'No equipment listed', 'Add your gear so clients can browse and request rentals.');
+    return;
+  }
+  el.innerHTML = S.equipment.map(e => `
     <div class="data-card mb-3">
-      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.6rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem;">
         <div>
-          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(r.name)}</p>
-          <p style="font-size:0.82rem;color:#849495;">${esc(r.vendor||'—')}</p>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(e.name)}</p>
+          <p style="font-size:0.78rem;color:#849495;margin-top:0.1rem;">${esc(e.category)}</p>
         </div>
-        ${badge(r.status)}
+        ${e.available
+          ? `<span style="font-size:0.63rem;font-weight:700;background:rgba(34,197,94,0.13);color:#22c55e;padding:0.15rem 0.55rem;border-radius:999px;letter-spacing:0.07em;white-space:nowrap;">AVAILABLE</span>`
+          : `<span style="font-size:0.63rem;font-weight:700;background:rgba(132,148,149,0.13);color:#849495;padding:0.15rem 0.55rem;border-radius:999px;letter-spacing:0.07em;white-space:nowrap;">UNAVAILABLE</span>`
+        }
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:1.25rem;font-size:0.82rem;color:#849495;margin-bottom:0.65rem;">
-        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">date_range</span>${fmt_date(r.from)} → ${fmt_date(r.to)}</span>
-        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span>${fmt_usd(r.cost)}</span>
-        ${r.tracking ? `<span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">local_shipping</span><span style="font-family:monospace;">${esc(r.tracking)}</span></span>` : ''}
-      </div>
-      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
-        ${r.status === 'in_transit' || r.status === 'active' ? `
-          <button onclick="goTrackRental(${r.id})" class="btn-sm btn-sm-cyan">
-            <span class="material-symbols-outlined" style="font-size:0.9rem;">local_shipping</span> Track
-          </button>` : ''}
-        ${r.status !== 'returned' ? `
-          <button onclick="updateRentalStatus(${r.id},'returned')" class="btn-sm btn-sm-ghost">
-            <span class="material-symbols-outlined" style="font-size:0.9rem;">keyboard_return</span> Return
-          </button>` : ''}
-        <button onclick="removeRental(${r.id})" class="btn-sm btn-sm-red">
-          <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
-        </button>
+      ${e.description ? `<p style="font-size:0.83rem;color:#849495;margin-bottom:0.55rem;">${esc(e.description)}</p>` : ''}
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+        <p style="font-size:1.15rem;font-weight:800;color:var(--ac);">${fmt_usd(e.pricePerDay)}<span style="font-size:0.72rem;font-weight:600;color:#849495;"> / day</span></p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button onclick="toggleEquipAvailability(${e.id})" class="btn-sm btn-sm-ghost">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">${e.available ? 'toggle_on' : 'toggle_off'}</span>
+            ${e.available ? 'Unavailable' : 'Available'}
+          </button>
+          <button onclick="openEditEquipmentModal(${e.id})" class="btn-sm btn-sm-ghost">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">edit</span>
+          </button>
+          <button onclick="removeEquipment(${e.id})" class="btn-sm btn-sm-red">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
+          </button>
+        </div>
       </div>
     </div>`).join('');
 }
 
-function updateRentalStatus(id, status) {
-  S.rentals = S.rentals.map(r => r.id === id ? { ...r, status } : r);
-  localStorage.setItem('pro_rentals', JSON.stringify(S.rentals));
-  showToast('Rental updated.');
-  loadRentals();
+function toggleEquipAvailability(id) {
+  S.equipment = S.equipment.map(e => e.id === id ? { ...e, available: !e.available } : e);
+  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
+  renderEquipmentList();
 }
 
-function removeRental(id) {
-  if (!confirm('Remove this rental?')) return;
-  S.rentals = S.rentals.filter(r => r.id !== id);
-  localStorage.setItem('pro_rentals', JSON.stringify(S.rentals));
-  showToast('Rental removed.');
-  loadRentals();
+function removeEquipment(id) {
+  if (!confirm('Remove this equipment listing?')) return;
+  S.equipment = S.equipment.filter(e => e.id !== id);
+  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
+  showToast('Equipment removed.');
+  renderEquipmentList();
 }
 
-function goTrackRental(id) {
-  showSection('tracking');
-  setTimeout(() => {
-    const r = S.rentals.find(x => x.id === id);
-    if (r) renderRentalTimeline(r);
-  }, 100);
-}
-
-function openAddRentalModal() {
+function openAddEquipmentModal() {
   document.getElementById('rental-form').reset();
+  document.getElementById('rental-equip-id').value = '';
+  document.getElementById('rental-available').checked = true;
+  document.getElementById('modal-rental-title').textContent = 'Add Equipment';
   document.getElementById('rental-err').classList.add('hidden');
   openModal('modal-rental');
 }
 
-function submitRental(e) {
+function openEditEquipmentModal(id) {
+  const e = S.equipment.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById('rental-equip-id').value      = e.id;
+  document.getElementById('rental-name').value           = e.name;
+  document.getElementById('rental-category').value       = e.category;
+  document.getElementById('rental-description').value    = e.description || '';
+  document.getElementById('rental-price').value          = e.pricePerDay;
+  document.getElementById('rental-available').checked    = e.available;
+  document.getElementById('modal-rental-title').textContent = 'Edit Equipment';
+  document.getElementById('rental-err').classList.add('hidden');
+  openModal('modal-rental');
+}
+
+function submitEquipment(e) {
   e.preventDefault();
-  const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
-  rentals.push({
-    id: Date.now(),
-    name:     document.getElementById('rental-name').value.trim(),
-    from:     document.getElementById('rental-from').value,
-    to:       document.getElementById('rental-to').value,
-    cost:     document.getElementById('rental-cost').value || 0,
-    vendor:   document.getElementById('rental-vendor').value.trim(),
-    status:   document.getElementById('rental-status').value,
-    tracking: document.getElementById('rental-tracking').value.trim(),
-  });
-  localStorage.setItem('pro_rentals', JSON.stringify(rentals));
+  const editId = document.getElementById('rental-equip-id').value;
+  const name   = document.getElementById('rental-name').value.trim();
+  const price  = parseFloat(document.getElementById('rental-price').value);
+  if (!name) { showRentalErr('Equipment name is required.'); return; }
+  if (!price || price <= 0) { showRentalErr('Enter a valid price per day.'); return; }
+  const item = {
+    name,
+    category:    document.getElementById('rental-category').value,
+    description: document.getElementById('rental-description').value.trim(),
+    pricePerDay: price,
+    available:   document.getElementById('rental-available').checked,
+  };
+  if (editId) {
+    S.equipment = S.equipment.map(x => x.id == editId ? { ...x, ...item } : x);
+  } else {
+    S.equipment.push({ id: Date.now(), ...item });
+  }
+  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
   closeModal('modal-rental');
-  showToast('Rental logged!');
-  loadRentals();
+  showToast(editId ? 'Equipment updated!' : 'Equipment listed!');
+  renderEquipmentList();
+}
+
+function showRentalErr(msg) {
+  const el = document.getElementById('rental-err');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+/* ── Rental orders / requests ───────────────────────────────────── */
+function renderRentalOrders() {
+  const el = document.getElementById('rental-orders-list');
+  const statusRank = { pending:0, accepted:1, active:2, completed:3, declined:4 };
+  const orders = [...S.rentalOrders].sort((a,b) =>
+    (statusRank[a.status]??5) - (statusRank[b.status]??5) ||
+    new Date(b.createdAt) - new Date(a.createdAt)
+  );
+  if (!orders.length) {
+    el.innerHTML = empty('inbox', 'No rental requests yet', 'Client requests will appear here once clients can browse your listings.');
+    return;
+  }
+  el.innerHTML = orders.map(o => `
+    <div class="data-card mb-3${o.status === 'pending' ? ' request-card-new' : ''}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem;">
+        <div>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(o.equipmentName)}</p>
+          <p style="font-size:0.82rem;color:#849495;">
+            <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;">person</span>
+            <strong style="color:#dce4e5;">${esc(o.clientName)}</strong>
+            &nbsp;·&nbsp;${esc(o.clientEmail)}
+          </p>
+        </div>
+        ${rentalOrderBadge(o.status)}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.82rem;color:#849495;margin-bottom:0.6rem;">
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">date_range</span>${fmt_date(o.fromDate)} → ${fmt_date(o.toDate)}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">calendar_today</span>${o.days} day${o.days!==1?'s':''}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span><strong style="color:#dce4e5;">${fmt_usd(o.totalCost)}</strong></span>
+      </div>
+      ${o.notes ? `<p style="font-size:0.8rem;color:#849495;font-style:italic;margin-bottom:0.6rem;">"${esc(o.notes)}"</p>` : ''}
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        ${o.status === 'pending' ? `
+          <button onclick="acceptRentalOrder(${o.id})" class="btn-sm btn-sm-green">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">check</span> Accept
+          </button>
+          <button onclick="declineRentalOrder(${o.id})" class="btn-sm btn-sm-red">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">close</span> Decline
+          </button>` : ''}
+        ${o.status === 'accepted' ? `
+          <button onclick="setRentalOrderStatus(${o.id},'active')" class="btn-sm btn-sm-cyan">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">handshake</span> Mark as Out
+          </button>` : ''}
+        ${o.status === 'active' ? `
+          <button onclick="setRentalOrderStatus(${o.id},'completed')" class="btn-sm btn-sm-ghost">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;">keyboard_return</span> Mark Returned
+          </button>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function rentalOrderBadge(status) {
+  const map = {
+    pending:   { color:'#849495', label:'PENDING' },
+    accepted:  { color:'#00dbe9', label:'ACCEPTED' },
+    active:    { color:'#22c55e', label:'OUT — ACTIVE' },
+    completed: { color:'#849495', label:'RETURNED' },
+    declined:  { color:'#ff6b6b', label:'DECLINED' },
+  };
+  const { color, label } = map[status] || { color:'#849495', label: status.toUpperCase() };
+  return `<span style="font-size:0.63rem;font-weight:700;color:${color};background:${color}22;padding:0.15rem 0.55rem;border-radius:999px;letter-spacing:0.07em;white-space:nowrap;">${label}</span>`;
+}
+
+function setRentalOrderStatus(id, status) {
+  S.rentalOrders = S.rentalOrders.map(o => o.id === id ? { ...o, status } : o);
+  localStorage.setItem('pro_rental_orders', JSON.stringify(S.rentalOrders));
+  const msgs = { active:'Equipment marked as out.', completed:'Returned — rental complete!', declined:'Request declined.' };
+  showToast(msgs[status] || 'Updated.');
+  switchRentalTab('orders'); // re-renders list + badge
+}
+
+function acceptRentalOrder(id) {
+  S.rentalOrders = S.rentalOrders.map(o => o.id === id ? { ...o, status:'accepted' } : o);
+  localStorage.setItem('pro_rental_orders', JSON.stringify(S.rentalOrders));
+  showToast('Request accepted!');
+  switchRentalTab('orders');
+}
+
+function declineRentalOrder(id) {
+  if (!confirm('Decline this rental request?')) return;
+  setRentalOrderStatus(id, 'declined');
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -1574,24 +1754,25 @@ const JOB_STEPS = [
 const JOB_ORDER = ['pending','confirmed','active','completed'];
 
 const RENTAL_STEPS = [
-  { key:'processing', label:'Order Placed',   icon:'shopping_cart' },
-  { key:'in_transit', label:'In Transit',     icon:'local_shipping' },
-  { key:'active',     label:'In Use',         icon:'videocam' },
-  { key:'returned',   label:'Returned',       icon:'keyboard_return' },
+  { key:'pending',   label:'Request Received', icon:'inbox' },
+  { key:'accepted',  label:'Accepted',         icon:'verified' },
+  { key:'active',    label:'Equipment Out',    icon:'videocam' },
+  { key:'completed', label:'Returned',         icon:'keyboard_return' },
 ];
-const RENTAL_ORDER = ['processing','in_transit','active','returned'];
+const RENTAL_ORDER = ['pending','accepted','active','completed'];
 
 function loadTrackingSelector() {
-  const jobs    = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
-  const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
+  const jobs   = JSON.parse(localStorage.getItem('pro_jobs')         || '[]');
+  const orders = JSON.parse(localStorage.getItem('pro_rental_orders')|| '[]');
   const sel = document.getElementById('tracking-selector');
   const tl  = document.getElementById('tracking-timeline');
 
-  const jobOpts    = jobs.map(j    => `<option value="job-${j.id}"    data-type="job">Job: ${j.client} — ${j.service} (${j.status})</option>`).join('');
-  const rentalOpts = rentals.filter(r => r.status !== 'returned').map(r => `<option value="rental-${r.id}" data-type="rental">Rental: ${r.name} (${r.status})</option>`).join('');
+  const jobOpts    = jobs.map(j => `<option value="job-${j.id}">Job: ${j.client} — ${j.service} (${j.status})</option>`).join('');
+  const rentalOpts = orders.filter(o => !['completed','declined'].includes(o.status))
+    .map(o => `<option value="rental-${o.id}">Rental: ${o.equipmentName} — ${o.clientName} (${o.status})</option>`).join('');
 
   if (!jobOpts && !rentalOpts) {
-    sel.innerHTML = empty('local_shipping', 'Nothing to track', 'Add jobs or rentals to track their progress.');
+    sel.innerHTML = empty('local_shipping', 'Nothing to track', 'Active jobs and accepted rentals appear here.');
     tl.innerHTML = '';
     return;
   }
@@ -1599,9 +1780,9 @@ function loadTrackingSelector() {
   sel.innerHTML = `
     <label class="fi-label">Select Item to Track</label>
     <select id="track-select" class="fi max-w-sm" onchange="selectTrackItem(this.value)" style="max-width:400px;">
-      <option value="">— Choose a job or rental —</option>
-      ${jobOpts ? `<optgroup label="Jobs">${jobOpts}</optgroup>` : ''}
-      ${rentalOpts ? `<optgroup label="Rentals">${rentalOpts}</optgroup>` : ''}
+      <option value="">— Choose a job or rental order —</option>
+      ${jobOpts    ? `<optgroup label="Jobs">${jobOpts}</optgroup>`           : ''}
+      ${rentalOpts ? `<optgroup label="Rental Orders">${rentalOpts}</optgroup>` : ''}
     </select>`;
 }
 
@@ -1609,13 +1790,11 @@ function selectTrackItem(val) {
   if (!val) return;
   const [type, id] = val.split('-');
   if (type === 'job') {
-    const jobs = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
-    const job  = jobs.find(j => j.id == id);
+    const job = JSON.parse(localStorage.getItem('pro_jobs') || '[]').find(j => j.id == id);
     if (job) renderJobTimeline(job);
   } else {
-    const rentals = JSON.parse(localStorage.getItem('pro_rentals') || '[]');
-    const rental  = rentals.find(r => r.id == id);
-    if (rental) renderRentalTimeline(rental);
+    const order = JSON.parse(localStorage.getItem('pro_rental_orders') || '[]').find(o => o.id == id);
+    if (order) renderRentalTimeline(order);
   }
 }
 
@@ -1654,14 +1833,17 @@ function renderJobTimeline(job) {
     </div>`);
 }
 
-function renderRentalTimeline(rental) {
-  renderTimeline(RENTAL_STEPS, RENTAL_ORDER, rental.status, `
+function renderRentalTimeline(order) {
+  renderTimeline(RENTAL_STEPS, RENTAL_ORDER, order.status, `
     <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
-      <span style="color:#849495;">Equipment</span><span style="color:#dce4e5;font-weight:700;">${esc(rental.name)}</span>
+      <span style="color:#849495;">Equipment</span><span style="color:#dce4e5;font-weight:700;">${esc(order.equipmentName)}</span>
     </div>
-    ${rental.tracking ? `<div style="display:flex;justify-content:space-between;font-size:0.85rem;">
-      <span style="color:#849495;">Tracking #</span><span style="color:#00dbe9;font-weight:700;font-family:monospace;">${esc(rental.tracking)}</span>
-    </div>` : ''}`);
+    <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+      <span style="color:#849495;">Client</span><span style="color:#dce4e5;font-weight:700;">${esc(order.clientName)}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+      <span style="color:#849495;">Period</span><span style="color:#dce4e5;font-weight:700;">${fmt_date(order.fromDate)} → ${fmt_date(order.toDate)}</span>
+    </div>`);
 }
 
 // ════════════════════════════════════════════════════════════════════
