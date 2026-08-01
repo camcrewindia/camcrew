@@ -770,6 +770,45 @@ def set_default_address(addr_id):
     return jsonify({"ok": True})
 
 
+# ── Aadhaar Verification ────────────────────────────────────────────────────
+
+def _verify_aadhaar_with_provider(aadhaar: str) -> dict:
+    """
+    Verification logic isolated here so it can be swapped for a real
+    KYC provider (e.g. UIDAI / Sandbox.co.in) without touching the route.
+
+    Returns a dict with keys: verified (bool), name (str), message (str).
+    Raises an exception if the provider call fails.
+    """
+    # Demo-safe: accept any valid 12-digit number
+    return {
+        "verified": True,
+        "name":     "Demo User",
+        "message":  "Aadhaar verified successfully.",
+    }
+
+
+@app.route("/api/verify-aadhar", methods=["POST"])
+def verify_aadhar():
+    data    = request.get_json(force=True, silent=True) or {}
+    aadhaar = data.get("aadhaar")
+
+    # Validate format
+    if not aadhaar or not isinstance(aadhaar, str):
+        return jsonify({"error": "Invalid Aadhaar number."}), 400
+
+    aadhaar = aadhaar.strip()
+    if not aadhaar.isdigit() or len(aadhaar) != 12:
+        return jsonify({"error": "Invalid Aadhaar number."}), 400
+
+    try:
+        result = _verify_aadhaar_with_provider(aadhaar)
+    except Exception:
+        return jsonify({"error": "Unable to verify Aadhaar."}), 500
+
+    return jsonify(result), 200
+
+
 # ── Rewards & Coupons ───────────────────────────────────────────────────────
 
 @app.route("/api/customer/rewards", methods=["GET"])
