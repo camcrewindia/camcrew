@@ -420,9 +420,83 @@
   }
   html.light .fi-label { color:#5a7475; }
 
-  /* Sign-out */
-  html.light .nm-signout { color:#5a7475; }
-  html.light .nm-signout:hover { color:#dc2626; }
+  /* ── Sign-out ── */
+  html.light .nm-signout { color:#2a5052; }
+  html.light .nm-signout:hover { color:#b91c1c; }
+
+  /* ── Buttons — light-mode overrides ── */
+  html.light .btn-sm-ghost       { color:#2a5052; }
+  html.light .btn-sm-ghost:hover { color:#0a1618; }
+  html.light .btn-sm-cyan        { color:#007d8e; }
+  html.light .btn-sm-cyan:hover  { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(0,125,142,0.28); }
+  html.light .btn-sm-green       { color:#15803d; }
+  html.light .btn-sm-green:hover { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(21,128,61,0.22); }
+  html.light .btn-sm-red         { color:#b91c1c; }
+  html.light .btn-sm-red:hover   { box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl), 0 0 8px rgba(185,28,28,0.22); }
+
+  /* ── nav-item & mobile-tab hover ── */
+  html.light .nav-item:hover           { color:#0a1618; }
+  html.light .mobile-header-back:hover { color:#0a1618; }
+  html.light .mobile-tab:hover         { color:#0a1618; }
+
+  /* ── Primary CTA — light shadows ── */
+  html.light .cc-btn-primary {
+    background: linear-gradient(135deg, #006b78, #009aad) !important;
+    color:#ffffff !important;
+    box-shadow: 5px 5px 14px var(--ns), -3px -3px 10px var(--nl), 0 4px 18px rgba(0,125,142,0.32) !important;
+  }
+  html.light .cc-btn-primary:hover {
+    box-shadow: 7px 7px 18px var(--ns), -4px -4px 12px var(--nl), 0 6px 24px rgba(0,125,142,0.42) !important;
+  }
+  html.light .cc-btn-primary:active {
+    box-shadow: inset 3px 3px 8px rgba(0,0,0,0.18), 0 2px 10px rgba(0,125,142,0.2) !important;
+  }
+
+  /* ── Timeline — light shadows & colors ── */
+  html.light .t-icon                  { box-shadow: var(--nr-s); }
+  html.light .t-icon.done   { box-shadow: inset 2px 2px 6px var(--ns), inset -2px -2px 6px var(--nl); color:#15803d; }
+  html.light .t-icon.active { box-shadow: inset 2px 2px 6px var(--ns), inset -2px -2px 6px var(--nl); color:#007d8e; }
+  html.light .timeline-step:not(:last-child)::after { background:var(--ns); box-shadow:none; opacity:0.35; }
+  html.light .timeline-step.done::after   { background:rgba(21,128,61,0.4);  box-shadow:none; opacity:1; }
+  html.light .timeline-step.active::after { background:rgba(0,125,142,0.38); box-shadow:none; opacity:1; }
+
+  /* ── Error text ── */
+  html.light [style*="color:#ffb4ab"] { color:#b91c1c !important; }
+
+  /* ── Toast — light colors ── */
+  html.light #toast      { box-shadow: 6px 6px 16px var(--ns), -4px -4px 10px var(--nl) !important; }
+  html.light #toast-msg  { color:#0a1618 !important; }
+
+  /* ── Vault breadcrumb ── */
+  html.light #vault-breadcrumb button { color:#2a5052 !important; }
+  html.light #vault-breadcrumb button:hover { color:#0a1618 !important; }
+  html.light #vault-breadcrumb span   { color:#2a5052 !important; }
+
+  /* ── nav-badge (inbox badge) ── */
+  html.light .nav-item .nav-badge { background:var(--ac); color:#ffffff; }
+
+  /* ── Progress bar track ── */
+  html.light .progress-bar { background:var(--nb); box-shadow: var(--ni-s); }
+
+  /* ── Vault drop zone ── */
+  html.light .vault-drop-zone { box-shadow: var(--ni); }
+  html.light .vault-drop-zone:hover,
+  html.light .vault-drop-zone.drag-over {
+    box-shadow: inset 5px 5px 12px var(--ns), inset -5px -5px 12px var(--nl), 0 0 0 2px rgba(0,125,142,0.4);
+  }
+
+  /* ── Vault folder hover accent ── */
+  html.light .vault-folder:hover { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl), 0 0 0 1.5px rgba(0,125,142,0.3); }
+  html.light .file-item:hover    { box-shadow: 5px 5px 12px var(--ns), -5px -5px 12px var(--nl), inset 0 0 0 1px rgba(0,125,142,0.15); }
+
+  /* ── Request card new accent ── */
+  html.light .request-card-new { box-shadow: var(--nr), inset 0 0 0 1.5px rgba(0,125,142,0.28) !important; }
+
+  /* ── data-card hover ── */
+  html.light .data-card:hover {
+    box-shadow: 10px 10px 22px var(--ns), -10px -10px 22px var(--nl),
+                inset 0 0 0 1px rgba(0,125,142,0.12);
+  }
 
   /* Modal */
   html.light .modal-overlay { background:rgba(0,0,0,0.45); }
@@ -442,8 +516,30 @@
   }
   .theme-toggle:hover { color:#dce4e5; box-shadow: 4px 4px 10px var(--ns), -4px -4px 10px var(--nl); }
   .theme-toggle:active { box-shadow: var(--ni-s); }
-  html.light .theme-toggle { color:#5a7475; }
-  html.light .theme-toggle:hover { color:#1a2a2b; }
+  html.light .theme-toggle { color:#2a5052; }
+  html.light .theme-toggle:hover { color:#0a1618; }
+
+  /* ── Edit Profile chip (sidebar) ── */
+  .edit-profile-chip {
+    font-size:0.65rem; font-weight:700; color:#849495;
+    background:var(--nb); box-shadow:var(--nr-s);
+    padding:0.18rem 0.55rem; border-radius:999px;
+    text-decoration:none; letter-spacing:0.08em;
+    text-transform:uppercase; transition:color 0.15s;
+  }
+  .edit-profile-chip:hover { color:#dce4e5; }
+  html.light .edit-profile-chip       { color:#2a5052; }
+  html.light .edit-profile-chip:hover { color:#0a1618; }
+
+  /* ── Modal close button ── */
+  .modal-close-btn {
+    background:none; border:none; cursor:pointer;
+    color:#849495; display:flex; align-items:center;
+    transition:color 0.15s; padding:0;
+  }
+  .modal-close-btn:hover { color:#dce4e5; }
+  html.light .modal-close-btn       { color:#2a5052; }
+  html.light .modal-close-btn:hover { color:#0a1618; }
 
   /* ── Sidebar logo ── */
   .cp-sidebar-logo {
@@ -518,7 +614,7 @@
       </div>
       <div style="display:flex;gap:0.4rem;">
         <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(0,219,233,0.1);color:#00dbe9;padding:0.18rem 0.55rem;border-radius:999px;">Pro</span>
-        <a href="professionalsetup.html" style="font-size:0.65rem;font-weight:700;color:#849495;background:var(--nb);box-shadow:var(--nr-s);padding:0.18rem 0.55rem;border-radius:999px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.15s;" onmouseover="this.style.color='#dce4e5'" onmouseout="this.style.color='#849495'">Edit Profile</a>
+        <a href="professionalsetup.html" class="edit-profile-chip">Edit Profile</a>
       </div>
     </div>
     <div class="nav-divider"></div>
@@ -800,7 +896,7 @@
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
       <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;" id="req-modal-title">Client Request</h3>
-      <button onclick="closeModal('modal-request')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+      <button onclick="closeModal('modal-request')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
     <div id="req-modal-body" class="mb-5"></div>
     <div style="display:flex;gap:0.65rem;">
@@ -823,7 +919,7 @@
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
       <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Add Job</h3>
-      <button onclick="closeModal('modal-job')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+      <button onclick="closeModal('modal-job')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
     <form id="job-form" onsubmit="submitJob(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
       <div class="grid grid-cols-2 gap-3">
@@ -870,7 +966,7 @@
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
       <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Log Equipment Rental</h3>
-      <button onclick="closeModal('modal-rental')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+      <button onclick="closeModal('modal-rental')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
     <form id="rental-form" onsubmit="submitRental(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
       <div>
@@ -921,7 +1017,7 @@
   <div class="modal-box" style="max-width:360px;" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
       <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">New Folder</h3>
-      <button onclick="closeModal('modal-folder')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+      <button onclick="closeModal('modal-folder')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
     <form onsubmit="submitNewFolder(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
       <div>
@@ -938,7 +1034,7 @@
   <div class="modal-box" style="max-width:420px;" onclick="event.stopPropagation()">
     <div class="flex items-center justify-between mb-4">
       <h3 style="color:#dce4e5;font-weight:800;font-size:1.1rem;">Share File</h3>
-      <button onclick="closeModal('modal-share')" style="color:#849495;background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined">close</span></button>
+      <button onclick="closeModal('modal-share')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
     <div id="share-file-name" style="font-size:0.9rem;font-weight:700;color:#dce4e5;margin-bottom:1rem;padding:0.75rem 1rem;background:var(--nb);border-radius:0.65rem;box-shadow:var(--ni-s);word-break:break-all;"></div>
     <div style="margin-bottom:1rem;">
@@ -1061,8 +1157,11 @@ function showToast(msg, isError=false) {
   const t  = document.getElementById('toast');
   const ic = document.getElementById('toast-icon');
   const tx = document.getElementById('toast-msg');
+  const isLight = document.documentElement.classList.contains('light');
   ic.textContent = isError ? 'error' : 'check_circle';
-  ic.style.color = tx.style.color = isError ? '#ffb4ab' : '#00dbe9';
+  const okColor  = isLight ? '#007d8e' : '#00dbe9';
+  const errColor = isLight ? '#b91c1c' : '#ffb4ab';
+  ic.style.color = tx.style.color = isError ? errColor : okColor;
   tx.textContent = msg;
   t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
   clearTimeout(t._t);
