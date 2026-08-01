@@ -1,7 +1,11 @@
 import os
-import sqlite3
 import secrets
 from datetime import datetime, timedelta
+
+import psycopg2
+import psycopg2.extras
+import psycopg2.errors
+
 from flask import (
     Flask, request, session, jsonify,
     send_from_directory, abort
@@ -18,39 +22,85 @@ ALLOWED_EXTENSIONS = {
     ".json", ".map", ".txt",
 }
 
-DB_PATH = "camcrew.db"
+DATABASE_URL = os.environ.get("RENDER_DATABASE_URL")
 
 # ---------------------------------------------------------------------------
 # Database helpers
 # ---------------------------------------------------------------------------
 
+class _DBCursor:
+    """Wraps a psycopg2 cursor so callers can chain .fetchone() / .fetchall()."""
+    def __init__(self, cur):
+        self._cur = cur
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+
+class _DBConn:
+    """
+    Drop-in replacement for sqlite3 connections.
+    Supports: conn.execute(sql, params), conn.commit(), context-manager.
+    Each execute() opens its own cursor backed by RealDictCursor so rows
+    behave like dicts (row["col"]) and can be passed to dict().
+    """
+    def __init__(self):
+        self._conn = psycopg2.connect(
+            DATABASE_URL,
+            cursor_factory=psycopg2.extras.RealDictCursor,
+        )
+
+    def execute(self, sql, params=None):
+        cur = self._conn.cursor()
+        cur.execute(sql, params or ())
+        return _DBCursor(cur)
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        self._conn.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type:
+            self._conn.rollback()
+        else:
+            self._conn.commit()
+        self._conn.close()
+        return False
+
+
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return _DBConn()
 
 
 def init_db():
     with get_db() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                id           SERIAL PRIMARY KEY,
                 email        TEXT    NOT NULL UNIQUE,
                 password     TEXT    NOT NULL,
                 role         TEXT    NOT NULL DEFAULT 'customer',
                 display_name TEXT,
-                created_at   TEXT    DEFAULT (datetime('now'))
+                created_at   TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS')
             )
         """)
         # Migrate: add display_name if it doesn't exist yet
-        try:
-            conn.execute("ALTER TABLE users ADD COLUMN display_name TEXT")
-        except Exception:
-            pass
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT")
 
         conn.execute("""
             CREATE TABLE IF NOT EXISTS password_reset_tokens (
-                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                id         SERIAL PRIMARY KEY,
                 user_id    INTEGER NOT NULL,
                 token      TEXT    NOT NULL UNIQUE,
                 expires_at TEXT    NOT NULL,
@@ -60,7 +110,7 @@ def init_db():
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS orders (
-                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                id               SERIAL PRIMARY KEY,
                 user_id          INTEGER NOT NULL,
                 order_ref        TEXT    NOT NULL,
                 status           TEXT    NOT NULL DEFAULT 'processing',
@@ -68,13 +118,13 @@ def init_db():
                 total_amount     REAL    NOT NULL DEFAULT 0,
                 tracking_number  TEXT,
                 tracking_status  TEXT,
-                created_at       TEXT    DEFAULT (datetime('now')),
+                created_at       TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS bookings (
-                id                INTEGER PRIMARY KEY AUTOINCREMENT,
+                id                SERIAL PRIMARY KEY,
                 user_id           INTEGER NOT NULL,
                 professional_name TEXT    NOT NULL,
                 service           TEXT    NOT NULL,
@@ -82,25 +132,25 @@ def init_db():
                 status            TEXT    NOT NULL DEFAULT 'pending',
                 amount            REAL    NOT NULL DEFAULT 0,
                 note              TEXT,
-                created_at        TEXT    DEFAULT (datetime('now')),
+                created_at        TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS payment_methods (
-                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                id         SERIAL PRIMARY KEY,
                 user_id    INTEGER NOT NULL,
                 type       TEXT    NOT NULL DEFAULT 'card',
                 label      TEXT    NOT NULL,
                 last4      TEXT,
                 is_default INTEGER NOT NULL DEFAULT 0,
-                created_at TEXT    DEFAULT (datetime('now')),
+                created_at TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS addresses (
-                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                id         SERIAL PRIMARY KEY,
                 user_id    INTEGER NOT NULL,
                 label      TEXT    NOT NULL DEFAULT 'Home',
                 full_name  TEXT    NOT NULL,
@@ -116,7 +166,7 @@ def init_db():
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS rewards (
-                id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                id      SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL UNIQUE,
                 points  INTEGER NOT NULL DEFAULT 0,
                 tier    TEXT    NOT NULL DEFAULT 'Bronze',
@@ -125,7 +175,7 @@ def init_db():
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS coupons (
-                id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                id             SERIAL PRIMARY KEY,
                 user_id        INTEGER NOT NULL,
                 code           TEXT    NOT NULL,
                 discount_value REAL    NOT NULL,
@@ -138,24 +188,23 @@ def init_db():
         """)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS refunds (
-                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                id         SERIAL PRIMARY KEY,
                 order_id   INTEGER,
                 user_id    INTEGER NOT NULL,
                 amount     REAL    NOT NULL,
                 reason     TEXT,
                 status     TEXT    NOT NULL DEFAULT 'pending',
-                created_at TEXT    DEFAULT (datetime('now')),
+                created_at TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
-        conn.commit()
 
 
 def seed_demo_data(user_id):
     """Populate sample orders/bookings/rewards for a user that has none yet."""
     import json, random, string as _string
     with get_db() as conn:
-        if conn.execute("SELECT COUNT(*) FROM orders WHERE user_id=?", (user_id,)).fetchone()[0]:
+        if conn.execute("SELECT COUNT(*) AS c FROM orders WHERE user_id=%s", (user_id,)).fetchone()['c']:
             return  # already seeded
         rnd = lambda n: ''.join(random.choices(_string.digits, k=n))
         orders = [
@@ -172,7 +221,7 @@ def seed_demo_data(user_id):
         ]
         for ref, status, items, total, trk_num, trk_status in orders:
             conn.execute(
-                "INSERT INTO orders (user_id,order_ref,status,items_json,total_amount,tracking_number,tracking_status) VALUES (?,?,?,?,?,?,?)",
+                "INSERT INTO orders (user_id,order_ref,status,items_json,total_amount,tracking_number,tracking_status) VALUES (%s,%s,%s,%s,%s,%s,%s)",
                 (user_id, ref, status, items, total, trk_num, trk_status),
             )
         bookings = [
@@ -182,20 +231,22 @@ def seed_demo_data(user_id):
         ]
         for prof, svc, date, status, amt, note in bookings:
             conn.execute(
-                "INSERT INTO bookings (user_id,professional_name,service,booking_date,status,amount,note) VALUES (?,?,?,?,?,?,?)",
+                "INSERT INTO bookings (user_id,professional_name,service,booking_date,status,amount,note) VALUES (%s,%s,%s,%s,%s,%s,%s)",
                 (user_id, prof, svc, date, status, amt, note),
             )
-        conn.execute("INSERT OR IGNORE INTO rewards (user_id,points,tier) VALUES (?,1250,'Silver')", (user_id,))
+        conn.execute(
+            "INSERT INTO rewards (user_id,points,tier) VALUES (%s,1250,'Silver') ON CONFLICT (user_id) DO NOTHING",
+            (user_id,)
+        )
         for code, val, dtype, minord, exp in [
             ("CAMCREW10", 10, "percent", 1000, "2026-12-31"),
             ("SAVE500",  500, "flat",    5000, "2026-09-30"),
         ]:
-            if not conn.execute("SELECT id FROM coupons WHERE user_id=? AND code=?", (user_id, code)).fetchone():
+            if not conn.execute("SELECT id FROM coupons WHERE user_id=%s AND code=%s", (user_id, code)).fetchone():
                 conn.execute(
-                    "INSERT INTO coupons (user_id,code,discount_value,discount_type,min_order,expires_at) VALUES (?,?,?,?,?,?)",
+                    "INSERT INTO coupons (user_id,code,discount_value,discount_type,min_order,expires_at) VALUES (%s,%s,%s,%s,%s,%s)",
                     (user_id, code, val, dtype, minord, exp),
                 )
-        conn.commit()
 
 
 init_db()
@@ -245,16 +296,15 @@ def register():
     try:
         with get_db() as conn:
             conn.execute(
-                "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+                "INSERT INTO users (email, password, role) VALUES (%s, %s, %s)",
                 (email, hashed, role),
             )
-            conn.commit()
-    except sqlite3.IntegrityError:
+    except psycopg2.IntegrityError:
         return jsonify({"ok": False, "error": "An account with that email already exists."}), 409
 
     # Log the user in immediately after registration
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT * FROM users WHERE email = %s", (email,)).fetchone()
 
     session["user_id"] = row["id"]
     session["email"]   = row["email"]
@@ -273,7 +323,7 @@ def login():
         return jsonify({"ok": False, "error": "Email and password are required."}), 400
 
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT * FROM users WHERE email = %s", (email,)).fetchone()
 
     if not row or not check_password_hash(row["password"], password):
         return jsonify({"ok": False, "error": "Invalid email or password."}), 401
@@ -300,7 +350,7 @@ def forgot_password():
         return jsonify({"ok": False, "error": "Email is required."}), 400
 
     with get_db() as conn:
-        row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT id FROM users WHERE email = %s", (email,)).fetchone()
 
     # Always return success to avoid leaking whether an account exists
     if not row:
@@ -312,14 +362,13 @@ def forgot_password():
     with get_db() as conn:
         # Invalidate any previous unused tokens for this user
         conn.execute(
-            "UPDATE password_reset_tokens SET used = 1 WHERE user_id = ? AND used = 0",
+            "UPDATE password_reset_tokens SET used = 1 WHERE user_id = %s AND used = 0",
             (row["id"],)
         )
         conn.execute(
-            "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)",
+            "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)",
             (row["id"], token, expires_at),
         )
-        conn.commit()
 
     # In production, send token via email. Here we return it so the UI can
     # construct the reset link (dev/demo mode — replace with email delivery).
@@ -344,7 +393,7 @@ def reset_password():
 
     with get_db() as conn:
         row = conn.execute(
-            "SELECT * FROM password_reset_tokens WHERE token = ? AND used = 0",
+            "SELECT * FROM password_reset_tokens WHERE token = %s AND used = 0",
             (token,)
         ).fetchone()
 
@@ -356,9 +405,8 @@ def reset_password():
 
     hashed = generate_password_hash(password)
     with get_db() as conn:
-        conn.execute("UPDATE users SET password = ? WHERE id = ?", (hashed, row["user_id"]))
-        conn.execute("UPDATE password_reset_tokens SET used = 1 WHERE id = ?", (row["id"],))
-        conn.commit()
+        conn.execute("UPDATE users SET password = %s WHERE id = %s", (hashed, row["user_id"]))
+        conn.execute("UPDATE password_reset_tokens SET used = 1 WHERE id = %s", (row["id"],))
 
     return jsonify({"ok": True, "message": "Password updated successfully. You can now sign in."})
 
@@ -382,7 +430,7 @@ def get_profile():
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
         row = conn.execute(
-            "SELECT email, role, display_name, created_at FROM users WHERE id = ?",
+            "SELECT email, role, display_name, created_at FROM users WHERE id = %s",
             (session["user_id"],)
         ).fetchone()
     if not row:
@@ -408,10 +456,9 @@ def update_profile():
         return jsonify({"ok": False, "error": "Display name must be 60 characters or fewer."}), 400
     with get_db() as conn:
         conn.execute(
-            "UPDATE users SET display_name = ? WHERE id = ?",
+            "UPDATE users SET display_name = %s WHERE id = %s",
             (display_name, session["user_id"])
         )
-        conn.commit()
     return jsonify({"ok": True, "display_name": display_name})
 
 
@@ -439,10 +486,10 @@ def customer_overview():
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        orders_count   = conn.execute("SELECT COUNT(*) FROM orders   WHERE user_id=?", (uid,)).fetchone()[0]
-        bookings_count = conn.execute("SELECT COUNT(*) FROM bookings WHERE user_id=? AND status IN ('pending','confirmed')", (uid,)).fetchone()[0]
-        addr_count     = conn.execute("SELECT COUNT(*) FROM addresses WHERE user_id=?", (uid,)).fetchone()[0]
-        row            = conn.execute("SELECT points, tier FROM rewards WHERE user_id=?", (uid,)).fetchone()
+        orders_count   = conn.execute("SELECT COUNT(*) AS c FROM orders   WHERE user_id=%s", (uid,)).fetchone()['c']
+        bookings_count = conn.execute("SELECT COUNT(*) AS c FROM bookings WHERE user_id=%s AND status IN ('pending','confirmed')", (uid,)).fetchone()['c']
+        addr_count     = conn.execute("SELECT COUNT(*) AS c FROM addresses WHERE user_id=%s", (uid,)).fetchone()['c']
+        row            = conn.execute("SELECT points, tier FROM rewards WHERE user_id=%s", (uid,)).fetchone()
         points = row["points"] if row else 0
         tier   = row["tier"]   if row else "Bronze"
     return jsonify({"ok": True, "overview": {
@@ -461,7 +508,7 @@ def customer_orders():
     import json as _json
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT * FROM orders WHERE user_id=? ORDER BY created_at DESC", (uid,)
+            "SELECT * FROM orders WHERE user_id=%s ORDER BY created_at DESC", (uid,)
         ).fetchall()
     orders = []
     for r in rows:
@@ -480,13 +527,12 @@ def cancel_order(order_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+        row = conn.execute("SELECT * FROM orders WHERE id=%s AND user_id=%s", (order_id, uid)).fetchone()
         if not row:
             return jsonify({"ok": False, "error": "Order not found."}), 404
         if row["status"] not in ("processing", "confirmed"):
             return jsonify({"ok": False, "error": f"Cannot cancel an order with status '{row['status']}'."}), 400
-        conn.execute("UPDATE orders SET status='cancelled', tracking_status=NULL WHERE id=?", (order_id,))
-        conn.commit()
+        conn.execute("UPDATE orders SET status='cancelled', tracking_status=NULL WHERE id=%s", (order_id,))
     return jsonify({"ok": True, "message": "Order cancelled."})
 
 
@@ -496,7 +542,7 @@ def track_order(order_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+        row = conn.execute("SELECT * FROM orders WHERE id=%s AND user_id=%s", (order_id, uid)).fetchone()
     if not row:
         return jsonify({"ok": False, "error": "Order not found."}), 404
     return jsonify({"ok": True, "tracking": {
@@ -514,7 +560,7 @@ def customer_bookings():
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT * FROM bookings WHERE user_id=? ORDER BY booking_date DESC", (uid,)
+            "SELECT * FROM bookings WHERE user_id=%s ORDER BY booking_date DESC", (uid,)
         ).fetchall()
     return jsonify({"ok": True, "bookings": [dict(r) for r in rows]})
 
@@ -525,13 +571,12 @@ def cancel_booking(booking_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM bookings WHERE id=? AND user_id=?", (booking_id, uid)).fetchone()
+        row = conn.execute("SELECT * FROM bookings WHERE id=%s AND user_id=%s", (booking_id, uid)).fetchone()
         if not row:
             return jsonify({"ok": False, "error": "Booking not found."}), 404
         if row["status"] in ("cancelled", "completed"):
             return jsonify({"ok": False, "error": f"Cannot cancel a booking with status '{row['status']}'."}), 400
-        conn.execute("UPDATE bookings SET status='cancelled' WHERE id=?", (booking_id,))
-        conn.commit()
+        conn.execute("UPDATE bookings SET status='cancelled' WHERE id=%s", (booking_id,))
     return jsonify({"ok": True, "message": "Booking cancelled."})
 
 
@@ -544,7 +589,7 @@ def customer_refunds():
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT r.*, o.order_ref FROM refunds r LEFT JOIN orders o ON r.order_id=o.id WHERE r.user_id=? ORDER BY r.created_at DESC",
+            "SELECT r.*, o.order_ref FROM refunds r LEFT JOIN orders o ON r.order_id=o.id WHERE r.user_id=%s ORDER BY r.created_at DESC",
             (uid,)
         ).fetchall()
     return jsonify({"ok": True, "refunds": [dict(r) for r in rows]})
@@ -561,19 +606,18 @@ def request_refund():
     if not order_id:
         return jsonify({"ok": False, "error": "order_id is required."}), 400
     with get_db() as conn:
-        order = conn.execute("SELECT * FROM orders WHERE id=? AND user_id=?", (order_id, uid)).fetchone()
+        order = conn.execute("SELECT * FROM orders WHERE id=%s AND user_id=%s", (order_id, uid)).fetchone()
         if not order:
             return jsonify({"ok": False, "error": "Order not found."}), 404
         if order["status"] not in ("cancelled", "delivered"):
             return jsonify({"ok": False, "error": "Refunds can only be requested for delivered or cancelled orders."}), 400
-        existing = conn.execute("SELECT id FROM refunds WHERE order_id=? AND user_id=? AND status!='rejected'", (order_id, uid)).fetchone()
+        existing = conn.execute("SELECT id FROM refunds WHERE order_id=%s AND user_id=%s AND status!='rejected'", (order_id, uid)).fetchone()
         if existing:
             return jsonify({"ok": False, "error": "A refund request already exists for this order."}), 409
         conn.execute(
-            "INSERT INTO refunds (order_id,user_id,amount,reason,status) VALUES (?,?,?,?,'pending')",
+            "INSERT INTO refunds (order_id,user_id,amount,reason,status) VALUES (%s,%s,%s,%s,'pending')",
             (order_id, uid, order["total_amount"], reason),
         )
-        conn.commit()
     return jsonify({"ok": True, "message": "Refund request submitted."})
 
 
@@ -585,7 +629,7 @@ def get_payment_methods():
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        rows = conn.execute("SELECT * FROM payment_methods WHERE user_id=? ORDER BY is_default DESC, created_at DESC", (uid,)).fetchall()
+        rows = conn.execute("SELECT * FROM payment_methods WHERE user_id=%s ORDER BY is_default DESC, created_at DESC", (uid,)).fetchall()
     return jsonify({"ok": True, "methods": [dict(r) for r in rows]})
 
 
@@ -601,13 +645,12 @@ def add_payment_method():
     if not label:
         return jsonify({"ok": False, "error": "Label is required."}), 400
     with get_db() as conn:
-        count = conn.execute("SELECT COUNT(*) FROM payment_methods WHERE user_id=?", (uid,)).fetchone()[0]
+        count = conn.execute("SELECT COUNT(*) AS c FROM payment_methods WHERE user_id=%s", (uid,)).fetchone()['c']
         is_default = 1 if count == 0 else 0
         conn.execute(
-            "INSERT INTO payment_methods (user_id,type,label,last4,is_default) VALUES (?,?,?,?,?)",
+            "INSERT INTO payment_methods (user_id,type,label,last4,is_default) VALUES (%s,%s,%s,%s,%s)",
             (uid, mtype, label, last4, is_default),
         )
-        conn.commit()
     return jsonify({"ok": True, "message": "Payment method added."})
 
 
@@ -617,15 +660,21 @@ def delete_payment_method(method_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM payment_methods WHERE id=? AND user_id=?", (method_id, uid)).fetchone()
+        row = conn.execute("SELECT * FROM payment_methods WHERE id=%s AND user_id=%s", (method_id, uid)).fetchone()
         if not row:
             return jsonify({"ok": False, "error": "Payment method not found."}), 404
-        conn.execute("DELETE FROM payment_methods WHERE id=?", (method_id,))
+        conn.execute("DELETE FROM payment_methods WHERE id=%s", (method_id,))
         if row["is_default"]:
-            conn.execute(
-                "UPDATE payment_methods SET is_default=1 WHERE user_id=? ORDER BY created_at DESC LIMIT 1", (uid,)
-            )
-        conn.commit()
+            # PostgreSQL doesn't support ORDER BY/LIMIT in UPDATE directly — use a subquery
+            conn.execute("""
+                UPDATE payment_methods SET is_default=1
+                WHERE id = (
+                    SELECT id FROM payment_methods
+                    WHERE user_id=%s
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                )
+            """, (uid,))
     return jsonify({"ok": True, "message": "Payment method removed."})
 
 
@@ -635,11 +684,10 @@ def set_default_payment(method_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        if not conn.execute("SELECT id FROM payment_methods WHERE id=? AND user_id=?", (method_id, uid)).fetchone():
+        if not conn.execute("SELECT id FROM payment_methods WHERE id=%s AND user_id=%s", (method_id, uid)).fetchone():
             return jsonify({"ok": False, "error": "Payment method not found."}), 404
-        conn.execute("UPDATE payment_methods SET is_default=0 WHERE user_id=?", (uid,))
-        conn.execute("UPDATE payment_methods SET is_default=1 WHERE id=?", (method_id,))
-        conn.commit()
+        conn.execute("UPDATE payment_methods SET is_default=0 WHERE user_id=%s", (uid,))
+        conn.execute("UPDATE payment_methods SET is_default=1 WHERE id=%s", (method_id,))
     return jsonify({"ok": True})
 
 
@@ -651,7 +699,7 @@ def get_addresses():
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        rows = conn.execute("SELECT * FROM addresses WHERE user_id=? ORDER BY is_default DESC, id DESC", (uid,)).fetchall()
+        rows = conn.execute("SELECT * FROM addresses WHERE user_id=%s ORDER BY is_default DESC, id DESC", (uid,)).fetchall()
     return jsonify({"ok": True, "addresses": [dict(r) for r in rows]})
 
 
@@ -666,18 +714,17 @@ def add_address():
         if not (d.get(f) or "").strip():
             return jsonify({"ok": False, "error": f"'{f}' is required."}), 400
     with get_db() as conn:
-        count = conn.execute("SELECT COUNT(*) FROM addresses WHERE user_id=?", (uid,)).fetchone()[0]
+        count = conn.execute("SELECT COUNT(*) AS c FROM addresses WHERE user_id=%s", (uid,)).fetchone()['c']
         is_default = 1 if count == 0 else int(bool(d.get("is_default")))
         if is_default:
-            conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=?", (uid,))
+            conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=%s", (uid,))
         conn.execute(
-            "INSERT INTO addresses (user_id,label,full_name,line1,line2,city,state,pincode,phone,is_default) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO addresses (user_id,label,full_name,line1,line2,city,state,pincode,phone,is_default) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
             (uid, (d.get("label") or "Home").strip(), d["full_name"].strip(),
              d["line1"].strip(), (d.get("line2") or "").strip(),
              d["city"].strip(), d["state"].strip(), d["pincode"].strip(),
              (d.get("phone") or "").strip(), is_default),
         )
-        conn.commit()
     return jsonify({"ok": True, "message": "Address added."})
 
 
@@ -688,14 +735,13 @@ def update_address(addr_id):
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     d = request.get_json(force=True)
     with get_db() as conn:
-        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+        if not conn.execute("SELECT id FROM addresses WHERE id=%s AND user_id=%s", (addr_id, uid)).fetchone():
             return jsonify({"ok": False, "error": "Address not found."}), 404
-        conn.execute("""UPDATE addresses SET label=?,full_name=?,line1=?,line2=?,city=?,state=?,pincode=?,phone=? WHERE id=?""",
+        conn.execute("""UPDATE addresses SET label=%s,full_name=%s,line1=%s,line2=%s,city=%s,state=%s,pincode=%s,phone=%s WHERE id=%s""",
             ((d.get("label") or "Home").strip(), (d.get("full_name") or "").strip(),
              (d.get("line1") or "").strip(), (d.get("line2") or "").strip(),
              (d.get("city") or "").strip(), (d.get("state") or "").strip(),
              (d.get("pincode") or "").strip(), (d.get("phone") or "").strip(), addr_id))
-        conn.commit()
     return jsonify({"ok": True, "message": "Address updated."})
 
 
@@ -705,10 +751,9 @@ def delete_address(addr_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+        if not conn.execute("SELECT id FROM addresses WHERE id=%s AND user_id=%s", (addr_id, uid)).fetchone():
             return jsonify({"ok": False, "error": "Address not found."}), 404
-        conn.execute("DELETE FROM addresses WHERE id=?", (addr_id,))
-        conn.commit()
+        conn.execute("DELETE FROM addresses WHERE id=%s", (addr_id,))
     return jsonify({"ok": True, "message": "Address deleted."})
 
 
@@ -718,11 +763,10 @@ def set_default_address(addr_id):
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        if not conn.execute("SELECT id FROM addresses WHERE id=? AND user_id=?", (addr_id, uid)).fetchone():
+        if not conn.execute("SELECT id FROM addresses WHERE id=%s AND user_id=%s", (addr_id, uid)).fetchone():
             return jsonify({"ok": False, "error": "Address not found."}), 404
-        conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=?", (uid,))
-        conn.execute("UPDATE addresses SET is_default=1 WHERE id=?", (addr_id,))
-        conn.commit()
+        conn.execute("UPDATE addresses SET is_default=0 WHERE user_id=%s", (uid,))
+        conn.execute("UPDATE addresses SET is_default=1 WHERE id=%s", (addr_id,))
     return jsonify({"ok": True})
 
 
@@ -734,8 +778,8 @@ def customer_rewards():
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     with get_db() as conn:
-        rw  = conn.execute("SELECT * FROM rewards WHERE user_id=?", (uid,)).fetchone()
-        cps = conn.execute("SELECT * FROM coupons WHERE user_id=? AND used=0 ORDER BY expires_at ASC", (uid,)).fetchall()
+        rw  = conn.execute("SELECT * FROM rewards WHERE user_id=%s", (uid,)).fetchone()
+        cps = conn.execute("SELECT * FROM coupons WHERE user_id=%s AND used=0 ORDER BY expires_at ASC", (uid,)).fetchall()
     points = rw["points"] if rw else 0
     tier   = rw["tier"]   if rw else "Bronze"
     tier_thresholds = {"Bronze": 0, "Silver": 1000, "Gold": 5000}
