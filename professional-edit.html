@@ -552,6 +552,21 @@
             </div>
           </div>
           <div class="mb-4">
+            <label class="cc-label">Service Category <span style="text-transform:none;letter-spacing:0;font-weight:400;color:#849495;">(optional)</span></label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.35rem;" id="svc-cat-chips">
+              <button class="cat-chip" data-svc-cat="Photography" onclick="selectSvcCat(this)">Photography</button>
+              <button class="cat-chip" data-svc-cat="Videography" onclick="selectSvcCat(this)">Videography</button>
+              <button class="cat-chip" data-svc-cat="Editing" onclick="selectSvcCat(this)">Editing</button>
+              <button class="cat-chip" data-svc-cat="Drone" onclick="selectSvcCat(this)">Drone</button>
+              <button class="cat-chip" data-svc-cat="Lighting" onclick="selectSvcCat(this)">Lighting</button>
+              <button class="cat-chip" data-svc-cat="Sound" onclick="selectSvcCat(this)">Sound</button>
+              <button class="cat-chip" data-svc-cat="Color Grading" onclick="selectSvcCat(this)">Color Grading</button>
+              <button class="cat-chip" data-svc-cat="Direction" onclick="selectSvcCat(this)">Direction</button>
+              <button class="cat-chip" data-svc-cat="Design" onclick="selectSvcCat(this)">Design</button>
+              <button class="cat-chip" data-svc-cat="Other" onclick="selectSvcCat(this)">Other</button>
+            </div>
+          </div>
+          <div class="mb-4">
             <label class="cc-label" for="svc-desc">Short Description <span style="text-transform:none;letter-spacing:0;font-weight:400;color:#849495;">(optional)</span></label>
             <input class="cc-input" id="svc-desc" type="text" placeholder="What's included in this service…" maxlength="120">
           </div>
@@ -797,18 +812,27 @@ function selectUnit(btn) {
   selectedUnit = btn.dataset.unit;
 }
 
+function selectSvcCat(btn) {
+  const already = btn.classList.contains('selected');
+  document.querySelectorAll('#svc-cat-chips .cat-chip').forEach(b => b.classList.remove('selected'));
+  if (!already) btn.classList.add('selected'); // clicking same chip deselects it
+}
+
 function addService() {
   const name  = document.getElementById('svc-name').value.trim();
   const price = document.getElementById('svc-price').value.trim();
   const desc  = document.getElementById('svc-desc').value.trim();
+  const catBtn = document.querySelector('#svc-cat-chips .cat-chip.selected');
+  const category = catBtn ? catBtn.dataset.svcCat : '';
   if (!name)  { showToast('Enter a service name', 'error', '#ffb4ab'); return; }
   if (!price) { showToast('Enter a rate', 'error', '#ffb4ab'); return; }
   const id = Date.now();
-  services.push({ id, name, price, unit: selectedUnit, desc });
+  services.push({ id, name, price, unit: selectedUnit, desc, category });
   renderServices();
   document.getElementById('svc-name').value  = '';
   document.getElementById('svc-price').value = '';
   document.getElementById('svc-desc').value  = '';
+  document.querySelectorAll('#svc-cat-chips .cat-chip').forEach(b => b.classList.remove('selected'));
   showToast('Service added', 'check_circle', '#00dbe9');
   markDirty();
 }
@@ -828,9 +852,12 @@ function renderServices() {
     const el = document.createElement('div');
     el.className = 'service-item';
     el.innerHTML = `
-      <div>
-        <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;">${esc(s.name)}</p>
-        ${s.desc ? `<p style="font-size:0.8rem;color:#849495;margin-top:2px;">${esc(s.desc)}</p>` : ''}
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.15rem;">
+          <p style="font-size:0.95rem;font-weight:700;color:#dce4e5;margin:0;">${esc(s.name)}</p>
+          ${s.category ? `<span style="display:inline-flex;align-items:center;padding:0.15rem 0.55rem;border-radius:999px;font-size:0.66rem;font-weight:700;letter-spacing:0.05em;background:rgba(0,219,233,0.1);color:#00dbe9;border:1px solid rgba(0,219,233,0.2);">${esc(s.category)}</span>` : ''}
+        </div>
+        ${s.desc ? `<p style="font-size:0.8rem;color:#849495;margin:0;">${esc(s.desc)}</p>` : ''}
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <p style="font-size:0.95rem;font-weight:800;color:#00dbe9;">$${Number(s.price).toLocaleString()}</p>
