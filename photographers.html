@@ -169,29 +169,49 @@
     --filter-focus-shadow: 0 0 0 3px rgba(0,240,255,0.08);
   }
 
-  .filter-input {
+  .filter-input,
+  .filter-input[type="text"],
+  .filter-input[type="number"],
+  select.filter-input {
     width: 100%;
-    background: var(--filter-bg);
-    border: 1px solid var(--filter-border);
+    background: var(--filter-bg) !important;
+    border: 1px solid var(--filter-border) !important;
     border-radius: var(--filter-radius);
     padding: 0.72rem 1rem;
-    color: #dce4e5; font-size: 0.875rem;
+    color: #dce4e5 !important; font-size: 0.875rem;
     font-family: 'Plus Jakarta Sans', sans-serif;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    /* Ensure consistent height across all field types */
     height: 2.75rem; box-sizing: border-box;
+    /* Kill any browser/Tailwind autofill or default white backgrounds */
+    -webkit-text-fill-color: #dce4e5;
+    color-scheme: dark;
   }
-  .filter-input:focus {
-    border-color: var(--filter-focus-border);
-    background: var(--filter-focus-bg);
+  .filter-input:focus,
+  .filter-input[type="text"]:focus,
+  .filter-input[type="number"]:focus,
+  select.filter-input:focus {
+    border-color: var(--filter-focus-border) !important;
+    background: var(--filter-focus-bg) !important;
     box-shadow: var(--filter-focus-shadow);
   }
+  /* Kill autofill blue/white flash on Webkit */
+  .filter-input:-webkit-autofill,
+  .filter-input:-webkit-autofill:hover,
+  .filter-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px rgba(10,14,20,0.98) inset !important;
+    -webkit-text-fill-color: #dce4e5 !important;
+    border-color: var(--filter-border) !important;
+  }
   .filter-input::placeholder { color: rgba(90,122,125,0.55); }
-  /* Normalize select to match text inputs exactly */
+  /* Remove number input spinner arrows */
+  .filter-input[type="number"]::-webkit-inner-spin-button,
+  .filter-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .filter-input[type="number"] { -moz-appearance: textfield; }
+  /* Normalize select */
   select.filter-input {
     appearance: none; -webkit-appearance: none; cursor: pointer;
-    padding-right: 2.25rem; /* space for custom arrow */
+    padding-right: 2.25rem;
   }
 
   .btn-search {
