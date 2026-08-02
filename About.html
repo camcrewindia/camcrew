@@ -151,26 +151,67 @@
         <!-- Founder card -->
         <div class="flex justify-center lg:justify-end reveal-right">
           <div class="relative">
-            <!-- Decorative rings -->
+            <!-- Outer glow halo -->
+            <div class="absolute inset-0 rounded-3xl pointer-events-none" style="box-shadow: 0 0 80px rgba(0,240,255,0.18), 0 0 160px rgba(0,240,255,0.07);"></div>
+            <!-- Spinning ring -->
             <div class="founder-ring ring-spin"></div>
             <div class="founder-ring-2"></div>
+
             <!-- Card -->
-            <div class="relative w-[340px] h-[420px] rounded-3xl overflow-hidden glass-panel border border-glass-stroke shadow-[0_0_60px_rgba(0,240,255,0.12)] group">
+            <div class="relative w-[360px] h-[460px] rounded-3xl overflow-hidden group"
+                 style="border: 1px solid rgba(0,240,255,0.22); background: rgba(14,14,16,0.9);">
+
+              <!-- Photo -->
               <img
-                class="img-zoom w-full h-full object-cover"
+                class="img-zoom w-full h-full object-cover object-top"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM_Da2TTGhHDSYUo7XU7rbOUDatk3tS7wwAsyFQGEFAXagVhmOb5DiiXGFS5Klgpop86T7CT4OHvB9ywUlArzhvZsgWp8zs6t-jJiNowznSZczS6E_elZoPDW9o_Y1EcDEhQRHnACHO3R2D4se0f4Sa71wh9z619Z8G7W0ydZRMNJ8beQrgeoQPkGY7HMktofx8zrlu1dDyfykGXKSaeg5nOCUd6tpjmmJSqgSve7-7u5Ib87Z6FExw2oMKmvGn-ralWtHfEFpN5MiMQ"
                 alt="Mohammad Thaha Hussain — Founder, Camcrew India"
               >
-              <div class="absolute inset-0 bg-gradient-to-t from-obsidian-base/80 via-obsidian-base/10 to-transparent"></div>
-              <!-- Tag -->
-              <div class="absolute top-5 right-5 bg-surface-container/80 backdrop-blur-md border border-glass-stroke rounded-full px-3 py-1 flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+
+              <!-- Deep bottom gradient -->
+              <div class="absolute inset-0" style="background: linear-gradient(to top, #0A0A0B 0%, rgba(10,10,11,0.75) 38%, transparent 65%);"></div>
+
+              <!-- Subtle grid overlay -->
+              <div class="absolute inset-0 pointer-events-none opacity-20"
+                   style="background-image: linear-gradient(rgba(0,240,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.08) 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+              <!-- Corner brackets — top-left -->
+              <div class="absolute top-4 left-4 pointer-events-none">
+                <div style="width:18px;height:18px;border-top:2px solid rgba(0,240,255,0.7);border-left:2px solid rgba(0,240,255,0.7);border-radius:3px 0 0 0;"></div>
+              </div>
+              <!-- Corner brackets — top-right (badge sits here, shift bracket down) -->
+              <div class="absolute top-4 right-4 pointer-events-none">
+                <div style="width:18px;height:18px;border-top:2px solid rgba(0,240,255,0.7);border-right:2px solid rgba(0,240,255,0.7);border-radius:0 3px 0 0;"></div>
+              </div>
+              <!-- Corner brackets — bottom-left -->
+              <div class="absolute bottom-4 left-4 pointer-events-none">
+                <div style="width:18px;height:18px;border-bottom:2px solid rgba(0,240,255,0.7);border-left:2px solid rgba(0,240,255,0.7);border-radius:0 0 0 3px;"></div>
+              </div>
+              <!-- Corner brackets — bottom-right -->
+              <div class="absolute bottom-4 right-4 pointer-events-none">
+                <div style="width:18px;height:18px;border-bottom:2px solid rgba(0,240,255,0.7);border-right:2px solid rgba(0,240,255,0.7);border-radius:0 0 3px 0;"></div>
+              </div>
+
+              <!-- Founder badge -->
+              <div class="absolute top-5 right-[52px] flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md"
+                   style="background: rgba(0,240,255,0.12); border: 1px solid rgba(0,240,255,0.35);">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
                 <span class="font-label-caps text-[10px] text-primary-container tracking-widest uppercase">Founder</span>
               </div>
-              <!-- Name overlay -->
-              <div class="absolute bottom-0 inset-x-0 p-7">
-                <p class="font-black text-2xl text-on-surface leading-tight">Mohammad Thaha Hussain</p>
-                <p class="text-primary-container font-label-caps text-label-caps tracking-widest mt-1">Camcrew India</p>
+
+              <!-- Bottom neon line accent -->
+              <div class="absolute bottom-0 inset-x-0 h-[2px]"
+                   style="background: linear-gradient(90deg, transparent, rgba(0,240,255,0.7) 50%, transparent); filter: blur(1px);"></div>
+
+              <!-- Name block -->
+              <div class="absolute bottom-0 inset-x-0 px-7 pb-8">
+                <!-- Divider -->
+                <div class="w-10 h-px mb-4" style="background: linear-gradient(to right, rgba(0,240,255,0.6), transparent);"></div>
+                <p class="font-black text-[26px] text-white leading-tight tracking-tight">Mohammad Thaha<br>Hussain</p>
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-primary-container flex-shrink-0"></span>
+                  <p class="text-primary-container font-label-caps text-label-caps tracking-widest uppercase text-[11px]">Camcrew India</p>
+                </div>
               </div>
             </div>
           </div>
