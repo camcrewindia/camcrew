@@ -159,29 +159,50 @@
     letter-spacing: 0.1em; text-transform: uppercase;
     color: rgba(0,240,255,0.55); margin-bottom: 0.5rem;
   }
+  /* Shared token for all filter field shapes */
+  :root {
+    --filter-radius: 0.875rem;
+    --filter-bg: rgba(255,255,255,0.04);
+    --filter-border: rgba(255,255,255,0.1);
+    --filter-focus-border: rgba(0,240,255,0.45);
+    --filter-focus-bg: rgba(0,240,255,0.04);
+    --filter-focus-shadow: 0 0 0 3px rgba(0,240,255,0.08);
+  }
+
   .filter-input {
     width: 100%;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 0.875rem;
+    background: var(--filter-bg);
+    border: 1px solid var(--filter-border);
+    border-radius: var(--filter-radius);
     padding: 0.72rem 1rem;
     color: #dce4e5; font-size: 0.875rem;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    /* Ensure consistent height across all field types */
+    height: 2.75rem; box-sizing: border-box;
   }
   .filter-input:focus {
-    border-color: rgba(0,240,255,0.4);
-    background: rgba(0,240,255,0.03);
-    box-shadow: 0 0 0 3px rgba(0,240,255,0.07);
+    border-color: var(--filter-focus-border);
+    background: var(--filter-focus-bg);
+    box-shadow: var(--filter-focus-shadow);
   }
-  .filter-input::placeholder { color: rgba(90,120,123,0.7); }
-  select.filter-input { appearance: none; cursor: pointer; }
+  .filter-input::placeholder { color: rgba(90,122,125,0.55); }
+  /* Normalize select to match text inputs exactly */
+  select.filter-input {
+    appearance: none; -webkit-appearance: none; cursor: pointer;
+    padding-right: 2.25rem; /* space for custom arrow */
+  }
 
   .btn-search {
     width: 100%;
     background: linear-gradient(135deg, #00f0ff 0%, #00c8e0 100%);
-    color: #001f22; font-weight: 900; padding: 0.76rem 1.5rem;
-    border-radius: 0.875rem; border: none; cursor: pointer;
+    color: #001f22; font-weight: 900;
+    /* Same height + radius as the inputs */
+    height: 2.75rem; box-sizing: border-box;
+    padding: 0 1.5rem;
+    border-radius: var(--filter-radius);
+    border: none; cursor: pointer;
     font-size: 0.875rem; letter-spacing: 0.02em;
     transition: all 0.2s;
     box-shadow: 0 6px 24px rgba(0,240,255,0.28);
