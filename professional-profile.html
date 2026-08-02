@@ -8,7 +8,7 @@
 <script src="tailwind-config.js"></script>
 <link rel="stylesheet" href="styles.css"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <style>
   :root {
@@ -25,171 +25,304 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--nb);
+    background: #0a0a0b;
     color: #dce4e5;
     font-family: 'Plus Jakarta Sans', sans-serif;
     min-height: 100vh;
   }
 
-  /* ── Layout ── */
+  /* ── Page wrapper ── */
   .page-wrap {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
-    padding: 2rem 1rem 4rem;
+    padding: 0 1rem 5rem;
   }
 
-  /* ── Profile header ── */
-  .profile-header {
+  /* ══════════════════════════════════════
+     COVER BANNER
+  ══════════════════════════════════════ */
+  .profile-banner {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(135deg, #0d1f22 0%, #0a0a0b 40%, #150d1f 100%);
+    overflow: hidden;
+    border-radius: 0 0 1.25rem 1.25rem;
+  }
+
+  @media (min-width: 640px) { .profile-banner { height: 240px; } }
+
+  .banner-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,219,233,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,219,233,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .banner-glow-left {
+    position: absolute; top: -60px; left: -60px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,219,233,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .banner-glow-right {
+    position: absolute; bottom: -80px; right: -40px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(235,178,255,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .banner-actions {
+    position: absolute; top: 1rem; right: 1rem;
+    display: flex; gap: 0.5rem;
+  }
+
+  /* ══════════════════════════════════════
+     PROFILE IDENTITY BLOCK
+  ══════════════════════════════════════ */
+  .identity-block {
+    position: relative;
+    padding: 0 1.5rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .avatar-positioner {
     display: flex;
-    align-items: flex-start;
-    gap: 2.5rem;
-    margin-bottom: 2rem;
+    align-items: flex-end;
+    gap: 1.25rem;
+    margin-top: -48px;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
   }
 
-  .avatar-wrap { flex-shrink: 0; position: relative; }
+  @media (min-width: 540px) { .avatar-positioner { margin-top: -56px; } }
 
   .avatar-ring {
-    width: 5.5rem;
-    height: 5.5rem;
+    width: 104px; height: 104px;
     border-radius: 50%;
     background: linear-gradient(135deg, #00dbe9, #ebb2ff);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: #001f22;
-    box-shadow: 0 0 0 3px var(--nb), 0 0 0 5px rgba(0,219,233,0.4), var(--nr-s);
-    overflow: hidden;
-    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem; font-weight: 900; color: #001f22;
+    border: 4px solid #0a0a0b;
+    box-shadow: 0 0 0 1px rgba(0,219,233,0.3), 0 8px 32px rgba(0,0,0,0.6);
+    overflow: hidden; position: relative; flex-shrink: 0;
   }
 
-  @media (min-width: 500px) {
-    .avatar-ring { width: 7rem; height: 7rem; font-size: 2.8rem; }
+  @media (min-width: 540px) {
+    .avatar-ring { width: 120px; height: 120px; font-size: 3rem; }
   }
 
-  /* ── Avatar image ── */
   .avatar-ring img {
     width: 100%; height: 100%; object-fit: cover;
-    position: absolute; inset: 0;
-    border-radius: 50%;
+    position: absolute; inset: 0; border-radius: 50%;
   }
 
-  /* ── Profile info ── */
-  .profile-info { flex: 1; min-width: 0; }
+  .avatar-actions {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    align-items: center; padding-bottom: 0.5rem;
+    margin-left: auto;
+  }
 
+  /* ── Identity text ── */
   .profile-name {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #dce4e5;
-    margin-bottom: 0.1rem;
-    line-height: 1.2;
-    word-break: break-word;
+    font-size: 1.65rem; font-weight: 900; color: #f0f6f7;
+    line-height: 1.15; margin-bottom: 0.2rem;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 540px) { .profile-name { font-size: 2rem; } }
+
+  .profile-handle {
+    font-size: 0.82rem; font-weight: 600; color: #556669;
+    margin-bottom: 0.35rem; letter-spacing: 0.01em;
   }
 
   .profile-title {
-    font-size: 0.9rem;
-    font-weight: 600;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.88rem; font-weight: 700; color: var(--ac);
+    margin-bottom: 0.6rem;
+  }
+
+  .pro-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.2rem 0.6rem; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.07em;
+    text-transform: uppercase;
+    background: rgba(0,219,233,0.12);
+    border: 1px solid rgba(0,219,233,0.3);
     color: var(--ac);
-    margin-bottom: 0.75rem;
+    vertical-align: middle;
   }
 
-  /* ── Stats row ── */
-  .stats-row {
-    display: flex;
-    gap: 1.75rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .stat-item { text-align: center; }
-  .stat-num  { font-size: 1.15rem; font-weight: 900; color: #dce4e5; display: block; }
-  .stat-lbl  { font-size: 0.72rem; font-weight: 700; color: #849495; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  /* ── Bio ── */
   .profile-bio {
-    font-size: 0.875rem;
-    color: #b0bdc0;
-    line-height: 1.65;
-    margin-bottom: 1rem;
-    max-width: 420px;
+    font-size: 0.88rem; color: #8fa8ab; line-height: 1.7;
+    max-width: 520px; margin-bottom: 1rem;
     white-space: pre-wrap;
   }
 
-  /* ── Category chips ── */
-  .chips-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.28rem 0.75rem; border-radius: 999px;
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
-    background: rgba(0,219,233,0.1); color: var(--ac);
-    border: 1px solid rgba(0,219,233,0.25);
+  /* ── Meta row (website, member since, location) ── */
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 0.9rem;
+    margin-bottom: 1rem; align-items: center;
   }
 
+  .meta-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.8rem; font-weight: 600; color: #556669;
+    text-decoration: none;
+  }
+
+  .meta-item.link { color: var(--ac); }
+  .meta-item.link:hover { text-decoration: underline; }
+  .meta-item .material-symbols-outlined { font-size: 0.95rem; }
+
+  /* ── Category / location chips ── */
+  .chips-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.3rem 0.8rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+    background: rgba(0,219,233,0.08); color: #6fd8e0;
+    border: 1px solid rgba(0,219,233,0.18);
+    transition: border-color 0.2s;
+  }
+  .chip:hover { border-color: rgba(0,219,233,0.4); }
+
+  .chip-location {
+    background: rgba(235,178,255,0.08); color: #d9a8f5;
+    border: 1px solid rgba(235,178,255,0.18);
+  }
+  .chip-location:hover { border-color: rgba(235,178,255,0.4); }
+
   /* ── Social links ── */
-  .socials-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .socials-row { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+
   .social-link {
     display: inline-flex; align-items: center; gap: 0.35rem;
-    padding: 0.32rem 0.85rem; border-radius: 999px;
-    font-size: 0.76rem; font-weight: 700;
-    background: var(--nb); box-shadow: var(--nr-s);
+    padding: 0.35rem 0.9rem; border-radius: 0.6rem;
+    font-size: 0.75rem; font-weight: 700;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
     color: #849495; text-decoration: none;
     transition: all 0.2s;
   }
-  .social-link:hover { color: var(--ac); box-shadow: 0 0 10px rgba(0,219,233,0.2); }
-  .social-link .material-symbols-outlined { font-size: 0.9rem; }
+  .social-link:hover {
+    color: var(--ac);
+    border-color: rgba(0,219,233,0.3);
+    background: rgba(0,219,233,0.06);
+  }
+  .social-link .material-symbols-outlined { font-size: 0.95rem; }
 
-  /* ── Action buttons ── */
-  .action-row { display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  /* ══════════════════════════════════════
+     STATS STRIP
+  ══════════════════════════════════════ */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 2rem;
+  }
 
-  .btn-dashboard {
+  .stat-cell {
+    background: rgba(20,20,20,0.8);
+    padding: 1.1rem 0.75rem;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.25rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 1.5rem; font-weight: 900; color: #f0f6f7;
+    line-height: 1; letter-spacing: -0.03em;
+  }
+
+  .stat-lbl {
+    font-size: 0.68rem; font-weight: 700; color: #4a6466;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  /* ══════════════════════════════════════
+     ACTION BUTTONS
+  ══════════════════════════════════════ */
+  .btn-primary {
     display: inline-flex; align-items: center; gap: 0.45rem;
-    padding: 0.6rem 1.4rem; border-radius: 0.75rem;
-    font-size: 0.85rem; font-weight: 800; cursor: pointer; border: none;
-    background: linear-gradient(135deg, #00dbe9, #00b8c4);
-    color: #001f22;
-    box-shadow: var(--nr-s);
-    text-decoration: none;
-    transition: all 0.2s;
+    padding: 0.6rem 1.35rem; border-radius: 0.75rem;
+    font-size: 0.83rem; font-weight: 800; cursor: pointer; border: none;
+    background: linear-gradient(135deg, #00dbe9, #00b5c0);
+    color: #001f22; text-decoration: none;
+    transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,219,233,0.25);
   }
-  .btn-dashboard:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,219,233,0.35); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,219,233,0.38); }
 
-  .btn-edit {
+  .btn-ghost {
     display: inline-flex; align-items: center; gap: 0.45rem;
-    padding: 0.6rem 1.2rem; border-radius: 0.75rem;
-    font-size: 0.85rem; font-weight: 800; cursor: pointer; border: none;
-    background: var(--nb); box-shadow: var(--nr-s);
-    color: #dce4e5; text-decoration: none;
-    transition: all 0.2s;
+    padding: 0.58rem 1.15rem; border-radius: 0.75rem;
+    font-size: 0.83rem; font-weight: 700; cursor: pointer;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #b8cbce; text-decoration: none;
+    transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif;
   }
-  .btn-edit:hover { box-shadow: var(--nr); }
-
-  /* ── Section heading ── */
-  .section-divider {
-    display: flex; align-items: center; gap: 0.75rem;
-    margin: 2rem 0 1.25rem;
-    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
-    text-transform: uppercase; color: #849495;
-  }
-  .section-divider::before, .section-divider::after {
-    content: ''; flex: 1; height: 1px;
-    background: var(--ns); box-shadow: 0 1px 0 var(--nl);
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.18);
+    color: #dce4e5;
   }
 
-  /* ── Portfolio grid (Instagram 3-col) ── */
+  .btn-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.3rem; height: 2.3rem; border-radius: 0.65rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #849495; cursor: pointer; text-decoration: none;
+    transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .btn-icon:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #dce4e5; }
+  .btn-icon .material-symbols-outlined { font-size: 1rem; }
+
+  /* ══════════════════════════════════════
+     SECTION HEADINGS
+  ══════════════════════════════════════ */
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin: 2.5rem 0 1.25rem;
+  }
+
+  .section-title {
+    font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #556669;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 14px; border-radius: 2px;
+    background: linear-gradient(to bottom, var(--ac), var(--ac2));
+    flex-shrink: 0;
+  }
+
+  /* ══════════════════════════════════════
+     PORTFOLIO GRID
+  ══════════════════════════════════════ */
   .portfolio-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 3px;
-    border-radius: 0.85rem;
+    border-radius: 1rem;
     overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
   }
 
   .portfolio-cell {
     aspect-ratio: 1;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     background: rgba(255,255,255,0.03);
     cursor: pointer;
   }
@@ -197,128 +330,224 @@
   .portfolio-cell img,
   .portfolio-cell video {
     width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.35s ease;
+    object-fit: cover; display: block;
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
   }
 
   .portfolio-cell:hover img,
-  .portfolio-cell:hover video { transform: scale(1.06); }
+  .portfolio-cell:hover video { transform: scale(1.08); }
 
   .portfolio-cell .cell-overlay {
     position: absolute; inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: linear-gradient(135deg, rgba(0,30,35,0.6) 0%, rgba(0,0,0,0.5) 100%);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: opacity 0.25s;
   }
   .portfolio-cell:hover .cell-overlay { opacity: 1; }
+
+  .cell-overlay-icon {
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    background: rgba(0,219,233,0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,219,233,0.3);
+    display: flex; align-items: center; justify-content: center;
+    transform: scale(0.8); transition: transform 0.25s;
+  }
+  .portfolio-cell:hover .cell-overlay-icon { transform: scale(1); }
+  .cell-overlay-icon .material-symbols-outlined { font-size: 1.25rem; color: var(--ac); }
 
   .portfolio-cell .cell-placeholder {
     width: 100%; height: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
   }
 
-  /* ── Services grid ── */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.85rem;
-  }
-
-  .service-card {
-    background: var(--nb);
-    border-radius: 1rem;
-    padding: 1.1rem 1.2rem;
-    box-shadow: var(--nr-s);
-    display: flex; flex-direction: column; gap: 0.3rem;
-  }
-
-  .service-name { font-size: 0.9rem; font-weight: 800; color: #dce4e5; }
-  .service-price { font-size: 0.82rem; font-weight: 700; color: var(--ac); }
-  .service-desc { font-size: 0.78rem; color: #849495; line-height: 1.5; }
-
-  /* ── Location pills ── */
-  .location-chip {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.28rem 0.75rem; border-radius: 999px;
-    font-size: 0.75rem; font-weight: 700;
-    background: rgba(235,178,255,0.1); color: var(--ac2);
-    border: 1px solid rgba(235,178,255,0.2);
-  }
-
   /* ── Empty state ── */
   .grid-empty {
     grid-column: 1 / -1;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.65rem; padding: 3rem 2rem; text-align: center;
+    gap: 0.75rem; padding: 4rem 2rem; text-align: center;
+    background: rgba(255,255,255,0.01);
   }
 
-  /* ── Member badge ── */
-  .member-since {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    font-size: 0.72rem; color: #849495; font-weight: 600;
-    margin-bottom: 0.75rem;
+  .empty-icon-wrap {
+    width: 4.5rem; height: 4.5rem; border-radius: 1.25rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.25rem;
   }
 
-  /* ── Website ── */
-  .website-link {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    font-size: 0.82rem; color: var(--ac); font-weight: 700;
-    text-decoration: none; margin-bottom: 0.75rem;
+  /* ══════════════════════════════════════
+     SERVICES GRID
+  ══════════════════════════════════════ */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1rem;
   }
-  .website-link:hover { text-decoration: underline; }
 
-  /* ── Lightbox ── */
+  .service-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1rem;
+    padding: 1.2rem 1.3rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ac), var(--ac2));
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .service-card:hover {
+    border-color: rgba(0,219,233,0.2);
+    background: rgba(0,219,233,0.04);
+    transform: translateY(-2px);
+  }
+  .service-card:hover::before { opacity: 1; }
+
+  .service-icon {
+    width: 2.25rem; height: 2.25rem; border-radius: 0.65rem;
+    background: rgba(0,219,233,0.1); border: 1px solid rgba(0,219,233,0.15);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.25rem;
+  }
+  .service-icon .material-symbols-outlined { font-size: 1.05rem; color: var(--ac); }
+
+  .service-name { font-size: 0.92rem; font-weight: 800; color: #e0ebec; }
+  .service-price {
+    font-size: 0.8rem; font-weight: 700; color: var(--ac);
+    display: inline-flex; align-items: center; gap: 0.25rem;
+  }
+  .service-desc { font-size: 0.78rem; color: #5a7a7d; line-height: 1.55; margin-top: 0.1rem; }
+
+  /* ══════════════════════════════════════
+     SHARE PROFILE CARD
+  ══════════════════════════════════════ */
+  .share-card {
+    background: rgba(0,219,233,0.04);
+    border: 1px solid rgba(0,219,233,0.12);
+    border-radius: 1rem;
+    padding: 1.4rem 1.6rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+
+  .share-card-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+  }
+
+  .share-title { font-size: 0.92rem; font-weight: 800; color: #dce4e5; margin-bottom: 0.2rem; }
+  .share-sub   { font-size: 0.78rem; color: #4d666a; }
+
+  .url-display {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,219,233,0.12);
+    border-radius: 0.65rem;
+    padding: 0.6rem 0.9rem;
+    overflow: hidden;
+  }
+  .url-display .material-symbols-outlined { font-size: 0.95rem; color: #4d666a; flex-shrink: 0; }
+  .url-text {
+    font-size: 0.8rem; color: var(--ac); font-weight: 700;
+    font-family: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ══════════════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════════════ */
   .lightbox-overlay {
     position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.92); backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.94); backdrop-filter: blur(12px);
     display: none; align-items: center; justify-content: center;
     padding: 1rem;
   }
   .lightbox-overlay.open { display: flex; }
-  .lightbox-inner { position: relative; max-width: 820px; width: 100%; max-height: 90vh; }
+  .lightbox-inner { position: relative; max-width: 860px; width: 100%; }
   .lightbox-inner img, .lightbox-inner video {
-    width: 100%; max-height: 80vh; object-fit: contain; border-radius: 0.75rem;
+    width: 100%; max-height: 82vh; object-fit: contain; border-radius: 0.85rem;
+    display: block;
   }
   .lightbox-close {
-    position: absolute; top: -2.5rem; right: 0;
-    background: none; border: none; color: #dce4e5; cursor: pointer;
-    font-size: 1.5rem; display: flex; align-items: center;
+    position: absolute; top: -3rem; right: 0;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 0.5rem; color: #dce4e5; cursor: pointer;
+    font-size: 1.25rem; display: flex; align-items: center; justify-content: center;
+    width: 2.25rem; height: 2.25rem;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.14); }
+
+  /* ══════════════════════════════════════
+     TOAST
+  ══════════════════════════════════════ */
+  #pp-toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    background: rgba(20,20,20,0.96);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #dce4e5; border-radius: 999px; padding: 0.65rem 1.4rem;
+    font-size: 0.82rem; font-weight: 700;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    z-index: 400; opacity: 0; transition: opacity 0.25s;
+    white-space: nowrap;
+  }
+  #pp-toast.show { opacity: 1; }
+
+  /* ══════════════════════════════════════
+     SKELETON
+  ══════════════════════════════════════ */
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.04; }
+    50%       { opacity: 0.09; }
   }
 
-  /* ── Light mode ── */
+  .skel {
+    border-radius: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+
+  .skel-banner {
+    height: 200px; width: 100%;
+    border-radius: 0 0 1.25rem 1.25rem;
+    background: rgba(255,255,255,0.04);
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+
+  /* ══════════════════════════════════════
+     LIGHT MODE
+  ══════════════════════════════════════ */
   html.light {
     --nb: #f0f4f5;
     --ns: rgba(0,0,0,0.1);
     --nl: rgba(255,255,255,0.9);
   }
-  html.light body              { color: #0a1618; }
-  html.light .profile-name     { color: #0a1618; }
-  html.light .profile-bio      { color: #3a5052; }
-  html.light .service-name     { color: #0a1618; }
-  html.light .portfolio-cell   { background: rgba(0,0,0,0.06); }
-  html.light .stat-num         { color: #0a1618; }
-
-  /* ── Toast ── */
-  #pp-toast {
-    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-    background: rgba(20,20,20,0.95); color: #dce4e5;
-    border-radius: 999px; padding: 0.7rem 1.4rem;
-    font-size: 0.85rem; font-weight: 700;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    z-index: 400; opacity: 0; transition: opacity 0.3s;
-    white-space: nowrap;
+  html.light body { background: #eef3f5; color: #0a1618; }
+  html.light .profile-banner {
+    background: linear-gradient(135deg, #d8f0f3 0%, #eef3f5 40%, #e8d8f5 100%);
   }
-  #pp-toast.show { opacity: 1; }
-
-  /* ── Loading skeleton ── */
-  @keyframes shimmer { to { background-position: -200% center; } }
-  .skel {
-    border-radius: 0.5rem;
-    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
-    background-size: 200%;
-    animation: shimmer 1.5s infinite;
-  }
+  html.light .profile-name { color: #0a1618; }
+  html.light .profile-bio  { color: #3a5052; }
+  html.light .stat-num     { color: #0a1618; }
+  html.light .stat-cell    { background: rgba(240,244,245,0.95); }
+  html.light .service-card { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08); }
+  html.light .service-name { color: #0a1618; }
+  html.light .portfolio-cell { background: rgba(0,0,0,0.05); }
+  html.light .btn-ghost    { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #2a4042; }
+  html.light .btn-ghost:hover { background: rgba(0,0,0,0.08); }
+  html.light .btn-icon     { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #4a6668; }
+  html.light .social-link  { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #4a6668; }
+  html.light .section-title { color: #7a9a9c; }
+  html.light .meta-item    { color: #7a9a9c; }
+  html.light .share-card   { background: rgba(0,219,233,0.05); }
+  html.light .url-display  { background: rgba(0,0,0,0.05); }
+  html.light .profile-handle { color: #9ab8bb; }
+  html.light .stats-strip  { background: rgba(0,0,0,0.06); }
 </style>
 </head>
 <body>
@@ -328,24 +557,28 @@
 <script src="header-loader.js"></script>
 
 <!-- ── Main ── -->
-<main class="page-wrap" id="profile-root">
+<main id="profile-root">
 
   <!-- Loading skeleton -->
   <div id="skeleton">
-    <div style="display:flex;gap:2.5rem;margin-bottom:2rem;flex-wrap:wrap;">
-      <div class="skel" style="width:7rem;height:7rem;border-radius:50%;flex-shrink:0;"></div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:0.65rem;padding-top:0.5rem;">
-        <div class="skel" style="height:1.6rem;max-width:220px;"></div>
-        <div class="skel" style="height:1rem;max-width:160px;"></div>
-        <div style="display:flex;gap:1.5rem;margin-top:0.25rem;">
-          <div class="skel" style="height:2.5rem;width:60px;"></div>
-          <div class="skel" style="height:2.5rem;width:60px;"></div>
-          <div class="skel" style="height:2.5rem;width:60px;"></div>
+    <div class="skel-banner"></div>
+    <div class="page-wrap">
+      <div style="display:flex;align-items:flex-end;gap:1.25rem;margin-top:-52px;margin-bottom:1.25rem;flex-wrap:wrap;">
+        <div class="skel" style="width:110px;height:110px;border-radius:50%;flex-shrink:0;border:4px solid #0a0a0b;"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:0.6rem;padding-bottom:0.5rem;">
+          <div class="skel" style="height:1.8rem;max-width:200px;"></div>
+          <div class="skel" style="height:0.9rem;max-width:140px;"></div>
         </div>
       </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:0.85rem;overflow:hidden;">
-      ${Array(6).fill('<div class="skel" style="aspect-ratio:1;"></div>').join('')}
+      <div class="skel" style="height:3.5rem;border-radius:1rem;margin-bottom:2rem;"></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:1rem;overflow:hidden;">
+        <div class="skel" style="aspect-ratio:1;"></div>
+        <div class="skel" style="aspect-ratio:1;"></div>
+        <div class="skel" style="aspect-ratio:1;"></div>
+        <div class="skel" style="aspect-ratio:1;"></div>
+        <div class="skel" style="aspect-ratio:1;"></div>
+        <div class="skel" style="aspect-ratio:1;"></div>
+      </div>
     </div>
   </div>
 
@@ -395,7 +628,7 @@ const S = { user: null, pro: null, username: null };
     if (raw) S.pro = JSON.parse(raw);
   } catch (_) {}
 
-  // Sync profile to server (creates/updates professional_profiles row + returns username)
+  // Sync profile to server
   if (S.user?.role === 'professional') {
     try {
       const payload = {
@@ -441,7 +674,6 @@ function render(vaultFiles, jobs) {
   const skeleton = document.getElementById('skeleton');
   const content  = document.getElementById('profile-content');
 
-  // Merge data sources
   const displayName  = S.user?.display_name || S.pro?.name || (S.user?.email?.split('@')[0]) || 'Professional';
   const title        = S.pro?.title        || '';
   const bio          = S.pro?.bio          || '';
@@ -453,31 +685,29 @@ function render(vaultFiles, jobs) {
   const website      = S.pro?.website      || '';
   const joinedAt     = S.user?.created_at  || S.pro?.savedAt || '';
 
-  // Stats
   const totalPortfolio = portfolio.length || vaultFiles.filter(f => ['image','video'].includes(f.type)).length;
   const completedJobs  = jobs.filter(j => j.status === 'completed').length;
+  const initial        = displayName.charAt(0).toUpperCase();
 
-  const initial = displayName.charAt(0).toUpperCase();
-
-  // Avatar — use photo from pro profile if available
   const avatarPhoto = S.pro?.photo || null;
   const avatarHTML  = avatarPhoto
     ? `<img src="${esc(avatarPhoto)}" alt="${esc(displayName)}" onerror="this.remove()"/><span>${initial}</span>`
     : `<span>${initial}</span>`;
 
-  // Member since
-  const memberSince = joinedAt ? new Date(joinedAt).toLocaleDateString('en-US', { month:'short', year:'numeric' }) : '';
+  const memberSince = joinedAt
+    ? new Date(joinedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    : '';
 
   /* ─ Portfolio grid ─ */
-  const allMedia = portfolio.length ? portfolio : vaultFiles.filter(f => ['image','video'].includes(f.type));
+  const allMedia  = portfolio.length ? portfolio : vaultFiles.filter(f => ['image','video'].includes(f.type));
   const gridCells = allMedia.length
     ? allMedia.map((item, i) => {
-        const isVideo = item.type === 'video' || (item.isVideo);
+        const isVideo = item.type === 'video' || item.isVideo;
         const url     = item.url || '';
         if (!url) {
           return `<div class="portfolio-cell">
             <div class="cell-placeholder">
-              <span class="material-symbols-outlined" style="font-size:1.75rem;color:rgba(255,255,255,0.15);">${isVideo ? 'movie' : 'image'}</span>
+              <span class="material-symbols-outlined" style="font-size:1.75rem;color:rgba(255,255,255,0.1);">${isVideo ? 'movie' : 'image'}</span>
             </div>
           </div>`;
         }
@@ -487,14 +717,20 @@ function render(vaultFiles, jobs) {
                  onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>`
             : `<img src="${esc(url)}" alt="Portfolio ${i+1}" loading="lazy"/>`}
           <div class="cell-overlay">
-            <span class="material-symbols-outlined" style="color:#fff;font-size:1.5rem;">${isVideo ? 'play_circle' : 'zoom_in'}</span>
+            <div class="cell-overlay-icon">
+              <span class="material-symbols-outlined">${isVideo ? 'play_arrow' : 'zoom_in'}</span>
+            </div>
           </div>
         </div>`;
       }).join('')
     : `<div class="grid-empty">
-        <span class="material-symbols-outlined" style="font-size:3rem;color:rgba(255,255,255,0.1);">photo_library</span>
-        <p style="color:#849495;font-size:0.85rem;">No portfolio items yet.<br>Add media in Professional Setup.</p>
-        <a href="professionalsetup.html" style="margin-top:0.5rem;font-size:0.8rem;color:var(--ac);font-weight:700;text-decoration:none;">Set up profile →</a>
+        <div class="empty-icon-wrap">
+          <span class="material-symbols-outlined" style="font-size:1.75rem;color:rgba(255,255,255,0.15);">photo_library</span>
+        </div>
+        <p style="color:#4d666a;font-size:0.85rem;font-weight:600;">No portfolio items yet.</p>
+        <a href="professionalsetup.html" style="font-size:0.8rem;color:var(--ac);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">
+          Set up profile <span class="material-symbols-outlined" style="font-size:0.85rem;">arrow_forward</span>
+        </a>
       </div>`;
 
   /* ─ Services ─ */
@@ -502,18 +738,24 @@ function render(vaultFiles, jobs) {
     ? `<div class="services-grid">
         ${services.map(s => `
           <div class="service-card">
+            <div class="service-icon">
+              <span class="material-symbols-outlined">camera</span>
+            </div>
             <p class="service-name">${esc(s.name)}</p>
-            ${s.price ? `<p class="service-price">${fmtPrice(s)}</p>` : ''}
+            ${s.price ? `<p class="service-price"><span class="material-symbols-outlined" style="font-size:0.8rem;">currency_rupee</span>${fmtPrice(s)}</p>` : ''}
             ${s.desc  ? `<p class="service-desc">${esc(s.desc)}</p>` : ''}
           </div>`).join('')}
        </div>`
-    : `<p style="color:#849495;font-size:0.85rem;">No services listed yet.</p>`;
+    : `<div style="padding:2rem 0;text-align:center;">
+        <p style="color:#4d666a;font-size:0.85rem;font-weight:600;">No services listed yet.</p>
+        <a href="professionalsetup.html" style="font-size:0.8rem;color:var(--ac);font-weight:700;text-decoration:none;">Add services →</a>
+       </div>`;
 
   /* ─ Social links ─ */
   const socialDefs = [
-    { key: 'instagram', icon: 'camera_alt',      label: 'Instagram', prefix: 'https://instagram.com/' },
-    { key: 'facebook',  icon: 'thumb_up',         label: 'Facebook',  prefix: 'https://facebook.com/'  },
-    { key: 'tiktok',    icon: 'music_video',      label: 'TikTok',    prefix: 'https://tiktok.com/@'   },
+    { key: 'instagram', icon: 'camera_alt',  label: 'Instagram', prefix: 'https://instagram.com/' },
+    { key: 'facebook',  icon: 'thumb_up',    label: 'Facebook',  prefix: 'https://facebook.com/'  },
+    { key: 'tiktok',    icon: 'music_video', label: 'TikTok',    prefix: 'https://tiktok.com/@'   },
   ];
   const socialsHTML = socialDefs
     .filter(d => socials[d.key])
@@ -523,120 +765,151 @@ function render(vaultFiles, jobs) {
         <span class="material-symbols-outlined">${d.icon}</span>${d.label}
       </a>`).join('');
 
+  /* ─ Meta row items ─ */
+  const metaItems = [];
+  if (website) {
+    const cleanUrl = website.startsWith('http') ? website : 'https://' + website;
+    metaItems.push(`<a href="${esc(cleanUrl)}" target="_blank" rel="noopener noreferrer" class="meta-item link">
+      <span class="material-symbols-outlined">link</span>
+      ${esc(website.replace(/^https?:\/\//, ''))}
+    </a>`);
+  }
+  if (memberSince) {
+    metaItems.push(`<span class="meta-item">
+      <span class="material-symbols-outlined">calendar_month</span>
+      Joined ${memberSince}
+    </span>`);
+  }
+
   /* ─ Render ─ */
   content.innerHTML = `
-    <!-- Profile header -->
-    <div class="profile-header">
-      <div class="avatar-wrap">
-        <div class="avatar-ring">${avatarHTML}</div>
+    <!-- Cover Banner -->
+    <div class="profile-banner">
+      <div class="banner-lines"></div>
+      <div class="banner-glow-left"></div>
+      <div class="banner-glow-right"></div>
+      <div class="banner-actions">
+        <a href="professional-dashboard.html" class="btn-primary" style="padding:0.5rem 1rem;font-size:0.78rem;">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">dashboard</span>
+          Dashboard
+        </a>
       </div>
+    </div>
 
-      <div class="profile-info">
-        <!-- Action buttons -->
-        <div class="action-row" style="margin-bottom:0.9rem;">
-          <a href="professional-dashboard.html" class="btn-dashboard">
-            <span class="material-symbols-outlined" style="font-size:1rem;">dashboard</span>
-            Dashboard
-          </a>
-          <a href="professional-edit.html" class="btn-edit">
-            <span class="material-symbols-outlined" style="font-size:1rem;">edit</span>
-            Edit Profile
-          </a>
-          <a href="professionalsetup.html" class="btn-edit" title="Setup Wizard">
-            <span class="material-symbols-outlined" style="font-size:1rem;">tune</span>
-          </a>
-        </div>
-
-        <h1 class="profile-name">${esc(displayName)}</h1>
-        ${S.username ? `<p style="font-size:0.85rem;font-weight:700;color:#849495;margin-bottom:0.3rem;letter-spacing:0.01em;">@${esc(S.username)}</p>` : ''}
-        ${title ? `<p class="profile-title">${esc(title)}</p>` : ''}
-
-        ${memberSince ? `<div class="member-since">
-          <span class="material-symbols-outlined" style="font-size:0.85rem;">calendar_month</span>
-          Member since ${memberSince}
-        </div>` : ''}
-
-        <!-- Stats -->
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-num">${totalPortfolio}</span>
-            <span class="stat-lbl">Portfolio</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">${services.length}</span>
-            <span class="stat-lbl">Services</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">${completedJobs}</span>
-            <span class="stat-lbl">Completed</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">${locations.length}</span>
-            <span class="stat-lbl">Cities</span>
+    <!-- Identity Block -->
+    <div class="page-wrap">
+      <div class="identity-block">
+        <!-- Avatar row -->
+        <div class="avatar-positioner">
+          <div class="avatar-ring">${avatarHTML}</div>
+          <div class="avatar-actions">
+            <a href="professional-edit.html" class="btn-ghost" style="font-size:0.78rem;padding:0.45rem 0.9rem;">
+              <span class="material-symbols-outlined" style="font-size:0.88rem;">edit</span>
+              Edit Profile
+            </a>
+            <a href="professionalsetup.html" class="btn-icon" title="Setup Wizard">
+              <span class="material-symbols-outlined">tune</span>
+            </a>
           </div>
         </div>
+
+        <!-- Name & title -->
+        <h1 class="profile-name">
+          ${esc(displayName)}
+          <span class="pro-badge" style="font-size:0.58rem;vertical-align:middle;margin-left:0.5rem;">
+            <span class="material-symbols-outlined" style="font-size:0.7rem;fill:1;">verified</span>
+            Pro
+          </span>
+        </h1>
+        ${S.username ? `<p class="profile-handle">@${esc(S.username)}</p>` : ''}
+        ${title ? `<p class="profile-title">
+          <span class="material-symbols-outlined" style="font-size:0.95rem;">photo_camera</span>
+          ${esc(title)}
+        </p>` : ''}
 
         ${bio ? `<p class="profile-bio">${esc(bio)}</p>` : ''}
 
-        ${website ? `<a href="${website.startsWith('http') ? esc(website) : 'https://' + esc(website)}"
-          target="_blank" rel="noopener noreferrer" class="website-link">
-          <span class="material-symbols-outlined" style="font-size:0.9rem;">link</span>
-          ${esc(website.replace(/^https?:\/\//, ''))}
-        </a>` : ''}
+        ${metaItems.length ? `<div class="meta-row">${metaItems.join('')}</div>` : ''}
 
         ${categories.length ? `<div class="chips-row">
           ${categories.map(c => `<span class="chip">${esc(c)}</span>`).join('')}
         </div>` : ''}
 
-        ${socialsHTML ? `<div class="socials-row">${socialsHTML}</div>` : ''}
-
         ${locations.length ? `<div class="chips-row">
-          ${locations.map(l => `<span class="location-chip">
+          ${locations.map(l => `<span class="chip chip-location">
             <span class="material-symbols-outlined" style="font-size:0.75rem;">location_on</span>${esc(l)}
           </span>`).join('')}
         </div>` : ''}
+
+        ${socialsHTML ? `<div class="socials-row">${socialsHTML}</div>` : ''}
       </div>
-    </div>
 
-    <!-- Portfolio grid -->
-    <div class="section-divider">Portfolio</div>
-    <div class="portfolio-grid" id="portfolio-grid">${gridCells}</div>
-
-    <!-- Services -->
-    <div class="section-divider">Services</div>
-    ${servicesHTML}
-
-    <!-- Share profile nudge -->
-    <div class="section-divider">Share Profile</div>
-    <div style="background:rgba(0,219,233,0.06);border:1px solid rgba(0,219,233,0.15);border-radius:1rem;padding:1.25rem 1.5rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.85rem;">
-        <div>
-          <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">Your public profile link</p>
-          <p style="color:#849495;font-size:0.78rem;">Share this with clients — no login required to view it.</p>
+      <!-- Stats Strip -->
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <span class="stat-num">${totalPortfolio}</span>
+          <span class="stat-lbl">Portfolio</span>
         </div>
-        <button onclick="copyProfileLink()" style="
-          display:inline-flex;align-items:center;gap:0.45rem;
-          padding:0.55rem 1.2rem;border-radius:0.75rem;border:none;cursor:pointer;
-          background:rgba(0,219,233,0.15);color:var(--ac);font-weight:800;font-size:0.82rem;
-          font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.2s;flex-shrink:0;"
-          onmouseover="this.style.background='rgba(0,219,233,0.25)'"
-          onmouseout="this.style.background='rgba(0,219,233,0.15)'">
-          <span class="material-symbols-outlined" style="font-size:1rem;">content_copy</span>
-          Copy Link
-        </button>
+        <div class="stat-cell">
+          <span class="stat-num">${services.length}</span>
+          <span class="stat-lbl">Services</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">${completedJobs}</span>
+          <span class="stat-lbl">Completed</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">${locations.length}</span>
+          <span class="stat-lbl">Cities</span>
+        </div>
       </div>
-      ${S.username ? `
-      <div style="display:flex;align-items:center;gap:0.5rem;background:var(--nb);border-radius:0.65rem;padding:0.6rem 0.9rem;box-shadow:var(--ni-s);overflow:hidden;">
-        <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;flex-shrink:0;">link</span>
-        <span style="font-size:0.82rem;color:var(--ac);font-weight:700;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(window.location.origin)}/@${esc(S.username)}</span>
-      </div>` : `
-      <p style="font-size:0.78rem;color:#849495;">Profile link will appear here once your profile data is saved.</p>`}
-    </div>
+
+      <!-- Portfolio -->
+      <div class="section-head">
+        <h2 class="section-title">Portfolio</h2>
+        ${allMedia.length ? `<span style="font-size:0.75rem;color:#4d666a;font-weight:600;">${allMedia.length} item${allMedia.length !== 1 ? 's' : ''}</span>` : ''}
+      </div>
+      <div class="portfolio-grid" id="portfolio-grid">${gridCells}</div>
+
+      <!-- Services -->
+      <div class="section-head">
+        <h2 class="section-title">Services</h2>
+      </div>
+      ${servicesHTML}
+
+      <!-- Share Profile -->
+      <div class="section-head">
+        <h2 class="section-title">Share Profile</h2>
+      </div>
+      <div class="share-card">
+        <div class="share-card-top">
+          <div>
+            <p class="share-title">Your public profile link</p>
+            <p class="share-sub">Share with clients — no login required to view.</p>
+          </div>
+          <button onclick="copyProfileLink()" style="
+            display:inline-flex;align-items:center;gap:0.45rem;
+            padding:0.55rem 1.15rem;border-radius:0.7rem;border:none;cursor:pointer;
+            background:rgba(0,219,233,0.14);color:var(--ac);font-weight:800;font-size:0.8rem;
+            font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.2s;flex-shrink:0;"
+            onmouseover="this.style.background='rgba(0,219,233,0.24)'"
+            onmouseout="this.style.background='rgba(0,219,233,0.14)'">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;">content_copy</span>
+            Copy Link
+          </button>
+        </div>
+        ${S.username
+          ? `<div class="url-display">
+              <span class="material-symbols-outlined">link</span>
+              <span class="url-text">${esc(window.location.origin)}/@${esc(S.username)}</span>
+             </div>`
+          : `<p style="font-size:0.78rem;color:#4d666a;">Profile link appears once your data is saved.</p>`}
+      </div>
+
+    </div><!-- /page-wrap -->
   `;
 
-  // Store media for lightbox
   window._lightboxMedia = allMedia;
-
   skeleton.style.display = 'none';
   content.style.display  = 'block';
 }
@@ -650,15 +923,14 @@ function openLightbox(idx) {
   const isVideo = media.type === 'video' || media.isVideo;
   const lb = document.getElementById('lightbox-content');
   lb.innerHTML = isVideo
-    ? `<video src="${esc(media.url)}" controls autoplay style="width:100%;max-height:80vh;border-radius:0.75rem;"></video>`
-    : `<img src="${esc(media.url)}" alt="Portfolio" style="width:100%;max-height:80vh;object-fit:contain;border-radius:0.75rem;"/>`;
+    ? `<video src="${esc(media.url)}" controls autoplay style="width:100%;max-height:82vh;border-radius:0.85rem;"></video>`
+    : `<img src="${esc(media.url)}" alt="Portfolio" style="width:100%;max-height:82vh;object-fit:contain;border-radius:0.85rem;"/>`;
   document.getElementById('lightbox').classList.add('open');
 }
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
-  const lb = document.getElementById('lightbox-content');
-  lb.innerHTML = '';
+  document.getElementById('lightbox-content').innerHTML = '';
 }
 
 document.addEventListener('keydown', e => {
@@ -673,7 +945,7 @@ function copyProfileLink() {
     ? window.location.origin + '/@' + S.username
     : window.location.origin + '/professional-profile.html';
   navigator.clipboard.writeText(url)
-    .then(() => showToast(`Copied: ${url}`))
+    .then(() => showToast('Link copied to clipboard'))
     .catch(() => showToast('Could not copy link.'));
 }
 
@@ -688,7 +960,7 @@ function fmtPrice(s) {
   if (!s.price) return '';
   const unit = s.unit || 'project';
   const num  = Number(s.price).toLocaleString('en-IN');
-  return `₹${num} / ${unit}`;
+  return `${num} / ${unit}`;
 }
 
 function showToast(msg) {
@@ -698,7 +970,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Theme toggle
 function toggleTheme() {
   const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
   document.documentElement.className = next;
