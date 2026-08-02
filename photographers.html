@@ -1,246 +1,711 @@
-<!DOCTYPE html><html class="dark" lang="en" ><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Camcrew Studio | Professional Photographers</title>
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Photographers | CamCrew Studio</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="tailwind-config.js"></script>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+  /* ── Ambient ── */
+  body { background: #06080a; }
+  .ambient-orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(100px);
+  }
+
+  /* ── Hero ── */
+  .hero-section {
+    position: relative; z-index: 1; overflow: hidden;
+    padding: 7rem 0 4rem;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+    background-size: 55px 55px;
+    mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.3) 70%, transparent);
+  }
+  .hero-glow {
+    position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
+    width: 700px; height: 350px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0,240,255,0.06) 0%, transparent 70%);
+    filter: blur(40px); pointer-events: none;
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    background: rgba(10,13,17,0.95);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.5rem;
+    backdrop-filter: blur(20px);
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .filter-label {
+    display: block; font-size: 0.65rem; font-weight: 800;
+    letter-spacing: 0.09em; text-transform: uppercase;
+    color: rgba(0,240,255,0.6); margin-bottom: 0.5rem;
+  }
+  .filter-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.7rem 1rem;
+    color: #dce4e5; font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .filter-input:focus {
+    border-color: rgba(0,240,255,0.4);
+    box-shadow: 0 0 0 3px rgba(0,240,255,0.07);
+  }
+  .filter-input::placeholder { color: #3a5a5d; }
+  select.filter-input { appearance: none; cursor: pointer; }
+
+  /* ── Sort chips ── */
+  .sort-chip {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.4rem 0.9rem; border-radius: 999px; cursor: pointer;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #5a7a7d; background: rgba(255,255,255,0.03);
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .sort-chip:hover { border-color: rgba(0,240,255,0.3); color: #00f0ff; }
+  .sort-chip.active {
+    background: rgba(0,240,255,0.1);
+    border-color: rgba(0,240,255,0.35);
+    color: #00f0ff;
+    box-shadow: 0 0 12px rgba(0,240,255,0.15);
+  }
+
+  /* ── Search button ── */
+  .btn-search {
+    width: 100%;
+    background: linear-gradient(135deg, #00f0ff, #00b8d9);
+    color: #001f22; font-weight: 900; padding: 0.75rem 1.5rem;
+    border-radius: 0.875rem; border: none; cursor: pointer;
+    font-size: 0.875rem; letter-spacing: 0.02em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(0,240,255,0.25);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .btn-search:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,240,255,0.38); }
+  .btn-search:active { transform: none; }
+
+  /* ── Results count ── */
+  .results-meta {
+    font-size: 0.8rem; color: #4a6a6d; font-weight: 600;
+  }
+  .results-meta strong { color: #dce4e5; }
+
+  /* ── Professional card ── */
+  .pro-card {
+    background: rgba(10,13,17,0.95);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    animation: cardFadeIn 0.4s ease both;
+  }
+  @keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .pro-card:hover {
+    border-color: rgba(0,240,255,0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,240,255,0.08);
+  }
+  .card-avatar-wrap {
+    height: 11rem; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-avatar-initials {
+    font-size: 3.2rem; font-weight: 900; select: none;
+    position: relative; z-index: 1;
+  }
+  .card-avatar-glow {
+    position: absolute; inset: 0;
+    opacity: 0.3;
+  }
+  .card-body { padding: 1.1rem 1.25rem 1.25rem; }
+  .card-name {
+    font-size: 1rem; font-weight: 800; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 0.15rem;
+  }
+  .card-title {
+    font-size: 0.78rem; color: #5a7a7d; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 0.75rem;
+  }
+  .card-meta {
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.75rem; color: #4a6a6d;
+  }
+  .card-meta .material-symbols-outlined { font-size: 0.9rem; }
+  .card-divider {
+    height: 1px; background: rgba(255,255,255,0.06); margin: 0.85rem 0;
+  }
+  .card-rate {
+    font-size: 0.85rem; font-weight: 800; color: #00f0ff;
+  }
+  .card-cats { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.65rem; }
+  .card-cat {
+    font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 999px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    color: #5a7a7d; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .card-actions {
+    display: flex; gap: 0.5rem; margin-top: 1rem;
+  }
+  .btn-profile {
+    flex: 1; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    color: #8aa0a3; font-weight: 700; font-size: 0.78rem;
+    padding: 0.6rem; border-radius: 0.65rem;
+    text-decoration: none; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+  }
+  .btn-profile:hover {
+    background: rgba(255,255,255,0.08); color: #dce4e5;
+    border-color: rgba(255,255,255,0.16);
+  }
+  .btn-book-card {
+    flex: 1; text-align: center;
+    background: rgba(0,240,255,0.1);
+    border: 1px solid rgba(0,240,255,0.22);
+    color: #00f0ff; font-weight: 800; font-size: 0.78rem;
+    padding: 0.6rem; border-radius: 0.65rem;
+    text-decoration: none; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+  }
+  .btn-book-card:hover {
+    background: #00f0ff; color: #001f22;
+    box-shadow: 0 4px 18px rgba(0,240,255,0.3);
+  }
+
+  /* ── INTL badge ── */
+  .intl-badge {
+    position: absolute; top: 0.75rem; right: 0.75rem; z-index: 2;
+    background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,240,255,0.3); border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.06em; color: #00f0ff;
+  }
+
+  /* ── Verified badge ── */
+  .verified-dot {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    font-size: 0.65rem; font-weight: 700; color: rgba(0,240,255,0.7);
+  }
+  .verified-dot .material-symbols-outlined { font-size: 0.78rem; }
+
+  /* ── Load more ── */
+  .btn-load-more {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 2.5rem; border-radius: 0.875rem;
+    border: 1.5px solid rgba(0,240,255,0.25);
+    color: #00f0ff; font-weight: 800; font-size: 0.88rem;
+    background: rgba(0,240,255,0.05); cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 0 0 rgba(0,240,255,0);
+  }
+  .btn-load-more:hover {
+    background: rgba(0,240,255,0.1); border-color: rgba(0,240,255,0.5);
+    box-shadow: 0 0 24px rgba(0,240,255,0.15);
+    transform: translateY(-1px);
+  }
+
+  /* ── Skeleton ── */
+  @keyframes shimmer { to { background-position: -200% center; } }
+  .skel {
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, rgba(255,255,255,0.025) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.025) 75%);
+    background-size: 200%; animation: shimmer 1.8s infinite;
+  }
+  .skel-card { border-radius: 1.25rem; overflow: hidden; }
+
+  /* ── Empty / error state ── */
+  .empty-state {
+    grid-column: 1/-1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.85rem;
+    padding: 5rem 2rem; text-align: center;
+    border: 1px dashed rgba(255,255,255,0.07); border-radius: 1.25rem;
+  }
+
+  /* ── CTA section ── */
+  .cta-section {
+    background: rgba(10,13,17,0.95);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 2rem; padding: 3.5rem;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(20px);
+  }
+  .cta-section::before {
+    content: ''; position: absolute; right: -80px; top: -80px;
+    width: 360px; height: 360px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+</style>
 </head>
-<body class="bg-obsidian-base selection:bg-primary selection:text-on-primary">
-<!-- Top Navigation Bar -->
-<div id="site-header"></div>
-<main class="pb-stack-xl py-4 pt-40"><section class="px-margin-desktop mb-8 relative overflow-hidden">
-<!-- Advanced Filter Bar -->
-<div class="glass-panel p-6 rounded-2xl neon-glow-blue grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6 items-end">
-<div class="space-y-2">
-<label class="font-label-caps text-primary text-[10px] block">LOCATION</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">location_on</span>
-<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-10 py-2.5 text-body-md outline-none transition-colors" placeholder="City or Region" type="text">
-</div>
-</div>
-<div class="space-y-2">
-<label class="font-label-caps text-primary text-[10px] block">STYLE</label>
-<select class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none appearance-none cursor-pointer">
-<option>All Styles</option>
-<option>Cinematic</option>
-<option>Portrait</option>
-<option>Drone / Aerial</option>
-<option>Commercial</option>
-</select>
-</div>
-<div class="space-y-2">
-<label class="font-label-caps text-primary text-[10px] block">EXPERIENCE</label>
-<select class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none appearance-none cursor-pointer">
-<option>Any Level</option>
-<option>Pro (5+ Years)</option>
-<option>Elite (10+ Years)</option>
-<option>Emerging</option>
-</select>
-</div>
-<div class="space-y-2">
-<label class="font-label-caps text-primary text-[10px] block">PRICE RANGE</label>
-<div class="flex items-center gap-2">
-<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none" placeholder="Min" type="number">
-<span class="text-outline">-</span>
-<input class="w-full bg-surface-container-low border-b border-glass-stroke focus:border-primary px-4 py-2.5 text-body-md outline-none" placeholder="Max" type="number">
-</div>
-</div>
-<div>
-<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-lg font-label-caps flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
-<span class="material-symbols-outlined text-[20px]">filter_list</span>
-                        Search Pro
-                    </button>
-</div>
-</div>
+<body class="min-h-screen antialiased overflow-x-hidden font-body-md">
+
+<!-- Ambient orbs -->
+<div class="ambient-orb w-[600px] h-[600px] opacity-[0.06]" style="background:#00f0ff;top:-200px;left:-150px;"></div>
+<div class="ambient-orb w-[500px] h-[500px] opacity-[0.05]" style="background:#8b5cf6;bottom:10%;right:-150px;"></div>
+
+<!-- Header -->
+<div id="site-header" class="relative z-50"></div>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero-section">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
+      <a href="/" class="hover:text-primary-container transition-colors">Home</a>
+      <span class="material-symbols-outlined text-sm opacity-40">chevron_right</span>
+      <a href="/services.html" class="hover:text-primary-container transition-colors">Services</a>
+      <span class="material-symbols-outlined text-sm opacity-40">chevron_right</span>
+      <span class="text-primary-container">Photographers</span>
+    </div>
+
+    <!-- Title -->
+    <div class="mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary-container/25 bg-primary-container/08 mb-4">
+        <span class="material-symbols-outlined text-sm text-primary-container">photo_camera</span>
+        <span class="text-xs font-bold text-primary-container uppercase tracking-widest">All Photographers</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-3">
+        Find Your Perfect<br/>
+        <span style="background:linear-gradient(135deg,#00f0ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Photographer</span>
+      </h1>
+      <p class="text-on-surface-variant max-w-xl text-base">Browse verified professional photographers available for events, portraits, commercial, and more.</p>
+    </div>
+
+    <!-- ── Filter Bar ── -->
+    <div class="filter-bar">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <!-- Location -->
+        <div>
+          <label class="filter-label">
+            <span class="material-symbols-outlined text-xs" style="vertical-align:middle;">location_on</span>
+            Location
+          </label>
+          <div class="relative">
+            <input id="filter-location" type="text" placeholder="City or region…" class="filter-input pr-8"/>
+          </div>
+        </div>
+
+        <!-- Style / Category -->
+        <div>
+          <label class="filter-label">
+            <span class="material-symbols-outlined text-xs" style="vertical-align:middle;">style</span>
+            Style
+          </label>
+          <div class="relative">
+            <select id="filter-style" class="filter-input pr-8">
+              <option value="">All Styles</option>
+              <option>Wedding</option>
+              <option>Portrait</option>
+              <option>Commercial</option>
+              <option>Event</option>
+              <option>Product</option>
+              <option>Drone / Aerial</option>
+              <option>Street</option>
+              <option>Fashion</option>
+              <option>Architectural</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Min Price -->
+        <div>
+          <label class="filter-label">
+            <span class="material-symbols-outlined text-xs" style="vertical-align:middle;">payments</span>
+            Min Price (₹)
+          </label>
+          <input id="filter-min" type="number" min="0" placeholder="e.g. 1000" class="filter-input"/>
+        </div>
+
+        <!-- Search button -->
+        <div>
+          <button class="btn-search" onclick="applyFilters()">
+            <span class="material-symbols-outlined text-sm">search</span>
+            Search Photographers
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- Results Grid -->
-<section class="px-margin-desktop">
-<div class="flex justify-between items-center mb-8">
-<h2 class="font-headline-md text-headline-md text-on-background">Found 124 Elite Professionals</h2>
-<div class="flex gap-3">
-<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer bg-primary-container/10 text-primary border-primary">TOP RATED</span>
-<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer">CINEMATIC</span>
-<span class="filter-chip px-4 py-1.5 rounded-full border border-glass-stroke text-label-caps text-[11px] cursor-pointer">AVAILABLE NOW</span>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter" id="grid-photographers">
-<!-- Photographer Card 1 -->
-<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
-<div class="relative h-64 overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://media.istockphoto.com/id/2190079061/photo/handsome-teen-boy-with-curly-hairstyle-wearing-green-t-shirt-posing-isolated-on-blue.jpg?s=612x612&w=0&k=20&c=PS54cA3ozt4stBfvfar4g7CXmfBuZpBh3ua25hGLJ7E=">
-<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
-<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-caps text-[12px]">4.9</span>
-</div>
-<div class="absolute bottom-4 left-4">
-<span class="bg-primary/20 backdrop-blur-md text-primary text-label-caps text-[10px] px-2 py-1 rounded border border-primary/30">PREMIUM PRO</span>
-</div>
-</div>
-<div class="p-6 space-y-4">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-headline-md text-on-background text-[20px] mb-1">Marcus Thorne</h3>
-<p class="text-on-surface-variant text-body-md text-sm">Cinematic &amp; Fashion Specialist</p>
-</div>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<div class="flex items-center gap-4 text-outline text-sm">
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">location_on</span>
-<span class="">London, UK</span>
-</div>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">payments</span>
-<span class="">$150/hr</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 pt-2">
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">PORTRAIT</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">URBAN</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">STREET</span>
-</div>
-<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
-</div>
-</div>
-<!-- Photographer Card 2 -->
-<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
-<div class="relative h-64 overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF02ybuPDIhfUP6k2irxiv5RcsIKy3YO2wvjSC0UQ3rOKrS8B_QqJdTggYQ4seZYMlj0NNf7sS5C-GXUV-GjrCHG88QxrbPU3dqGjxezOTgp0M8C_Gl4ShKZAWPn3abG-tc0lLv1b1yJz-ZpmmdkE-dqQvJx7lOr8K9IgSw7f4WRDMSYsQNQezQdeuZjAB5D0UYjYxrLzKU6M7ALC1DJxZ2Oi3rzcgfzscN1xqGj7WIPsV5Qqgb-GG">
-<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
-<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-caps text-[12px]">5.0</span>
-</div>
-<div class="absolute bottom-4 left-4">
-<span class="bg-secondary/20 backdrop-blur-md text-secondary text-label-caps text-[10px] px-2 py-1 rounded border border-secondary/30">ELITE ARTIST</span>
-</div>
-</div>
-<div class="p-6 space-y-4">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-headline-md text-on-background text-[20px] mb-1">Elena Volkov</h3>
-<p class="text-on-surface-variant text-body-md text-sm">Drone &amp; Architectural Visuals</p>
-</div>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<div class="flex items-center gap-4 text-outline text-sm">
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">location_on</span>
-<span class="">Dubai, UAE</span>
-</div>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">payments</span>
-<span class="">$280/hr</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 pt-2">
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">DRONE</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">AERIAL</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">ESTATE</span>
-</div>
-<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
-</div>
-</div>
-<!-- Photographer Card 3 -->
-<div class="glass-panel rounded-2xl overflow-hidden group hover:border-primary/50 transition-all duration-500 neon-glow-blue-hover">
-<div class="relative h-64 overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT1UjYVjZFoLpCa8nTHsOaTRhMd_LhkmOpvNI2JUupzgQEposXO-n2DOxhD8OaFOW-Q3O14OFHQwSfioCrKUDoEBD0r4pwGOptApq7-9fxZKZJ7Ww3zMJpGj6R4mNX_u3ZIpn0gTj3E38q5tYX-4kIeknbNsx7WTAOePgP7mUr6b2_uvrCwa1tyqbHCAm1RrJdW3BKlGBOcftk2v1Qu6zmTPHSMt0stRPRkNkY-TAW1wO6GyaTGA34">
-<div class="absolute top-4 right-4 bg-obsidian-base/60 backdrop-blur-md px-3 py-1 rounded-full border border-glass-stroke flex items-center gap-1.5">
-<span class="material-symbols-outlined text-yellow-400 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-caps text-[12px]">4.8</span>
-</div>
-</div>
-<div class="p-6 space-y-4">
-<div class="flex justify-between items-start">
-<div>
-<h3 class="font-headline-md text-on-background text-[20px] mb-1">Satoshi Nara</h3>
-<p class="text-on-surface-variant text-body-md text-sm">Product &amp; Tech Commercials</p>
-</div>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<div class="flex items-center gap-4 text-outline text-sm">
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">location_on</span>
-<span class="">Tokyo, JP</span>
-</div>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[18px]">payments</span>
-<span class="">$190/hr</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-2 pt-2">
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">PRODUCT</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">MACRO</span>
-<span class="text-[10px] px-2 py-1 bg-surface-container rounded border border-glass-stroke text-outline">CLEAN</span>
-</div>
-<button class="w-full bg-surface-container-high hover:bg-primary hover:text-on-primary border border-glass-stroke py-3 rounded-xl font-label-caps transition-all duration-300 mt-2">Book Now</button>
-</div>
-</div>
-<div class="glass-panel rounded-2xl border-dashed border-glass-stroke flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-primary/50 transition-colors">
-<span class="material-symbols-outlined text-primary text-[48px] mb-4">add_circle</span>
-<h3 class="font-headline-md text-on-background">Explore More Pros</h3>
-<p class="text-on-surface-variant text-body-md">Load 50+ more professionals matching your criteria</p>
-</div>
-</div>
+
+<!-- ═══════════════════════════════════════
+     RESULTS
+═══════════════════════════════════════ -->
+<main class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pb-24">
+
+  <!-- Results bar -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-7">
+    <p class="results-meta" id="results-meta">Loading photographers…</p>
+
+    <!-- Sort chips -->
+    <div class="flex flex-wrap gap-2" id="sort-chips">
+      <button class="sort-chip active" data-sort="recent" onclick="setSort(this,'recent')">
+        <span class="material-symbols-outlined text-xs">schedule</span> Most Recent
+      </button>
+      <button class="sort-chip" data-sort="name" onclick="setSort(this,'name')">
+        <span class="material-symbols-outlined text-xs">sort_by_alpha</span> A–Z
+      </button>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="grid-photographers">
+    <!-- Skeleton cards -->
+    <div class="skel-card skel" style="height:22rem;"></div>
+    <div class="skel-card skel" style="height:22rem;"></div>
+    <div class="skel-card skel" style="height:22rem;"></div>
+    <div class="skel-card skel" style="height:22rem;"></div>
+    <div class="skel-card skel hidden sm:block" style="height:22rem;"></div>
+    <div class="skel-card skel hidden lg:block" style="height:22rem;"></div>
+    <div class="skel-card skel hidden xl:block" style="height:22rem;"></div>
+    <div class="skel-card skel hidden xl:block" style="height:22rem;"></div>
+  </div>
+
+  <!-- Load more -->
+  <div class="flex justify-center mt-10" id="load-more-wrap" style="display:none!important;">
+    <button class="btn-load-more" id="load-more-btn" onclick="loadMore()">
+      <span class="material-symbols-outlined text-sm">expand_more</span>
+      Load More Photographers
+    </button>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════
+     CTA SECTION
+═══════════════════════════════════════ -->
+<section class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pb-24">
+  <div class="cta-section">
+    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+      <div class="max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary-container/25 bg-primary-container/08 mb-4">
+          <span class="material-symbols-outlined text-sm text-primary-container" style="font-variation-settings:'FILL' 1">verified</span>
+          <span class="text-xs font-bold text-primary-container uppercase tracking-widest">For Professionals</span>
+        </div>
+        <h2 class="text-3xl font-black text-white tracking-tight mb-3">Are you a Professional Photographer?</h2>
+        <p class="text-on-surface-variant mb-6 leading-relaxed">Join the CamCrew network and showcase your work to clients actively looking to book talent like you.</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/professionalsetup.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm bg-primary-container text-obsidian-base hover:opacity-90 transition-all">
+            <span class="material-symbols-outlined text-sm">add_circle</span> List Your Profile
+          </a>
+          <a href="/About.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm border border-primary-container/30 text-primary-container hover:bg-primary-container/10 transition-all">
+            Learn More
+          </a>
+        </div>
+      </div>
+      <!-- Decorative stats -->
+      <div class="hidden md:grid grid-cols-2 gap-3 flex-shrink-0">
+        <div class="p-4 rounded-xl border border-white/07 bg-white/02 text-center">
+          <p class="text-2xl font-black text-white mb-0.5" id="stat-count">—</p>
+          <p class="text-xs text-on-surface-variant font-semibold">Photographers</p>
+        </div>
+        <div class="p-4 rounded-xl border border-white/07 bg-white/02 text-center">
+          <p class="text-2xl font-black text-primary-container mb-0.5">✓</p>
+          <p class="text-xs text-on-surface-variant font-semibold">Verified Pros</p>
+        </div>
+        <div class="p-4 rounded-xl border border-white/07 bg-white/02 text-center">
+          <p class="text-2xl font-black text-white mb-0.5">Free</p>
+          <p class="text-xs text-on-surface-variant font-semibold">To Join</p>
+        </div>
+        <div class="p-4 rounded-xl border border-white/07 bg-white/02 text-center">
+          <p class="text-2xl font-black text-white mb-0.5">24h</p>
+          <p class="text-xs text-on-surface-variant font-semibold">Avg Response</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- CTA Section -->
-<section class="px-margin-desktop mt-stack-xl">
-<div class="glass-panel p-12 rounded-[32px] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
-<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px]"></div>
-<div class="relative z-10 max-w-xl">
-<h2 class="font-display-lg text-display-lg-mobile md:text-[36px] text-on-background mb-4">Are you a Professional Visual Creator?</h2>
-<p class="text-body-lg text-on-surface-variant mb-8">Join the elite network of Camcrew Studio and showcase your cinematic excellence to high-tier clients worldwide.</p>
-<div class="flex flex-wrap gap-4">
-<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-caps shimmer-effect hover:shadow-neon-blue-glow transition-all">List Your Studio</button>
-<button class="border border-primary text-primary px-8 py-3 rounded-full font-label-caps hover:bg-primary/10 transition-all">Learn More</button>
-</div>
-</div>
-<div class="relative z-10 hidden lg:block w-96 h-64 glass-panel rounded-2xl p-6 border-primary/20">
-<div class="space-y-4">
-<div class="h-4 w-3/4 bg-primary/10 rounded"></div>
-<div class="h-4 w-1/2 bg-primary/10 rounded"></div>
-<div class="h-32 w-full bg-surface-container rounded flex items-center justify-center">
-<span class="material-symbols-outlined text-primary/40 text-[48px]">insights</span>
-</div>
-<p class="text-label-caps text-[10px] text-primary">LIVE MARKET ANALYTICS</p>
-</div>
-</div>
-</div>
-</section></main>
+
 <!-- Footer -->
-<div id="site-footer"></div>
-<!-- Interactive Layer for cursor effect -->
-<div class="fixed pointer-events-none w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 transition-opacity duration-300 opacity-0" id="glow-cursor" style="opacity: 1; left: 393px; top: -195px;"></div>
-<script>
-        document.addEventListener('mousemove', (e) => {
-            const cursor = document.getElementById('glow-cursor');
-            cursor.style.opacity = '1';
-            cursor.style.left = (e.clientX - 200) + 'px';
-            cursor.style.top = (e.clientY - 200) + 'px';
-        });
-
-        // Simple scroll reveal for cards
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.glass-panel').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'all 0.6s ease-out';
-            observer.observe(card);
-        });
-    </script>
+<div id="site-footer" class="relative z-10"></div>
 
 <script src="header-loader.js"></script>
-  <script src="footer-loader.js"></script>
-</body></html>
+<script src="footer-loader.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   State
+═══════════════════════════════════════════════════════════════ */
+const PAGE_SIZE  = 12;
+let   offset     = 0;
+let   totalLoaded = 0;
+let   currentSort = 'recent';
+let   allDone    = false;
+let   isLoading  = false;
+
+/* ═══════════════════════════════════════════════════════════════
+   Helpers
+═══════════════════════════════════════════════════════════════ */
+function strHue(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) & 0xffffffff;
+  return Math.abs(h) % 360;
+}
+function initials(name) {
+  return (name || '?').split(' ').filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('');
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Card builder
+═══════════════════════════════════════════════════════════════ */
+function buildCard(pro, delay = 0) {
+  const hue   = strHue(pro.username || pro.display_name || '');
+  const hue2  = (hue + 55) % 360;
+  const inits = initials(pro.display_name || pro.username);
+  const name  = pro.display_name || pro.username || 'Professional';
+  const title = pro.title || (pro.categories && pro.categories[0]) || 'Photographer';
+
+  // Location: pick first available
+  const loc = (pro.locations && pro.locations[0]) || pro.location || '';
+
+  // Price: find cheapest service
+  let rateDisplay = '';
+  if (pro.services && pro.services.length) {
+    const priced = pro.services.filter(s => s.price);
+    if (priced.length) {
+      const cheapest = priced.reduce((a,b) => Number(a.price) < Number(b.price) ? a : b);
+      rateDisplay = `₹${Number(cheapest.price).toLocaleString('en-IN')} / ${cheapest.unit || 'project'}`;
+    }
+  }
+  if (!rateDisplay && pro.rate) rateDisplay = pro.rate;
+
+  // Category chips (up to 3)
+  const cats = (pro.categories || []).slice(0, 3);
+
+  return `
+    <div class="pro-card" style="animation-delay:${delay}ms;">
+      <!-- Avatar area -->
+      <div class="card-avatar-wrap" style="background:linear-gradient(135deg,hsl(${hue},40%,10%),hsl(${hue2},50%,16%));">
+        <div class="card-avatar-glow" style="background:radial-gradient(circle,hsl(${hue},60%,30%) 0%,transparent 70%);"></div>
+        <span class="card-avatar-initials" style="color:hsl(${hue},75%,72%);">${esc(inits)}</span>
+        ${pro.travel_intl ? `<div class="intl-badge">INTL</div>` : ''}
+      </div>
+
+      <!-- Body -->
+      <div class="card-body">
+        <!-- Name row -->
+        <div class="flex items-start justify-between gap-2 mb-0.5">
+          <p class="card-name">${esc(name)}</p>
+          <span class="material-symbols-outlined text-primary-container flex-shrink-0 mt-0.5" style="font-size:1.1rem;font-variation-settings:'FILL' 1">verified</span>
+        </div>
+        <p class="card-title">${esc(title)}</p>
+
+        <!-- Meta row -->
+        <div class="flex items-center flex-wrap gap-3">
+          ${loc ? `<div class="card-meta">
+            <span class="material-symbols-outlined">location_on</span>
+            <span class="truncate max-w-[120px]">${esc(loc)}</span>
+          </div>` : ''}
+          ${rateDisplay ? `<div class="card-meta">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="card-rate">${esc(rateDisplay)}</span>
+          </div>` : ''}
+        </div>
+
+        <!-- Category chips -->
+        ${cats.length ? `<div class="card-cats">${cats.map(c=>`<span class="card-cat">${esc(c)}</span>`).join('')}</div>` : ''}
+
+        <div class="card-divider"></div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          <a href="/@${esc(pro.username)}" class="btn-profile">
+            <span class="material-symbols-outlined text-xs">person</span> Profile
+          </a>
+          <a href="/book.html?pro=${esc(pro.username)}" class="btn-book-card">
+            <span class="material-symbols-outlined text-xs">calendar_month</span> Book Now
+          </a>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Fetch photographers
+═══════════════════════════════════════════════════════════════ */
+async function fetchPhotographers(reset = false) {
+  if (isLoading) return;
+  if (allDone && !reset) return;
+  isLoading = true;
+
+  if (reset) {
+    offset = 0;
+    totalLoaded = 0;
+    allDone = false;
+    document.getElementById('grid-photographers').innerHTML = `
+      <div class="skel-card skel" style="height:22rem;"></div>
+      <div class="skel-card skel" style="height:22rem;"></div>
+      <div class="skel-card skel" style="height:22rem;"></div>
+      <div class="skel-card skel" style="height:22rem;"></div>
+    `;
+    document.getElementById('load-more-wrap').style.display = 'none';
+    document.getElementById('results-meta').textContent = 'Loading photographers…';
+  }
+
+  const locationVal = (document.getElementById('filter-location').value || '').trim();
+  const styleVal    = (document.getElementById('filter-style').value   || '').trim();
+  const minVal      = (document.getElementById('filter-min').value      || '').trim();
+
+  let url = `/api/professionals?category=Photographer&limit=${PAGE_SIZE}&offset=${offset}`;
+  if (locationVal) url += `&location=${encodeURIComponent(locationVal)}`;
+  if (styleVal)    url += `&style=${encodeURIComponent(styleVal)}`;
+  if (minVal)      url += `&min_price=${encodeURIComponent(minVal)}`;
+
+  try {
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    const grid = document.getElementById('grid-photographers');
+
+    // Remove skeletons on first load
+    if (reset) grid.innerHTML = '';
+
+    if (!data.ok || !data.professionals || !data.professionals.length) {
+      if (reset) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <span class="material-symbols-outlined" style="font-size:3rem;color:rgba(255,255,255,0.08);">photo_camera</span>
+            <p style="font-weight:700;color:#dce4e5;">No photographers found</p>
+            <p style="font-size:0.85rem;color:#4a6a6d;max-width:300px;">Try clearing your filters or broadening your search criteria.</p>
+            <button onclick="clearFilters()" style="margin-top:0.5rem;padding:0.6rem 1.4rem;border-radius:0.75rem;border:1px solid rgba(0,240,255,0.25);color:#00f0ff;background:rgba(0,240,255,0.06);font-weight:700;font-size:0.82rem;cursor:pointer;">Clear Filters</button>
+          </div>`;
+      } else {
+        allDone = true;
+      }
+      updateMeta(totalLoaded);
+      document.getElementById('load-more-wrap').style.display = 'none';
+      isLoading = false;
+      return;
+    }
+
+    // Sort client-side
+    let pros = data.professionals;
+    if (currentSort === 'name') {
+      pros = pros.slice().sort((a,b) => (a.display_name||'').localeCompare(b.display_name||''));
+    }
+
+    pros.forEach((pro, i) => {
+      grid.insertAdjacentHTML('beforeend', buildCard(pro, i * 50));
+    });
+
+    totalLoaded += pros.length;
+    offset      += pros.length;
+
+    // Show load more if full page returned
+    const lmw = document.getElementById('load-more-wrap');
+    if (pros.length < PAGE_SIZE) {
+      allDone = true;
+      lmw.style.display = 'none';
+    } else {
+      lmw.style.removeProperty('display');
+    }
+
+    updateMeta(totalLoaded);
+
+    // Update CTA stat
+    document.getElementById('stat-count').textContent = totalLoaded + (allDone ? '' : '+');
+
+  } catch (e) {
+    const grid = document.getElementById('grid-photographers');
+    if (reset) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <span class="material-symbols-outlined" style="font-size:2.5rem;color:rgba(255,255,255,0.08);">wifi_off</span>
+          <p style="font-weight:700;color:#dce4e5;">Failed to load photographers</p>
+          <p style="font-size:0.85rem;color:#4a6a6d;">Please check your connection and try again.</p>
+          <button onclick="fetchPhotographers(true)" style="margin-top:0.5rem;padding:0.6rem 1.4rem;border-radius:0.75rem;border:1px solid rgba(0,240,255,0.25);color:#00f0ff;background:rgba(0,240,255,0.06);font-weight:700;font-size:0.82rem;cursor:pointer;">Retry</button>
+        </div>`;
+    }
+  } finally {
+    isLoading = false;
+  }
+}
+
+function updateMeta(count) {
+  const meta = document.getElementById('results-meta');
+  if (count === 0) {
+    meta.innerHTML = 'No results found';
+  } else {
+    meta.innerHTML = `Showing <strong>${count}</strong> photographer${count !== 1 ? 's' : ''}${allDone ? '' : ' so far'}`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Controls
+═══════════════════════════════════════════════════════════════ */
+function applyFilters() { fetchPhotographers(true); }
+
+function clearFilters() {
+  document.getElementById('filter-location').value = '';
+  document.getElementById('filter-style').value    = '';
+  document.getElementById('filter-min').value      = '';
+  fetchPhotographers(true);
+}
+
+function loadMore() {
+  const btn = document.getElementById('load-more-btn');
+  btn.innerHTML = `<span class="material-symbols-outlined text-sm" style="animation:spin 0.8s linear infinite">progress_activity</span> Loading…`;
+  btn.disabled = true;
+  fetchPhotographers(false).then(() => {
+    btn.innerHTML = `<span class="material-symbols-outlined text-sm">expand_more</span> Load More Photographers`;
+    btn.disabled = false;
+  });
+}
+
+function setSort(el, sort) {
+  currentSort = sort;
+  document.querySelectorAll('.sort-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  fetchPhotographers(true);
+}
+
+/* ── Enter to search ── */
+['filter-location','filter-style','filter-min'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyFilters();
+  });
+});
+
+/* ── Spin keyframe ── */
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+document.head.appendChild(styleEl);
+
+/* ── Boot ── */
+fetchPhotographers(true);
+</script>
+</body>
+</html>
