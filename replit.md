@@ -1,47 +1,38 @@
-# Camcrew Studio
+# CamCrew
 
-A static multi-page digital marketplace for cinematic creators (photographers, videographers, designers, organizers, etc.) with a Python Flask authentication backend.
+A marketplace web app for creative professionals — photographers, videographers, designers, organizers, caterers, and more. Customers can browse services, book professionals, manage orders, and handle rentals/sales. Professionals get a dashboard to manage their profile and bookings. Admins have a separate dashboard for user management and verification.
 
 ## Stack
 
-- **Frontend**: Plain HTML + Tailwind CSS (CDN)
-- **Backend**: Python Flask
-- **Database**: SQLite (`camcrew.db`, auto-created on first run)
-- **Auth**: Flask sessions + Werkzeug password hashing
+- **Backend**: Python / Flask (`app.py`)
+- **Database**: PostgreSQL (via `psycopg2`)
+- **Frontend**: Multi-page HTML/CSS/JS (Tailwind CSS via CDN)
+- **Auth**: Session-based (Flask sessions)
 
-## Running
+## Running the app
 
-```bash
+The workflow `Start application` runs `python app.py`, which starts the Flask server on port 5000.
+
+```
 python app.py
 ```
 
-The app runs on port 5000.
+## Environment variables / secrets
 
-## Auth API
+| Key | Purpose |
+|-----|---------|
+| `SESSION_SECRET` | Flask session signing key |
+| `RENDER_DATABASE_URL` | PostgreSQL external connection URL |
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/register` | Register a new user. Body: `{ email, password, role }` |
-| POST | `/api/login` | Log in. Body: `{ email, password }` |
-| POST | `/api/logout` | Log out (clears session) |
-| GET | `/api/me` | Returns current session user |
+## Database
 
-### Roles
-- `customer` — default
-- `professional` — photographers, videographers, designers, etc.
-- `studio` — studio accounts (redirected to admin panel)
+The app calls `init_db()` on startup, which creates all tables with `CREATE TABLE IF NOT EXISTS` — safe to run on an existing database.
 
-## Project Structure
+## Key pages
 
-```
-app.py           # Flask app — auth API + static file serving
-camcrew.db       # SQLite database (auto-created)
-signin.html      # Auth portal (wired to Flask API)
-admin.html       # Studio/admin landing page
-index.html       # Main homepage
-*.html           # Other marketplace pages
-```
+- `/` — Homepage (`index.html`)
+- `/signin.html` — Customer/professional sign-in
+- `/admindashboard.html` — Admin dashboard
+- `/professional-dashboard.html` — Professional dashboard
 
-## User Preferences
-
-- Backend must be strictly Python Flask only (no other frameworks).
+## User preferences
