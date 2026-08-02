@@ -374,7 +374,7 @@
         ? `<div class="absolute top-3 left-3 ${badgeClass(p.badge)} border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">${p.badge}</div>`
         : '';
       return `
-        <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:${delay}s">
+        <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" data-product-id="${p.id}" style="transition-delay:${delay}s">
           <div class="relative h-60 overflow-hidden bg-surface-container">
             <div class="card-img absolute inset-0 bg-cover bg-center" style="${imgBg}"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
@@ -383,7 +383,7 @@
               <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
             </button>
             <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-              <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
+              <button data-cart-btn data-pid="${p.id}" class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
                 <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
               </button>
             </div>
@@ -394,7 +394,7 @@
             <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">${p.name}</h3>
             <div class="flex items-center justify-between">
               <span class="text-on-surface font-bold text-xl">$${price.toLocaleString('en-US', {minimumFractionDigits: 0})}</span>
-              <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
+              <button data-cart-btn data-pid="${p.id}" class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
                 <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
               </button>
             </div>
@@ -489,6 +489,58 @@
 
     /* Initial load */
     loadProducts('');
+
+    /* ── Add to Cart ──────────────────────────────────────────── */
+    // Toast notification
+    function showToast(msg, ok) {
+      const t = document.createElement('div');
+      t.textContent = msg;
+      t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:999px;
+        background:${ok ? '#006970' : '#b71c1c'};color:#fff;font-weight:700;font-size:0.88rem;
+        z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:opacity 0.4s;`;
+      document.body.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2200);
+    }
+
+    document.getElementById('product-grid').addEventListener('click', async function (e) {
+      const btn = e.target.closest('[data-cart-btn]');
+      if (!btn) return;
+      const productId = parseInt(btn.dataset.pid);
+      if (!productId) return;
+
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      if (icon) icon.textContent = 'progress_activity';
+
+      try {
+        const res  = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, quantity: 1 })
+        });
+        if (res.status === 401) {
+          window.location.href = 'signin.html';
+          return;
+        }
+        const data = await res.json();
+        if (data.ok) {
+          showToast('Added to cart!', true);
+          if (window.updateCartBadge && data.item) {
+            // Refresh badge count
+            fetch('/api/cart').then(r => r.json()).then(d => { if (d.ok && window.updateCartBadge) window.updateCartBadge(d.count); });
+          }
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Added';
+          setTimeout(() => { btn.innerHTML = origText; btn.disabled = false; }, 1500);
+        } else {
+          showToast(data.error || 'Could not add to cart.', false);
+          btn.innerHTML = origText; btn.disabled = false;
+        }
+      } catch (err) {
+        showToast('Network error.', false);
+        btn.innerHTML = origText; btn.disabled = false;
+      }
+    });
   })();
   </script>
 
