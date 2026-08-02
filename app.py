@@ -352,6 +352,52 @@ def get_public_profile(username):
     }})
 
 
+@app.route("/api/professionals", methods=["GET"])
+def list_professionals():
+    """Return professionals filtered by category (case-insensitive). No auth required."""
+    category = (request.args.get("category") or "").strip()
+    limit = min(int(request.args.get("limit", 20)), 50)
+    if not category:
+        return jsonify({"ok": False, "error": "category parameter required."}), 400
+
+    with get_db() as conn:
+        rows = conn.execute("""
+            SELECT pp.username, pp.title, pp.bio, pp.categories, pp.services,
+                   pp.locations, pp.travel_intl,
+                   u.display_name
+            FROM professional_profiles pp
+            JOIN users u ON u.id = pp.user_id
+            WHERE pp.categories::jsonb @> %s::jsonb
+            ORDER BY pp.updated_at DESC
+            LIMIT %s
+        """, (_json.dumps([category]), limit)).fetchall()
+
+    professionals = []
+    for r in rows:
+        services = _json.loads(r["services"] or "[]")
+        locations = _json.loads(r["locations"] or "[]")
+        # Pick the first service price as the display rate
+        rate = None
+        if services:
+            s = services[0]
+            price = s.get("price")
+            unit  = s.get("unit", "per day")
+            if price:
+                rate = f"${price}/{unit}"
+        professionals.append({
+            "username":     r["username"],
+            "display_name": r["display_name"] or r["username"],
+            "title":        r["title"],
+            "bio":          r["bio"],
+            "location":     locations[0] if locations else None,
+            "rate":         rate,
+            "categories":   _json.loads(r["categories"] or "[]"),
+            "travel_intl":  r["travel_intl"],
+        })
+
+    return jsonify({"ok": True, "professionals": professionals})
+
+
 @app.route("/shared/<share_id>")
 def shared_portfolio_page(share_id):
     """Serve the public portfolio viewer for a given share_id."""
