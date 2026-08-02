@@ -709,7 +709,7 @@
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>
                 </div>
                 <div class="nm-input-wrap" style="flex:1;">
-                  <input type="text" placeholder="instagram.com/yourhandle">
+                  <input id="inp-instagram" type="text" placeholder="instagram.com/yourhandle">
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:0.6rem;">
@@ -717,7 +717,7 @@
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>
                 </div>
                 <div class="nm-input-wrap" style="flex:1;">
-                  <input type="text" placeholder="facebook.com/yourpage">
+                  <input id="inp-facebook" type="text" placeholder="facebook.com/yourpage">
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:0.6rem;">
@@ -725,7 +725,7 @@
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
                 </div>
                 <div class="nm-input-wrap" style="flex:1;">
-                  <input type="text" placeholder="tiktok.com/@yourhandle">
+                  <input id="inp-tiktok" type="text" placeholder="tiktok.com/@yourhandle">
                 </div>
               </div>
             </div>
@@ -1164,13 +1164,17 @@ async function submitSetup() {
   submitBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1rem;animation:spin 0.8s linear infinite;">progress_activity</span> Saving…`;
 
   const selectedCats = Array.from(document.querySelectorAll('#cat-chips .nm-chip.selected')).map(b => b.dataset.cat);
-  const socialInputs = document.querySelectorAll('.nm-input-wrap input[type=text]');
   const socials = {
-    instagram: socialInputs[0] ? socialInputs[0].value.trim() : '',
-    facebook:  socialInputs[1] ? socialInputs[1].value.trim() : '',
-    tiktok:    socialInputs[2] ? socialInputs[2].value.trim() : '',
+    instagram: (document.getElementById('inp-instagram')?.value || '').trim(),
+    facebook:  (document.getElementById('inp-facebook')?.value  || '').trim(),
+    tiktok:    (document.getElementById('inp-tiktok')?.value    || '').trim(),
   };
-  const portfolioItems = mediaFiles.map(m => ({ url: m.url, type: m.isVideo ? 'video' : 'image', name: m.file ? m.file.name : '' }));
+  // Merge existing URL-only portfolio items with any newly uploaded files
+  const portfolioItems = mediaFiles.map(m => ({
+    url:  m.url,
+    type: m.isVideo ? 'video' : 'image',
+    name: m.file ? m.file.name : (m.name || ''),
+  }));
 
   const proData = {
     name, title: document.getElementById('inp-title').value.trim(),
@@ -1198,14 +1202,118 @@ async function submitSetup() {
   document.getElementById('step-complete').classList.add('active');
 }
 
-/* ── Load email ──────────────────────────────────────────────────── */
+/* ── Load email + existing profile data ──────────────────────────── */
 (async () => {
+  // 1. Load email from session
   try {
     const res  = await fetch('/api/me');
     const data = await res.json();
     if (data.ok) document.getElementById('inp-email').value = data.user.email;
   } catch(_) {}
+
+  // 2. Pre-fill all fields from saved profile
+  loadExistingProfile();
 })();
+
+function loadExistingProfile() {
+  let pro = null;
+  try {
+    const raw = localStorage.getItem('cc_pro_profile');
+    if (raw) pro = JSON.parse(raw);
+  } catch(_) {}
+  if (!pro) return; // nothing saved yet — fresh setup
+
+  // ── Step 1: identity ──────────────────────────────────────────
+  if (pro.name)  document.getElementById('inp-name').value  = pro.name;
+  if (pro.title) document.getElementById('inp-title').value = pro.title;
+  if (pro.bio) {
+    const bioEl = document.getElementById('inp-bio');
+    bioEl.value = pro.bio;
+    updateCharCount(bioEl, 'bio-count', 300);
+  }
+
+  // Avatar photo
+  if (pro.photo) {
+    const preview     = document.getElementById('avatar-preview');
+    const placeholder = document.getElementById('avatar-placeholder');
+    preview.src           = pro.photo;
+    preview.style.display = 'block';
+    placeholder.style.display = 'none';
+  }
+
+  // Category chips
+  if (Array.isArray(pro.categories) && pro.categories.length) {
+    document.querySelectorAll('#cat-chips .nm-chip').forEach(btn => {
+      if (pro.categories.includes(btn.dataset.cat)) btn.classList.add('selected');
+    });
+  }
+
+  // ── Step 2: contact ───────────────────────────────────────────
+  if (pro.phone)   document.getElementById('inp-phone').value   = pro.phone;
+  if (pro.website) document.getElementById('inp-website').value = pro.website;
+
+  const soc = pro.socials || {};
+  if (soc.instagram) document.getElementById('inp-instagram').value = soc.instagram;
+  if (soc.facebook)  document.getElementById('inp-facebook').value  = soc.facebook;
+  if (soc.tiktok)    document.getElementById('inp-tiktok').value    = soc.tiktok;
+
+  // ── Step 3: portfolio (existing URL items) ────────────────────
+  if (Array.isArray(pro.portfolio) && pro.portfolio.length) {
+    const grid = document.getElementById('portfolio-grid');
+    pro.portfolio.forEach(item => {
+      if (!item.url) return;
+      const id      = Date.now() + Math.random();
+      const isVideo = item.type === 'video' || item.isVideo;
+      // Push as a URL-only entry (no .file) so it gets included on save
+      mediaFiles.push({ id, url: item.url, isVideo, name: item.name || '', file: null });
+
+      const thumb = document.createElement('div');
+      thumb.className     = 'media-thumb';
+      thumb.dataset.id    = id;
+      thumb.innerHTML = isVideo
+        ? `<video src="${escAttr(item.url)}" muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`
+        : `<img src="${escAttr(item.url)}" alt="portfolio item">`;
+      thumb.innerHTML += `<button class="remove-btn" onclick="removeMedia(${id},this.closest('.media-thumb'))">
+        <span class="material-symbols-outlined" style="font-size:0.75rem;">close</span></button>`;
+      if (isVideo) {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'position:absolute;bottom:0.3rem;left:0.3rem;background:rgba(0,0,0,0.7);border-radius:0.3rem;padding:1px 4px;font-size:0.6rem;font-weight:800;color:#fff;';
+        badge.textContent = 'VIDEO';
+        thumb.appendChild(badge);
+      }
+      grid.appendChild(thumb);
+    });
+  }
+
+  // ── Step 4: services ──────────────────────────────────────────
+  if (Array.isArray(pro.services) && pro.services.length) {
+    services = pro.services.map(s => ({
+      id:    s.id || (Date.now() + Math.random()),
+      name:  s.name  || '',
+      price: s.price || '',
+      unit:  s.unit  || 'per day',
+      desc:  s.desc  || '',
+    }));
+    renderServices();
+  }
+
+  // ── Step 5: locations & travel ────────────────────────────────
+  if (Array.isArray(pro.locations) && pro.locations.length) {
+    locations = [...pro.locations];
+    renderLocations();
+  }
+  if (pro.travelIntl) {
+    travelIntl = true;
+    const btn = document.getElementById('travel-toggle');
+    btn.classList.add('on');
+    btn.setAttribute('aria-checked', 'true');
+  }
+}
+
+/* small helper — HTML-attribute-safe escaping for src/href values */
+function escAttr(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
 /* ── Toast ───────────────────────────────────────────────────────── */
 function showToast(msg, icon, color) {
