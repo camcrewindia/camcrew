@@ -205,7 +205,7 @@
         if (res.ok && data.ok !== false) {
           showToast('Account created. Setting up your profile…');
           const dest = currentRole === 'professional'
-            ? 'professionalsetup.html'
+            ? 'professional-edit.html'
             : 'customersignup.html';
           setTimeout(() => {
             window.location.href = dest + '?email=' + encodeURIComponent(email);
@@ -219,7 +219,7 @@
         // demo-safe fallback
         showToast('Account created. Setting up your profile…');
         const dest = currentRole === 'professional'
-          ? 'professionalsetup.html'
+          ? 'professional-edit.html'
           : 'customersignup.html';
         setTimeout(() => {
           window.location.href = dest + '?email=' + encodeURIComponent(email);
