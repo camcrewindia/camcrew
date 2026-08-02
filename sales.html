@@ -267,321 +267,230 @@
           <p class="font-label-caps text-label-caps text-primary-container uppercase tracking-widest mb-2">The full catalogue</p>
           <h2 class="font-display-lg text-display-lg-mobile md:text-[40px] text-on-surface font-bold">Browse Professional Gear</h2>
         </div>
-        <p class="hidden md:block text-on-surface-variant text-sm">Showing 8 of 500+ items</p>
+        <p id="product-count" class="hidden md:block text-on-surface-variant text-sm">Loading…</p>
       </div>
 
       <!-- Filter chips -->
       <div class="flex flex-wrap items-center gap-3">
-        <button class="filter-chip active glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50">
+        <button class="filter-chip active glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50" data-category="">
           <span class="material-symbols-outlined text-sm">grid_view</span> All
         </button>
-        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface">
+        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface" data-category="Cameras">
           <span class="material-symbols-outlined text-sm">camera</span> Cameras
         </button>
-        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface">
+        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface" data-category="Lighting">
           <span class="material-symbols-outlined text-sm">light_mode</span> Lighting
         </button>
-        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface">
+        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface" data-category="Audio">
           <span class="material-symbols-outlined text-sm">mic</span> Audio
         </button>
-        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface">
+        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface" data-category="Lenses">
+          <span class="material-symbols-outlined text-sm">lens</span> Lenses
+        </button>
+        <button class="filter-chip glass-panel px-5 py-2 rounded-full font-label-caps text-label-caps text-sm flex items-center gap-2 border border-glass-stroke transition-all hover:border-primary-container/50 text-on-surface-variant hover:text-on-surface" data-category="Storage">
           <span class="material-symbols-outlined text-sm">storage</span> Storage
         </button>
         <div class="ml-auto flex items-center gap-2">
-          <button class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 border border-glass-stroke text-on-surface-variant hover:text-on-surface hover:border-primary-container/40 transition-all text-sm">
-            <span class="material-symbols-outlined text-sm">sort</span> Price: High–Low
+          <button id="sort-btn" class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 border border-glass-stroke text-on-surface-variant hover:text-on-surface hover:border-primary-container/40 transition-all text-sm">
+            <span class="material-symbols-outlined text-sm">sort</span> <span id="sort-label">Price: High–Low</span>
           </button>
         </div>
       </div>
     </div>
 
     <!-- Product Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter">
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter">
+      <!-- Skeleton loaders -->
+      <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+      <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+      <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+      <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+    </div>
 
-      <!-- Product 1 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.05s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3-kfTbLQM15yRU1j9Ovs6H3Sy2oUCax_GUfOO8G3DLe7Qe5VMRsMO-FlL-87_pAlDLjeen0ZghmHvpq9GTIsUKDky4Um2Z12faLVxFlFXyVtR8WwddC3EWQd2IOl8Nktydbpa88kUtZGWQo7LScDMFlyhWBwxT5SMDePQTM0dJExdPrxvzmcAh74NhqXeCgIveF-hRPd1wrwW1NEURjhUyUSZLHWHf8r4W0O01y6hYn4PxzYEUMVw')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <!-- Badge -->
-          <div class="absolute top-3 left-3 badge-hot border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">🔥 Hot</div>
-          <!-- Wishlist -->
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <!-- Hover CTA overlay -->
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(128)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Sony Alpha a7 IV</h3>
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="text-on-surface font-bold text-xl">$2,499</span>
-            </div>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
+    <!-- Empty state (hidden by default) -->
+    <div id="empty-state" class="hidden text-center py-24">
+      <span class="material-symbols-outlined text-on-surface-variant text-6xl mb-4 block">inventory_2</span>
+      <p class="text-on-surface-variant text-lg font-semibold">No products found</p>
+      <p class="text-on-surface-variant text-sm mt-1">The admin hasn't added any products in this category yet.</p>
+    </div>
 
-      <!-- Product 2 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.1s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCx67TQvTD5TJFd9PFspNJi9c1RZQpFE_zQMtRDL07RiTC-5gm4ArUaUUp3HKz48f_jbYo0zO5ibDxd3rxvUp630I1cTYnMY4pnIqIxycBXshBwZdCxrGZ3GPPN3P_f_wPuQdUJ_lTavA6s6cnS5mRBrXS-upnFaoQ3XPEdn4kqql6YaXwZmLZWgHoUO9bffOlneDqNSw9-QXtNSHfO81Ou0VzzVw9yAwXsbdfHl4SfNqqhFktfZsMq')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <div class="absolute top-3 left-3 badge-sale border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">Limited</div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 0">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(84)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">RED Komodo 6K</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$5,995</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
+    <!-- dynamic cards end -->
 
-      <!-- Product 3 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.15s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGn0S5Z9jp0PBI8rqbUfI75Ji4CjPERjb2Lb6uYPe5XNoqcKscGIUK2GGtrpuMDQr3FEk5RsFLuelY8Tndv0M-UnViEtQ17nUTcMVm7SRzvsKfuzpDgurQt72yHsIsRgAUSBbNn3l3ZPs--Y0LkxREGdZjOoEUeGZjCFX95nTX2_BpQ1s8PoSx0GI8Qw8VapioyPOEV5I6Bb_4cxPSZyzyaJuBLasHJz5JX_dJoer3ytOffW-GadOV')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <div class="absolute top-3 left-3 badge-new border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">Best Seller</div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(215)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Aputure 600d Pro</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$1,890</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 4 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.2s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDxRQenfImmM-V1eG3MyKDOW6Sgfk2MsF1Hpx27GVwg8gWrs_aeo3mu-CZiQHSUtVmGsHuqg_pqzFGCQemfx9nAHr-qydznqDhTNqSRIGwyWZGFqG6FS4VbzGtgh-xUgohn7_loK9EL0V01uqQ8KIRHCXo_my0PLFu1cl9gZ7kwS3iNeCuIDWP9iXSbu1OqnVbgP-lLip6SLvncs7pe6q7hBAhn5HL56OAqMg1fiFmES4j0r6YMWyYh')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 0.5">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(56)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Canon RF 50mm f/1.2</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$2,299</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 5 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.05s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGTLeIpGiPJoQfJNj3VzzLp6awvqHCNLdfZKzbz9PF3lzx6WXHjId0Gr9SJ4JzpgTRwCeM2KciOPivdcf4pm4Q-Wu-8GeqLJqaD9OJ3JAlIrwJbNfg0Wi44kv0GC2e4Qjd3K9ESShsIVkiyrLfXm1nN5-SGiqiu7cTKYB4Dwur69cgg3HlHjTu-L_BA25R2OTDs1QXvtaLFhxdHmFniDz4muuZtGg1RDq7fS60-0fMsQsFHIUuZWC5')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <div class="absolute top-3 left-3 badge-new border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">⭐ Top Rated</div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(342)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Shure SM7B</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$399</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 6 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.1s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBq9vMKit-pM_MuuUtlmtnEyuwCr1OI0kyIxIp9hAAB-Khzebw9uvKwLH-4I8a1ZOr1DDmSQ-18MlrN2PITPaRhv7AI3tUNUp0thBIHTZWChkTr-Xt5m8HiaZ4xiL9dt1r-FTR_c5gcL59cnrkw9cYTIBMBzH_3PYGyWIuGHXFD20GeFtDDnst5Wq3su7QcwW1KHrSGcVHViYXAs7HbTmlscnEcQMLDGyMJOlVaH7m2Jdx7xBlWpg_5')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 0">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(19)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Pro Studio Desk v2</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$1,250</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 7 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.15s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeOXLNYaxm0dcKD-vkjXwPrKOLT7JV_OP4Tt69wYEP6q1wAfnlC0_5Qw3kh2zejKerdQ8tV2unEtUiUrty4P5w_LU7cI23-HbhnoYCxSSGDJZGVKLi-_dETX_w_YFx51t4X5hH6Q1CLqWh2jE_KXr97-7JNGYxf4Tic7JdA2ye1hNT9_n0jKLUGXpypdUBawgXi7T0XFRIZouHh18TQlsTzRPQ3EvgV9MTFFLS_awjxpjFRiVU095O')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <div class="absolute top-3 left-3 badge-hot border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">🔥 Hot</div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(412)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">Orbit Peak Design Strap</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$85</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 8 -->
-      <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:.2s">
-        <div class="relative h-60 overflow-hidden bg-surface-container">
-          <div class="card-img absolute inset-0 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZWYTk0GpbueiDAOsKylTDeZhjDL4Ffy5ZFfnzJ5Q2-L1y3FO79fpQWeZmCYdtQOOKrRWkA4CxNLaDPuKBHrmMCh4AxykRnZkb9nqBmNwUUw4cQ_Ur-j-JLaIBsLRdnbeYuG02X-jouCD9wgFJObO-XI5Ft0qI01_li85i3H8aeoMm50lWXNZ2qBn-wdMOQPj8_P5LnQXVWmSdVFgP4nYTkcyBT9nH-4G7bn4LSfKgI160eUz_L-HZ')"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
-          <div class="absolute top-3 left-3 badge-new border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">New</div>
-          <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
-            <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
-          </button>
-          <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
-            <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
-            </button>
-          </div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-0.5 mb-1.5">
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 0.5">star</span>
-            <span class="text-[11px] text-on-surface-variant ml-1.5">(92)</span>
-          </div>
-          <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">SanDisk 2TB Extreme Pro</h3>
-          <div class="flex items-center justify-between">
-            <span class="text-on-surface font-bold text-xl">$249</span>
-            <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Load more -->
-    <div class="mt-16 text-center reveal">
-      <button class="shimmer-btn glass-panel px-14 py-4 rounded-full font-label-caps text-label-caps text-on-surface hover:border-primary-container/40 hover:text-primary-container transition-colors inline-flex items-center gap-2">
+    <div id="load-more-wrap" class="mt-16 text-center hidden">
+      <button id="load-more-btn" class="shimmer-btn glass-panel px-14 py-4 rounded-full font-label-caps text-label-caps text-on-surface hover:border-primary-container/40 hover:text-primary-container transition-colors inline-flex items-center gap-2">
         <span class="material-symbols-outlined text-sm">expand_more</span>
         Load More Products
       </button>
     </div>
   </section>
+
+  <script>
+  /* ── Sales catalogue — dynamic product loader ─────────────────── */
+  (function () {
+    const grid      = document.getElementById('product-grid');
+    const emptyEl   = document.getElementById('empty-state');
+    const countEl   = document.getElementById('product-count');
+    const loadWrap  = document.getElementById('load-more-wrap');
+    const loadBtn   = document.getElementById('load-more-btn');
+    const sortBtn   = document.getElementById('sort-btn');
+    const sortLabel = document.getElementById('sort-label');
+
+    let allProducts = [];   // full list from API
+    let filtered    = [];   // after category filter
+    let sortDir     = 'desc'; // 'desc' = high→low, 'asc' = low→high
+    let page        = 0;
+    const PAGE_SIZE = 8;
+
+    /* Badge colour class */
+    function badgeClass(badge) {
+      if (!badge) return '';
+      if (badge.includes('Hot'))    return 'badge-hot';
+      if (badge.includes('Seller') || badge.includes('Rated')) return 'badge-new';
+      return 'badge-sale';
+    }
+
+    /* Stars HTML */
+    function starsHtml(rating, count) {
+      const r = parseFloat(rating) || 5;
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        const fill = i <= Math.floor(r) ? 1 : (i - r < 1 ? r - Math.floor(r) : 0);
+        html += `<span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' ${fill}">star</span>`;
+      }
+      if (count) html += `<span class="text-[11px] text-on-surface-variant ml-1.5">(${count})</span>`;
+      return html;
+    }
+
+    /* Build one card */
+    function cardHtml(p, delay) {
+      const price   = parseFloat(p.price) || 0;
+      const imgBg   = p.image_url
+        ? `background-image:url('${p.image_url}')`
+        : 'background:linear-gradient(135deg,#161618,#1f2937)';
+      const badge   = p.badge
+        ? `<div class="absolute top-3 left-3 ${badgeClass(p.badge)} border text-[10px] font-label-caps tracking-widest px-2.5 py-1 rounded-full uppercase">${p.badge}</div>`
+        : '';
+      return `
+        <div class="product-card glass-panel rounded-2xl overflow-hidden group shimmer-card reveal" style="transition-delay:${delay}s">
+          <div class="relative h-60 overflow-hidden bg-surface-container">
+            <div class="card-img absolute inset-0 bg-cover bg-center" style="${imgBg}"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-surface/80 to-transparent"></div>
+            ${badge}
+            <button class="absolute top-3 right-3 w-8 h-8 bg-surface-container/80 backdrop-blur-sm border border-glass-stroke rounded-full flex items-center justify-center hover:border-primary-container/50 transition-colors group/wish">
+              <span class="material-symbols-outlined text-sm text-on-surface-variant group-hover/wish:text-primary-container transition-colors">favorite</span>
+            </button>
+            <div class="card-cta absolute inset-x-0 bottom-0 p-4 flex gap-2">
+              <button class="flex-1 bg-primary-container text-on-primary-fixed font-label-caps text-[11px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.03] active:scale-95 transition-transform shadow-lg">
+                <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+              </button>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center gap-0.5 mb-1.5">${starsHtml(p.rating, p.review_count)}</div>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">${p.category || ''}</p>
+            <h3 class="font-semibold text-on-surface text-base leading-snug mb-3">${p.name}</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-on-surface font-bold text-xl">$${price.toLocaleString('en-US', {minimumFractionDigits: 0})}</span>
+              <button class="w-9 h-9 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container flex items-center justify-center hover:bg-primary-container hover:text-on-primary transition-colors active:scale-90">
+                <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    /* Render a page of cards */
+    function renderPage(reset) {
+      if (reset) { page = 0; grid.innerHTML = ''; }
+      const start  = page * PAGE_SIZE;
+      const slice  = filtered.slice(start, start + PAGE_SIZE);
+      if (reset && slice.length === 0) {
+        emptyEl.classList.remove('hidden');
+        loadWrap.classList.add('hidden');
+        return;
+      }
+      emptyEl.classList.add('hidden');
+      slice.forEach((p, i) => {
+        const delay = ((i % 4) * 0.05).toFixed(2);
+        grid.insertAdjacentHTML('beforeend', cardHtml(p, delay));
+      });
+      // Re-observe reveal elements
+      grid.querySelectorAll('.reveal:not(.active)').forEach(el => revealObserver.observe(el));
+      page++;
+      loadWrap.classList.toggle('hidden', page * PAGE_SIZE >= filtered.length);
+    }
+
+    /* Sorting */
+    function applySort() {
+      filtered.sort((a, b) => sortDir === 'desc' ? b.price - a.price : a.price - b.price);
+    }
+
+    /* Count label */
+    function updateCount() {
+      countEl.textContent = `Showing ${Math.min(page * PAGE_SIZE, filtered.length)} of ${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+    }
+
+    /* Reveal observer (reused) */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+
+    /* Fetch products */
+    async function loadProducts(category) {
+      grid.innerHTML = `
+        <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+        <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+        <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>
+        <div class="glass-panel rounded-2xl overflow-hidden animate-pulse"><div class="h-60 bg-surface-container-high"></div><div class="p-5 space-y-3"><div class="h-3 bg-surface-container-high rounded w-3/4"></div><div class="h-4 bg-surface-container-high rounded w-1/2"></div></div></div>`;
+      try {
+        const url  = category ? `/api/products?category=${encodeURIComponent(category)}` : '/api/products';
+        const res  = await fetch(url);
+        const json = await res.json();
+        allProducts = json.products || [];
+        filtered    = [...allProducts];
+        applySort();
+        renderPage(true);
+        updateCount();
+      } catch (err) {
+        grid.innerHTML = `<div class="col-span-4 text-center py-16 text-on-surface-variant">Failed to load products. Please refresh.</div>`;
+      }
+    }
+
+    /* Filter chips */
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        loadProducts(chip.dataset.category || '');
+      });
+    });
+
+    /* Sort toggle */
+    if (sortBtn) {
+      sortBtn.addEventListener('click', () => {
+        sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+        sortLabel.textContent = sortDir === 'desc' ? 'Price: High–Low' : 'Price: Low–High';
+        filtered.sort((a, b) => sortDir === 'desc' ? b.price - a.price : a.price - b.price);
+        renderPage(true);
+        updateCount();
+      });
+    }
+
+    /* Load more */
+    if (loadBtn) {
+      loadBtn.addEventListener('click', () => {
+        renderPage(false);
+        updateCount();
+      });
+    }
+
+    /* Initial load */
+    loadProducts('');
+  })();
+  </script>
 
   <!-- ═══════════════════════════════════════
        FEATURED PRODUCT SPOTLIGHT

@@ -684,13 +684,59 @@
           box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
           border-radius:0.75rem;padding:0.65rem 1rem;
         ">
-          <textarea rows="2" placeholder="Short equipment description…" style="
+          <textarea id="pf-description" rows="2" placeholder="Short equipment description…" style="
             background:transparent;border:none;outline:none;resize:none;
             font-size:0.92rem;color:#0f172a;width:100%;
             font-family:'Plus Jakarta Sans',sans-serif;line-height:1.5;
           "></textarea>
         </div>
       </div>
+
+      <!-- Image URL -->
+      <div>
+        <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Image URL <span style="color:#94a3b8;text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+        <div style="
+          background:var(--neu-bg);
+          box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+          border-radius:0.75rem;padding:0.65rem 1rem;
+          display:flex;align-items:center;gap:0.5rem;
+        ">
+          <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">image</span>
+          <input id="pf-image-url" type="url" placeholder="https://…" style="
+            background:transparent;border:none;outline:none;
+            font-size:0.92rem;color:#0f172a;width:100%;
+            font-family:'Plus Jakarta Sans',sans-serif;
+          "/>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      <div>
+        <label style="display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.09em;color:#334155;text-transform:uppercase;margin-bottom:0.45rem;">Badge <span style="color:#94a3b8;text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+        <div style="
+          background:var(--neu-bg);
+          box-shadow:inset 4px 4px 8px var(--neu-shadow-dark),inset -4px -4px 8px var(--neu-shadow-light);
+          border-radius:0.75rem;padding:0.65rem 1rem;
+          display:flex;align-items:center;gap:0.5rem;
+        ">
+          <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">label</span>
+          <select id="pf-badge" style="
+            background:transparent;border:none;outline:none;
+            font-size:0.92rem;color:#0f172a;width:100%;cursor:pointer;
+            font-family:'Plus Jakarta Sans',sans-serif;
+          ">
+            <option value="">None</option>
+            <option value="🔥 Hot">🔥 Hot</option>
+            <option value="New">New</option>
+            <option value="Best Seller">Best Seller</option>
+            <option value="Limited">Limited</option>
+            <option value="⭐ Top Rated">⭐ Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Error message -->
+      <div id="pf-error" style="display:none;color:#b71c1c;font-size:0.82rem;font-weight:600;padding:0.5rem 0.75rem;background:rgba(183,28,28,0.07);border-radius:0.5rem;"></div>
 
       <!-- Divider -->
       <div style="height:1px;background:rgba(0,0,0,0.07);border-radius:1px;margin:0.25rem 0;"></div>
@@ -711,7 +757,7 @@
         onmouseup="this.style.boxShadow='4px 4px 8px var(--neu-shadow-dark),-4px -4px 8px var(--neu-shadow-light)'">
           Cancel
         </button>
-        <button type="submit" style="
+        <button type="submit" id="pf-submit-btn" style="
           background:var(--neu-accent);color:#fff;
           box-shadow:4px 4px 10px rgba(0,105,112,0.35);
           border:none;border-radius:0.65rem;padding:0.65rem 1.6rem;
@@ -740,15 +786,35 @@
 
 <script>
   (function(){
-    const overlay = document.getElementById('add-product-overlay');
-    const modal   = document.getElementById('add-product-modal');
-    const fabBtn  = document.getElementById('fab-add-btn');
-    const addBtn  = document.querySelector('[data-action="add-item"]');
+    const overlay   = document.getElementById('add-product-overlay');
+    const modal     = document.getElementById('add-product-modal');
+    const fabBtn    = document.getElementById('fab-add-btn');
+    const addBtn    = document.querySelector('[data-action="add-item"]');
     const closeBtn  = document.getElementById('close-modal-btn');
     const cancelBtn = document.getElementById('cancel-modal-btn');
+    const form      = document.getElementById('add-product-form');
+    const errBox    = document.getElementById('pf-error');
+    const submitBtn = document.getElementById('pf-submit-btn');
+
+    // Field references (assigned lazily so DOM is ready)
+    function getFields() {
+      const inputs = form.querySelectorAll('input, textarea, select');
+      // Map by position: name(0), sku(1), category(2), stock(3), price(4)
+      return {
+        name:        form.querySelector('input[placeholder*="Arri"]')  || inputs[0],
+        sku:         form.querySelector('input[placeholder*="CAM"]')   || inputs[1],
+        category:    form.querySelector('select')                       || inputs[2],
+        stock:       form.querySelector('input[type=number]')          || inputs[3],
+        price:       form.querySelectorAll('input[type=number]')[1]    || inputs[4],
+        description: document.getElementById('pf-description'),
+        image_url:   document.getElementById('pf-image-url'),
+        badge:       document.getElementById('pf-badge'),
+      };
+    }
 
     function openModal() {
       overlay.style.display = 'flex';
+      errBox.style.display  = 'none';
       requestAnimationFrame(() => {
         modal.style.transform = 'scale(1)';
         modal.style.opacity   = '1';
@@ -759,18 +825,70 @@
       modal.style.opacity   = '0';
       setTimeout(() => { overlay.style.display = 'none'; }, 220);
     }
+    function resetForm() {
+      form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+      form.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      errBox.style.display = 'none';
+    }
 
     fabBtn.addEventListener('click', openModal);
     if (addBtn) addBtn.addEventListener('click', openModal);
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
-
-    overlay.addEventListener('click', function(e){
-      if (e.target === overlay) closeModal();
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.style.display === 'flex') closeModal();
     });
 
-    document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape' && overlay.style.display === 'flex') closeModal();
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const f = getFields();
+
+      const name  = f.name  ? f.name.value.trim()  : '';
+      const price = f.price ? f.price.value.trim()  : '';
+
+      if (!name) {
+        errBox.textContent = 'Product name is required.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      const payload = {
+        name,
+        sku:         f.sku         ? f.sku.value.trim()         : '',
+        category:    f.category    ? f.category.value           : 'Other',
+        stock:       f.stock       ? parseInt(f.stock.value)||0 : 0,
+        price:       price         ? parseFloat(price)||0        : 0,
+        description: f.description ? f.description.value.trim() : '',
+        image_url:   f.image_url   ? f.image_url.value.trim()   : '',
+        badge:       f.badge       ? f.badge.value              : '',
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.05rem;animation:spin 1s linear infinite">progress_activity</span> Saving…';
+
+      try {
+        const res  = await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to save product.');
+
+        // Success
+        closeModal();
+        resetForm();
+        // Show a quick toast if available
+        if (typeof showToast === 'function') showToast('Product added to sales catalogue ✓', 'success');
+        else alert('Product "' + name + '" added to the sales catalogue.');
+      } catch(err) {
+        errBox.textContent = err.message;
+        errBox.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.05rem;">add_box</span> Add Product';
+      }
     });
   })();
 </script>

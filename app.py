@@ -230,6 +230,22 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS products (
+                id           SERIAL PRIMARY KEY,
+                name         TEXT    NOT NULL,
+                sku          TEXT,
+                category     TEXT    NOT NULL DEFAULT 'Other',
+                price        REAL    NOT NULL DEFAULT 0,
+                stock        INTEGER NOT NULL DEFAULT 0,
+                description  TEXT,
+                image_url    TEXT,
+                badge        TEXT,
+                rating       REAL    NOT NULL DEFAULT 5.0,
+                review_count INTEGER NOT NULL DEFAULT 0,
+                created_at   TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS')
+            )
+        """)
 
 
 def seed_demo_data(user_id):
@@ -1122,6 +1138,107 @@ def customer_rewards():
         "next_tier": nt_name, "next_tier_points": nt_pts, "progress": progress,
         "coupons": [dict(c) for c in cps],
     }})
+
+
+# ── Products (Sales catalogue) ──────────────────────────────────────────────
+
+@app.route("/api/products", methods=["GET"])
+def list_products():
+    category = request.args.get("category", "")
+    with get_db() as conn:
+        if category:
+            rows = conn.execute(
+                "SELECT * FROM products WHERE category=%s ORDER BY created_at DESC",
+                (category,)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM products ORDER BY created_at DESC"
+            ).fetchall()
+    return jsonify({"ok": True, "products": [dict(r) for r in rows]})
+
+
+@app.route("/api/products", methods=["POST"])
+def create_product():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        user = conn.execute("SELECT role FROM users WHERE id=%s", (uid,)).fetchone()
+    if not user or user["role"] != "admin":
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+
+    data = request.get_json(force=True, silent=True) or {}
+    name     = (data.get("name") or "").strip()
+    if not name:
+        return jsonify({"ok": False, "error": "Product name is required."}), 400
+
+    sku         = (data.get("sku") or "").strip() or None
+    category    = (data.get("category") or "Other").strip()
+    price       = float(data.get("price") or 0)
+    stock       = int(data.get("stock") or 0)
+    description = (data.get("description") or "").strip() or None
+    image_url   = (data.get("image_url") or "").strip() or None
+    badge       = (data.get("badge") or "").strip() or None
+
+    with get_db() as conn:
+        conn.execute(
+            """INSERT INTO products (name, sku, category, price, stock, description, image_url, badge)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+            (name, sku, category, price, stock, description, image_url, badge)
+        )
+        conn.commit()
+        product = conn.execute(
+            "SELECT * FROM products WHERE name=%s ORDER BY created_at DESC LIMIT 1",
+            (name,)
+        ).fetchone()
+    return jsonify({"ok": True, "product": dict(product)}), 201
+
+
+@app.route("/api/products/<int:product_id>", methods=["DELETE"])
+def delete_product(product_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        user = conn.execute("SELECT role FROM users WHERE id=%s", (uid,)).fetchone()
+    if not user or user["role"] != "admin":
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+
+    with get_db() as conn:
+        conn.execute("DELETE FROM products WHERE id=%s", (product_id,))
+        conn.commit()
+    return jsonify({"ok": True})
+
+
+@app.route("/api/products/<int:product_id>", methods=["PATCH"])
+def update_product(product_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        user = conn.execute("SELECT role FROM users WHERE id=%s", (uid,)).fetchone()
+    if not user or user["role"] != "admin":
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+
+    data    = request.get_json(force=True, silent=True) or {}
+    allowed = ["name", "sku", "category", "price", "stock", "description", "image_url", "badge"]
+    sets    = []
+    vals    = []
+    for key in allowed:
+        if key in data:
+            sets.append(f"{key}=%s")
+            vals.append(data[key])
+    if not sets:
+        return jsonify({"ok": False, "error": "Nothing to update."}), 400
+    vals.append(product_id)
+    with get_db() as conn:
+        conn.execute(f"UPDATE products SET {', '.join(sets)} WHERE id=%s", vals)
+        conn.commit()
+        product = conn.execute("SELECT * FROM products WHERE id=%s", (product_id,)).fetchone()
+    if not product:
+        return jsonify({"ok": False, "error": "Not found."}), 404
+    return jsonify({"ok": True, "product": dict(product)})
 
 
 if __name__ == "__main__":
