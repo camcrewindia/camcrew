@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book a Service | CamCrew Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/tailwind-config.js"></script>
+<link rel="stylesheet" href="/styles.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+  /* ── Date / time inputs ── */
+  input[type="date"], input[type="time"] {
+    color-scheme: dark;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+  }
+
+  /* ── Step transition ── */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  /* ── Service checkbox card ── */
+  .svc-check { display: none; }
+  .svc-label {
+    display: flex; flex-direction: column; gap: 0.35rem;
+    cursor: pointer; border-radius: 1rem;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    background: rgba(22,22,24,0.8);
+    padding: 1rem 1.1rem;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+  }
+  .svc-label:hover { border-color: rgba(0,240,255,0.35); background: rgba(0,240,255,0.04); }
+  .svc-check:checked + .svc-label {
+    border-color: #00f0ff;
+    background: rgba(0,240,255,0.08);
+    box-shadow: 0 0 0 1px #00f0ff33;
+  }
+  .svc-check:checked + .svc-label .svc-tick { opacity: 1; }
+  .svc-tick {
+    position: absolute; top: 0.7rem; right: 0.8rem;
+    width: 1.4rem; height: 1.4rem; border-radius: 50%;
+    background: #00f0ff; color: #001f22;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 900;
+    opacity: 0; transition: opacity 0.18s;
+  }
+
+  /* ── Time slot pills ── */
+  .time-pill { display: none; }
+  .time-label {
+    padding: 0.5rem 1rem; border-radius: 999px; cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    background: rgba(22,22,24,0.8);
+    font-size: 0.82rem; font-weight: 700; color: #b9cacb;
+    transition: all 0.18s;
+  }
+  .time-label:hover { border-color: rgba(0,240,255,0.35); color: #00f0ff; }
+  .time-pill:checked + .time-label {
+    border-color: #00f0ff; background: rgba(0,240,255,0.12); color: #00f0ff;
+  }
+
+  /* ── Qty spinner inside service card ── */
+  .qty-wrap { display: none; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+  .svc-check:checked ~ .qty-wrap { display: flex; }
+  .qty-btn {
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    border: 1px solid rgba(0,240,255,0.4); background: rgba(0,240,255,0.08);
+    color: #00f0ff; font-size: 1rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-btn:hover { background: rgba(0,240,255,0.18); }
+
+  /* ── Progress bar segment ── */
+  .prog-seg {
+    flex: 1; height: 3px; border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    transition: background 0.3s;
+  }
+  .prog-seg.done { background: #00f0ff; }
+  .prog-seg.active { background: linear-gradient(90deg, #00f0ff 60%, rgba(0,240,255,0.25)); }
+
+  /* ── Shimmer skeleton ── */
+  @keyframes shimmer { to { background-position: -200% center; } }
+  .skel { border-radius: 0.5rem; background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%); background-size: 200%; animation: shimmer 1.4s infinite; }
+
+  /* ── Summary row ── */
+  .summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; }
+  .summary-row:last-child { border-bottom: none; }
+
+  /* ── Input base ── */
+  .cc-input {
+    width: 100%; background: rgba(22,22,24,0.8); border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 0.75rem; padding: 0.75rem 1rem; color: #dce4e5; font-size: 0.9rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .cc-input:focus { border-color: #00f0ff; box-shadow: 0 0 0 3px rgba(0,240,255,0.1); }
+  .cc-input::placeholder { color: #849495; }
+</style>
+</head>
+<body class="bg-obsidian-base min-h-screen font-body-md antialiased">
+
+<!-- Header -->
+<div id="site-header"></div>
+
+<!-- Main -->
+<main class="relative z-10 pt-28 pb-20 px-4 md:px-8">
+  <div class="max-w-2xl mx-auto">
+
+    <!-- Back link -->
+    <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary-container transition-colors text-sm mb-6">
+      <span class="material-symbols-outlined text-sm">arrow_back</span> Back
+    </a>
+
+    <!-- Page title -->
+    <div class="mb-8">
+      <span class="font-label-caps text-label-caps text-primary-container uppercase tracking-widest mb-2 block">Book a Service</span>
+      <h1 class="text-3xl font-bold text-white" id="page-title">Loading…</h1>
+      <p class="text-on-surface-variant text-sm mt-1" id="page-subtitle"></p>
+    </div>
+
+    <!-- Pro card skeleton / summary -->
+    <div id="pro-skeleton" class="glass-panel rounded-2xl p-5 flex items-center gap-4 mb-8">
+      <div class="skel w-14 h-14 rounded-full flex-shrink-0"></div>
+      <div class="flex-1 flex flex-col gap-2">
+        <div class="skel h-4 w-32 rounded"></div>
+        <div class="skel h-3 w-48 rounded"></div>
+      </div>
+    </div>
+
+    <div id="pro-card" class="glass-panel rounded-2xl p-5 flex items-center gap-4 mb-8 border-glass-stroke" style="display:none!important"></div>
+
+    <!-- Progress bar -->
+    <div class="flex gap-2 mb-8" id="progress-bar">
+      <div class="prog-seg active" id="prog-0"></div>
+      <div class="prog-seg" id="prog-1"></div>
+      <div class="prog-seg" id="prog-2"></div>
+      <div class="prog-seg" id="prog-3"></div>
+    </div>
+
+    <!-- Step labels -->
+    <div class="flex justify-between text-xs text-on-surface-variant mb-6 px-0.5">
+      <span id="lbl-0" class="text-primary-container font-bold">Services</span>
+      <span id="lbl-1">Date &amp; Time</span>
+      <span id="lbl-2">Venue</span>
+      <span id="lbl-3">Confirm</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         STEP 1 — Select Services
+    ════════════════════════════════════════════════════ -->
+    <div class="step-panel active" id="step-0">
+      <h2 class="text-white font-bold text-lg mb-4">Choose Services</h2>
+      <p class="text-on-surface-variant text-sm mb-5">Select one or more services. For hourly services you can set the number of hours.</p>
+
+      <div id="services-list" class="flex flex-col gap-3 mb-6">
+        <!-- injected by JS -->
+        <div class="skel h-20 rounded-2xl"></div>
+        <div class="skel h-20 rounded-2xl"></div>
+        <div class="skel h-20 rounded-2xl"></div>
+      </div>
+
+      <p id="no-services" class="hidden text-on-surface-variant text-sm text-center py-8">
+        This professional hasn't listed any services yet.
+      </p>
+
+      <p id="svc-error" class="hidden text-error text-sm mt-2">Please select at least one service.</p>
+
+      <div class="flex justify-end mt-2">
+        <button onclick="goStep(1)" class="flex items-center gap-2 bg-primary-container text-obsidian-base font-bold px-6 py-3 rounded-xl hover:brightness-110 transition-all">
+          Next <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         STEP 2 — Date & Time
+    ════════════════════════════════════════════════════ -->
+    <div class="step-panel" id="step-1">
+      <h2 class="text-white font-bold text-lg mb-4">Pick a Date &amp; Time</h2>
+      <p class="text-on-surface-variant text-sm mb-6">Choose when you'd like the service to take place.</p>
+
+      <!-- Date -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-2">Date <span class="text-error">*</span></label>
+        <input type="date" id="input-date" class="cc-input" />
+      </div>
+
+      <!-- Time slots -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-3">Start Time <span class="text-error">*</span></label>
+        <div class="flex flex-wrap gap-2" id="time-slots">
+          <!-- generated by JS -->
+        </div>
+      </div>
+
+      <!-- Duration (shown only when hourly services selected) -->
+      <div id="duration-wrap" class="mb-5 hidden">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-2">Duration (hours)</label>
+        <input type="number" id="input-duration" min="1" max="24" value="2" class="cc-input w-32" oninput="recalcTotal()"/>
+        <p class="text-xs text-on-surface-variant mt-1">Applied to per-hour services only.</p>
+      </div>
+
+      <p id="date-error" class="hidden text-error text-sm mt-2">Please select a date and time.</p>
+
+      <div class="flex justify-between mt-6">
+        <button onclick="goStep(0)" class="flex items-center gap-2 text-on-surface-variant hover:text-white font-bold px-4 py-3 rounded-xl hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">arrow_back</span> Back
+        </button>
+        <button onclick="goStep(2)" class="flex items-center gap-2 bg-primary-container text-obsidian-base font-bold px-6 py-3 rounded-xl hover:brightness-110 transition-all">
+          Next <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         STEP 3 — Venue & Notes
+    ════════════════════════════════════════════════════ -->
+    <div class="step-panel" id="step-2">
+      <h2 class="text-white font-bold text-lg mb-4">Venue &amp; Details</h2>
+      <p class="text-on-surface-variant text-sm mb-6">Tell the professional where the service should take place and any extra details.</p>
+
+      <!-- Venue -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-2">Venue / Location <span class="text-error">*</span></label>
+        <input type="text" id="input-venue" placeholder="e.g. Banquet Hall, Grand Hyatt, Mumbai" class="cc-input"/>
+      </div>
+
+      <!-- Event type -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-2">Event Type</label>
+        <select id="input-event-type" class="cc-input">
+          <option value="">Select event type…</option>
+          <option>Wedding</option>
+          <option>Corporate Event</option>
+          <option>Birthday / Party</option>
+          <option>Product Launch</option>
+          <option>Concert / Live Show</option>
+          <option>Short Film / Production</option>
+          <option>Portrait / Headshots</option>
+          <option>Drone Shoot</option>
+          <option>Podcast Recording</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Notes -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-on-surface-variant mb-2">Additional Notes</label>
+        <textarea id="input-notes" rows="4" placeholder="Any special requirements, equipment needs, guest count, references…" class="cc-input resize-none"></textarea>
+      </div>
+
+      <p id="venue-error" class="hidden text-error text-sm mt-2">Please enter a venue.</p>
+
+      <div class="flex justify-between mt-6">
+        <button onclick="goStep(1)" class="flex items-center gap-2 text-on-surface-variant hover:text-white font-bold px-4 py-3 rounded-xl hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">arrow_back</span> Back
+        </button>
+        <button onclick="goStep(3)" class="flex items-center gap-2 bg-primary-container text-obsidian-base font-bold px-6 py-3 rounded-xl hover:brightness-110 transition-all">
+          Review Booking <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         STEP 4 — Review & Confirm
+    ════════════════════════════════════════════════════ -->
+    <div class="step-panel" id="step-3">
+      <h2 class="text-white font-bold text-lg mb-6">Review &amp; Confirm</h2>
+
+      <!-- Summary card -->
+      <div class="glass-panel rounded-2xl border-glass-stroke overflow-hidden mb-6">
+
+        <!-- Professional -->
+        <div class="p-5 border-b border-glass-stroke">
+          <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Professional</p>
+          <div class="flex items-center gap-3 mt-2">
+            <div id="sum-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"></div>
+            <div>
+              <p class="text-white font-bold text-sm" id="sum-name">—</p>
+              <p class="text-on-surface-variant text-xs" id="sum-title">—</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date & time -->
+        <div class="p-5 border-b border-glass-stroke grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Date</p>
+            <p class="text-white font-bold text-sm" id="sum-date">—</p>
+          </div>
+          <div>
+            <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Time</p>
+            <p class="text-white font-bold text-sm" id="sum-time">—</p>
+          </div>
+        </div>
+
+        <!-- Venue -->
+        <div class="p-5 border-b border-glass-stroke">
+          <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Venue</p>
+          <p class="text-white font-bold text-sm" id="sum-venue">—</p>
+          <p class="text-on-surface-variant text-xs mt-0.5" id="sum-event-type"></p>
+        </div>
+
+        <!-- Line items -->
+        <div class="p-5">
+          <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-3">Services</p>
+          <div id="sum-line-items"></div>
+          <div class="mt-3 pt-3 border-t border-glass-stroke flex justify-between items-center">
+            <span class="text-on-surface-variant text-sm font-semibold">Estimated Total</span>
+            <span class="text-primary-container text-xl font-black" id="sum-total">₹0</span>
+          </div>
+          <p class="text-xs text-on-surface-variant/60 mt-1 text-right">Actual amount may vary. Finalised on confirmation with professional.</p>
+        </div>
+      </div>
+
+      <!-- Notes preview -->
+      <div id="sum-notes-wrap" class="glass-panel rounded-2xl border-glass-stroke p-5 mb-6 hidden">
+        <p class="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-2">Notes</p>
+        <p class="text-white text-sm" id="sum-notes"></p>
+      </div>
+
+      <!-- Auth warning -->
+      <div id="auth-warning" class="hidden glass-panel rounded-2xl border border-error/30 p-4 mb-5 flex items-start gap-3">
+        <span class="material-symbols-outlined text-error mt-0.5">warning</span>
+        <div>
+          <p class="text-white font-bold text-sm">Sign in required</p>
+          <p class="text-on-surface-variant text-xs mt-0.5">You need to be signed in to confirm a booking.
+            <a href="/signin.html" class="text-primary-container font-bold hover:underline">Sign In</a> or
+            <a href="/customersignup.html" class="text-primary-container font-bold hover:underline">Create Account</a>.
+          </p>
+        </div>
+      </div>
+
+      <p id="confirm-error" class="hidden text-error text-sm mb-3"></p>
+
+      <div class="flex justify-between">
+        <button onclick="goStep(2)" class="flex items-center gap-2 text-on-surface-variant hover:text-white font-bold px-4 py-3 rounded-xl hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">arrow_back</span> Back
+        </button>
+        <button id="confirm-btn" onclick="confirmBooking()"
+          class="flex items-center gap-2 bg-primary-container text-obsidian-base font-bold px-8 py-3 rounded-xl hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="material-symbols-outlined">check_circle</span> Confirm Booking
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         SUCCESS
+    ════════════════════════════════════════════════════ -->
+    <div class="step-panel" id="step-success">
+      <div class="text-center py-12">
+        <div class="w-20 h-20 rounded-full bg-primary-container/15 border border-primary-container/30 flex items-center justify-center mx-auto mb-6">
+          <span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings:'FILL' 1">check_circle</span>
+        </div>
+        <h2 class="text-white text-2xl font-bold mb-2">Booking Submitted!</h2>
+        <p class="text-on-surface-variant text-sm mb-8 max-w-sm mx-auto">Your request has been sent to the professional. You'll receive a confirmation once they accept.</p>
+
+        <div id="success-summary" class="glass-panel rounded-2xl border-glass-stroke p-5 text-left mb-8 max-w-sm mx-auto"></div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/services.html" class="flex items-center justify-center gap-2 border border-glass-stroke text-on-surface-variant hover:text-white font-bold px-6 py-3 rounded-xl hover:bg-white/5 transition-all">
+            <span class="material-symbols-outlined text-sm">arrow_back</span> Browse More
+          </a>
+          <a href="/customer-profile.html" class="flex items-center justify-center gap-2 bg-primary-container text-obsidian-base font-bold px-6 py-3 rounded-xl hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined text-sm">calendar_month</span> My Bookings
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /max-w-2xl -->
+</main>
+
+<div id="site-footer"></div>
+<script src="/header-loader.js"></script>
+<script src="/footer-loader.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   State
+══════════════════════════════════════════════════════════════ */
+let PRO        = null;   // full profile from API
+let currentStep = 0;
+
+const TIME_SLOTS = [
+  '07:00','08:00','09:00','10:00','11:00','12:00',
+  '13:00','14:00','15:00','16:00','17:00','18:00',
+  '19:00','20:00','21:00',
+];
+
+/* ══════════════════════════════════════════════════════════════
+   Boot — load professional from ?pro=username
+══════════════════════════════════════════════════════════════ */
+(async function boot() {
+  const params   = new URLSearchParams(location.search);
+  const username = params.get('pro');
+
+  if (!username) {
+    document.getElementById('page-title').textContent = 'No professional specified.';
+    return;
+  }
+
+  // Build time slots
+  buildTimeSlots();
+
+  // Set min date to today
+  document.getElementById('input-date').min = new Date().toISOString().split('T')[0];
+
+  let data;
+  try {
+    const res = await fetch(`/api/profile/@${encodeURIComponent(username)}`);
+    data = await res.json();
+  } catch (_) {
+    document.getElementById('page-title').textContent = 'Failed to load professional.';
+    return;
+  }
+
+  if (!data.ok) {
+    document.getElementById('page-title').textContent = 'Professional not found.';
+    return;
+  }
+
+  PRO = data.profile;
+
+  // Update page title
+  document.getElementById('page-title').textContent = `Book ${PRO.display_name}`;
+  document.title = `Book ${PRO.display_name} | CamCrew Studio`;
+  document.getElementById('page-subtitle').textContent = PRO.title || (PRO.categories || []).join(' · ') || '';
+
+  // Pro summary card
+  renderProCard();
+
+  // Render service checkboxes
+  renderServices();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   Pro card
+══════════════════════════════════════════════════════════════ */
+function strHue(s) {
+  let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0xffffffff;
+  return Math.abs(h) % 360;
+}
+function initials(n) { return (n||'?').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+
+function renderProCard() {
+  const skel = document.getElementById('pro-skeleton');
+  const card = document.getElementById('pro-card');
+  const hue  = strHue(PRO.username || '');
+  const inits = initials(PRO.display_name);
+  const locs = (PRO.locations || []).join(', ') || 'Location not set';
+  const cats = (PRO.categories || []).slice(0,3).join(' · ');
+
+  card.innerHTML = `
+    <div class="w-14 h-14 rounded-full flex items-center justify-center text-xl font-black flex-shrink-0"
+         style="background:linear-gradient(135deg,hsl(${hue},40%,16%),hsl(${(hue+40)%360},50%,22%));color:hsl(${hue},70%,70%)">
+      ${inits}
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="text-white font-bold truncate">${PRO.display_name}</p>
+      <p class="text-primary-container text-xs font-semibold truncate">${PRO.title || cats}</p>
+      <p class="text-on-surface-variant text-xs truncate mt-0.5"><span class="material-symbols-outlined text-xs">location_on</span> ${locs}</p>
+    </div>
+    <a href="/@${PRO.username}" class="text-primary-container text-xs font-bold hover:underline whitespace-nowrap">View Profile</a>
+  `;
+  skel.style.display = 'none';
+  card.style.display = 'flex';
+  card.style.removeProperty('display'); // clear the !important none
+  card.style.display = 'flex';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Services
+══════════════════════════════════════════════════════════════ */
+function renderServices() {
+  const container = document.getElementById('services-list');
+  const services  = PRO.services || [];
+
+  if (!services.length) {
+    container.innerHTML = '';
+    document.getElementById('no-services').classList.remove('hidden');
+    return;
+  }
+
+  container.innerHTML = services.map((svc, i) => {
+    const isHourly = (svc.unit || '').toLowerCase().includes('hour');
+    const priceLabel = svc.price ? `₹${Number(svc.price).toLocaleString()} / ${svc.unit || 'service'}` : 'Price on request';
+    return `
+      <div class="relative">
+        <input type="checkbox" class="svc-check" id="svc-${i}" data-idx="${i}" onchange="onSvcChange(${i})"/>
+        <label class="svc-label" for="svc-${i}">
+          <div class="svc-tick">✓</div>
+          <div class="flex items-start justify-between gap-2 pr-8">
+            <div>
+              <p class="text-white font-bold text-sm">${svc.name || 'Unnamed Service'}</p>
+              ${svc.description ? `<p class="text-on-surface-variant text-xs mt-0.5 leading-relaxed">${svc.description}</p>` : ''}
+            </div>
+            <span class="text-primary-container font-black text-sm whitespace-nowrap flex-shrink-0">${priceLabel}</span>
+          </div>
+          ${isHourly ? `
+          <div class="qty-wrap" id="qty-wrap-${i}">
+            <span class="text-xs text-on-surface-variant">Hours:</span>
+            <button type="button" class="qty-btn" onclick="adjustQty(event,${i},-1)">−</button>
+            <span class="text-white font-bold text-sm w-6 text-center" id="qty-${i}">2</span>
+            <button type="button" class="qty-btn" onclick="adjustQty(event,${i},+1)">+</button>
+          </div>` : ''}
+        </label>
+      </div>`;
+  }).join('');
+}
+
+function onSvcChange(i) {
+  recalcTotal();
+  // Show/hide duration field if any hourly service is selected
+  const services = PRO.services || [];
+  const hasHourly = services.some((svc, idx) => {
+    const cb = document.getElementById(`svc-${idx}`);
+    return cb && cb.checked && (svc.unit || '').toLowerCase().includes('hour');
+  });
+  document.getElementById('duration-wrap').classList.toggle('hidden', !hasHourly);
+}
+
+function adjustQty(e, i, delta) {
+  e.preventDefault(); e.stopPropagation();
+  const el  = document.getElementById(`qty-${i}`);
+  const val = Math.max(1, Math.min(24, parseInt(el.textContent) + delta));
+  el.textContent = val;
+  recalcTotal();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Time slots
+══════════════════════════════════════════════════════════════ */
+function buildTimeSlots() {
+  const wrap = document.getElementById('time-slots');
+  wrap.innerHTML = TIME_SLOTS.map((t, i) => {
+    const [hh, mm] = t.split(':').map(Number);
+    const ampm = hh < 12 ? 'AM' : 'PM';
+    const h12  = ((hh - 1 + 12) % 12) + 1;
+    const label = `${h12}:${mm.toString().padStart(2,'0')} ${ampm}`;
+    return `<input type="radio" name="timeslot" class="time-pill" id="ts-${i}" value="${t}"/>
+            <label class="time-label" for="ts-${i}">${label}</label>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Total calculation
+══════════════════════════════════════════════════════════════ */
+function recalcTotal() {
+  const services = PRO ? (PRO.services || []) : [];
+  const duration = parseInt(document.getElementById('input-duration')?.value || '2');
+  let total = 0;
+  services.forEach((svc, i) => {
+    const cb = document.getElementById(`svc-${i}`);
+    if (!cb || !cb.checked) return;
+    const price = parseFloat(svc.price) || 0;
+    const isHourly = (svc.unit || '').toLowerCase().includes('hour');
+    const qty = isHourly ? (parseInt(document.getElementById(`qty-${i}`)?.textContent || duration)) : 1;
+    total += price * qty;
+  });
+  return total;
+}
+
+function getSelectedServices() {
+  const services = PRO ? (PRO.services || []) : [];
+  const sel = [];
+  services.forEach((svc, i) => {
+    const cb = document.getElementById(`svc-${i}`);
+    if (cb && cb.checked) {
+      const isHourly = (svc.unit || '').toLowerCase().includes('hour');
+      const qty = isHourly ? parseInt(document.getElementById(`qty-${i}`)?.textContent || '2') : 1;
+      sel.push({ svc, qty, isHourly });
+    }
+  });
+  return sel;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Step navigation
+══════════════════════════════════════════════════════════════ */
+function goStep(n) {
+  // Validate current step before advancing
+  if (n > currentStep) {
+    if (!validateStep(currentStep)) return;
+  }
+
+  // Build summary on step 3
+  if (n === 3) buildSummary();
+
+  // Hide all
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`step-${n}`).classList.add('active');
+
+  // Progress bar
+  for (let i = 0; i < 4; i++) {
+    const seg = document.getElementById(`prog-${i}`);
+    const lbl = document.getElementById(`lbl-${i}`);
+    seg.className = 'prog-seg ' + (i < n ? 'done' : i === n ? 'active' : '');
+    lbl.className = i <= n ? 'text-primary-container font-bold' : '';
+  }
+
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(step) {
+  if (step === 0) {
+    const ok = getSelectedServices().length > 0;
+    document.getElementById('svc-error').classList.toggle('hidden', ok);
+    return ok;
+  }
+  if (step === 1) {
+    const date = document.getElementById('input-date').value;
+    const time = document.querySelector('input[name="timeslot"]:checked');
+    const ok   = date && time;
+    document.getElementById('date-error').classList.toggle('hidden', ok);
+    return ok;
+  }
+  if (step === 2) {
+    const venue = document.getElementById('input-venue').value.trim();
+    document.getElementById('venue-error').classList.toggle('hidden', !!venue);
+    return !!venue;
+  }
+  return true;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Build summary (step 4)
+══════════════════════════════════════════════════════════════ */
+function buildSummary() {
+  if (!PRO) return;
+
+  const hue   = strHue(PRO.username || '');
+  const inits = initials(PRO.display_name);
+
+  // Avatar
+  const av = document.getElementById('sum-avatar');
+  av.style.background = `linear-gradient(135deg,hsl(${hue},40%,16%),hsl(${(hue+40)%360},50%,22%))`;
+  av.style.color = `hsl(${hue},70%,70%)`;
+  av.textContent = inits;
+
+  document.getElementById('sum-name').textContent  = PRO.display_name || PRO.username;
+  document.getElementById('sum-title').textContent = PRO.title || (PRO.categories || []).join(' · ');
+
+  // Date & time
+  const dateVal = document.getElementById('input-date').value;
+  const timeEl  = document.querySelector('input[name="timeslot"]:checked');
+  const dateStr = dateVal ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : '—';
+  document.getElementById('sum-date').textContent = dateStr;
+  document.getElementById('sum-time').textContent = timeEl ? formatTime(timeEl.value) : '—';
+
+  // Venue
+  const venue    = document.getElementById('input-venue').value.trim();
+  const evtType  = document.getElementById('input-event-type').value;
+  document.getElementById('sum-venue').textContent      = venue || '—';
+  document.getElementById('sum-event-type').textContent = evtType || '';
+
+  // Notes
+  const notes = document.getElementById('input-notes').value.trim();
+  if (notes) {
+    document.getElementById('sum-notes').textContent = notes;
+    document.getElementById('sum-notes-wrap').classList.remove('hidden');
+  } else {
+    document.getElementById('sum-notes-wrap').classList.add('hidden');
+  }
+
+  // Line items
+  const sel    = getSelectedServices();
+  const lineEl = document.getElementById('sum-line-items');
+  let total    = 0;
+
+  lineEl.innerHTML = sel.map(({ svc, qty, isHourly }) => {
+    const price = parseFloat(svc.price) || 0;
+    const line  = price * qty;
+    total += line;
+    const qtyLabel = isHourly ? ` × ${qty} hr` : '';
+    const priceStr = price ? `₹${line.toLocaleString()}` : 'On request';
+    return `<div class="summary-row">
+      <span class="text-on-surface-variant">${svc.name || 'Service'}${qtyLabel}</span>
+      <span class="text-white font-bold">${priceStr}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sum-total').textContent = total ? `₹${total.toLocaleString()}` : 'On request';
+
+  // Auth check
+  checkAuth();
+}
+
+async function checkAuth() {
+  try {
+    const res  = await fetch('/api/me');
+    const data = await res.json();
+    const authed = data.ok;
+    document.getElementById('auth-warning').classList.toggle('hidden', authed);
+    document.getElementById('confirm-btn').disabled = !authed;
+  } catch (_) {
+    document.getElementById('auth-warning').classList.remove('hidden');
+    document.getElementById('confirm-btn').disabled = true;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Confirm booking
+══════════════════════════════════════════════════════════════ */
+async function confirmBooking() {
+  const btn  = document.getElementById('confirm-btn');
+  const errEl = document.getElementById('confirm-error');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span> Confirming…`;
+
+  const sel      = getSelectedServices();
+  const dateVal  = document.getElementById('input-date').value;
+  const timeEl   = document.querySelector('input[name="timeslot"]:checked');
+  const venue    = document.getElementById('input-venue').value.trim();
+  const evtType  = document.getElementById('input-event-type').value;
+  const notes    = document.getElementById('input-notes').value.trim();
+
+  const bookingDate = `${dateVal} ${timeEl ? timeEl.value : ''}`.trim();
+  const serviceStr  = sel.map(({ svc, qty, isHourly }) =>
+    svc.name + (isHourly ? ` (${qty} hr)` : '')
+  ).join(', ');
+  const total = recalcTotal();
+
+  const noteLines = [];
+  if (venue)   noteLines.push(`Venue: ${venue}`);
+  if (evtType) noteLines.push(`Event: ${evtType}`);
+  if (notes)   noteLines.push(notes);
+
+  const payload = {
+    professional_name: PRO.display_name || PRO.username,
+    service:           serviceStr,
+    booking_date:      bookingDate,
+    amount:            total,
+    note:              noteLines.join('\n') || null,
+  };
+
+  try {
+    const res  = await fetch('/api/customer/bookings', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      errEl.textContent = data.error || 'Something went wrong. Please try again.';
+      errEl.classList.remove('hidden');
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Confirm Booking`;
+      return;
+    }
+
+    // Success
+    showSuccess(payload, data.booking_id);
+  } catch (_) {
+    errEl.textContent = 'Network error. Please check your connection.';
+    errEl.classList.remove('hidden');
+    btn.disabled = false;
+    btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Confirm Booking`;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Success screen
+══════════════════════════════════════════════════════════════ */
+function showSuccess(payload, bookingId) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-success').classList.add('active');
+  document.getElementById('progress-bar').style.display = 'none';
+  document.querySelector('.flex.justify-between.text-xs').style.display = 'none';
+
+  const dateVal = document.getElementById('input-date').value;
+  const timeEl  = document.querySelector('input[name="timeslot"]:checked');
+  const dateStr = dateVal ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' }) : '—';
+
+  document.getElementById('success-summary').innerHTML = `
+    <div class="summary-row"><span class="text-on-surface-variant">Professional</span><span class="text-white font-bold">${payload.professional_name}</span></div>
+    <div class="summary-row"><span class="text-on-surface-variant">Date</span><span class="text-white font-bold">${dateStr}</span></div>
+    <div class="summary-row"><span class="text-on-surface-variant">Time</span><span class="text-white font-bold">${timeEl ? formatTime(timeEl.value) : '—'}</span></div>
+    <div class="summary-row"><span class="text-on-surface-variant">Services</span><span class="text-white font-bold text-right max-w-xs">${payload.service}</span></div>
+    ${payload.amount ? `<div class="summary-row"><span class="text-on-surface-variant">Estimated Total</span><span class="text-primary-container font-black">₹${Number(payload.amount).toLocaleString()}</span></div>` : ''}
+    <div class="pt-2 text-xs text-on-surface-variant">Booking #${bookingId}</div>
+  `;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Helpers
+══════════════════════════════════════════════════════════════ */
+function formatTime(t) {
+  const [hh, mm] = t.split(':').map(Number);
+  const ampm = hh < 12 ? 'AM' : 'PM';
+  const h12  = ((hh - 1 + 12) % 12) + 1;
+  return `${h12}:${mm.toString().padStart(2,'0')} ${ampm}`;
+}
+</script>
+</body>
+</html>

@@ -819,6 +819,29 @@ def track_order(order_id):
 
 # ── Bookings ────────────────────────────────────────────────────────────────
 
+@app.route("/api/customer/bookings", methods=["POST"])
+def create_booking():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data = request.get_json(force=True)
+    professional_name = (data.get("professional_name") or "").strip()
+    service           = (data.get("service") or "").strip()
+    booking_date      = (data.get("booking_date") or "").strip()
+    amount            = float(data.get("amount") or 0)
+    note              = (data.get("note") or "").strip() or None
+    if not professional_name or not service or not booking_date:
+        return jsonify({"ok": False, "error": "professional_name, service, and booking_date are required."}), 400
+    with get_db() as conn:
+        cur = conn.execute(
+            """INSERT INTO bookings (user_id, professional_name, service, booking_date, status, amount, note)
+               VALUES (%s, %s, %s, %s, 'pending', %s, %s) RETURNING id""",
+            (uid, professional_name, service, booking_date, amount, note),
+        )
+        booking_id = cur.fetchone()["id"]
+    return jsonify({"ok": True, "booking_id": booking_id, "status": "pending"})
+
+
 @app.route("/api/customer/bookings", methods=["GET"])
 def customer_bookings():
     uid = require_auth()
