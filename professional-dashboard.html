@@ -1144,20 +1144,7 @@ function seedDemoData() {
       { id:3, client:'Nova Films',    service:'Cinematic Brand Video',    date:'2026-08-10', amount:5000, status:'active',    notes:'3-day shoot, downtown LA' },
     ]));
   }
-  if (!localStorage.getItem('pro_equipment')) {
-    localStorage.setItem('pro_equipment', JSON.stringify([
-      { id:1, name:'Sony FX6 Body',     category:'Camera',     description:'Full-frame cinema camera — battery & charger included', pricePerDay:150, available:true },
-      { id:2, name:'Aputure 600D Pro',  category:'Lighting',   description:'Bi-colour COB LED, Fresnel & barn doors included',      pricePerDay:65,  available:true },
-      { id:3, name:'DJI Ronin RS3 Pro', category:'Stabilizer', description:'3-axis gimbal, supports up to 4.5 kg payload',          pricePerDay:45,  available:false },
-    ]));
-  }
-  if (!localStorage.getItem('pro_rental_orders')) {
-    localStorage.setItem('pro_rental_orders', JSON.stringify([
-      { id:1, equipmentId:1, equipmentName:'Sony FX6 Body',     clientName:'Alex Rivera', clientEmail:'alex@example.com',  fromDate:'2026-08-10', toDate:'2026-08-13', days:3, totalCost:450, status:'pending',   notes:'Need it for a music video shoot.',   createdAt: new Date(Date.now()-3600000).toISOString() },
-      { id:2, equipmentId:2, equipmentName:'Aputure 600D Pro',  clientName:'Lena Park',   clientEmail:'lena@studio.io',    fromDate:'2026-08-07', toDate:'2026-08-08', days:1, totalCost:65,  status:'accepted',  notes:'Interview lighting setup.',          createdAt: new Date(Date.now()-2*86400000).toISOString() },
-      { id:3, equipmentId:3, equipmentName:'DJI Ronin RS3 Pro', clientName:'Marcus Webb', clientEmail:'marcus@film.co',    fromDate:'2026-07-25', toDate:'2026-07-27', days:2, totalCost:90,  status:'completed', notes:'Short film project.',                 createdAt: new Date(Date.now()-10*86400000).toISOString() },
-    ]));
-  }
+  // Equipment and rental orders are now stored in the database — no localStorage seeding needed.
   if (!localStorage.getItem('pro_vault')) {
     localStorage.setItem('pro_vault', JSON.stringify({
       folders: [
@@ -1518,13 +1505,50 @@ function submitJob(e) {
 }
 
 // ════════════════════════════════════════════════════════════════════
-// Rentals — Equipment Listing + Client Orders
+// Rentals — Equipment Listing + Client Orders  (API-backed)
 // ════════════════════════════════════════════════════════════════════
-function loadRentals() {
-  S.equipment    = JSON.parse(localStorage.getItem('pro_equipment')     || '[]');
-  S.rentalOrders = JSON.parse(localStorage.getItem('pro_rental_orders') || '[]');
-  // Restore last active tab
+async function loadRentals() {
   switchRentalTab(S.rentalTab || 'equipment');
+  try {
+    const [eqRes, ordRes] = await Promise.all([
+      fetch('/api/professional/rental-equipment'),
+      fetch('/api/professional/rental-orders'),
+    ]);
+    const eqData  = await eqRes.json();
+    const ordData = await ordRes.json();
+    if (eqData.ok)  S.equipment    = (eqData.equipment || []).map(normaliseEquip);
+    if (ordData.ok) S.rentalOrders = (ordData.orders   || []).map(normaliseOrder);
+  } catch (_) { /* silently fail — shows empty state */ }
+  switchRentalTab(S.rentalTab || 'equipment');
+}
+
+/* Map snake_case DB fields → camelCase used throughout the dashboard */
+function normaliseEquip(e) {
+  return {
+    id:          e.id,
+    name:        e.name,
+    category:    e.category,
+    description: e.description || '',
+    pricePerDay: e.price_per_day,
+    available:   e.available,
+    image_url:   e.image_url || '',
+  };
+}
+function normaliseOrder(o) {
+  return {
+    id:            o.id,
+    equipmentId:   o.equipment_id,
+    equipmentName: o.equipment_name || '',
+    clientName:    o.customer_name,
+    clientEmail:   o.customer_email,
+    fromDate:      o.from_date,
+    toDate:        o.to_date,
+    days:          o.days,
+    totalCost:     o.total_cost,
+    notes:         o.notes || '',
+    status:        o.status,
+    createdAt:     o.created_at,
+  };
 }
 
 function switchRentalTab(tab) {
@@ -1591,16 +1615,30 @@ function renderEquipmentList() {
     </div>`).join('');
 }
 
-function toggleEquipAvailability(id) {
-  S.equipment = S.equipment.map(e => e.id === id ? { ...e, available: !e.available } : e);
-  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
+async function toggleEquipAvailability(id) {
+  const eq = S.equipment.find(e => e.id === id);
+  if (!eq) return;
+  try {
+    const res  = await fetch(`/api/professional/rental-equipment/${id}/availability`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ available: !eq.available }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    S.equipment = S.equipment.map(e => e.id === id ? normaliseEquip(data.equipment) : e);
+  } catch (err) { showToast('Update failed: ' + err.message, 'error'); return; }
   renderEquipmentList();
 }
 
-function removeEquipment(id) {
+async function removeEquipment(id) {
   if (!confirm('Remove this equipment listing?')) return;
-  S.equipment = S.equipment.filter(e => e.id !== id);
-  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
+  try {
+    const res  = await fetch(`/api/professional/rental-equipment/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    S.equipment = S.equipment.filter(e => e.id !== id);
+  } catch (err) { showToast('Delete failed: ' + err.message, 'error'); return; }
   showToast('Equipment removed.');
   renderEquipmentList();
 }
@@ -1628,26 +1666,42 @@ function openEditEquipmentModal(id) {
   openModal('modal-rental');
 }
 
-function submitEquipment(e) {
+async function submitEquipment(e) {
   e.preventDefault();
   const editId = document.getElementById('rental-equip-id').value;
   const name   = document.getElementById('rental-name').value.trim();
   const price  = parseFloat(document.getElementById('rental-price').value);
   if (!name) { showRentalErr('Equipment name is required.'); return; }
   if (!price || price <= 0) { showRentalErr('Enter a valid price per day.'); return; }
-  const item = {
+  const payload = {
     name,
-    category:    document.getElementById('rental-category').value,
-    description: document.getElementById('rental-description').value.trim(),
-    pricePerDay: price,
-    available:   document.getElementById('rental-available').checked,
+    category:      document.getElementById('rental-category').value,
+    description:   document.getElementById('rental-description').value.trim(),
+    price_per_day: price,
+    available:     document.getElementById('rental-available').checked,
   };
-  if (editId) {
-    S.equipment = S.equipment.map(x => x.id == editId ? { ...x, ...item } : x);
-  } else {
-    S.equipment.push({ id: Date.now(), ...item });
-  }
-  localStorage.setItem('pro_equipment', JSON.stringify(S.equipment));
+  try {
+    let res, data;
+    if (editId) {
+      res  = await fetch(`/api/professional/rental-equipment/${editId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      data = await res.json();
+      if (!data.ok) throw new Error(data.error);
+      S.equipment = S.equipment.map(x => x.id == editId ? normaliseEquip(data.equipment) : x);
+    } else {
+      res  = await fetch('/api/professional/rental-equipment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      data = await res.json();
+      if (!data.ok) throw new Error(data.error);
+      S.equipment.push(normaliseEquip(data.equipment));
+    }
+  } catch (err) { showRentalErr(err.message); return; }
   closeModal('modal-rental');
   showToast(editId ? 'Equipment updated!' : 'Equipment listed!');
   renderEquipmentList();
@@ -1722,19 +1776,25 @@ function rentalOrderBadge(status) {
   return `<span style="font-size:0.63rem;font-weight:700;color:${color};background:${color}22;padding:0.15rem 0.55rem;border-radius:999px;letter-spacing:0.07em;white-space:nowrap;">${label}</span>`;
 }
 
-function setRentalOrderStatus(id, status) {
-  S.rentalOrders = S.rentalOrders.map(o => o.id === id ? { ...o, status } : o);
-  localStorage.setItem('pro_rental_orders', JSON.stringify(S.rentalOrders));
+async function setRentalOrderStatus(id, status) {
+  try {
+    const res  = await fetch(`/api/professional/rental-orders/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    S.rentalOrders = S.rentalOrders.map(o => o.id === id ? normaliseOrder(data.order) : o);
+  } catch (err) { showToast('Update failed: ' + err.message, 'error'); return; }
   const msgs = { active:'Equipment marked as out.', completed:'Returned — rental complete!', declined:'Request declined.' };
   showToast(msgs[status] || 'Updated.');
-  switchRentalTab('orders'); // re-renders list + badge
+  switchRentalTab('orders');
 }
 
-function acceptRentalOrder(id) {
-  S.rentalOrders = S.rentalOrders.map(o => o.id === id ? { ...o, status:'accepted' } : o);
-  localStorage.setItem('pro_rental_orders', JSON.stringify(S.rentalOrders));
+async function acceptRentalOrder(id) {
+  await setRentalOrderStatus(id, 'accepted');
   showToast('Request accepted!');
-  switchRentalTab('orders');
 }
 
 function declineRentalOrder(id) {
@@ -1762,8 +1822,8 @@ const RENTAL_STEPS = [
 const RENTAL_ORDER = ['pending','accepted','active','completed'];
 
 function loadTrackingSelector() {
-  const jobs   = JSON.parse(localStorage.getItem('pro_jobs')         || '[]');
-  const orders = JSON.parse(localStorage.getItem('pro_rental_orders')|| '[]');
+  const jobs   = JSON.parse(localStorage.getItem('pro_jobs') || '[]');
+  const orders = S.rentalOrders || [];
   const sel = document.getElementById('tracking-selector');
   const tl  = document.getElementById('tracking-timeline');
 

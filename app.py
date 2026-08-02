@@ -297,7 +297,45 @@ def seed_demo_data(user_id):
                 )
 
 
+def init_rental_tables():
+    """Create rental_equipment and rental_orders tables if they don't exist."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS rental_equipment (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                name            TEXT    NOT NULL,
+                category        TEXT    NOT NULL DEFAULT 'Camera',
+                description     TEXT,
+                price_per_day   REAL    NOT NULL DEFAULT 0,
+                available       BOOLEAN NOT NULL DEFAULT TRUE,
+                image_url       TEXT,
+                created_at      TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS rental_orders (
+                id              SERIAL PRIMARY KEY,
+                equipment_id    INTEGER NOT NULL,
+                professional_id INTEGER NOT NULL,
+                customer_id     INTEGER,
+                customer_name   TEXT    NOT NULL,
+                customer_email  TEXT    NOT NULL,
+                from_date       TEXT    NOT NULL,
+                to_date         TEXT    NOT NULL,
+                days            INTEGER NOT NULL DEFAULT 1,
+                total_cost      REAL    NOT NULL DEFAULT 0,
+                notes           TEXT,
+                status          TEXT    NOT NULL DEFAULT 'pending',
+                created_at      TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (equipment_id)    REFERENCES rental_equipment(id),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+
 init_db()
+init_rental_tables()
 
 # ---------------------------------------------------------------------------
 # Public portfolio sharing
@@ -1239,6 +1277,253 @@ def update_product(product_id):
     if not product:
         return jsonify({"ok": False, "error": "Not found."}), 404
     return jsonify({"ok": True, "product": dict(product)})
+
+
+# ---------------------------------------------------------------------------
+# Rental Equipment — public listing
+# ---------------------------------------------------------------------------
+
+@app.route("/api/rental-equipment", methods=["GET"])
+def list_rental_equipment():
+    """Public: list all available rental equipment (optionally filter by category)."""
+    category = request.args.get("category", "").strip()
+    with get_db() as conn:
+        if category and category.lower() != "all":
+            rows = conn.execute(
+                """SELECT re.*, u.display_name AS professional_name
+                   FROM rental_equipment re
+                   JOIN users u ON u.id = re.professional_id
+                   WHERE re.available = TRUE AND LOWER(re.category) = LOWER(%s)
+                   ORDER BY re.created_at DESC""",
+                (category,)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                """SELECT re.*, u.display_name AS professional_name
+                   FROM rental_equipment re
+                   JOIN users u ON u.id = re.professional_id
+                   WHERE re.available = TRUE
+                   ORDER BY re.created_at DESC"""
+            ).fetchall()
+    return jsonify({"ok": True, "equipment": [dict(r) for r in rows]})
+
+
+# ---------------------------------------------------------------------------
+# Rental Equipment — professional management
+# ---------------------------------------------------------------------------
+
+def _require_professional():
+    """Return user_id if session user is a professional/studio/admin, else None."""
+    uid = require_auth()
+    if not uid:
+        return None
+    with get_db() as conn:
+        row = conn.execute("SELECT role FROM users WHERE id=%s", (uid,)).fetchone()
+    if row and row["role"] in ("professional", "studio", "admin"):
+        return uid
+    return None
+
+
+@app.route("/api/professional/rental-equipment", methods=["GET"])
+def pro_list_rental_equipment():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM rental_equipment WHERE professional_id=%s ORDER BY created_at DESC",
+            (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "equipment": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/rental-equipment", methods=["POST"])
+def pro_add_rental_equipment():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    name          = (data.get("name") or "").strip()
+    category      = (data.get("category") or "Camera").strip()
+    description   = (data.get("description") or "").strip()
+    price_per_day = float(data.get("price_per_day") or 0)
+    available     = bool(data.get("available", True))
+    image_url     = (data.get("image_url") or "").strip() or None
+    if not name:
+        return jsonify({"ok": False, "error": "Equipment name is required."}), 400
+    if price_per_day <= 0:
+        return jsonify({"ok": False, "error": "Price per day must be greater than 0."}), 400
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO rental_equipment
+               (professional_id, name, category, description, price_per_day, available, image_url)
+               VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+            (uid, name, category, description, price_per_day, available, image_url)
+        ).fetchone()
+    return jsonify({"ok": True, "equipment": dict(row)}), 201
+
+
+@app.route("/api/professional/rental-equipment/<int:equip_id>", methods=["PUT"])
+def pro_edit_rental_equipment(equip_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT * FROM rental_equipment WHERE id=%s AND professional_id=%s",
+            (equip_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        name          = (data.get("name") or existing["name"]).strip()
+        category      = (data.get("category") or existing["category"]).strip()
+        description   = (data.get("description") or existing["description"] or "").strip()
+        price_per_day = float(data.get("price_per_day") or existing["price_per_day"])
+        available     = data.get("available", existing["available"])
+        image_url     = data.get("image_url", existing["image_url"])
+        conn.execute(
+            """UPDATE rental_equipment
+               SET name=%s, category=%s, description=%s, price_per_day=%s, available=%s, image_url=%s
+               WHERE id=%s AND professional_id=%s""",
+            (name, category, description, price_per_day, available, image_url, equip_id, uid)
+        )
+        row = conn.execute("SELECT * FROM rental_equipment WHERE id=%s", (equip_id,)).fetchone()
+    return jsonify({"ok": True, "equipment": dict(row)})
+
+
+@app.route("/api/professional/rental-equipment/<int:equip_id>", methods=["DELETE"])
+def pro_delete_rental_equipment(equip_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT id FROM rental_equipment WHERE id=%s AND professional_id=%s",
+            (equip_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM rental_equipment WHERE id=%s", (equip_id,))
+    return jsonify({"ok": True})
+
+
+@app.route("/api/professional/rental-equipment/<int:equip_id>/availability", methods=["PATCH"])
+def pro_toggle_rental_availability(equip_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT * FROM rental_equipment WHERE id=%s AND professional_id=%s",
+            (equip_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        new_val = data.get("available", not existing["available"])
+        conn.execute(
+            "UPDATE rental_equipment SET available=%s WHERE id=%s",
+            (new_val, equip_id)
+        )
+        row = conn.execute("SELECT * FROM rental_equipment WHERE id=%s", (equip_id,)).fetchone()
+    return jsonify({"ok": True, "equipment": dict(row)})
+
+
+# ---------------------------------------------------------------------------
+# Rental Orders — customers place requests, professionals manage them
+# ---------------------------------------------------------------------------
+
+@app.route("/api/rental-orders", methods=["POST"])
+def place_rental_order():
+    """Customer places a rental request. Auth optional — name/email required in body."""
+    data           = request.get_json(force=True, silent=True) or {}
+    equipment_id   = data.get("equipment_id")
+    customer_name  = (data.get("customer_name") or "").strip()
+    customer_email = (data.get("customer_email") or "").strip()
+    from_date      = (data.get("from_date") or "").strip()
+    to_date        = (data.get("to_date") or "").strip()
+    notes          = (data.get("notes") or "").strip()
+    customer_id    = require_auth()
+
+    if not equipment_id or not customer_name or not customer_email or not from_date or not to_date:
+        return jsonify({"ok": False, "error": "equipment_id, customer_name, customer_email, from_date, and to_date are required."}), 400
+
+    try:
+        from datetime import date as _date
+        d1 = _date.fromisoformat(from_date)
+        d2 = _date.fromisoformat(to_date)
+        if d2 <= d1:
+            return jsonify({"ok": False, "error": "to_date must be after from_date."}), 400
+        days = (d2 - d1).days
+    except ValueError:
+        return jsonify({"ok": False, "error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+    with get_db() as conn:
+        equip = conn.execute(
+            "SELECT * FROM rental_equipment WHERE id=%s AND available=TRUE",
+            (equipment_id,)
+        ).fetchone()
+        if not equip:
+            return jsonify({"ok": False, "error": "Equipment not found or not available."}), 404
+        total_cost = round(equip["price_per_day"] * days, 2)
+        row = conn.execute(
+            """INSERT INTO rental_orders
+               (equipment_id, professional_id, customer_id, customer_name, customer_email,
+                from_date, to_date, days, total_cost, notes, status)
+               VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'pending') RETURNING *""",
+            (equipment_id, equip["professional_id"], customer_id,
+             customer_name, customer_email, from_date, to_date, days, total_cost, notes)
+        ).fetchone()
+    return jsonify({"ok": True, "order": dict(row)}), 201
+
+
+@app.route("/api/professional/rental-orders", methods=["GET"])
+def pro_list_rental_orders():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            """SELECT ro.*, re.name AS equipment_name
+               FROM rental_orders ro
+               JOIN rental_equipment re ON re.id = ro.equipment_id
+               WHERE ro.professional_id=%s
+               ORDER BY ro.created_at DESC""",
+            (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "orders": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/rental-orders/<int:order_id>", methods=["PATCH"])
+def pro_update_rental_order(order_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data       = request.get_json(force=True, silent=True) or {}
+    new_status = (data.get("status") or "").strip()
+    allowed    = ("pending", "accepted", "active", "completed", "declined")
+    if new_status not in allowed:
+        return jsonify({"ok": False, "error": f"status must be one of {allowed}"}), 400
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT * FROM rental_orders WHERE id=%s AND professional_id=%s",
+            (order_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute(
+            "UPDATE rental_orders SET status=%s WHERE id=%s",
+            (new_status, order_id)
+        )
+        row = conn.execute(
+            """SELECT ro.*, re.name AS equipment_name
+               FROM rental_orders ro
+               JOIN rental_equipment re ON re.id = ro.equipment_id
+               WHERE ro.id=%s""",
+            (order_id,)
+        ).fetchone()
+    return jsonify({"ok": True, "order": dict(row)})
 
 
 if __name__ == "__main__":

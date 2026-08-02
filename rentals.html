@@ -652,9 +652,14 @@
 
     <!-- Cards grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="gear-grid">
+      <!-- dynamically populated -->
+      <div id="gear-loading" style="grid-column:1/-1;padding:4rem 0;text-align:center;color:#445a5c;">
+        <span class="material-symbols-outlined" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;opacity:0.4;">hourglass_top</span>
+        Loading equipment…
+      </div>
 
-      <!-- Card 1 -->
-      <div class="gear-card reveal" data-cat="camera">
+      <!-- (static fallback cards hidden until JS replaces them) -->
+      <div class="gear-card reveal" data-cat="camera" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVpQZ8cNnlIfSgXyiUC1YjtvWa6PvnlLR0CUAskl6pUw7xpJJzfZ41-86EYK0zYG3GCt6xOM_wzJQZqrwCDQYdXWcVEDgnMEABKihaRqvZIL0bpdg4wriuZFWLKU5sVxrUglM6g4totPDA2a-sJFQtZeWNODMkSQ30mHhBQ7QsMNKB0SOsukPjcejCBRjVBMcer7EwwluDGed8ADsbzC4xhkkqETeWqZdO-cCMngTcy0yXjmhWY8PV" alt="Arri Alexa Mini LF">
           <div class="gear-img-overlay"></div>
@@ -681,7 +686,7 @@
       </div>
 
       <!-- Card 2 -->
-      <div class="gear-card reveal" data-cat="stabilizer">
+      <div class="gear-card reveal" data-cat="stabilizer" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCukEt_8wcNOCMAgejxr8TIevfstxdzUGLBjntnF5RzRbO3zPV7jsg4sUTPREynvpDFg4N8iNZZNj0hsaB_HtqJpNYYv995iOKq4vhpZ-M6xwbsrFG3Jhb3xHINy9nBcAys5nUkJDgrPYl7dIQzmuHMMK27Em3JS0LccO2Mk2AF5Ig2Q1vsivWLXp0hq37wJzPgSpGW-WZ2YYOGialPcDde5NqsfnF2Gmgz8O6Gkcb7y3maOfTOo-Mn" alt="Freefly Movi Pro">
           <div class="gear-img-overlay"></div>
@@ -707,7 +712,7 @@
       </div>
 
       <!-- Card 3 -->
-      <div class="gear-card reveal" data-cat="lighting">
+      <div class="gear-card reveal" data-cat="lighting" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVpJ91ykmmYgzq10Iw341ZwMt-htXuTbev9KBMPRbo0SXf5FOreIIo2zisg06cc4AONC0nlxuKsMU7V_XMRLXhtyulUuFzJ97jRz2awFR0TWDih4n7t3_CR-sZaKm9vmVEop5lCD0MwQ9zY_fi0z1FVrxHdDLGo22jHjXKxg9e6adg3DYHr_2SDiKQkVGqVxDWe6H--ru1oSAQMxCnNdS3ZrTBbsNsVI0ItB5xk0elSJCMkwOdRJyd" alt="Aputure 1200d Pro">
           <div class="gear-img-overlay"></div>
@@ -734,7 +739,7 @@
       </div>
 
       <!-- Card 4 -->
-      <div class="gear-card reveal" data-cat="camera">
+      <div class="gear-card reveal" data-cat="camera" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMDdQEYaOl-QyCfvuMNJjpewqgogdR6583uvuOWjPc_Nc-CdFrXXf_e_tF8YF5CyDTidIeFsKEIqWNWOW3bsKcUEctDyyOJWC-QXf3HY10eIQUsPnwlZdfcY2O-wJtK-OnAHFuoBQWbjvjpW3Scc6GBQyey6UhGZf8j25NNtZ_BCOXonfwTX4FMjo0iRSgn1Bx9N-NV-jd0CP02kp72hnNgFDnIoHG_0PTqDjtqBaJ6fWtGhw5UcgJ" alt="Sony Venice 2">
           <div class="gear-img-overlay"></div>
@@ -761,7 +766,7 @@
       </div>
 
       <!-- Card 5 -->
-      <div class="gear-card reveal" data-cat="audio">
+      <div class="gear-card reveal" data-cat="audio" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp2wcikCAZoEeGt9VaaiBt_CKnJXtvtYIw4zcwBr73Lw1YqJAnx0HiKnXZfTnjXVafHRRmBIxcX808qNrfA1npTWcVlwP7yw87aNIgPTatnkoDsHNYs5Lsi9mcsz-8DDuL4-RlOC2ErdEdD8mQo6GpBYi0jf3WnRST379JSMQ8hS7SVMBbgDA9g6deXX8ThML1O8oPGtumlxe0n3EtGrpsloAepCWtUl75vPAUQaRrtprCkH-d5v37" alt="Sound Devices 888">
           <div class="gear-img-overlay"></div>
@@ -787,7 +792,7 @@
       </div>
 
       <!-- Card 6 -->
-      <div class="gear-card reveal" data-cat="lens">
+      <div class="gear-card reveal" data-cat="lens" style="display:none">
         <div class="gear-img-wrap">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdjnF8sQFQGYU25tParylfFz1qz3ESUUJirJx2tE-k1im1Ty77KlKjCHuYu96LcE4CV0YH5pVfpXYOHwOLJAr9lG-ERCAjnp7IosUvcH096B_2iZG9tu1bU29sNQeLIj20HHpkEFqcdXAeZKkpddR0VKldUscomGF5eRuYB-4Uw7izzXsVAefiga5I7OnSCfbXNnDVVsDIYzXjb_SA2RS--JvnZRtW6IOGLsr7IayOF8GSrf0SHZgh" alt="Zeiss Supreme Prime Set">
           <div class="gear-img-overlay"></div>
@@ -815,15 +820,91 @@
 
     </div>
 
-    <!-- View all -->
-    <div class="text-center mt-10 reveal">
-      <button class="cc-btn-ghost" style="width:auto;padding:0.85rem 2.5rem;display:inline-flex;gap:0.5rem;">
-        <span class="material-symbols-outlined" style="font-size:1.1rem;">expand_more</span>
-        Load More Equipment
-      </button>
+    <!-- Empty state (shown when no equipment in DB) -->
+    <div id="gear-empty" style="display:none;grid-column:1/-1;padding:4rem 0;text-align:center;color:#445a5c;">
+      <span class="material-symbols-outlined" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;opacity:0.4;">videocam_off</span>
+      No equipment listed yet. Check back soon!
     </div>
+
   </div>
 </section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RESERVATION MODAL
+══════════════════════════════════════════════════════════════ -->
+<div id="modal-reserve" style="
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:1rem;">
+  <div style="
+    background:#0e0e10;border:1px solid rgba(255,255,255,0.1);
+    border-radius:1.5rem;padding:2rem;width:100%;max-width:460px;
+    box-shadow:0 32px 80px rgba(0,0,0,0.7);position:relative;">
+    <button onclick="closeReserveModal()" style="
+      position:absolute;top:1rem;right:1rem;
+      background:none;border:none;cursor:pointer;
+      color:#849495;font-size:1.3rem;line-height:1;">✕</button>
+
+    <h3 id="modal-equip-name" style="color:#dce4e5;font-size:1.1rem;font-weight:800;margin-bottom:0.25rem;"></h3>
+    <p id="modal-equip-price" style="color:#00dbe9;font-size:0.85rem;font-weight:700;margin-bottom:1.5rem;"></p>
+
+    <form id="reserve-form" onsubmit="submitReservation(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <input type="hidden" id="reserve-equip-id"/>
+      <input type="hidden" id="reserve-price-per-day"/>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div>
+          <label style="font-size:0.72rem;font-weight:700;color:#445a5c;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.35rem;">From Date</label>
+          <input id="reserve-from" type="date" required style="
+            width:100%;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);
+            border-radius:0.6rem;padding:0.65rem 0.85rem;color:#dce4e5;
+            font-family:inherit;font-size:0.88rem;outline:none;">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;font-weight:700;color:#445a5c;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.35rem;">To Date</label>
+          <input id="reserve-to" type="date" required style="
+            width:100%;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);
+            border-radius:0.6rem;padding:0.65rem 0.85rem;color:#dce4e5;
+            font-family:inherit;font-size:0.88rem;outline:none;">
+        </div>
+      </div>
+
+      <div id="reserve-total-row" style="display:none;background:rgba(0,219,233,0.06);border:1px solid rgba(0,219,233,0.15);border-radius:0.75rem;padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.82rem;color:#556669;">Estimated total</span>
+        <span id="reserve-total-val" style="font-size:1.1rem;font-weight:900;color:#00dbe9;"></span>
+      </div>
+
+      <div>
+        <label style="font-size:0.72rem;font-weight:700;color:#445a5c;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Your Name</label>
+        <input id="reserve-name" type="text" required placeholder="Full name" style="
+          width:100%;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);
+          border-radius:0.6rem;padding:0.65rem 0.85rem;color:#dce4e5;
+          font-family:inherit;font-size:0.88rem;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:0.72rem;font-weight:700;color:#445a5c;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Email</label>
+        <input id="reserve-email" type="email" required placeholder="your@email.com" style="
+          width:100%;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);
+          border-radius:0.6rem;padding:0.65rem 0.85rem;color:#dce4e5;
+          font-family:inherit;font-size:0.88rem;outline:none;">
+      </div>
+      <div>
+        <label style="font-size:0.72rem;font-weight:700;color:#445a5c;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Notes (optional)</label>
+        <input id="reserve-notes" type="text" placeholder="What's the shoot about?" style="
+          width:100%;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);
+          border-radius:0.6rem;padding:0.65rem 0.85rem;color:#dce4e5;
+          font-family:inherit;font-size:0.88rem;outline:none;">
+      </div>
+
+      <div id="reserve-err" style="display:none;color:#ffb4ab;font-size:0.82rem;font-weight:600;"></div>
+
+      <button type="submit" class="btn-reserve" style="margin-top:0.25rem;">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span id="reserve-btn-label">Send Request</span>
+      </button>
+    </form>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -1159,34 +1240,211 @@ document.getElementById('prevBtn').addEventListener('click', () => {
   carousel.scrollBy({ left: -380, behavior: 'smooth' });
 });
 
-/* ── Filter ────────────────────────────────────────────────────────── */
-function filterGear(btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const cat = btn.dataset.cat;
-  document.querySelectorAll('#gear-grid .gear-card').forEach(card => {
-    const show = cat === 'all' || card.dataset.cat === cat;
-    card.style.transition = 'opacity 0.25s, transform 0.25s';
-    if (show) {
-      card.style.display = '';
-      requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = ''; });
-    } else {
-      card.style.opacity = '0';
-      card.style.transform = 'scale(0.97)';
-      setTimeout(() => { if (btn.classList.contains('active') && (cat === 'all' || card.dataset.cat !== cat)) card.style.display = 'none'; }, 250);
-    }
-  });
-}
-
 /* ── Scroll reveal ─────────────────────────────────────────────────── */
 const revealObs = new IntersectionObserver(entries =>
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); revealObs.unobserve(e.target); } }),
   { threshold: 0.08 }
 );
-document.querySelectorAll('.reveal').forEach((el, i) => {
-  el.style.transitionDelay = (i % 3) * 0.07 + 's';
-  revealObs.observe(el);
+function observeReveal() {
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 3) * 0.07 + 's';
+    revealObs.observe(el);
+  });
+}
+observeReveal();
+
+/* ── Category icon map ─────────────────────────────────────────────── */
+const CAT_ICONS = {
+  camera: 'movie_camera', Camera: 'movie_camera',
+  lens: 'lens', Lens: 'lens',
+  lighting: 'light_mode', Lighting: 'light_mode',
+  stabilizer: '360', Stabilizer: '360',
+  audio: 'mic', Audio: 'mic',
+};
+function catIcon(cat) {
+  return CAT_ICONS[cat] || CAT_ICONS[cat?.toLowerCase()] || 'videocam';
+}
+function catKey(cat) {
+  return (cat || '').toLowerCase();
+}
+
+/* ── Render equipment cards from API data ──────────────────────────── */
+let allEquipment = [];
+
+function renderGearGrid(list) {
+  const grid    = document.getElementById('gear-grid');
+  const loading = document.getElementById('gear-loading');
+  const empty   = document.getElementById('gear-empty');
+
+  // Remove any previously injected dynamic cards
+  grid.querySelectorAll('.gear-card-dynamic').forEach(el => el.remove());
+
+  if (loading) loading.style.display = 'none';
+
+  if (!list.length) {
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  list.forEach(eq => {
+    const imgSrc = eq.image_url || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBdjnF8sQFQGYU25tParylfFz1qz3ESUUJirJx2tE-k1im1Ty77KlKjCHuYu96LcE4CV0YH5pVfpXYOHwOLJAr9lG-ERCAjnp7IosUvcH096B_2iZG9tu1bU29sNQeLIj20HHpkEFqcdXAeZKkpddR0VKldUscomGF5eRuYB-4Uw7izzXsVAefiga5I7OnSCfbXNnDVVsDIYzXjb_SA2RS--JvnZRtW6IOGLsr7IayOF8GSrf0SHZgh';
+    const weekPrice = (eq.price_per_day * 7 * 0.85).toFixed(0);
+    const div = document.createElement('div');
+    div.className  = 'gear-card gear-card-dynamic reveal';
+    div.dataset.cat = catKey(eq.category);
+    div.dataset.id  = eq.id;
+    div.innerHTML = `
+      <div class="gear-img-wrap">
+        <img src="${imgSrc}" alt="${eq.name}" loading="lazy" onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuBdjnF8sQFQGYU25tParylfFz1qz3ESUUJirJx2tE-k1im1Ty77KlKjCHuYu96LcE4CV0YH5pVfpXYOHwOLJAr9lG-ERCAjnp7IosUvcH096B_2iZG9tu1bU29sNQeLIj20HHpkEFqcdXAeZKkpddR0VKldUscomGF5eRuYB-4Uw7izzXsVAefiga5I7OnSCfbXNnDVVsDIYzXjb_SA2RS--JvnZRtW6IOGLsr7IayOF8GSrf0SHZgh'">
+        <div class="gear-img-overlay"></div>
+        <span class="availability-dot available">Available</span>
+      </div>
+      <div class="gear-body">
+        <div class="gear-cat-tag">
+          <span class="material-symbols-outlined">${catIcon(eq.category)}</span> ${eq.category}
+        </div>
+        <div class="gear-name">${eq.name}</div>
+        ${eq.description ? `<div class="gear-spec">${eq.description}</div>` : ''}
+        <div class="gear-price-row">
+          <div>
+            <span class="gear-price"><sup>$</sup>${Number(eq.price_per_day).toLocaleString()}</span>
+            <span class="gear-price-unit">/ day</span>
+          </div>
+          <div class="gear-week-price">$${Number(weekPrice).toLocaleString()} / week</div>
+        </div>
+        <button class="btn-reserve" onclick="openReserveModal(${eq.id})">
+          <span class="material-symbols-outlined">calendar_month</span> Reserve Now
+        </button>
+      </div>`;
+    grid.appendChild(div);
+    revealObs.observe(div);
+  });
+}
+
+/* ── Filter ────────────────────────────────────────────────────────── */
+let activeFilter = 'all';
+
+function filterGear(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.cat;
+  const filtered = activeFilter === 'all'
+    ? allEquipment
+    : allEquipment.filter(e => catKey(e.category) === activeFilter);
+  renderGearGrid(filtered);
+}
+
+/* ── Load equipment from API ───────────────────────────────────────── */
+async function loadEquipment() {
+  try {
+    const res  = await fetch('/api/rental-equipment');
+    const data = await res.json();
+    allEquipment = data.equipment || [];
+    renderGearGrid(allEquipment);
+  } catch (err) {
+    const loading = document.getElementById('gear-loading');
+    if (loading) { loading.innerHTML = '<span style="color:#ff6b6b;">Failed to load equipment. Please refresh.</span>'; }
+  }
+}
+loadEquipment();
+
+/* ── Reservation modal ─────────────────────────────────────────────── */
+function openReserveModal(equipId) {
+  const eq = allEquipment.find(e => e.id === equipId);
+  if (!eq) return;
+  document.getElementById('reserve-equip-id').value    = eq.id;
+  document.getElementById('reserve-price-per-day').value = eq.price_per_day;
+  document.getElementById('modal-equip-name').textContent = eq.name;
+  document.getElementById('modal-equip-price').textContent = `$${Number(eq.price_per_day).toLocaleString()} / day`;
+  document.getElementById('reserve-from').value  = '';
+  document.getElementById('reserve-to').value    = '';
+  document.getElementById('reserve-name').value  = '';
+  document.getElementById('reserve-email').value = '';
+  document.getElementById('reserve-notes').value = '';
+  document.getElementById('reserve-err').style.display = 'none';
+  document.getElementById('reserve-btn-label').textContent = 'Send Request';
+  document.getElementById('reserve-total-row').style.display = 'none';
+
+  // Set min dates to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('reserve-from').min = today;
+  document.getElementById('reserve-to').min   = today;
+
+  // Recalc total when dates change
+  ['reserve-from','reserve-to'].forEach(id => {
+    document.getElementById(id).addEventListener('change', updateReserveTotal);
+  });
+
+  const modal = document.getElementById('modal-reserve');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReserveModal() {
+  document.getElementById('modal-reserve').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('modal-reserve').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeReserveModal();
 });
+
+function updateReserveTotal() {
+  const from  = document.getElementById('reserve-from').value;
+  const to    = document.getElementById('reserve-to').value;
+  const price = parseFloat(document.getElementById('reserve-price-per-day').value) || 0;
+  const row   = document.getElementById('reserve-total-row');
+  if (from && to && to > from) {
+    const days  = Math.round((new Date(to) - new Date(from)) / 86400000);
+    const total = (days * price).toLocaleString('en-US', { style:'currency', currency:'USD' });
+    document.getElementById('reserve-total-val').textContent = `${total} (${days} day${days !== 1 ? 's' : ''})`;
+    row.style.display = 'flex';
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+async function submitReservation(e) {
+  e.preventDefault();
+  const btn      = document.getElementById('reserve-btn-label');
+  const errEl    = document.getElementById('reserve-err');
+  const equipId  = parseInt(document.getElementById('reserve-equip-id').value);
+  const from     = document.getElementById('reserve-from').value;
+  const to       = document.getElementById('reserve-to').value;
+  const name     = document.getElementById('reserve-name').value.trim();
+  const email    = document.getElementById('reserve-email').value.trim();
+  const notes    = document.getElementById('reserve-notes').value.trim();
+
+  if (!from || !to || to <= from) {
+    errEl.textContent = 'Please select a valid date range.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.textContent = 'Sending…';
+  errEl.style.display = 'none';
+
+  try {
+    const res  = await fetch('/api/rental-orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ equipment_id: equipId, customer_name: name, customer_email: email, from_date: from, to_date: to, notes }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Something went wrong.');
+    closeReserveModal();
+    // Brief success banner
+    const banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);background:#0e0e10;border:1px solid rgba(0,219,233,0.3);border-radius:999px;padding:0.65rem 1.5rem;color:#00dbe9;font-size:0.88rem;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,0.5);';
+    banner.textContent = '✓ Rental request sent! The professional will be in touch.';
+    document.body.appendChild(banner);
+    setTimeout(() => banner.remove(), 4000);
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.style.display = 'block';
+    btn.textContent = 'Send Request';
+  }
+}
 </script>
 
 <script src="header-loader.js"></script>
