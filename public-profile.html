@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CamCrew Professional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/tailwind-config.js"></script>
+<link rel="stylesheet" href="/styles.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+  :root {
+    --nb:  #141414;
+    --ns:  #000000;
+    --nl:  #1e1e1e;
+    --nr:  6px 6px 14px var(--ns), -6px -6px 14px var(--nl);
+    --nr-s:3px 3px 8px  var(--ns), -3px -3px 8px  var(--nl);
+    --ni-s:inset 2px 2px 6px  var(--ns), inset -2px -2px 6px  var(--nl);
+    --ac:  #00dbe9;
+    --ac2: #ebb2ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--nb); color: #dce4e5; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── Site header ── */
+  .site-header {
+    background: var(--nb);
+    box-shadow: 0 2px 12px var(--ns), 0 1px 0 var(--nl);
+    padding: 0.9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .site-logo { display: flex; align-items: center; gap: 0.55rem; text-decoration: none; }
+  .site-logo img { height: 1.9rem; }
+  .site-logo span { font-weight: 900; font-size: 1.05rem; color: var(--ac); letter-spacing: -0.01em; }
+
+  /* ── Layout ── */
+  main { flex: 1; max-width: 935px; margin: 0 auto; width: 100%; padding: 2.5rem 1rem 4rem; }
+
+  /* ── Profile header ── */
+  .profile-header { display: flex; align-items: flex-start; gap: 2.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+
+  .avatar-ring {
+    width: 7rem; height: 7rem; flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00dbe9, #ebb2ff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem; font-weight: 900; color: #001f22;
+    box-shadow: 0 0 0 3px var(--nb), 0 0 0 5px rgba(0,219,233,0.45), var(--nr-s);
+    overflow: hidden; position: relative;
+  }
+  .avatar-ring img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: 50%; }
+
+  /* ── Profile info ── */
+  .profile-info { flex: 1; min-width: 200px; }
+
+  /* ── @username ── */
+  .username-tag { font-size: 1rem; font-weight: 700; color: #dce4e5; margin-bottom: 0.2rem; }
+  .display-name { font-size: 0.85rem; font-weight: 600; color: #849495; margin-bottom: 0.85rem; }
+  .pro-title    { font-size: 0.88rem; font-weight: 700; color: var(--ac); margin-bottom: 0.85rem; }
+
+  /* ── Stats ── */
+  .stats-row { display: flex; gap: 1.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .stat-item { text-align: center; }
+  .stat-num  { font-size: 1.1rem; font-weight: 900; color: #dce4e5; display: block; line-height: 1.2; }
+  .stat-lbl  { font-size: 0.7rem; font-weight: 700; color: #849495; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── Bio ── */
+  .profile-bio { font-size: 0.875rem; color: #b0bdc0; line-height: 1.7; margin-bottom: 0.85rem; max-width: 440px; white-space: pre-wrap; }
+
+  /* ── Website ── */
+  .website-link {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.82rem; color: var(--ac); font-weight: 700;
+    text-decoration: none; margin-bottom: 0.85rem;
+  }
+  .website-link:hover { text-decoration: underline; }
+
+  /* ── Chips ── */
+  .chips-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.25rem 0.7rem; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    background: rgba(0,219,233,0.1); color: var(--ac);
+    border: 1px solid rgba(0,219,233,0.22);
+  }
+  .loc-chip {
+    background: rgba(235,178,255,0.1); color: var(--ac2);
+    border: 1px solid rgba(235,178,255,0.2);
+  }
+
+  /* ── Social links ── */
+  .socials-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .social-link {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.28rem 0.8rem; border-radius: 999px;
+    font-size: 0.74rem; font-weight: 700;
+    background: var(--nb); box-shadow: var(--nr-s);
+    color: #849495; text-decoration: none; transition: color 0.2s;
+  }
+  .social-link:hover { color: var(--ac); }
+  .social-link .material-symbols-outlined { font-size: 0.88rem; }
+
+  /* ── CTA button ── */
+  .btn-book {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.65rem 1.5rem; border-radius: 0.8rem;
+    font-size: 0.88rem; font-weight: 800; cursor: pointer; border: none;
+    background: linear-gradient(135deg, #00dbe9, #00b8c4);
+    color: #001f22; box-shadow: var(--nr-s);
+    text-decoration: none; transition: all 0.2s;
+  }
+  .btn-book:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0,219,233,0.38); }
+
+  /* ── Section divider ── */
+  .section-divider {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin: 2rem 0 1.25rem;
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #849495;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--ns); box-shadow: 0 1px 0 var(--nl);
+  }
+
+  /* ── Portfolio grid ── */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    border-radius: 0.85rem;
+    overflow: hidden;
+  }
+  .p-cell { aspect-ratio: 1; position: relative; overflow: hidden; background: rgba(255,255,255,0.03); cursor: pointer; }
+  .p-cell img, .p-cell video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+  .p-cell:hover img, .p-cell:hover video { transform: scale(1.06); }
+  .p-cell-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.42);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.22s;
+  }
+  .p-cell:hover .p-cell-overlay { opacity: 1; }
+  .p-cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; }
+  .grid-empty { grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.65rem; padding: 3rem 2rem; text-align: center; }
+
+  /* ── Services grid ── */
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 0.8rem; }
+  .svc-card { background: var(--nb); border-radius: 1rem; padding: 1.1rem 1.2rem; box-shadow: var(--nr-s); }
+  .svc-name  { font-size: 0.88rem; font-weight: 800; color: #dce4e5; margin-bottom: 0.2rem; }
+  .svc-price { font-size: 0.8rem; font-weight: 700; color: var(--ac); margin-bottom: 0.2rem; }
+  .svc-desc  { font-size: 0.76rem; color: #849495; line-height: 1.5; }
+
+  /* ── Member badge ── */
+  .member-since { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; color: #849495; font-weight: 600; margin-bottom: 0.85rem; }
+
+  /* ── Lightbox ── */
+  .lb-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.92); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .lb-overlay.open { display: flex; }
+  .lb-inner { position: relative; max-width: 820px; width: 100%; }
+  .lb-inner img, .lb-inner video { width: 100%; max-height: 80vh; object-fit: contain; border-radius: 0.75rem; }
+  .lb-close { position: absolute; top: -2.5rem; right: 0; background: none; border: none; color: #dce4e5; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; }
+
+  /* ── State screens ── */
+  .state-box { min-height: 55vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center; padding: 2rem; }
+
+  /* ── Skeleton ── */
+  @keyframes shimmer { to { background-position: -200% center; } }
+  .skel { border-radius: 0.5rem; background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%); background-size: 200%; animation: shimmer 1.4s infinite; }
+
+  /* ── Light mode ── */
+  html.light { --nb:#f0f4f5; --ns:rgba(0,0,0,0.1); --nl:rgba(255,255,255,0.9); }
+  html.light body            { color: #0a1618; }
+  html.light .username-tag   { color: #0a1618; }
+  html.light .svc-name       { color: #0a1618; }
+
+  /* ── Footer ── */
+  .site-footer { text-align: center; padding: 1.5rem; border-top: 1px solid var(--ns); font-size: 0.78rem; color: #849495; }
+  .site-footer a { color: var(--ac); font-weight: 700; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <a href="/" class="site-logo">
+    <img src="/attached_assets/camcrew_studio_logo_cop_y_1785515916927.png" alt="CamCrew"
+         onerror="this.style.display='none'"/>
+    <span>CamCrew</span>
+  </a>
+  <a href="/" class="btn-book" style="padding:0.5rem 1.1rem;font-size:0.8rem;">
+    <span class="material-symbols-outlined" style="font-size:0.9rem;">home</span>
+    Visit CamCrew
+  </a>
+</header>
+
+<!-- Main -->
+<main id="app-root">
+  <!-- Skeleton -->
+  <div id="skeleton">
+    <div style="display:flex;gap:2.5rem;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <div class="skel" style="width:7rem;height:7rem;border-radius:50%;flex-shrink:0;"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:0.65rem;padding-top:0.5rem;">
+        <div class="skel" style="height:1rem;max-width:140px;"></div>
+        <div class="skel" style="height:1.5rem;max-width:200px;"></div>
+        <div style="display:flex;gap:1.75rem;margin-top:0.25rem;">
+          <div class="skel" style="height:2.4rem;width:55px;"></div>
+          <div class="skel" style="height:2.4rem;width:55px;"></div>
+          <div class="skel" style="height:2.4rem;width:55px;"></div>
+        </div>
+        <div class="skel" style="height:3.5rem;max-width:360px;margin-top:0.25rem;"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:0.85rem;overflow:hidden;">
+      <div class="skel" style="aspect-ratio:1;"></div>
+      <div class="skel" style="aspect-ratio:1;"></div>
+      <div class="skel" style="aspect-ratio:1;"></div>
+      <div class="skel" style="aspect-ratio:1;"></div>
+      <div class="skel" style="aspect-ratio:1;"></div>
+      <div class="skel" style="aspect-ratio:1;"></div>
+    </div>
+  </div>
+
+  <div id="profile-content" style="display:none;"></div>
+</main>
+
+<!-- Lightbox -->
+<div id="lb" class="lb-overlay" onclick="closeLb()">
+  <div class="lb-inner" onclick="event.stopPropagation()">
+    <button class="lb-close" onclick="closeLb()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div id="lb-content"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <a href="/">CamCrew Studio</a> — Connect with creative professionals
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Boot
+══════════════════════════════════════════════════════════════ */
+(async function () {
+  const theme = localStorage.getItem('cc-theme') || 'dark';
+  document.documentElement.className = theme;
+
+  // Extract @username from URL path  e.g.  /@john_smith  →  john_smith
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const atPart    = pathParts.find(p => p.startsWith('@'));
+  const username  = atPart ? atPart.slice(1) : null;
+
+  if (!username || !/^[a-z0-9][a-z0-9._]{2,29}$/.test(username)) {
+    showError('link_off', 'Invalid profile link.', 'This URL doesn\'t look like a valid CamCrew profile.');
+    return;
+  }
+
+  document.title = `@${username} | CamCrew`;
+
+  let data;
+  try {
+    const res = await fetch(`/api/profile/@${encodeURIComponent(username)}`);
+    data = await res.json();
+  } catch (_) {
+    showError('wifi_off', 'Unable to load profile.', 'Please check your connection and try again.');
+    return;
+  }
+
+  if (!data.ok) {
+    showError('person_off', data.error || 'Profile not found.',
+      'This account may not exist or has been removed.');
+    return;
+  }
+
+  renderProfile(data.profile);
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   Render
+══════════════════════════════════════════════════════════════ */
+function renderProfile(p) {
+  document.title = `@${p.username} — ${p.display_name} | CamCrew`;
+
+  const initial     = (p.display_name || p.username).charAt(0).toUpperCase();
+  const memberSince = p.joined_at
+    ? new Date(p.joined_at).toLocaleDateString('en-US', { month:'short', year:'numeric' }) : '';
+
+  /* ─ Portfolio grid ─ */
+  const portfolio = p.portfolio || [];
+  window._lbMedia = portfolio;
+
+  const gridCells = portfolio.length
+    ? portfolio.map((item, i) => {
+        const isVid = item.file_type === 'video';
+        if (!item.file_url) {
+          return `<div class="p-cell">
+            <div class="p-cell-placeholder">
+              <span class="material-symbols-outlined" style="font-size:1.6rem;color:rgba(255,255,255,0.13);">${isVid?'movie':'image'}</span>
+              <span style="font-size:0.7rem;color:#849495;">${esc(item.title||'')}</span>
+            </div>
+          </div>`;
+        }
+        return `<div class="p-cell" onclick="openLb(${i})">
+          ${isVid
+            ? `<video src="${esc(item.file_url)}" muted playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>`
+            : `<img src="${esc(item.file_url)}" alt="${esc(item.title||'Portfolio')}" loading="lazy"/>`}
+          <div class="p-cell-overlay">
+            <span class="material-symbols-outlined" style="color:#fff;font-size:1.4rem;">${isVid?'play_circle':'zoom_in'}</span>
+          </div>
+        </div>`;
+      }).join('')
+    : `<div class="grid-empty">
+        <span class="material-symbols-outlined" style="font-size:3rem;color:rgba(255,255,255,0.1);">photo_library</span>
+        <p style="color:#849495;font-size:0.85rem;">No shared portfolio items yet.</p>
+      </div>`;
+
+  /* ─ Services ─ */
+  const services = p.services || [];
+  const svcHTML  = services.length
+    ? `<div class="services-grid">${services.map(s=>`
+        <div class="svc-card">
+          <p class="svc-name">${esc(s.name)}</p>
+          ${s.price ? `<p class="svc-price">${fmtPrice(s)}</p>` : ''}
+          ${s.desc  ? `<p class="svc-desc">${esc(s.desc)}</p>`  : ''}
+        </div>`).join('')}</div>`
+    : `<p style="color:#849495;font-size:0.85rem;">No services listed.</p>`;
+
+  /* ─ Social links ─ */
+  const socials    = p.socials || {};
+  const socialDefs = [
+    { key:'instagram', icon:'camera_alt',  label:'Instagram', base:'https://instagram.com/' },
+    { key:'facebook',  icon:'thumb_up',    label:'Facebook',  base:'https://facebook.com/'  },
+    { key:'tiktok',    icon:'music_video', label:'TikTok',    base:'https://tiktok.com/@'   },
+  ];
+  const socialsHTML = socialDefs.filter(d => socials[d.key]).map(d => `
+    <a href="${socials[d.key].startsWith('http') ? esc(socials[d.key]) : esc(d.base+socials[d.key])}"
+       target="_blank" rel="noopener noreferrer" class="social-link">
+      <span class="material-symbols-outlined">${d.icon}</span>${d.label}
+    </a>`).join('');
+
+  /* ─ Categories & locations ─ */
+  const cats  = (p.categories || []);
+  const locs  = (p.locations  || []);
+
+  document.getElementById('skeleton').style.display = 'none';
+  document.getElementById('profile-content').style.display = 'block';
+  document.getElementById('profile-content').innerHTML = `
+
+    <!-- Header -->
+    <div class="profile-header">
+      <div class="avatar-ring">${initial}</div>
+
+      <div class="profile-info">
+        <p class="username-tag">@${esc(p.username)}</p>
+        <p class="display-name">${esc(p.display_name)}</p>
+        ${p.title ? `<p class="pro-title">${esc(p.title)}</p>` : ''}
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-num">${portfolio.length}</span>
+            <span class="stat-lbl">Portfolio</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">${services.length}</span>
+            <span class="stat-lbl">Services</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">${locs.length}</span>
+            <span class="stat-lbl">Cities</span>
+          </div>
+        </div>
+
+        ${p.bio ? `<p class="profile-bio">${esc(p.bio)}</p>` : ''}
+
+        ${p.website ? `<a href="${p.website.startsWith('http') ? esc(p.website) : 'https://'+esc(p.website)}"
+          target="_blank" rel="noopener noreferrer" class="website-link">
+          <span class="material-symbols-outlined" style="font-size:0.88rem;">link</span>
+          ${esc(p.website.replace(/^https?:\/\//,''))}
+        </a>` : ''}
+
+        ${memberSince ? `<div class="member-since">
+          <span class="material-symbols-outlined" style="font-size:0.82rem;">calendar_month</span>
+          Member since ${memberSince}
+        </div>` : ''}
+
+        ${cats.length ? `<div class="chips-row">${cats.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
+        ${locs.length ? `<div class="chips-row">${locs.map(l=>`<span class="chip loc-chip"><span class="material-symbols-outlined" style="font-size:0.72rem;">location_on</span>${esc(l)}</span>`).join('')}</div>` : ''}
+        ${socialsHTML ? `<div class="socials-row">${socialsHTML}</div>` : ''}
+
+        <!-- CTA -->
+        <div style="display:flex;gap:0.65rem;flex-wrap:wrap;margin-top:0.5rem;">
+          <a href="/" class="btn-book">
+            <span class="material-symbols-outlined" style="font-size:1rem;">photo_camera</span>
+            Book on CamCrew
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio -->
+    <div class="section-divider">Portfolio</div>
+    <div class="portfolio-grid">${gridCells}</div>
+
+    <!-- Services -->
+    <div class="section-divider">Services</div>
+    ${svcHTML}
+  `;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Lightbox
+══════════════════════════════════════════════════════════════ */
+function openLb(i) {
+  const item  = (window._lbMedia || [])[i];
+  if (!item || !item.file_url) return;
+  const isVid = item.file_type === 'video';
+  document.getElementById('lb-content').innerHTML = isVid
+    ? `<video src="${esc(item.file_url)}" controls autoplay style="width:100%;max-height:80vh;border-radius:0.75rem;"></video>`
+    : `<img src="${esc(item.file_url)}" alt="Portfolio" style="width:100%;max-height:80vh;object-fit:contain;border-radius:0.75rem;"/>`;
+  document.getElementById('lb').classList.add('open');
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.getElementById('lb-content').innerHTML = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+/* ══════════════════════════════════════════════════════════════
+   Error state
+══════════════════════════════════════════════════════════════ */
+function showError(icon, heading, sub) {
+  document.getElementById('skeleton').style.display = 'none';
+  document.getElementById('profile-content').style.display = 'block';
+  document.getElementById('profile-content').innerHTML = `
+    <div class="state-box">
+      <span class="material-symbols-outlined" style="font-size:3.5rem;color:rgba(255,255,255,0.12);">${icon}</span>
+      <h2 style="font-weight:800;font-size:1.1rem;">${esc(heading)}</h2>
+      ${sub ? `<p style="color:#849495;font-size:0.875rem;max-width:340px;">${esc(sub)}</p>` : ''}
+      <a href="/" class="btn-book" style="margin-top:0.5rem;">
+        <span class="material-symbols-outlined" style="font-size:0.95rem;">home</span>
+        Go to CamCrew
+      </a>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Helpers
+══════════════════════════════════════════════════════════════ */
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtPrice(s) {
+  if (!s.price) return '';
+  return `₹${Number(s.price).toLocaleString('en-IN')} / ${s.unit||'project'}`;
+}
+</script>
+</body>
+</html>

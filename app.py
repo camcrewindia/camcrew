@@ -1,4 +1,5 @@
 import os
+import json as _json
 import secrets
 from datetime import datetime, timedelta
 
@@ -212,6 +213,23 @@ def init_db():
                 FOREIGN KEY (professional_id) REFERENCES users(id)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS professional_profiles (
+                user_id      INTEGER PRIMARY KEY,
+                username     TEXT UNIQUE NOT NULL,
+                title        TEXT,
+                bio          TEXT,
+                phone        TEXT,
+                website      TEXT,
+                categories   TEXT NOT NULL DEFAULT '[]',
+                services     TEXT NOT NULL DEFAULT '[]',
+                locations    TEXT NOT NULL DEFAULT '[]',
+                socials      TEXT NOT NULL DEFAULT '{}',
+                travel_intl  BOOLEAN NOT NULL DEFAULT FALSE,
+                updated_at   TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
 
 
 def seed_demo_data(user_id):
@@ -271,7 +289,67 @@ init_db()
 
 import re as _re
 
-_SHARE_ID_RE = _re.compile(r'^[A-Za-z0-9_\-]{4,64}$')
+_SHARE_ID_RE  = _re.compile(r'^[A-Za-z0-9_\-]{4,64}$')
+_USERNAME_RE  = _re.compile(r'^[a-z0-9][a-z0-9._]{2,29}$')
+
+def _make_username(display_name, conn):
+    """Derive a unique URL-safe username from a display name."""
+    base = _re.sub(r'[^a-z0-9]', '_', (display_name or 'pro').lower())
+    base = _re.sub(r'_+', '_', base).strip('_') or 'pro'
+    base = base[:24]
+    candidate = base
+    i = 2
+    while True:
+        if not conn.execute(
+            "SELECT user_id FROM professional_profiles WHERE username=%s",
+            (candidate,)
+        ).fetchone():
+            return candidate
+        candidate = f"{base}_{i}"
+        i += 1
+        if i > 99:
+            return base + '_' + secrets.token_hex(3)
+
+
+@app.route("/@<username>")
+def at_profile_page(username):
+    """Serve the public Instagram-style profile page for a professional."""
+    return send_from_directory(".", "public-profile.html")
+
+
+@app.route("/api/profile/@<username>", methods=["GET"])
+def get_public_profile(username):
+    """Return public profile JSON for /@username — no auth required."""
+    if not _USERNAME_RE.match(username):
+        return jsonify({"ok": False, "error": "Invalid username."}), 400
+    with get_db() as conn:
+        row = conn.execute("""
+            SELECT pp.*, u.display_name, u.created_at AS joined_at
+            FROM professional_profiles pp
+            JOIN users u ON u.id = pp.user_id
+            WHERE pp.username = %s
+        """, (username,)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Profile not found."}), 404
+        portfolio = conn.execute("""
+            SELECT title, file_url, file_type, created_at
+            FROM portfolio_items
+            WHERE professional_id = %s AND is_public = TRUE
+            ORDER BY created_at DESC LIMIT 30
+        """, (row["user_id"],)).fetchall()
+    return jsonify({"ok": True, "profile": {
+        "username":     row["username"],
+        "display_name": row["display_name"] or username,
+        "title":        row["title"],
+        "bio":          row["bio"],
+        "website":      row["website"],
+        "categories":   _json.loads(row["categories"] or "[]"),
+        "services":     _json.loads(row["services"]   or "[]"),
+        "locations":    _json.loads(row["locations"]  or "[]"),
+        "socials":      _json.loads(row["socials"]    or "{}"),
+        "joined_at":    row["joined_at"],
+        "portfolio":    [dict(p) for p in portfolio],
+    }})
 
 
 @app.route("/shared/<share_id>")
@@ -550,16 +628,58 @@ def get_profile():
 def update_profile():
     if "user_id" not in session:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    uid  = session["user_id"]
     data = request.get_json(force=True)
+
     display_name = (data.get("display_name") or "").strip()
-    if len(display_name) > 60:
+    if display_name and len(display_name) > 60:
         return jsonify({"ok": False, "error": "Display name must be 60 characters or fewer."}), 400
+
+    username = None
     with get_db() as conn:
-        conn.execute(
-            "UPDATE users SET display_name = %s WHERE id = %s",
-            (display_name, session["user_id"])
-        )
-    return jsonify({"ok": True, "display_name": display_name})
+        if display_name:
+            conn.execute("UPDATE users SET display_name=%s WHERE id=%s", (display_name, uid))
+
+        role_row = conn.execute("SELECT role, display_name FROM users WHERE id=%s", (uid,)).fetchone()
+
+        if role_row and role_row["role"] == "professional":
+            title       = (data.get("title")   or "").strip() or None
+            bio         = (data.get("bio")      or "").strip() or None
+            phone       = (data.get("phone")    or "").strip() or None
+            website     = (data.get("website")  or "").strip() or None
+            categories  = _json.dumps(data.get("categories") or [])
+            services    = _json.dumps(data.get("services")   or [])
+            locations   = _json.dumps(data.get("locations")  or [])
+            socials     = _json.dumps(data.get("socials")    or {})
+            travel_intl = bool(data.get("travel_international", False))
+
+            existing = conn.execute(
+                "SELECT username FROM professional_profiles WHERE user_id=%s", (uid,)
+            ).fetchone()
+
+            if existing:
+                conn.execute("""
+                    UPDATE professional_profiles SET
+                        title=%s, bio=%s, phone=%s, website=%s,
+                        categories=%s, services=%s, locations=%s,
+                        socials=%s, travel_intl=%s,
+                        updated_at=TO_CHAR(NOW(),'YYYY-MM-DD HH24:MI:SS')
+                    WHERE user_id=%s
+                """, (title, bio, phone, website, categories, services,
+                      locations, socials, travel_intl, uid))
+                username = existing["username"]
+            else:
+                dn = display_name or (role_row["display_name"] or "")
+                username = _make_username(dn or "pro", conn)
+                conn.execute("""
+                    INSERT INTO professional_profiles
+                    (user_id, username, title, bio, phone, website,
+                     categories, services, locations, socials, travel_intl)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                """, (uid, username, title, bio, phone, website,
+                      categories, services, locations, socials, travel_intl))
+
+    return jsonify({"ok": True, "display_name": display_name, "username": username})
 
 
 # ---------------------------------------------------------------------------

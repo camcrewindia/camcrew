@@ -375,7 +375,7 @@
 /* ═══════════════════════════════════════════════════════════════════
    State & bootstrap
 ═══════════════════════════════════════════════════════════════════ */
-const S = { user: null, pro: null };
+const S = { user: null, pro: null, username: null };
 
 (async function boot() {
   // Theme
@@ -394,6 +394,31 @@ const S = { user: null, pro: null };
     const raw = localStorage.getItem('cc_pro_profile');
     if (raw) S.pro = JSON.parse(raw);
   } catch (_) {}
+
+  // Sync profile to server (creates/updates professional_profiles row + returns username)
+  if (S.user?.role === 'professional') {
+    try {
+      const payload = {
+        display_name:         S.user.display_name || S.pro?.name || '',
+        title:                S.pro?.title        || '',
+        bio:                  S.pro?.bio          || '',
+        phone:                S.pro?.phone        || '',
+        website:              S.pro?.website      || '',
+        categories:           S.pro?.categories   || [],
+        services:             S.pro?.services     || [],
+        locations:            S.pro?.locations    || [],
+        socials:              S.pro?.socials      || {},
+        travel_international: S.pro?.travelIntl   || false,
+      };
+      const res  = await fetch('/api/profile', {
+        method: 'PATCH', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.ok && data.username) S.username = data.username;
+    } catch (_) {}
+  }
 
   // Load vault for portfolio count
   let vaultFiles = [];
@@ -523,6 +548,7 @@ function render(vaultFiles, jobs) {
         </div>
 
         <h1 class="profile-name">${esc(displayName)}</h1>
+        ${S.username ? `<p style="font-size:0.85rem;font-weight:700;color:#849495;margin-bottom:0.3rem;letter-spacing:0.01em;">@${esc(S.username)}</p>` : ''}
         ${title ? `<p class="profile-title">${esc(title)}</p>` : ''}
 
         ${memberSince ? `<div class="member-since">
@@ -582,21 +608,29 @@ function render(vaultFiles, jobs) {
 
     <!-- Share profile nudge -->
     <div class="section-divider">Share Profile</div>
-    <div style="background:rgba(0,219,233,0.06);border:1px solid rgba(0,219,233,0.15);border-radius:1rem;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
-      <div>
-        <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">Share your CamCrew profile</p>
-        <p style="color:#849495;font-size:0.78rem;">Copy your profile link and send it to potential clients.</p>
+    <div style="background:rgba(0,219,233,0.06);border:1px solid rgba(0,219,233,0.15);border-radius:1rem;padding:1.25rem 1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.85rem;">
+        <div>
+          <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">Your public profile link</p>
+          <p style="color:#849495;font-size:0.78rem;">Share this with clients — no login required to view it.</p>
+        </div>
+        <button onclick="copyProfileLink()" style="
+          display:inline-flex;align-items:center;gap:0.45rem;
+          padding:0.55rem 1.2rem;border-radius:0.75rem;border:none;cursor:pointer;
+          background:rgba(0,219,233,0.15);color:var(--ac);font-weight:800;font-size:0.82rem;
+          font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.2s;flex-shrink:0;"
+          onmouseover="this.style.background='rgba(0,219,233,0.25)'"
+          onmouseout="this.style.background='rgba(0,219,233,0.15)'">
+          <span class="material-symbols-outlined" style="font-size:1rem;">content_copy</span>
+          Copy Link
+        </button>
       </div>
-      <button onclick="copyProfileLink()" style="
-        display:inline-flex;align-items:center;gap:0.45rem;
-        padding:0.55rem 1.2rem;border-radius:0.75rem;border:none;cursor:pointer;
-        background:rgba(0,219,233,0.15);color:var(--ac);font-weight:800;font-size:0.82rem;
-        font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.2s;"
-        onmouseover="this.style.background='rgba(0,219,233,0.25)'"
-        onmouseout="this.style.background='rgba(0,219,233,0.15)'">
-        <span class="material-symbols-outlined" style="font-size:1rem;">content_copy</span>
-        Copy Link
-      </button>
+      ${S.username ? `
+      <div style="display:flex;align-items:center;gap:0.5rem;background:var(--nb);border-radius:0.65rem;padding:0.6rem 0.9rem;box-shadow:var(--ni-s);overflow:hidden;">
+        <span class="material-symbols-outlined" style="font-size:1rem;color:#849495;flex-shrink:0;">link</span>
+        <span style="font-size:0.82rem;color:var(--ac);font-weight:700;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(window.location.origin)}/@${esc(S.username)}</span>
+      </div>` : `
+      <p style="font-size:0.78rem;color:#849495;">Profile link will appear here once your profile data is saved.</p>`}
     </div>
   `;
 
@@ -635,9 +669,11 @@ document.addEventListener('keydown', e => {
    Copy profile link
 ═══════════════════════════════════════════════════════════════════ */
 function copyProfileLink() {
-  const url = window.location.origin + '/professional-profile.html';
+  const url = S.username
+    ? window.location.origin + '/@' + S.username
+    : window.location.origin + '/professional-profile.html';
   navigator.clipboard.writeText(url)
-    .then(() => showToast('Profile link copied!'))
+    .then(() => showToast(`Copied: ${url}`))
     .catch(() => showToast('Could not copy link.'));
 }
 
