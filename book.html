@@ -162,20 +162,54 @@ body { background: #06080a; }
 .svc-check:checked + .svc-label .svc-box span { opacity: 1; transform: scale(1); }
 
 /* ── Time slot pills ── */
-.time-pill { display: none; }
+.time-pill {
+  position: absolute; opacity: 0; width: 0; height: 0;
+  pointer-events: none; visibility: hidden;
+}
 .time-label {
-  display: block; padding: 0.6rem 0.9rem; border-radius: 0.75rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+  padding: 0.6rem 0.7rem; border-radius: 0.75rem; cursor: pointer;
   border: 1.5px solid rgba(255,255,255,0.07);
   background: rgba(14,17,21,0.9);
   font-size: 0.8rem; font-weight: 700; color: #5a6b6c;
   transition: all 0.2s; white-space: nowrap; text-align: center;
 }
+/* Radio dot inside the pill */
+.time-label::before {
+  content: '';
+  width: 0.55rem; height: 0.55rem; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  background: transparent;
+  transition: all 0.2s;
+}
 .time-label:hover { border-color: rgba(0,240,255,0.3); color: #00f0ff; background: rgba(0,240,255,0.05); transform: translateY(-1px); }
+.time-label:hover::before { border-color: rgba(0,240,255,0.5); }
 .time-pill:checked + .time-label {
   border-color: #00f0ff;
   background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,184,204,0.08));
   color: #00f0ff;
   box-shadow: 0 0 16px rgba(0,240,255,0.2), 0 0 0 1px rgba(0,240,255,0.1);
+}
+.time-pill:checked + .time-label::before {
+  background: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 6px rgba(0,240,255,0.6);
+}
+
+/* ── Dark date input override ── */
+input[type="date"] {
+  color-scheme: dark;
+  background: rgba(10,13,17,0.9) !important;
+  color: #dce4e5 !important;
+}
+input[type="date"]::-webkit-datetime-edit-fields-wrapper { color: #dce4e5; }
+input[type="date"]::-webkit-datetime-edit-text { color: #4a5a5b; }
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field { color: #dce4e5; }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) sepia(0.3) hue-rotate(160deg);
+  cursor: pointer; opacity: 0.8;
 }
 
 /* ── Qty controls ── */
@@ -468,13 +502,22 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cur
           <input type="date" id="input-date" class="cc-input"/>
         </div>
 
-        <!-- Time slots -->
+        <!-- Start Time slots -->
         <div class="mb-7">
           <label class="cc-label">
             <span class="material-symbols-outlined text-sm text-primary-container/60">schedule</span>
             Start Time <span class="text-red-400 normal-case font-normal ml-0.5">*</span>
           </label>
           <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2" id="time-slots"></div>
+        </div>
+
+        <!-- End Time slots -->
+        <div class="mb-7">
+          <label class="cc-label">
+            <span class="material-symbols-outlined text-sm text-primary-container/60">schedule_send</span>
+            End Time <span class="text-on-surface-variant/40 normal-case font-normal text-xs ml-0.5">(optional)</span>
+          </label>
+          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2" id="end-time-slots"></div>
         </div>
 
         <!-- Duration (hourly only) -->
@@ -976,13 +1019,23 @@ function changeDuration(delta) {
    Time slots
 ══════════════════════════════════════════════════════════ */
 function buildTimeSlots() {
-  document.getElementById('time-slots').innerHTML = TIME_SLOTS.map((t, i) => {
+  const html = TIME_SLOTS.map((t, i) => {
     const [hh] = t.split(':').map(Number);
     const ampm = hh < 12 ? 'AM' : 'PM';
     const h12  = ((hh - 1 + 12) % 12) + 1;
     return `<input type="radio" name="timeslot" class="time-pill" id="ts-${i}" value="${t}" onchange="updateSidebar()"/>
             <label class="time-label" for="ts-${i}">${h12} ${ampm}</label>`;
   }).join('');
+  document.getElementById('time-slots').innerHTML = html;
+
+  const htmlEnd = TIME_SLOTS.map((t, i) => {
+    const [hh] = t.split(':').map(Number);
+    const ampm = hh < 12 ? 'AM' : 'PM';
+    const h12  = ((hh - 1 + 12) % 12) + 1;
+    return `<input type="radio" name="endtimeslot" class="time-pill" id="ets-${i}" value="${t}" onchange="updateSidebar()"/>
+            <label class="time-label" for="ets-${i}">${h12} ${ampm}</label>`;
+  }).join('');
+  document.getElementById('end-time-slots').innerHTML = htmlEnd;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1040,14 +1093,18 @@ function updateSidebar() {
   }
 
   // Date/time
-  const dateVal = document.getElementById('input-date')?.value;
-  const timeEl  = document.querySelector('input[name="timeslot"]:checked');
-  const sbDt    = document.getElementById('sb-datetime');
+  const dateVal   = document.getElementById('input-date')?.value;
+  const timeEl    = document.querySelector('input[name="timeslot"]:checked');
+  const endTimeEl = document.querySelector('input[name="endtimeslot"]:checked');
+  const sbDt      = document.getElementById('sb-datetime');
   if (dateVal || timeEl) {
     const dStr = dateVal
       ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
       : '';
-    sbDt.innerHTML = `<span class="text-white text-xs font-bold">${dStr}</span>${timeEl ? ` <span class="text-primary-container text-xs font-semibold">@ ${formatTime(timeEl.value)}</span>` : ''}`;
+    const timeRange = timeEl
+      ? formatTime(timeEl.value) + (endTimeEl ? ` → ${formatTime(endTimeEl.value)}` : '')
+      : '';
+    sbDt.innerHTML = `<span class="text-white text-xs font-bold">${dStr}</span>${timeRange ? ` <span class="text-primary-container text-xs font-semibold">@ ${timeRange}</span>` : ''}`;
   } else {
     sbDt.innerHTML = '<span class="text-white/25 text-xs italic">Not set</span>';
   }
@@ -1141,13 +1198,17 @@ function buildConfirmSummary() {
   document.getElementById('sum-name').textContent  = PRO.display_name || PRO.username;
   document.getElementById('sum-title').textContent = PRO.title || (PRO.categories || []).join(' · ');
 
-  const dateVal = document.getElementById('input-date').value;
-  const timeEl  = document.querySelector('input[name="timeslot"]:checked');
+  const dateVal   = document.getElementById('input-date').value;
+  const timeEl    = document.querySelector('input[name="timeslot"]:checked');
+  const endTimeEl = document.querySelector('input[name="endtimeslot"]:checked');
   const dateStr = dateVal
     ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short', year:'numeric' })
     : '—';
   document.getElementById('sum-date').textContent = dateStr;
-  document.getElementById('sum-time').textContent = timeEl ? formatTime(timeEl.value) : '—';
+  const timeRange = timeEl
+    ? formatTime(timeEl.value) + (endTimeEl ? ` → ${formatTime(endTimeEl.value)}` : '')
+    : '—';
+  document.getElementById('sum-time').textContent = timeRange;
 
   const venue   = document.getElementById('input-venue').value.trim();
   const evtType = document.getElementById('input-event-type').value;
@@ -1202,14 +1263,16 @@ async function confirmBooking() {
   btn.disabled = true;
   btn.innerHTML = `<span class="material-symbols-outlined" style="animation:spin 0.8s linear infinite">progress_activity</span> Confirming…`;
 
-  const sel     = getSelectedServices();
-  const dateVal = document.getElementById('input-date').value;
-  const timeEl  = document.querySelector('input[name="timeslot"]:checked');
-  const venue   = document.getElementById('input-venue').value.trim();
-  const evtType = document.getElementById('input-event-type').value;
-  const notes   = document.getElementById('input-notes').value.trim();
+  const sel       = getSelectedServices();
+  const dateVal   = document.getElementById('input-date').value;
+  const timeEl    = document.querySelector('input[name="timeslot"]:checked');
+  const endTimeEl = document.querySelector('input[name="endtimeslot"]:checked');
+  const venue     = document.getElementById('input-venue').value.trim();
+  const evtType   = document.getElementById('input-event-type').value;
+  const notes     = document.getElementById('input-notes').value.trim();
 
-  const bookingDate = `${dateVal} ${timeEl ? timeEl.value : ''}`.trim();
+  const timeRange   = timeEl ? (endTimeEl ? `${timeEl.value}–${endTimeEl.value}` : timeEl.value) : '';
+  const bookingDate = `${dateVal} ${timeRange}`.trim();
   const serviceStr  = sel.map(({ svc, qty, isHourly }) => svc.name + (isHourly ? ` (${qty} hr)` : '')).join(', ');
   const total       = calcTotal();
 
