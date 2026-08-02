@@ -297,6 +297,26 @@ def seed_demo_data(user_id):
                 )
 
 
+def init_cart_table():
+    """Create cart_items table if it doesn't exist."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS cart_items (
+                id          SERIAL PRIMARY KEY,
+                user_id     INTEGER NOT NULL,
+                product_id  INTEGER,
+                name        TEXT    NOT NULL,
+                price       REAL    NOT NULL DEFAULT 0,
+                quantity    INTEGER NOT NULL DEFAULT 1,
+                image_url   TEXT,
+                category    TEXT,
+                created_at  TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (user_id)    REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+            )
+        """)
+
+
 def init_rental_tables():
     """Create rental_equipment and rental_orders tables if they don't exist."""
     with get_db() as conn:
@@ -335,6 +355,7 @@ def init_rental_tables():
         """)
 
 init_db()
+init_cart_table()
 init_rental_tables()
 
 # ---------------------------------------------------------------------------
@@ -1277,6 +1298,118 @@ def update_product(product_id):
     if not product:
         return jsonify({"ok": False, "error": "Not found."}), 404
     return jsonify({"ok": True, "product": dict(product)})
+
+
+# ---------------------------------------------------------------------------
+# Cart — per-user, DB-backed
+# ---------------------------------------------------------------------------
+
+@app.route("/api/cart", methods=["GET"])
+def get_cart():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM cart_items WHERE user_id=%s ORDER BY created_at ASC",
+            (uid,)
+        ).fetchall()
+    items = [dict(r) for r in rows]
+    subtotal = sum(r["price"] * r["quantity"] for r in items)
+    return jsonify({"ok": True, "items": items, "subtotal": round(subtotal, 2), "count": sum(r["quantity"] for r in items)})
+
+
+@app.route("/api/cart", methods=["POST"])
+def add_to_cart():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data       = request.get_json(force=True, silent=True) or {}
+    product_id = data.get("product_id")
+    name       = (data.get("name") or "").strip()
+    price      = float(data.get("price") or 0)
+    quantity   = max(1, int(data.get("quantity") or 1))
+    image_url  = (data.get("image_url") or "").strip() or None
+    category   = (data.get("category") or "").strip() or None
+
+    # If product_id given, resolve name/price/image from DB
+    if product_id:
+        with get_db() as conn:
+            prod = conn.execute("SELECT * FROM products WHERE id=%s", (product_id,)).fetchone()
+        if not prod:
+            return jsonify({"ok": False, "error": "Product not found."}), 404
+        name      = prod["name"]
+        price     = prod["price"]
+        image_url = prod["image_url"]
+        category  = prod["category"]
+    elif not name or price <= 0:
+        return jsonify({"ok": False, "error": "name and price are required when product_id is not given."}), 400
+
+    with get_db() as conn:
+        # If same product already in cart, increment quantity
+        if product_id:
+            existing = conn.execute(
+                "SELECT id, quantity FROM cart_items WHERE user_id=%s AND product_id=%s",
+                (uid, product_id)
+            ).fetchone()
+        else:
+            existing = conn.execute(
+                "SELECT id, quantity FROM cart_items WHERE user_id=%s AND name=%s AND product_id IS NULL",
+                (uid, name)
+            ).fetchone()
+
+        if existing:
+            new_qty = existing["quantity"] + quantity
+            conn.execute("UPDATE cart_items SET quantity=%s WHERE id=%s", (new_qty, existing["id"]))
+            row = conn.execute("SELECT * FROM cart_items WHERE id=%s", (existing["id"],)).fetchone()
+        else:
+            row = conn.execute(
+                """INSERT INTO cart_items (user_id, product_id, name, price, quantity, image_url, category)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+                (uid, product_id, name, price, quantity, image_url, category)
+            ).fetchone()
+    return jsonify({"ok": True, "item": dict(row)}), 201
+
+
+@app.route("/api/cart/<int:item_id>", methods=["PATCH"])
+def update_cart_item(item_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    data     = request.get_json(force=True, silent=True) or {}
+    quantity = int(data.get("quantity") or 0)
+    if quantity <= 0:
+        return jsonify({"ok": False, "error": "quantity must be >= 1."}), 400
+    with get_db() as conn:
+        existing = conn.execute("SELECT id FROM cart_items WHERE id=%s AND user_id=%s", (item_id, uid)).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("UPDATE cart_items SET quantity=%s WHERE id=%s", (quantity, item_id))
+        row = conn.execute("SELECT * FROM cart_items WHERE id=%s", (item_id,)).fetchone()
+    return jsonify({"ok": True, "item": dict(row)})
+
+
+@app.route("/api/cart/<int:item_id>", methods=["DELETE"])
+def remove_cart_item(item_id):
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        existing = conn.execute("SELECT id FROM cart_items WHERE id=%s AND user_id=%s", (item_id, uid)).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM cart_items WHERE id=%s", (item_id,))
+    return jsonify({"ok": True})
+
+
+@app.route("/api/cart", methods=["DELETE"])
+def clear_cart():
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        conn.execute("DELETE FROM cart_items WHERE user_id=%s", (uid,))
+    return jsonify({"ok": True})
 
 
 # ---------------------------------------------------------------------------

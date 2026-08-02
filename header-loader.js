@@ -135,7 +135,33 @@
     if (data.ok) showLoggedIn(data.user);
   } catch (_) { /* offline or network error — leave logged-out UI */ }
 
-  // ── 5. Global sign-out ───────────────────────────────────────────────────
+  // ── 5. Cart badge ────────────────────────────────────────────────────────
+  function setCartBadge(count) {
+    ['cart-badge', 'cart-badge-mobile'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (count > 0) {
+        el.textContent = count > 99 ? '99+' : count;
+        el.style.display = 'block';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  // Expose so cart.html and other pages can update the badge immediately
+  window.updateCartBadge = setCartBadge;
+
+  // Fetch cart count on every page load (only when logged in)
+  try {
+    const cartRes = await fetch('/api/cart');
+    if (cartRes.ok) {
+      const cartData = await cartRes.json();
+      if (cartData.ok) setCartBadge(cartData.count);
+    }
+  } catch (_) { /* ignore */ }
+
+  // ── 6. Global sign-out ───────────────────────────────────────────────────
   window.signOut = async function () {
     await fetch('/api/logout', { method: 'POST' });
     window.location.href = 'signin.html';

@@ -39,7 +39,10 @@
 
             <!-- Desktop right: auth area -->
             <div class="flex items-center gap-4">
-                <a href="cart.html" class="hidden md:block material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</a>
+                <a href="cart.html" class="hidden md:block relative text-on-surface-variant hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span id="cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:999px;background:#00dbe9;color:#001f22;font-size:10px;font-weight:800;line-height:18px;text-align:center;padding:0 4px;"></span>
+                </a>
 
                 <!-- Logged-in: shown via JS (desktop only) -->
                 <div class="hidden md:block">
@@ -58,7 +61,10 @@
                 <a id="desktop-signin-link" href="signin.html" class="hidden md:inline-block shimmer-btn relative overflow-hidden bg-primary-container text-on-primary font-bold py-4 px-6 rounded-full text-label-caps transition-transform hover:scale-105">Sign In</a>
 
                 <!-- Mobile buttons -->
-                <a href="cart.html" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_cart</a>
+                <a href="cart.html" class="md:hidden relative text-on-surface-variant hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span id="cart-badge-mobile" style="display:none;position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:999px;background:#00dbe9;color:#001f22;font-size:10px;font-weight:800;line-height:18px;text-align:center;padding:0 4px;"></span>
+                </a>
                 <button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-3xl">menu</button>
             </div>
         </nav>

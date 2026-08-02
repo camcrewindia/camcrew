@@ -222,34 +222,12 @@ void main() {
 <div class="sticky top-32 space-y-gutter">
 <section class="glass-panel rounded-xl p-6">
 <h3 class="text-headline-md font-headline-md mb-6">Order Summary</h3>
-<!-- Product List -->
-<div class="space-y-4 mb-6">
-<div class="flex gap-4">
-<div class="w-20 h-20 bg-surface-container rounded-lg border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="A high-end Sony Alpha a7 IV mirrorless camera body, captured in a moody cinematic studio environment with dramatic rim lighting and blue highlights. The texture of the magnesium alloy body and the precision dials are visible. The background is a blurred obsidian tech workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAksfnUfWQ3yS2qlMBnU4MWfWaaf5x_nVB-ixZakOI4VfC-JZExKEt42orG2c1MJZxVy-_EhLWMvN-GpNW6EUypoqXHEW7eTDZzWNK1dcM9kxHw3bVphL8eRRVjPWxoDKVixhc-lTpfewJ6G9FGZFHTsax9peN9CTZKsRTDozUcFM4nwqCRS2Zt8CZ2zC3PR3Au8XVqVZZFEmadlChWCqPzh68mGvNS_i9BUNVn52lV6f7x3GoxjFzS">
-</div>
-<div class="flex-grow">
-<h4 class="text-body-md font-bold text-on-surface leading-tight">Sony Alpha a7 IV</h4>
-<p class="text-label-caps text-on-surface-variant uppercase mt-1">Full-frame Body</p>
-<div class="flex justify-between items-center mt-2">
-<span class="text-on-surface-variant font-body-md">Qty: 1</span>
-<span class="text-primary font-bold">$2,499.00</span>
-</div>
-</div>
-</div>
-<div class="flex gap-4">
-<div class="w-20 h-20 bg-surface-container rounded-lg border border-glass-stroke overflow-hidden flex-shrink-0">
-<img class="w-full h-full object-cover" data-alt="A premium 24-70mm f/2.8 GM II lens for Sony E-mount, featuring large glass elements that catch the light with an iridescent cyan glow. The lens is placed on a reflective black surface in a high-tech lab setting. Professional cinematic photography style with high contrast and sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhkFxO7RWV6-Gsp326YInv_JJFGHwm9f9x-yo-hd1NBtsrCdoaZSwpz79R_xarVBMcnOieb8oD1HN0iuhrZh50gL8SCuYyaPI34ie79upF0wuPun_LcnWK6RYmvU8Uxrwy1r8cFOs-s4AP6pCmJRYjY2E6wi_CRDWLGR-iImrWwduM9l1SJu09-LJQZDrcSN8KpxWLDH2mWM_-UhHHynC2oloxlkl1WzNhqHDORpdrVlvZ16Q1jEwm">
-</div>
-<div class="flex-grow">
-<h4 class="text-body-md font-bold text-on-surface leading-tight">FE 24-70mm f/2.8 GM II</h4>
-<p class="text-label-caps text-on-surface-variant uppercase mt-1">G Master Lens</p>
-<div class="flex justify-between items-center mt-2">
-<span class="text-on-surface-variant font-body-md">Qty: 1</span>
-<span class="text-primary font-bold">$2,298.00</span>
-</div>
-</div>
-</div>
+<!-- Product List (dynamic) -->
+<div id="checkout-items-list" class="space-y-4 mb-6">
+  <div class="flex items-center gap-3 text-on-surface-variant py-4">
+    <span class="material-symbols-outlined text-[20px] text-primary" style="animation:spin 1s linear infinite">progress_activity</span>
+    <span class="text-body-md">Loading cart...</span>
+  </div>
 </div>
 <!-- Coupon Code -->
 <div class="mb-8">
@@ -262,23 +240,23 @@ void main() {
 <!-- Price Breakdown -->
 <div class="space-y-3 border-t border-glass-stroke pt-6 mb-6">
 <div class="flex justify-between text-body-md text-on-surface-variant">
-<span class="">Subtotal</span>
-<span class="">$4,797.00</span>
+<span>Subtotal</span>
+<span id="checkout-subtotal">—</span>
 </div>
 <div class="flex justify-between text-body-md text-on-surface-variant">
-<span class="">Shipping (Express)</span>
-<span class="">$45.00</span>
+<span>Shipping (Express)</span>
+<span>FREE</span>
 </div>
 <div class="flex justify-between text-body-md text-on-surface-variant">
-<span class="">Tax</span>
-<span class="">$383.76</span>
+<span>Tax (8.875%)</span>
+<span id="checkout-tax">—</span>
 </div>
 <div class="flex justify-between text-headline-md font-bold text-on-surface pt-2">
-<span class="">Total</span>
-<span class="text-primary-container">$5,225.76</span>
+<span>Total</span>
+<span class="text-primary-container" id="checkout-total">—</span>
 </div>
 </div>
-<button class="shimmer w-full bg-primary-container text-on-primary font-bold text-body-lg py-4 rounded-xl uppercase tracking-widest neon-glow-primary neon-glow-hover transition-all flex items-center justify-center gap-3">
+<button id="complete-purchase-btn" class="shimmer w-full bg-primary-container text-on-primary font-bold text-body-lg py-4 rounded-xl uppercase tracking-widest neon-glow-primary neon-glow-hover transition-all flex items-center justify-center gap-3 opacity-50" disabled>
                             Complete Purchase
                             <span class="material-symbols-outlined">bolt</span>
 </button>
@@ -293,10 +271,12 @@ void main() {
 </main>
 <!-- Footer -->
 <div id="site-footer"></div>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 <script>
-        // Simple Micro-interaction for input fields
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
+        // ── Input micro-interactions ──────────────────────────────────────────
+        document.querySelectorAll('input').forEach(input => {
             input.addEventListener('focus', () => {
                 input.parentElement.classList.add('scale-[1.01]');
                 input.parentElement.style.transition = 'transform 0.3s ease';
@@ -306,18 +286,83 @@ void main() {
             });
         });
 
-        // "Complete Purchase" button animation trigger
-        const completeBtn = document.querySelector('.shimmer');
-        completeBtn.addEventListener('click', function() {
-            this.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...';
+        // ── Complete Purchase button ──────────────────────────────────────────
+        document.getElementById('complete-purchase-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+            this.innerHTML = '<span class="material-symbols-outlined" style="animation:spin 1s linear infinite">progress_activity</span>&nbsp;Processing...';
             this.classList.add('opacity-80');
+            this.disabled = true;
             setTimeout(() => {
                 this.innerHTML = 'Payment Confirmed <span class="material-symbols-outlined">check_circle</span>';
                 this.classList.replace('bg-primary-container', 'bg-green-500');
                 this.classList.remove('neon-glow-primary');
             }, 2000);
         });
+
+        // ── Load cart for order summary ───────────────────────────────────────
+        function fmt(n) {
+            return '$' + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        async function loadCheckoutSummary() {
+            try {
+                const res = await fetch('/api/cart');
+                if (res.status === 401) {
+                    document.getElementById('checkout-items-list').innerHTML =
+                        `<p class="text-on-surface-variant text-body-md py-2">
+                           <a href="signin.html" class="text-primary underline">Sign in</a> to view your cart.
+                         </p>`;
+                    return;
+                }
+                const data = await res.json();
+                if (!data.ok || data.items.length === 0) {
+                    document.getElementById('checkout-items-list').innerHTML =
+                        `<p class="text-on-surface-variant text-body-md py-2">Your cart is empty. <a href="sales.html" class="text-primary underline">Shop now →</a></p>`;
+                    return;
+                }
+
+                const list = document.getElementById('checkout-items-list');
+                list.innerHTML = '';
+                data.items.forEach(item => {
+                    const lineTotal = item.price * item.quantity;
+                    const imgEl = item.image_url
+                        ? `<img class="w-full h-full object-cover" src="${item.image_url}" alt="${item.name}">`
+                        : `<div class="w-full h-full flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined">photo_camera</span></div>`;
+                    const row = document.createElement('div');
+                    row.className = 'flex gap-4';
+                    row.innerHTML = `
+                        <div class="w-20 h-20 bg-surface-container rounded-lg border border-glass-stroke overflow-hidden flex-shrink-0">
+                            ${imgEl}
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="text-body-md font-bold text-on-surface leading-tight">${item.name}</h4>
+                            ${item.category ? `<p class="text-label-caps text-on-surface-variant uppercase mt-1">${item.category}</p>` : ''}
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-on-surface-variant font-body-md">Qty: ${item.quantity}</span>
+                                <span class="text-primary font-bold">${fmt(lineTotal)}</span>
+                            </div>
+                        </div>`;
+                    list.appendChild(row);
+                });
+
+                const subtotal = data.subtotal;
+                const tax = subtotal * 0.08875;
+                const total = subtotal + tax;
+                document.getElementById('checkout-subtotal').textContent = fmt(subtotal);
+                document.getElementById('checkout-tax').textContent = fmt(tax);
+                document.getElementById('checkout-total').textContent = fmt(total);
+
+                const btn = document.getElementById('complete-purchase-btn');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            } catch (e) {
+                document.getElementById('checkout-items-list').innerHTML =
+                    `<p class="text-on-surface-variant text-body-md py-2">Could not load cart.</p>`;
+            }
+        }
+
+        loadCheckoutSummary();
     </script>
 <script src="header-loader.js"></script>
-  <script src="footer-loader.js"></script>
+<script src="footer-loader.js"></script>
 </body></html>
