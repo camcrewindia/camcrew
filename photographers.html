@@ -212,6 +212,20 @@
   select.filter-input {
     appearance: none; -webkit-appearance: none; cursor: pointer;
     padding-right: 2.25rem;
+    background-color: rgba(10,14,20,0.98) !important;
+  }
+  /* Dark dropdown list */
+  select.filter-input option {
+    background-color: #0d1117;
+    color: #dce4e5;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+  select.filter-input option:checked,
+  select.filter-input option:hover {
+    background-color: rgba(0,240,255,0.12);
+    color: #00f0ff;
   }
 
   .btn-search {
