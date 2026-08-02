@@ -93,9 +93,10 @@ body { background: #06080a; }
 .step-item.is-active .step-label { color: #00f0ff; }
 .step-item.is-done .step-label { color: rgba(0,240,255,0.6); }
 .step-connector {
-  position: absolute; top: 1.2rem; left: 50%; right: -50%;
+  position: absolute; top: 1.2rem;
+  left: calc(50% + 1.4rem); right: calc(-50% + 1.4rem);
   height: 2px; background: rgba(255,255,255,0.06);
-  z-index: 1; transition: background 0.4s;
+  z-index: 0; transition: background 0.4s;
 }
 .step-item:last-child .step-connector { display: none; }
 .step-item.is-done .step-connector {
