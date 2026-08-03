@@ -394,12 +394,12 @@
   const showing = document.getElementById('sub-showing');
   let currentPage=1, total=0;
 
-  const ROLE_TIER = { studio:'Studio Enterprise', professional:'Elite Pro', customer:'Professional', admin:'Admin' };
+  const ROLE_TIER = { studio:'Studio', professional:'Professional', customer:'Customer', admin:'Admin' };
   const TIER_STYLE = {
-    'Studio Enterprise': 'background:rgba(123,31,162,0.12);color:#6a1070;',
-    'Elite Pro':         'background:rgba(0,133,143,0.12);color:#005662;',
-    'Professional':      'background:rgba(0,0,0,0.07);color:#334155;',
-    'Admin':             'background:rgba(183,28,28,0.1);color:#b71c1c;',
+    'Studio':       'background:rgba(123,31,162,0.12);color:#6a1070;',
+    'Professional': 'background:rgba(0,133,143,0.12);color:#005662;',
+    'Customer':     'background:rgba(0,0,0,0.07);color:#334155;',
+    'Admin':        'background:rgba(183,28,28,0.1);color:#b71c1c;',
   };
 
   function initials(n){ return (n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
