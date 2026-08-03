@@ -123,21 +123,8 @@
     border-bottom: 1px solid var(--divider);
     flex-shrink: 0;
   }
-  .al-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .al-logo-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #006970, #00b8c4);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 14px rgba(0,184,196,0.3);
-  }
-  .al-logo-icon span { font-size: 1rem; color: #fff; }
-  .al-logo-text { font-size: 0.88rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-  .al-logo-sub { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; color: var(--text-muted); text-transform: uppercase; margin-top: 1px; }
+  .al-logo { display: flex; align-items: center; }
+  #al-logo-img { height: 32px; width: auto; object-fit: contain; display: block; }
 
   .al-header-right { display: flex; align-items: center; gap: 0.6rem; }
   .al-secure-tag {
@@ -377,13 +364,7 @@
   <!-- Header -->
   <div class="al-header">
     <div class="al-logo">
-      <div class="al-logo-icon">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">videocam</span>
-      </div>
-      <div>
-        <div class="al-logo-text">CamCrew Studio</div>
-        <div class="al-logo-sub">Admin Control Center</div>
-      </div>
+      <img id="al-logo-img" src="" alt="CamCrew Studio">
     </div>
     <div class="al-header-right">
       <span class="al-secure-tag">Secure</span>
@@ -644,9 +625,17 @@
   })();
 
   (function(){
+    var LOGO_DARK  = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD9q9WVugN54N0Fb7aRUtxhE8PbmbqbdZTbv95zqsIkJgOBvQ2YSnJM5eEsO75LaztJD6qmaVdCCWaQK1NbD62to1CGN4bTwFVAh0Ft0FSjBG7OyXa-YjEsUU5-I0GrNxLig8VzO6p5S1LtjayqZNGde8y20wt1McNqpRBosYLBLNj0kgRSdHZ_5LOyTRqkeyvgRRjPKTZheePKB1-DVbrI08U-IJyZt1ltAYIoPFOL746s8P3LdgMrT-EW-PkAJ3GufbpN8zUZIK-0lg';
+    var LOGO_LIGHT = 'attached_assets/camcrew_studio_logo_cop_1785515916927.png';
+
+    function updateLogo(t){
+      var img=document.getElementById('al-logo-img'); if(!img)return;
+      img.src = t==='dark' ? LOGO_DARK : LOGO_LIGHT;
+    }
     function initTheme(){
       var t=localStorage.getItem('cc-theme')||'dark';
-      document.documentElement.setAttribute('data-theme',t); updateBtn(t);
+      document.documentElement.setAttribute('data-theme',t);
+      updateBtn(t); updateLogo(t);
     }
     function updateBtn(t){
       var btn=document.getElementById('al-theme-toggle'); if(!btn)return;
@@ -657,7 +646,7 @@
       var cur=document.documentElement.getAttribute('data-theme');
       var next=cur==='dark'?'light':'dark';
       document.documentElement.setAttribute('data-theme',next);
-      localStorage.setItem('cc-theme',next); updateBtn(next);
+      localStorage.setItem('cc-theme',next); updateBtn(next); updateLogo(next);
     };
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initTheme);
     else initTheme();
