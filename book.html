@@ -1283,11 +1283,12 @@ async function confirmBooking() {
   if (notes)   noteLines.push(notes);
 
   const payload = {
-    professional_name: PRO.display_name || PRO.username,
-    service:     serviceStr,
+    professional_name:     PRO.display_name || PRO.username,
+    professional_username: PRO.username || null,
+    service:      serviceStr,
     booking_date: bookingDate,
-    amount:      total,
-    note:        noteLines.join('\n') || null,
+    amount:       total,
+    note:         noteLines.join('\n') || null,
   };
 
   try {

@@ -98,6 +98,8 @@ def init_db():
         """)
         # Migrate: add display_name if it doesn't exist yet
         conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT")
+        # Migrate: add seller_id to products for professional-listed items
+        conn.execute("ALTER TABLE products ADD COLUMN IF NOT EXISTS seller_id INTEGER")
 
         conn.execute("""
             CREATE TABLE IF NOT EXISTS password_reset_tokens (
@@ -433,6 +435,10 @@ def init_professional_tables():
                 FOREIGN KEY (professional_id) REFERENCES users(id)
             )
         """)
+        # Migrate: link bookings to a professional user account
+        conn.execute("ALTER TABLE bookings ADD COLUMN IF NOT EXISTS professional_id INTEGER")
+        # Migrate: link professional_requests back to the originating customer booking
+        conn.execute("ALTER TABLE professional_requests ADD COLUMN IF NOT EXISTS booking_id INTEGER")
 
 
 def seed_professional_data(uid):
@@ -486,11 +492,33 @@ def seed_professional_data(uid):
             )
 
 
+def init_pro_sales_table():
+    """Create pro_sale_items table for tracking professional product sales."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS pro_sale_items (
+                id           SERIAL PRIMARY KEY,
+                seller_id    INTEGER NOT NULL,
+                order_id     INTEGER NOT NULL,
+                product_id   INTEGER,
+                product_name TEXT    NOT NULL,
+                quantity     INTEGER NOT NULL DEFAULT 1,
+                unit_price   REAL    NOT NULL DEFAULT 0,
+                total_price  REAL    NOT NULL DEFAULT 0,
+                created_at   TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (seller_id)  REFERENCES users(id),
+                FOREIGN KEY (order_id)   REFERENCES orders(id) ON DELETE CASCADE,
+                FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+            )
+        """)
+
+
 init_db()
 init_cart_table()
 init_rental_tables()
 init_admin_tables()
 init_professional_tables()
+init_pro_sales_table()
 
 # ---------------------------------------------------------------------------
 # Public portfolio sharing
@@ -1041,20 +1069,58 @@ def create_booking():
     if not uid:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
     data = request.get_json(force=True)
-    professional_name = (data.get("professional_name") or "").strip()
-    service           = (data.get("service") or "").strip()
-    booking_date      = (data.get("booking_date") or "").strip()
-    amount            = float(data.get("amount") or 0)
-    note              = (data.get("note") or "").strip() or None
+    professional_name     = (data.get("professional_name")     or "").strip()
+    professional_username = (data.get("professional_username") or "").strip()
+    service      = (data.get("service")      or "").strip()
+    booking_date = (data.get("booking_date") or "").strip()
+    amount       = float(data.get("amount") or 0)
+    note         = (data.get("note") or "").strip() or None
     if not professional_name or not service or not booking_date:
         return jsonify({"ok": False, "error": "professional_name, service, and booking_date are required."}), 400
+
+    # Resolve professional user_id for dashboard cross-posting
+    professional_id = None
     with get_db() as conn:
+        if professional_username:
+            row = conn.execute(
+                "SELECT user_id FROM professional_profiles WHERE username=%s",
+                (professional_username,)
+            ).fetchone()
+            if row:
+                professional_id = row["user_id"]
+        if not professional_id and professional_name:
+            row = conn.execute(
+                "SELECT id FROM users WHERE LOWER(display_name)=LOWER(%s) AND role='professional' LIMIT 1",
+                (professional_name,)
+            ).fetchone()
+            if row:
+                professional_id = row["id"]
+
+    with get_db() as conn:
+        # Get customer display info for the professional's request card
+        cust = conn.execute(
+            "SELECT email, display_name FROM users WHERE id=%s", (uid,)
+        ).fetchone()
+        client_name  = (cust["display_name"] or cust["email"]) if cust else "Customer"
+        client_email = cust["email"] if cust else None
+
         cur = conn.execute(
-            """INSERT INTO bookings (user_id, professional_name, service, booking_date, status, amount, note)
-               VALUES (%s, %s, %s, %s, 'pending', %s, %s) RETURNING id""",
-            (uid, professional_name, service, booking_date, amount, note),
+            """INSERT INTO bookings
+               (user_id, professional_name, service, booking_date, status, amount, note, professional_id)
+               VALUES (%s, %s, %s, %s, 'pending', %s, %s, %s) RETURNING id""",
+            (uid, professional_name, service, booking_date, amount, note, professional_id),
         )
         booking_id = cur.fetchone()["id"]
+
+        # Cross-post to professional_requests so it appears on the pro's dashboard
+        if professional_id:
+            conn.execute(
+                """INSERT INTO professional_requests
+                   (professional_id, client_name, client_email, service, booking_date, amount, note, status, booking_id)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, 'pending', %s)""",
+                (professional_id, client_name, client_email, service, booking_date, amount, note, booking_id),
+            )
+
     return jsonify({"ok": True, "booking_id": booking_id, "status": "pending"})
 
 
@@ -1834,12 +1900,34 @@ def professional_overview():
         recent_requests = conn.execute(
             "SELECT * FROM professional_requests WHERE professional_id=%s ORDER BY created_at DESC LIMIT 5", (uid,)
         ).fetchall()
+        # Rentals stats
+        rental_income = conn.execute(
+            "SELECT COALESCE(SUM(total_cost),0) AS s FROM rental_orders WHERE professional_id=%s AND status='completed'", (uid,)
+        ).fetchone()['s']
+        pending_rentals = conn.execute(
+            "SELECT COUNT(*) AS c FROM rental_orders WHERE professional_id=%s AND status='pending'", (uid,)
+        ).fetchone()['c']
+        active_rentals = conn.execute(
+            "SELECT COUNT(*) AS c FROM rental_orders WHERE professional_id=%s AND status IN ('accepted','active')", (uid,)
+        ).fetchone()['c']
+        # Sales stats
+        sales_revenue = conn.execute(
+            "SELECT COALESCE(SUM(total_price),0) AS s FROM pro_sale_items WHERE seller_id=%s", (uid,)
+        ).fetchone()['s']
+        product_count = conn.execute(
+            "SELECT COUNT(*) AS c FROM products WHERE seller_id=%s", (uid,)
+        ).fetchone()['c']
     return jsonify({"ok": True, "overview": {
         "pending_requests": pending_requests,
         "active_jobs":      active_jobs,
         "total_earnings":   float(total_earnings),
         "vault_files":      vault_files_count,
         "recent_requests":  [dict(r) for r in recent_requests],
+        "rental_income":    float(rental_income),
+        "pending_rentals":  pending_rentals,
+        "active_rentals":   active_rentals,
+        "sales_revenue":    float(sales_revenue),
+        "product_count":    product_count,
     }})
 
 
@@ -1899,6 +1987,18 @@ def pro_update_request(req_id):
             return jsonify({"ok": False, "error": "Not found."}), 404
         conn.execute("UPDATE professional_requests SET status=%s WHERE id=%s", (new_status, req_id))
         row = conn.execute("SELECT * FROM professional_requests WHERE id=%s", (req_id,)).fetchone()
+        # Sync status back to the originating customer booking
+        if existing.get("booking_id"):
+            booking_status = {
+                "confirmed": "confirmed",
+                "declined":  "cancelled",
+                "completed": "completed",
+                "pending":   "pending",
+            }.get(new_status, new_status)
+            conn.execute(
+                "UPDATE bookings SET status=%s WHERE id=%s",
+                (booking_status, existing["booking_id"])
+            )
     return jsonify({"ok": True, "request": dict(row)})
 
 
@@ -2102,6 +2202,152 @@ def pro_move_vault_file(file_id):
         conn.execute("UPDATE vault_files SET folder_id=%s WHERE id=%s", (folder_id, file_id))
         row = conn.execute("SELECT * FROM vault_files WHERE id=%s", (file_id,)).fetchone()
     return jsonify({"ok": True, "file": dict(row)})
+
+
+# ── Professional Products (Sales catalogue) ───────────────────────────────────
+
+@app.route("/api/professional/products", methods=["GET"])
+def pro_list_products():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM products WHERE seller_id=%s ORDER BY created_at DESC", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "products": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/products", methods=["POST"])
+def pro_create_product():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data        = request.get_json(force=True, silent=True) or {}
+    name        = (data.get("name")        or "").strip()
+    if not name:
+        return jsonify({"ok": False, "error": "Product name is required."}), 400
+    sku         = (data.get("sku")         or "").strip() or None
+    category    = (data.get("category")    or "Other").strip()
+    price       = float(data.get("price")  or 0)
+    stock       = int(data.get("stock")    or 0)
+    description = (data.get("description") or "").strip() or None
+    image_url   = (data.get("image_url")   or "").strip() or None
+    badge_val   = (data.get("badge")       or "").strip() or None
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO products (name,sku,category,price,stock,description,image_url,badge,seller_id)
+               VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+            (name, sku, category, price, stock, description, image_url, badge_val, uid)
+        ).fetchone()
+    return jsonify({"ok": True, "product": dict(row)}), 201
+
+
+@app.route("/api/professional/products/<int:product_id>", methods=["PATCH"])
+def pro_update_product(product_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        if not conn.execute(
+            "SELECT id FROM products WHERE id=%s AND seller_id=%s", (product_id, uid)
+        ).fetchone():
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        data    = request.get_json(force=True, silent=True) or {}
+        allowed = ["name", "sku", "category", "price", "stock", "description", "image_url", "badge"]
+        sets, vals = [], []
+        for key in allowed:
+            if key in data:
+                sets.append(f"{key}=%s")
+                vals.append(data[key])
+        if not sets:
+            return jsonify({"ok": False, "error": "Nothing to update."}), 400
+        vals.append(product_id)
+        conn.execute(f"UPDATE products SET {', '.join(sets)} WHERE id=%s", vals)
+        row = conn.execute("SELECT * FROM products WHERE id=%s", (product_id,)).fetchone()
+    return jsonify({"ok": True, "product": dict(row)})
+
+
+@app.route("/api/professional/products/<int:product_id>", methods=["DELETE"])
+def pro_delete_product(product_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        if not conn.execute(
+            "SELECT id FROM products WHERE id=%s AND seller_id=%s", (product_id, uid)
+        ).fetchone():
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM products WHERE id=%s", (product_id,))
+    return jsonify({"ok": True})
+
+
+# ── Professional Sales Orders ──────────────────────────────────────────────────
+
+@app.route("/api/professional/sales", methods=["GET"])
+def pro_sales():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            """SELECT psi.*, o.order_ref, o.status AS order_status,
+                      u.email AS customer_email, u.display_name AS customer_name
+               FROM pro_sale_items psi
+               JOIN orders o ON o.id = psi.order_id
+               JOIN users  u ON u.id = o.user_id
+               WHERE psi.seller_id=%s
+               ORDER BY psi.created_at DESC""",
+            (uid,)
+        ).fetchall()
+    total_revenue = sum(float(r["total_price"]) for r in rows)
+    return jsonify({"ok": True, "sales": [dict(r) for r in rows], "total_revenue": total_revenue})
+
+
+# ── Checkout / Place Order ─────────────────────────────────────────────────────
+
+@app.route("/api/orders", methods=["POST"])
+def place_order():
+    """Create an order from the user's current cart and record professional sale items."""
+    uid = require_auth()
+    if not uid:
+        return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    import random, string as _str
+    with get_db() as conn:
+        cart_items = conn.execute(
+            "SELECT * FROM cart_items WHERE user_id=%s", (uid,)
+        ).fetchall()
+        if not cart_items:
+            return jsonify({"ok": False, "error": "Cart is empty."}), 400
+        order_ref  = 'CC-' + ''.join(random.choices(_str.digits, k=6))
+        items_json_val = _json.dumps([{
+            "name": ci["name"], "qty": ci["quantity"],
+            "price": ci["price"], "product_id": ci["product_id"],
+        } for ci in cart_items])
+        total = sum(ci["price"] * ci["quantity"] for ci in cart_items)
+        order_row = conn.execute(
+            """INSERT INTO orders (user_id,order_ref,status,items_json,total_amount)
+               VALUES (%s,%s,'processing',%s,%s) RETURNING id""",
+            (uid, order_ref, items_json_val, total)
+        ).fetchone()
+        order_id = order_row["id"]
+        # Record per-seller sale items for professional dashboard
+        for ci in cart_items:
+            if ci["product_id"]:
+                prod = conn.execute(
+                    "SELECT seller_id FROM products WHERE id=%s", (ci["product_id"],)
+                ).fetchone()
+                if prod and prod["seller_id"]:
+                    conn.execute(
+                        """INSERT INTO pro_sale_items
+                           (seller_id,order_id,product_id,product_name,quantity,unit_price,total_price)
+                           VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+                        (prod["seller_id"], order_id, ci["product_id"], ci["name"],
+                         ci["quantity"], ci["price"], ci["price"] * ci["quantity"])
+                    )
+        conn.execute("DELETE FROM cart_items WHERE user_id=%s", (uid,))
+    return jsonify({"ok": True, "order_id": order_id, "order_ref": order_ref,
+                    "status": "processing", "total": round(total, 2)})
 
 
 # ── Earnings ─────────────────────────────────────────────────────────────

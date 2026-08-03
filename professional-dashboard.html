@@ -658,6 +658,10 @@
       </div>
       <div class="nav-item" data-section="rentals" onclick="showSection('rentals')">
         <span class="material-symbols-outlined">videocam</span> Rentals
+        <span class="nav-badge" id="nb-rentals" style="display:none;">0</span>
+      </div>
+      <div class="nav-item" data-section="sales" onclick="showSection('sales')">
+        <span class="material-symbols-outlined">storefront</span> Sales
       </div>
       <div class="nav-item" data-section="tracking" onclick="showSection('tracking')">
         <span class="material-symbols-outlined">local_shipping</span> Job Tracking
@@ -714,6 +718,7 @@
       <div class="mobile-tab" data-section="requests"  onclick="showSection('requests')"><span class="material-symbols-outlined">inbox</span>Requests</div>
       <div class="mobile-tab" data-section="jobs"      onclick="showSection('jobs')"><span class="material-symbols-outlined">work_history</span>Jobs</div>
       <div class="mobile-tab" data-section="rentals"   onclick="showSection('rentals')"><span class="material-symbols-outlined">videocam</span>Rentals</div>
+      <div class="mobile-tab" data-section="sales"     onclick="showSection('sales')"><span class="material-symbols-outlined">storefront</span>Sales</div>
       <div class="mobile-tab" data-section="tracking"  onclick="showSection('tracking')"><span class="material-symbols-outlined">local_shipping</span>Tracking</div>
       <div class="mobile-tab" data-section="vault"     onclick="showSection('vault')"><span class="material-symbols-outlined">cloud</span>Vault</div>
       <div class="mobile-tab" data-section="earnings"  onclick="showSection('earnings')"><span class="material-symbols-outlined">payments</span>Earnings</div>
@@ -743,8 +748,8 @@
       <div id="sec-overview">
         <p class="sec-sub">Your professional dashboard — manage work, clients, and deliverables.</p>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <!-- Stats Row 1: Services & Work -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
           <div class="stat-card">
             <span class="material-symbols-outlined" style="font-size:1.6rem;color:var(--ac);">inbox</span>
             <p id="ov-requests" class="text-2xl font-black" style="color:#dce4e5;">—</p>
@@ -758,12 +763,35 @@
           <div class="stat-card">
             <span class="material-symbols-outlined" style="font-size:1.6rem;color:#fbbf24;">payments</span>
             <p id="ov-earnings" class="text-2xl font-black" style="color:#dce4e5;">—</p>
-            <p class="text-xs font-semibold" style="color:#849495;">Pending Payout</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Service Earnings</p>
           </div>
           <div class="stat-card">
             <span class="material-symbols-outlined" style="font-size:1.6rem;color:#a855f7;">cloud</span>
             <p id="ov-files" class="text-2xl font-black" style="color:#dce4e5;">—</p>
             <p class="text-xs font-semibold" style="color:#849495;">Vault Files</p>
+          </div>
+        </div>
+        <!-- Stats Row 2: Rentals & Sales -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div class="stat-card" style="cursor:pointer;" onclick="showSection('rentals')">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#00dbe9;">videocam</span>
+            <p id="ov-rental-income" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Rental Income</p>
+          </div>
+          <div class="stat-card" style="cursor:pointer;" onclick="showSection('rentals')">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#fbbf24;">pending</span>
+            <p id="ov-pending-rentals" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Pending Rentals</p>
+          </div>
+          <div class="stat-card" style="cursor:pointer;" onclick="showSection('sales')">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#4ade80;">storefront</span>
+            <p id="ov-sales-revenue" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Sales Revenue</p>
+          </div>
+          <div class="stat-card" style="cursor:pointer;" onclick="showSection('sales')">
+            <span class="material-symbols-outlined" style="font-size:1.4rem;color:#ebb2ff;">inventory_2</span>
+            <p id="ov-products" class="text-2xl font-black" style="color:#dce4e5;">—</p>
+            <p class="text-xs font-semibold" style="color:#849495;">Listed Products</p>
           </div>
         </div>
 
@@ -774,13 +802,13 @@
             <span class="material-symbols-outlined" style="font-size:1.8rem;color:var(--ac);">inbox</span>
             <span style="font-size:0.78rem;font-weight:700;color:#849495;">Client Requests</span>
           </button>
-          <button onclick="showSection('jobs')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
-            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#4ade80;">work_history</span>
-            <span style="font-size:0.78rem;font-weight:700;color:#849495;">My Jobs</span>
+          <button onclick="showSection('rentals')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#00dbe9;">videocam</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Rentals</span>
           </button>
-          <button onclick="showSection('vault')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
-            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#a855f7;">cloud_upload</span>
-            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Upload Files</span>
+          <button onclick="showSection('sales')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
+            <span class="material-symbols-outlined" style="font-size:1.8rem;color:#4ade80;">storefront</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#849495;">Sales</span>
           </button>
           <button onclick="showSection('earnings')" class="data-card flex flex-col items-center gap-2 py-4 text-center cursor-pointer">
             <span class="material-symbols-outlined" style="font-size:1.8rem;color:#fbbf24;">account_balance_wallet</span>
@@ -828,6 +856,32 @@
         <!-- Orders panel -->
         <div id="rental-orders-panel" class="hidden">
           <div id="rental-orders-list"></div>
+        </div>
+      </div>
+
+      <!-- ═══ SALES ══════════════════════════════════════════════════ -->
+      <div id="sec-sales" class="hidden">
+        <p class="sec-sub">List your products for sale and track orders from the <a href="sales.html" style="color:var(--ac);font-weight:700;">Sales page</a>.</p>
+
+        <!-- Sales tabs -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;">
+          <button id="stab-listings" class="rental-tab active" onclick="switchSalesTab('listings')">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;vertical-align:middle;">inventory_2</span> My Listings
+          </button>
+          <button id="stab-orders" class="rental-tab" onclick="switchSalesTab('orders')">
+            <span class="material-symbols-outlined" style="font-size:0.95rem;vertical-align:middle;">receipt_long</span> Orders
+          </button>
+        </div>
+
+        <!-- Listings panel -->
+        <div id="sales-listings-panel">
+          <div id="sales-products-list"></div>
+        </div>
+
+        <!-- Orders panel -->
+        <div id="sales-orders-panel" class="hidden">
+          <div id="sales-orders-stats" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5"></div>
+          <div id="sales-orders-list"></div>
         </div>
       </div>
 
@@ -1097,6 +1151,58 @@
   </div>
 </div>
 
+<!-- Add / Edit Product Modal -->
+<div id="modal-product" class="modal-overlay" onclick="closeModal('modal-product',event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 id="modal-product-title" style="color:#dce4e5;font-weight:800;font-size:1.1rem;">List New Product</h3>
+      <button onclick="closeModal('modal-product')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="product-form" onsubmit="submitProduct(event)" style="display:flex;flex-direction:column;gap:0.9rem;">
+      <input type="hidden" id="product-id"/>
+      <div>
+        <label class="fi-label">Product Name *</label>
+        <input id="product-name" class="fi" type="text" required placeholder="e.g. Sony FX6 Spare Battery"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Category</label>
+          <select id="product-category" class="fi">
+            <option value="Camera">Camera</option>
+            <option value="Lens">Lens</option>
+            <option value="Lighting">Lighting</option>
+            <option value="Audio">Audio</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Prints">Prints</option>
+            <option value="Digital">Digital</option>
+            <option value="Other" selected>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="fi-label">SKU / Model</label>
+          <input id="product-sku" class="fi" type="text" placeholder="Optional"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="fi-label">Price ($) *</label>
+          <input id="product-price" class="fi" type="number" min="0" step="0.01" required placeholder="0.00"/>
+        </div>
+        <div>
+          <label class="fi-label">Stock Quantity</label>
+          <input id="product-stock" class="fi" type="number" min="0" placeholder="0"/>
+        </div>
+      </div>
+      <div>
+        <label class="fi-label">Description</label>
+        <textarea id="product-description" class="fi" rows="2" style="resize:none;" placeholder="Condition, what's included, specs…"></textarea>
+      </div>
+      <div id="product-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
+      <button type="submit" class="cc-btn-primary">Save Listing</button>
+    </form>
+  </div>
+</div>
+
 <!-- Toast -->
 <div id="toast" style="
   position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(1.5rem);
@@ -1121,6 +1227,10 @@ const S = {
   equipment: [],
   rentalOrders: [],
   rentalTab: 'equipment',
+  products: [],
+  salesOrders: [],
+  salesRevenue: 0,
+  salesTab: 'listings',
   vault: { currentFolder: null, folders: [], files: [] },
   vaultViewGrid: false,
   activeRequestId: null,
@@ -1211,6 +1321,12 @@ const SECTION_CFG = {
       <span class="material-symbols-outlined" style="font-size:1rem;">add</span> Add Equipment
     </button>`
   },
+  sales: {
+    title: () => 'Sales',
+    actions: `<button onclick="openAddProductModal()" class="btn-sm btn-sm-cyan">
+      <span class="material-symbols-outlined" style="font-size:1rem;">add</span> List Product
+    </button>`
+  },
   tracking: { title: () => 'Job Tracking', actions: '' },
   vault: {
     title: () => 'File Vault',
@@ -1246,6 +1362,7 @@ function showSection(name) {
     requests: loadRequests,
     jobs: loadJobs,
     rentals: loadRentals,
+    sales: loadSales,
     tracking: loadTrackingSelector,
     vault: renderVault,
     earnings: loadEarnings,
@@ -1293,10 +1410,18 @@ async function loadOverview() {
     if (!data.ok) return;
     const ov = data.overview;
 
-    document.getElementById('ov-requests').textContent = ov.pending_requests;
-    document.getElementById('ov-jobs').textContent     = ov.active_jobs;
-    document.getElementById('ov-earnings').textContent = fmt_usd(ov.total_earnings);
-    document.getElementById('ov-files').textContent    = ov.vault_files;
+    document.getElementById('ov-requests').textContent      = ov.pending_requests;
+    document.getElementById('ov-jobs').textContent          = ov.active_jobs;
+    document.getElementById('ov-earnings').textContent      = fmt_usd(ov.total_earnings);
+    document.getElementById('ov-files').textContent         = ov.vault_files;
+    document.getElementById('ov-rental-income').textContent = fmt_usd(ov.rental_income  || 0);
+    document.getElementById('ov-pending-rentals').textContent = ov.pending_rentals ?? '0';
+    document.getElementById('ov-sales-revenue').textContent = fmt_usd(ov.sales_revenue  || 0);
+    document.getElementById('ov-products').textContent      = ov.product_count ?? '0';
+
+    // Update rental badge in sidebar
+    const nbr = document.getElementById('nb-rentals');
+    if (nbr) { nbr.textContent = ov.pending_rentals; nbr.style.display = ov.pending_rentals > 0 ? 'inline-block' : 'none'; }
 
     // Badge
     const nb = document.getElementById('nb-requests');
@@ -1838,6 +1963,196 @@ async function acceptRentalOrder(id) {
 function declineRentalOrder(id) {
   if (!confirm('Decline this rental request?')) return;
   setRentalOrderStatus(id, 'declined');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// Sales — Product Listings + Orders  (API-backed)
+// ════════════════════════════════════════════════════════════════════
+async function loadSales() {
+  switchSalesTab(S.salesTab || 'listings');
+  try {
+    const [pRes, sRes] = await Promise.all([
+      api('GET', '/api/professional/products'),
+      api('GET', '/api/professional/sales'),
+    ]);
+    if (pRes.ok) S.products  = pRes.products  || [];
+    if (sRes.ok) { S.salesOrders = sRes.sales || []; S.salesRevenue = sRes.total_revenue || 0; }
+  } catch (_) { /* silently fail — shows empty state */ }
+  switchSalesTab(S.salesTab || 'listings');
+}
+
+function switchSalesTab(tab) {
+  S.salesTab = tab;
+  document.getElementById('sales-listings-panel').classList.toggle('hidden', tab !== 'listings');
+  document.getElementById('sales-orders-panel').classList.toggle('hidden', tab !== 'orders');
+  document.getElementById('stab-listings').classList.toggle('active', tab === 'listings');
+  document.getElementById('stab-orders').classList.toggle('active', tab === 'orders');
+
+  // Update sticky header action button
+  const actEl = document.getElementById('cp-hdr-actions');
+  if (actEl) {
+    actEl.innerHTML = tab === 'listings'
+      ? `<button onclick="openAddProductModal()" class="btn-sm btn-sm-cyan">
+           <span class="material-symbols-outlined" style="font-size:1rem;">add</span> List Product
+         </button>`
+      : `<span style="font-size:0.78rem;font-weight:700;color:#849495;">${(S.salesOrders||[]).length} orders</span>`;
+  }
+
+  if (tab === 'listings') renderProductsList();
+  else renderSalesOrders();
+}
+
+function renderProductsList() {
+  const el = document.getElementById('sales-products-list');
+  if (!S.products.length) {
+    el.innerHTML = empty('storefront', 'No products listed', 'List your gear, prints, or digital products for customers to buy on the Sales page.');
+    return;
+  }
+  el.innerHTML = S.products.map(p => `
+    <div class="data-card mb-3">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem;">
+        <div>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(p.name)}</p>
+          <p style="font-size:0.78rem;color:#849495;margin-top:0.1rem;">${esc(p.category)}${p.sku ? ' · SKU: ' + esc(p.sku) : ''}</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p style="font-size:1.1rem;font-weight:800;color:var(--ac);">${fmt_usd(p.price)}</p>
+          <p style="font-size:0.73rem;color:#849495;">Stock: ${p.stock ?? '—'}</p>
+        </div>
+      </div>
+      ${p.description ? `<p style="font-size:0.83rem;color:#849495;margin-bottom:0.55rem;">${esc(p.description)}</p>` : ''}
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+        <a href="sales.html" target="_blank" class="btn-sm btn-sm-ghost" title="View on Sales page">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">open_in_new</span>
+        </a>
+        <button onclick="openEditProductModal(${p.id})" class="btn-sm btn-sm-ghost">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">edit</span>
+        </button>
+        <button onclick="removeProduct(${p.id})" class="btn-sm btn-sm-red">
+          <span class="material-symbols-outlined" style="font-size:0.9rem;">delete</span>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function renderSalesOrders() {
+  const el = document.getElementById('sales-orders-list');
+  const statsEl = document.getElementById('sales-orders-stats');
+
+  // Summary cards
+  const totalRev = S.salesRevenue || 0;
+  const totalQty = (S.salesOrders || []).reduce((a, o) => a + (o.quantity || 0), 0);
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <span class="material-symbols-outlined" style="font-size:1.4rem;color:#4ade80;">account_balance_wallet</span>
+      <p class="text-2xl font-black" style="color:#dce4e5;">${fmt_usd(totalRev)}</p>
+      <p style="font-size:0.75rem;font-weight:700;color:#849495;">Total Sales Revenue</p>
+    </div>
+    <div class="stat-card">
+      <span class="material-symbols-outlined" style="font-size:1.4rem;color:var(--ac);">shopping_bag</span>
+      <p class="text-2xl font-black" style="color:#dce4e5;">${totalQty}</p>
+      <p style="font-size:0.75rem;font-weight:700;color:#849495;">Units Sold</p>
+    </div>`;
+
+  if (!S.salesOrders.length) {
+    el.innerHTML = empty('receipt_long', 'No sales yet', 'When customers buy your products on the Sales page, orders appear here.');
+    return;
+  }
+  el.innerHTML = S.salesOrders.map(o => `
+    <div class="data-card mb-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.6rem;">
+        <div>
+          <p style="font-size:1rem;font-weight:800;color:#dce4e5;">${esc(o.product_name)}</p>
+          <p style="font-size:0.82rem;color:#849495;">
+            <span class="material-symbols-outlined" style="font-size:0.85rem;vertical-align:middle;">person</span>
+            <strong style="color:#dce4e5;">${esc(o.customer_name || o.customer_email)}</strong>
+            &nbsp;·&nbsp;${esc(o.customer_email)}
+          </p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p style="font-size:1.1rem;font-weight:800;color:#4ade80;">${fmt_usd(o.total_price)}</p>
+          ${badge(o.order_status || 'processing')}
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.82rem;color:#849495;">
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">receipt</span>Order ${esc(o.order_ref)}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">shopping_cart</span>Qty: ${o.quantity}</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">attach_money</span>${fmt_usd(o.unit_price)} each</span>
+        <span><span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:3px;">event</span>${fmt_date(o.created_at)}</span>
+      </div>
+    </div>`).join('');
+}
+
+function openAddProductModal() {
+  document.getElementById('product-form').reset();
+  document.getElementById('product-id').value = '';
+  document.getElementById('modal-product-title').textContent = 'List New Product';
+  document.getElementById('product-err').classList.add('hidden');
+  openModal('modal-product');
+}
+
+function openEditProductModal(id) {
+  const p = S.products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('product-id').value          = p.id;
+  document.getElementById('product-name').value        = p.name;
+  document.getElementById('product-sku').value         = p.sku || '';
+  document.getElementById('product-category').value    = p.category;
+  document.getElementById('product-price').value       = p.price;
+  document.getElementById('product-stock').value       = p.stock;
+  document.getElementById('product-description').value = p.description || '';
+  document.getElementById('modal-product-title').textContent = 'Edit Product';
+  document.getElementById('product-err').classList.add('hidden');
+  openModal('modal-product');
+}
+
+async function submitProduct(e) {
+  e.preventDefault();
+  const editId = document.getElementById('product-id').value;
+  const name   = document.getElementById('product-name').value.trim();
+  const price  = parseFloat(document.getElementById('product-price').value);
+  if (!name) { showProductErr('Product name is required.'); return; }
+  if (!price || price <= 0) { showProductErr('Enter a valid price.'); return; }
+  const payload = {
+    name,
+    sku:         document.getElementById('product-sku').value.trim() || null,
+    category:    document.getElementById('product-category').value,
+    price,
+    stock:       parseInt(document.getElementById('product-stock').value) || 0,
+    description: document.getElementById('product-description').value.trim() || null,
+  };
+  try {
+    let data;
+    if (editId) {
+      data = await api('PATCH', `/api/professional/products/${editId}`, payload);
+      if (!data.ok) throw new Error(data.error);
+      S.products = S.products.map(p => p.id == editId ? data.product : p);
+    } else {
+      data = await api('POST', '/api/professional/products', payload);
+      if (!data.ok) throw new Error(data.error);
+      S.products.unshift(data.product);
+    }
+  } catch (err) { showProductErr(err.message); return; }
+  closeModal('modal-product');
+  showToast(editId ? 'Product updated!' : 'Product listed on Sales page!');
+  renderProductsList();
+}
+
+function showProductErr(msg) {
+  const el = document.getElementById('product-err');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+async function removeProduct(id) {
+  if (!confirm('Remove this product listing?')) return;
+  try {
+    const data = await api('DELETE', `/api/professional/products/${id}`);
+    if (!data.ok) throw new Error(data.error);
+    S.products = S.products.filter(p => p.id !== id);
+  } catch (err) { showToast('Delete failed: ' + err.message, true); return; }
+  showToast('Product removed.');
+  renderProductsList();
 }
 
 // ════════════════════════════════════════════════════════════════════
