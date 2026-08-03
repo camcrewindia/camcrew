@@ -283,34 +283,32 @@
           <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Total Assets</p>
           <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;font-size:1.2rem;">precision_manufacturing</span>
         </div>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">1,284</div>
-        <div class="flex items-center gap-1 mt-2" style="font-size:0.82rem;font-weight:600;color:#1b5e20;">
-          <span class="material-symbols-outlined" style="font-size:0.95rem;">trending_up</span> 12% from last month
-        </div>
+        <div id="stat-total" style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">—</div>
+        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Products in catalogue</div>
       </div>
       <div class="stat-card">
         <div class="flex justify-between items-start mb-4">
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Active Rentals</p>
-          <span class="neu-icon-badge material-symbols-outlined" style="color:#7b1fa2;font-size:1.2rem;">videocam</span>
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Total Units</p>
+          <span class="neu-icon-badge material-symbols-outlined" style="color:#7b1fa2;font-size:1.2rem;">inventory</span>
         </div>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">452</div>
-        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Currently on location</div>
+        <div id="stat-units" style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">—</div>
+        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Combined stock units</div>
       </div>
       <div class="stat-card">
         <div class="flex justify-between items-start mb-4">
           <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Low Stock Alerts</p>
           <span class="neu-icon-badge material-symbols-outlined" style="color:#b45309;font-size:1.2rem;">warning</span>
         </div>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">18</div>
+        <div id="stat-low" style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">—</div>
         <div style="font-size:0.82rem;font-weight:600;color:#b45309;margin-top:6px;">Requires urgent restock</div>
       </div>
       <div class="stat-card">
         <div class="flex justify-between items-start mb-4">
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Valuation</p>
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Catalogue Value</p>
           <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;font-size:1.2rem;">payments</span>
         </div>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">$2.4M</div>
-        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Estimated asset value</div>
+        <div id="stat-value" style="font-size:2rem;font-weight:800;color:#0f172a;line-height:1.1;">—</div>
+        <div style="font-size:0.82rem;color:#475569;margin-top:6px;">Sum of price × stock</div>
       </div>
     </div>
 
@@ -319,22 +317,25 @@
       <!-- Filter Bar -->
       <div class="p-5 flex flex-wrap gap-4 items-center justify-between" style="border-bottom:1px solid rgba(0,0,0,0.08);background:#d8dfe8;">
         <div class="flex gap-4">
-          <select class="neu-select" data-cat-filter>
-            <option>All Categories</option>
+          <select class="neu-select" data-inv-category>
+            <option value="">All Categories</option>
             <option>Cameras</option>
             <option>Lenses</option>
             <option>Lighting</option>
             <option>Audio</option>
+            <option>Storage</option>
+            <option>Accessories</option>
+            <option>Other</option>
           </select>
-          <select class="neu-select" data-inv-status-filter>
-            <option>Status: Any</option>
+          <select class="neu-select" data-inv-stock>
+            <option value="">Status: Any</option>
             <option>In Stock</option>
             <option>Low Stock</option>
             <option>Out of Stock</option>
           </select>
         </div>
-        <div style="font-size:0.88rem;color:#334155;">
-          Showing <strong style="color:#0f172a;">1–10</strong> of <strong style="color:#0f172a;">128</strong> entries
+        <div id="inv-entry-count" style="font-size:0.88rem;color:#334155;">
+          Loading…
         </div>
       </div>
 
@@ -362,37 +363,20 @@
       </div>
 
       <!-- Pagination -->
-      <div class="p-5 flex justify-center gap-2" style="border-top:1px solid rgba(0,0,0,0.08);">
-        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_left</span></button>
-        <button class="page-btn-active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <span class="page-btn" style="cursor:default;box-shadow:none;background:transparent;color:#475569;">…</span>
-        <button class="page-btn">12</button>
-        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_right</span></button>
-      </div>
+      <div id="inv-pagination" class="p-5 flex justify-center gap-2" style="border-top:1px solid rgba(0,0,0,0.08);display:none!important;"></div>
     </div>
 
     <!-- Bottom Widgets -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-      <!-- Stock Utilization Chart -->
+      <!-- Stock by Category Chart -->
       <div class="glass-panel p-8 rounded-3xl">
-        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin-bottom:1.25rem;">Stock Utilization Trend</h4>
-        <div class="flex items-end gap-2" style="height:10rem;">
-          <div class="bar-segment w-full" style="height:60%;"></div>
-          <div class="bar-segment w-full" style="height:45%;"></div>
-          <div class="bar-segment w-full" style="height:85%;"></div>
-          <div class="bar-segment w-full" style="height:70%;"></div>
-          <div class="bar-segment w-full" style="height:95%;"></div>
-          <div class="bar-segment w-full" style="height:50%;"></div>
-          <div class="bar-segment w-full" style="height:30%;"></div>
+        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin-bottom:1.25rem;">Stock by Category</h4>
+        <div id="cat-chart-bars" class="flex items-end gap-2" style="height:10rem;">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:0.8rem;">Loading…</div>
         </div>
-        <!-- Bar track base -->
         <div class="neu-track rounded-sm" style="height:3px;margin-top:2px;"></div>
-        <div class="flex justify-between mt-3" style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase;">
-          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-        </div>
+        <div id="cat-chart-labels" class="flex justify-between mt-3" style="font-size:0.68rem;font-weight:700;letter-spacing:0.04em;color:#475569;text-transform:uppercase;"></div>
       </div>
 
       <!-- Maintenance Card -->
@@ -757,12 +741,11 @@
         const json = await res.json();
         if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to save product.');
 
-        // Success
+        // Success — reload inventory table and stats
         closeModal();
         resetForm();
-        // Show a quick toast if available
+        if (typeof window._invReload === 'function') window._invReload();
         if (typeof showToast === 'function') showToast('Product added to sales catalogue ✓', 'success');
-        else alert('Product "' + name + '" added to the sales catalogue.');
       } catch(err) {
         errBox.textContent = err.message;
         errBox.style.display = 'block';
@@ -798,24 +781,103 @@
 </script>
 
 <script>
-/* ── Inventory — Live product data ── */
+/* ── Inventory — Live product data connected to sales catalogue ── */
 (function(){
-  const tbody  = document.getElementById('inv-tbody');
-  let allProds = [], currentPage = 1;
-  const PER    = 20;
+  const tbody      = document.getElementById('inv-tbody');
+  const pagEl      = document.getElementById('inv-pagination');
+  const countEl    = document.getElementById('inv-entry-count');
+  let allProds = [], filteredProds = [], currentPage = 1;
+  const PER = 20;
 
+  /* ── Stats ── */
+  function updateStats(prods) {
+    const total    = prods.length;
+    const units    = prods.reduce((s, p) => s + (parseInt(p.stock) || 0), 0);
+    const lowStock = prods.filter(p => p.stock > 0 && p.stock <= 3).length;
+    const outStock = prods.filter(p => p.stock === 0).length;
+    const value    = prods.reduce((s, p) => s + (parseFloat(p.price)||0) * (parseInt(p.stock)||0), 0);
+
+    document.getElementById('stat-total').textContent  = total.toLocaleString();
+    document.getElementById('stat-units').textContent  = units.toLocaleString();
+    document.getElementById('stat-low').textContent    = (lowStock + outStock).toLocaleString();
+    const val = value >= 1_000_000
+      ? '$' + (value/1_000_000).toFixed(1) + 'M'
+      : value >= 1_000
+      ? '$' + (value/1_000).toFixed(1) + 'K'
+      : '$' + value.toLocaleString();
+    document.getElementById('stat-value').textContent = val;
+  }
+
+  /* ── Category chart ── */
+  function updateChart(prods) {
+    const barsEl   = document.getElementById('cat-chart-bars');
+    const labelsEl = document.getElementById('cat-chart-labels');
+    if (!barsEl || !labelsEl) return;
+    const cats = ['Cameras','Lenses','Lighting','Audio','Storage','Accessories','Other'];
+    const counts = cats.map(c => prods.filter(p => p.category === c).length);
+    const max = Math.max(...counts, 1);
+    if (counts.every(c => c === 0)) {
+      barsEl.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:0.8rem;">No data</div>`;
+      labelsEl.innerHTML = '';
+      return;
+    }
+    barsEl.innerHTML = cats.map((c, i) => {
+      const pct = Math.max((counts[i] / max) * 100, counts[i] > 0 ? 8 : 0);
+      return `<div class="bar-segment w-full" style="height:${pct}%;position:relative;" title="${c}: ${counts[i]}"></div>`;
+    }).join('');
+    labelsEl.innerHTML = cats.map(c => `<span>${c.substring(0,3)}</span>`).join('');
+  }
+
+  /* ── Pagination ── */
+  function renderPagination(total) {
+    const pages = Math.ceil(total / PER);
+    if (pages <= 1) { pagEl.style.display = 'none'; return; }
+    pagEl.style.display = 'flex';
+    let html = `<button class="page-btn" onclick="invGoPage(${currentPage-1})" ${currentPage===1?'disabled':''}>
+      <span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_left</span></button>`;
+    for (let i = 1; i <= pages; i++) {
+      if (pages > 5 && i > 2 && i < pages - 1 && Math.abs(i - currentPage) > 1) {
+        if (i === 3 || i === pages - 2) html += `<span class="page-btn" style="cursor:default;box-shadow:none;background:transparent;color:#475569;">…</span>`;
+        continue;
+      }
+      html += `<button class="${i===currentPage?'page-btn-active':'page-btn'}" onclick="invGoPage(${i})">${i}</button>`;
+    }
+    html += `<button class="page-btn" onclick="invGoPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>
+      <span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_right</span></button>`;
+    pagEl.innerHTML = html;
+  }
+
+  window.invGoPage = function(p) {
+    const pages = Math.ceil(filteredProds.length / PER);
+    if (p < 1 || p > pages) return;
+    currentPage = p;
+    renderRows(filteredProds);
+  };
+
+  /* ── Stock badge ── */
   function stockBadge(stock){
     if (stock === 0)   return `<span class="w-2 h-2 rounded-full" style="background:#b71c1c;display:inline-block;"></span><span style="font-size:0.9rem;font-weight:600;color:#b71c1c;"> Out of Stock</span>`;
     if (stock <= 3)    return `<span class="w-2 h-2 rounded-full" style="background:#b45309;display:inline-block;"></span><span style="font-size:0.9rem;font-weight:600;color:#b45309;"> Low Stock (${stock})</span>`;
     return `<span class="w-2 h-2 rounded-full animate-pulse" style="background:#16a34a;display:inline-block;"></span><span style="font-size:0.9rem;font-weight:600;color:#0f172a;"> In Stock (${stock})</span>`;
   }
 
+  /* ── Render rows ── */
   function renderRows(prods){
-    if (!prods.length){
+    filteredProds = prods;
+    const total = prods.length;
+    const start = (currentPage - 1) * PER;
+    const slice = prods.slice(start, start + PER);
+
+    if (countEl) {
+      if (!total) countEl.textContent = 'No products found';
+      else countEl.innerHTML = `Showing <strong style="color:#0f172a;">${start+1}–${Math.min(start+PER, total)}</strong> of <strong style="color:#0f172a;">${total}</strong> ${total===1?'entry':'entries'}`;
+    }
+    renderPagination(total);
+
+    if (!slice.length){
       tbody.innerHTML=`<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;">No products found.</td></tr>`;
       return;
     }
-    const slice = prods.slice((currentPage-1)*PER, currentPage*PER);
     tbody.innerHTML = slice.map((p,i,arr) => `
       <tr class="neu-row transition-colors" style="${i<arr.length-1?'border-bottom:1px solid rgba(0,0,0,0.06);':''}">
         <td class="px-6 py-5">
@@ -845,29 +907,34 @@
       </tr>`).join('');
   }
 
+  /* ── Load from API ── */
   async function loadInventory(){
     try {
       tbody.innerHTML=`<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;"><span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span> Loading…</td></tr>`;
       const res  = await fetch('/api/products');
       const data = await res.json();
       allProds   = data.products || [];
+      updateStats(allProds);
+      updateChart(allProds);
+      currentPage = 1;
       applyFilters();
     } catch(e){
       tbody.innerHTML=`<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#b71c1c;">Failed to load inventory.</td></tr>`;
     }
   }
 
+  /* ── Filters ── */
   function applyFilters(){
     const q     = (document.querySelector('[data-inv-search]')?.value||'').toLowerCase();
-    const cat   = (document.querySelector('[data-inv-category]')?.value||'').toLowerCase();
+    const cat   = (document.querySelector('[data-inv-category]')?.value||'');
     const stock = (document.querySelector('[data-inv-stock]')?.value||'').toLowerCase();
     let filtered = allProds;
-    if (q)     filtered = filtered.filter(p => (p.name+p.category+p.sku).toLowerCase().includes(q));
-    if (cat && cat !== 'all categories') filtered = filtered.filter(p => (p.category||'').toLowerCase()===cat);
-    if (stock === 'low stock')  filtered = filtered.filter(p => p.stock>0&&p.stock<=3);
+    if (q)   filtered = filtered.filter(p => (p.name+' '+(p.category||'')+' '+(p.sku||'')).toLowerCase().includes(q));
+    if (cat) filtered = filtered.filter(p => p.category === cat);
+    if (stock === 'low stock')    filtered = filtered.filter(p => p.stock>0&&p.stock<=3);
     if (stock === 'out of stock') filtered = filtered.filter(p => p.stock===0);
-    if (stock === 'in stock')   filtered = filtered.filter(p => p.stock>3);
-    currentPage=1;
+    if (stock === 'in stock')     filtered = filtered.filter(p => p.stock>3);
+    currentPage = 1;
     renderRows(filtered);
   }
 
