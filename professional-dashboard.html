@@ -1277,9 +1277,6 @@ async function init() {
 
     document.getElementById('dashboard').style.display = 'flex';
 
-    // Seed demo data if first visit
-    api('POST', '/api/professional/seed').catch(() => {});
-
     showSection('overview');
   } catch(_) {
     document.getElementById('auth-gate').style.display = 'flex';
