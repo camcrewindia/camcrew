@@ -246,12 +246,12 @@
         <span class="material-symbols-outlined t-icon" style="font-size:1.15rem;">light_mode</span>
       </button>
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
-          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+        <div id="hdr-avatar" class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);background:rgba(0,105,112,0.15);">
+          <span class="material-symbols-outlined" style="color:#006970;font-size:1.3rem;">person</span>
         </div>
         <div class="hidden md:block">
-          <p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
+          <p id="hdr-name" style="font-size:0.95rem;font-weight:800;color:#006970;">—</p>
+          <p id="hdr-role" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">LOADING…</p>
         </div>
       </div>
     </div>
@@ -267,7 +267,7 @@
         <p style="font-size:0.95rem;color:#334155;margin-top:4px;max-width:500px;">Centralized control for high-fidelity cinematic assets. Monitor stock levels, SKUs, and equipment status in real-time.</p>
       </div>
       <div class="flex gap-3">
-        <button class="action-btn">
+        <button id="export-csv-btn" class="action-btn">
           <span class="material-symbols-outlined" style="font-size:1.1rem;">file_download</span> Export CSV
         </button>
         <button class="action-btn-primary" data-action="add-item">
@@ -379,16 +379,21 @@
         <div id="cat-chart-labels" class="flex justify-between mt-3" style="font-size:0.68rem;font-weight:700;letter-spacing:0.04em;color:#475569;text-transform:uppercase;"></div>
       </div>
 
-      <!-- Maintenance Card -->
-      <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center">
-        <div class="neu-icon-badge mb-4" style="padding:1rem;">
-          <span class="material-symbols-outlined" style="font-size:2rem;color:#006970;">quick_reference_all</span>
+      <!-- Quick Actions Card -->
+      <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center gap-4">
+        <div class="neu-icon-badge mb-2" style="padding:1rem;">
+          <span class="material-symbols-outlined" style="font-size:2rem;color:#006970;">manage_search</span>
         </div>
-        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;">Maintenance Schedule</h4>
-        <p style="font-size:0.9rem;color:#334155;margin-top:8px;max-width:280px;">Next system-wide equipment calibration is scheduled in <strong style="color:#006970;">4 days</strong>. Ensure all returned assets are checked.</p>
-        <button style="margin-top:1.25rem;background:none;border:none;cursor:pointer;font-size:0.9rem;font-weight:700;color:#006970;display:flex;align-items:center;gap:6px;">
-          View Schedule <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
-        </button>
+        <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;">Quick Actions</h4>
+        <p style="font-size:0.88rem;color:#334155;max-width:260px;">Add a new product to the catalogue or export the current inventory list as CSV.</p>
+        <div class="flex flex-col gap-3 w-full" style="max-width:220px;">
+          <button data-action="add-item" class="action-btn-primary" style="width:100%;justify-content:center;border-radius:0.75rem;">
+            <span class="material-symbols-outlined" style="font-size:1rem;">add_box</span> Add New Product
+          </button>
+          <button id="export-csv-btn2" class="action-btn" style="width:100%;justify-content:center;border-radius:0.75rem;">
+            <span class="material-symbols-outlined" style="font-size:1rem;">file_download</span> Export CSV
+          </button>
+        </div>
       </div>
 
     </div>
@@ -417,6 +422,7 @@
     transition:transform 0.25s cubic-bezier(.34,1.56,.64,1),opacity 0.2s ease;
   ">
     <!-- Header -->
+    <input type="hidden" id="pf-edit-id" value="">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;">
       <div style="display:flex;align-items:center;gap:0.85rem;">
         <div style="
@@ -424,11 +430,11 @@
           box-shadow:4px 4px 10px var(--neu-shadow-dark),-4px -4px 10px var(--neu-shadow-light);
           border-radius:0.85rem;padding:0.6rem;display:inline-flex;
         ">
-          <span class="material-symbols-outlined" style="font-size:1.4rem;color:var(--neu-accent);">inventory_2</span>
+          <span id="modal-icon" class="material-symbols-outlined" style="font-size:1.4rem;color:var(--neu-accent);">inventory_2</span>
         </div>
         <div>
-          <h3 style="font-size:1.15rem;font-weight:800;color:#0f172a;line-height:1.2;">Add New Product</h3>
-          <p style="font-size:0.78rem;color:#475569;margin-top:2px;">Fill in the details below to add a new inventory item.</p>
+          <h3 id="modal-title" style="font-size:1.15rem;font-weight:800;color:#0f172a;line-height:1.2;">Add New Product</h3>
+          <p id="modal-subtitle" style="font-size:0.78rem;color:#475569;margin-top:2px;">Fill in the details below to add a new inventory item.</p>
         </div>
       </div>
       <button id="close-modal-btn" style="
@@ -455,7 +461,7 @@
           display:flex;align-items:center;gap:0.5rem;
         ">
           <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">label</span>
-          <input type="text" placeholder="e.g. Arri Alexa Mini LF" style="
+          <input id="pf-name" type="text" placeholder="e.g. Arri Alexa Mini LF" style="
             background:transparent;border:none;outline:none;
             font-size:0.92rem;color:#0f172a;width:100%;
             font-family:'Plus Jakarta Sans',sans-serif;
@@ -474,10 +480,10 @@
             display:flex;align-items:center;gap:0.5rem;
           ">
             <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">qr_code</span>
-            <input type="text" placeholder="e.g. CAM-AR-01" style="
+            <input id="pf-sku" type="text" placeholder="e.g. CAM-AR-01" style="
               background:transparent;border:none;outline:none;
               font-size:0.92rem;color:#0f172a;width:100%;
-              font-family:'Plus Jakarta Sans',sans-serif;font-family:monospace;
+              font-family:monospace;
             "/>
           </div>
         </div>
@@ -490,7 +496,7 @@
             display:flex;align-items:center;gap:0.5rem;
           ">
             <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">category</span>
-            <select style="
+            <select id="pf-category" style="
               background:transparent;border:none;outline:none;
               font-size:0.92rem;color:#0f172a;width:100%;cursor:pointer;
               font-family:'Plus Jakarta Sans',sans-serif;
@@ -500,6 +506,9 @@
               <option>Lenses</option>
               <option>Lighting</option>
               <option>Audio</option>
+              <option>Storage</option>
+              <option>Accessories</option>
+              <option>Other</option>
             </select>
           </div>
         </div>
@@ -516,7 +525,7 @@
             display:flex;align-items:center;gap:0.5rem;
           ">
             <span class="material-symbols-outlined" style="font-size:1rem;color:#475569;flex-shrink:0;">inventory</span>
-            <input type="number" min="0" placeholder="0" style="
+            <input id="pf-stock" type="number" min="0" placeholder="0" style="
               background:transparent;border:none;outline:none;
               font-size:0.92rem;color:#0f172a;width:100%;
               font-family:'Plus Jakarta Sans',sans-serif;
@@ -532,7 +541,7 @@
             display:flex;align-items:center;gap:0.5rem;
           ">
             <span style="font-size:0.92rem;font-weight:700;color:#475569;flex-shrink:0;">$</span>
-            <input type="number" min="0" placeholder="0.00" style="
+            <input id="pf-price" type="number" min="0" step="0.01" placeholder="0.00" style="
               background:transparent;border:none;outline:none;
               font-size:0.92rem;color:#0f172a;width:100%;
               font-family:'Plus Jakarta Sans',sans-serif;
@@ -634,8 +643,8 @@
         onmouseout="this.style.boxShadow='4px 4px 10px rgba(0,105,112,0.35)';this.style.transform='translateY(0)'"
         onmousedown="this.style.transform='translateY(0)';this.style.boxShadow='2px 2px 6px rgba(0,105,112,0.3)'"
         onmouseup="this.style.boxShadow='4px 4px 10px rgba(0,105,112,0.35)'">
-          <span class="material-symbols-outlined" style="font-size:1.05rem;">add_box</span>
-          Add Product
+          <span id="pf-submit-icon" class="material-symbols-outlined" style="font-size:1.05rem;">add_box</span>
+          <span id="pf-submit-label">Add Product</span>
         </button>
       </div>
 
@@ -650,111 +659,211 @@
 </style>
 
 <script>
-  (function(){
-    const overlay   = document.getElementById('add-product-overlay');
-    const modal     = document.getElementById('add-product-modal');
-    const fabBtn    = document.getElementById('fab-add-btn');
-    const addBtn    = document.querySelector('[data-action="add-item"]');
-    const closeBtn  = document.getElementById('close-modal-btn');
-    const cancelBtn = document.getElementById('cancel-modal-btn');
-    const form      = document.getElementById('add-product-form');
-    const errBox    = document.getElementById('pf-error');
-    const submitBtn = document.getElementById('pf-submit-btn');
+/* ── Modal: Add / Edit product ───────────────────────────────── */
+(function(){
+  const overlay   = document.getElementById('add-product-overlay');
+  const modal     = document.getElementById('add-product-modal');
+  const fabBtn    = document.getElementById('fab-add-btn');
+  const closeBtn  = document.getElementById('close-modal-btn');
+  const cancelBtn = document.getElementById('cancel-modal-btn');
+  const form      = document.getElementById('add-product-form');
+  const errBox    = document.getElementById('pf-error');
+  const submitBtn = document.getElementById('pf-submit-btn');
+  const submitIcon  = document.getElementById('pf-submit-icon');
+  const submitLabel = document.getElementById('pf-submit-label');
+  const modalTitle  = document.getElementById('modal-title');
+  const modalSub    = document.getElementById('modal-subtitle');
+  const modalIcon   = document.getElementById('modal-icon');
+  const editIdInput = document.getElementById('pf-edit-id');
 
-    // Field references (assigned lazily so DOM is ready)
-    function getFields() {
-      const inputs = form.querySelectorAll('input, textarea, select');
-      // Map by position: name(0), sku(1), category(2), stock(3), price(4)
-      return {
-        name:        form.querySelector('input[placeholder*="Arri"]')  || inputs[0],
-        sku:         form.querySelector('input[placeholder*="CAM"]')   || inputs[1],
-        category:    form.querySelector('select')                       || inputs[2],
-        stock:       form.querySelector('input[type=number]')          || inputs[3],
-        price:       form.querySelectorAll('input[type=number]')[1]    || inputs[4],
-        description: document.getElementById('pf-description'),
-        image_url:   document.getElementById('pf-image-url'),
-        badge:       document.getElementById('pf-badge'),
-      };
-    }
+  /* Field shortcuts */
+  const F = {
+    name:        () => document.getElementById('pf-name'),
+    sku:         () => document.getElementById('pf-sku'),
+    category:    () => document.getElementById('pf-category'),
+    stock:       () => document.getElementById('pf-stock'),
+    price:       () => document.getElementById('pf-price'),
+    description: () => document.getElementById('pf-description'),
+    image_url:   () => document.getElementById('pf-image-url'),
+    badge:       () => document.getElementById('pf-badge'),
+  };
 
-    function openModal() {
-      overlay.style.display = 'flex';
-      errBox.style.display  = 'none';
-      requestAnimationFrame(() => {
-        modal.style.transform = 'scale(1)';
-        modal.style.opacity   = '1';
-      });
-    }
-    function closeModal() {
-      modal.style.transform = 'scale(0.95)';
-      modal.style.opacity   = '0';
-      setTimeout(() => { overlay.style.display = 'none'; }, 220);
-    }
-    function resetForm() {
-      form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  function openModal(prefill) {
+    editIdInput.value = prefill ? prefill.id : '';
+    if (prefill) {
+      modalTitle.textContent  = 'Edit Product';
+      modalSub.textContent    = 'Update the details for this inventory item.';
+      modalIcon.textContent   = 'edit';
+      submitIcon.textContent  = 'save';
+      submitLabel.textContent = 'Save Changes';
+      F.name().value        = prefill.name        || '';
+      F.sku().value         = prefill.sku         || '';
+      F.category().value    = prefill.category    || '';
+      F.stock().value       = prefill.stock       ?? '';
+      F.price().value       = prefill.price       ?? '';
+      F.description().value = prefill.description || '';
+      F.image_url().value   = prefill.image_url   || '';
+      F.badge().value       = prefill.badge       || '';
+    } else {
+      modalTitle.textContent  = 'Add New Product';
+      modalSub.textContent    = 'Fill in the details below to add a new inventory item.';
+      modalIcon.textContent   = 'inventory_2';
+      submitIcon.textContent  = 'add_box';
+      submitLabel.textContent = 'Add Product';
+      form.querySelectorAll('input:not([type=hidden]), textarea').forEach(el => el.value = '');
       form.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-      errBox.style.display = 'none';
     }
-
-    fabBtn.addEventListener('click', openModal);
-    if (addBtn) addBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && overlay.style.display === 'flex') closeModal();
+    errBox.style.display = 'none';
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      modal.style.transform = 'scale(1)';
+      modal.style.opacity   = '1';
     });
+  }
 
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const f = getFields();
+  function closeModal() {
+    modal.style.transform = 'scale(0.95)';
+    modal.style.opacity   = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 220);
+  }
 
-      const name  = f.name  ? f.name.value.trim()  : '';
-      const price = f.price ? f.price.value.trim()  : '';
+  /* Bind open triggers */
+  fabBtn?.addEventListener('click', () => openModal());
+  document.querySelectorAll('[data-action="add-item"]').forEach(btn => btn.addEventListener('click', () => openModal()));
+  closeBtn?.addEventListener('click', closeModal);
+  cancelBtn?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay?.style.display === 'flex') closeModal();
+  });
 
-      if (!name) {
-        errBox.textContent = 'Product name is required.';
-        errBox.style.display = 'block';
-        return;
-      }
+  /* Expose globally for table row buttons */
+  window.openEditModal = function(id) {
+    const p = (window._allInvProds || []).find(x => x.id === id);
+    if (p) openModal(p);
+  };
 
-      const payload = {
-        name,
-        sku:         f.sku         ? f.sku.value.trim()         : '',
-        category:    f.category    ? f.category.value           : 'Other',
-        stock:       f.stock       ? parseInt(f.stock.value)||0 : 0,
-        price:       price         ? parseFloat(price)||0        : 0,
-        description: f.description ? f.description.value.trim() : '',
-        image_url:   f.image_url   ? f.image_url.value.trim()   : '',
-        badge:       f.badge       ? f.badge.value              : '',
-      };
+  /* Submit: create or update */
+  form?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const editId = editIdInput.value;
+    const name   = F.name()?.value.trim() || '';
+    if (!name) {
+      errBox.textContent   = 'Product name is required.';
+      errBox.style.display = 'block';
+      return;
+    }
+    const payload = {
+      name,
+      sku:         F.sku()?.value.trim()         || '',
+      category:    F.category()?.value           || 'Other',
+      stock:       parseInt(F.stock()?.value)    || 0,
+      price:       parseFloat(F.price()?.value)  || 0,
+      description: F.description()?.value.trim() || '',
+      image_url:   F.image_url()?.value.trim()   || '',
+      badge:       F.badge()?.value              || '',
+    };
 
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.05rem;animation:spin 1s linear infinite">progress_activity</span> Saving…';
+    submitBtn.disabled       = true;
+    submitIcon.textContent   = 'progress_activity';
+    submitLabel.textContent  = 'Saving…';
 
-      try {
-        const res  = await fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        const json = await res.json();
-        if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to save product.');
+    try {
+      const url    = editId ? `/api/products/${editId}` : '/api/products';
+      const method = editId ? 'PATCH' : 'POST';
+      const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const json   = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to save product.');
+      closeModal();
+      if (typeof window._invReload === 'function') window._invReload();
+      showInvToast(editId ? 'Product updated ✓' : 'Product added to catalogue ✓', true);
+    } catch(err) {
+      errBox.textContent   = err.message;
+      errBox.style.display = 'block';
+    } finally {
+      submitBtn.disabled      = false;
+      submitIcon.textContent  = editIdInput.value ? 'save' : 'add_box';
+      submitLabel.textContent = editIdInput.value ? 'Save Changes' : 'Add Product';
+    }
+  });
+})();
 
-        // Success — reload inventory table and stats
-        closeModal();
-        resetForm();
-        if (typeof window._invReload === 'function') window._invReload();
-        if (typeof showToast === 'function') showToast('Product added to sales catalogue ✓', 'success');
-      } catch(err) {
-        errBox.textContent = err.message;
-        errBox.style.display = 'block';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.05rem;">add_box</span> Add Product';
-      }
-    });
-  })();
+/* ── Edit / Delete — called from table row buttons ─────────── */
+window.editProduct = function(id) {
+  window.openEditModal(id);
+};
+
+window.deleteProduct = async function(id, name) {
+  if (!confirm(`Delete "${name}" from the catalogue?\nThis will also remove it from the sales page.`)) return;
+  try {
+    const res  = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json.error || 'Delete failed.');
+    if (typeof window._invReload === 'function') window._invReload();
+    showInvToast(`"${name}" deleted.`, true);
+  } catch(err) {
+    showInvToast(err.message, false);
+  }
+};
+
+/* ── Export CSV ─────────────────────────────────────────────── */
+function exportInventoryCSV() {
+  const prods = window._allInvProds || [];
+  if (!prods.length) { showInvToast('No products to export.', false); return; }
+  const headers = ['ID','Name','SKU','Category','Stock','Price','Badge','Description'];
+  const rows = prods.map(p => [
+    p.id,
+    `"${(p.name||'').replace(/"/g,'""')}"`,
+    `"${(p.sku||'').replace(/"/g,'""')}"`,
+    p.category||'',
+    p.stock,
+    p.price,
+    `"${(p.badge||'').replace(/"/g,'""')}"`,
+    `"${(p.description||'').replace(/"/g,'""')}"`,
+  ].join(','));
+  const csv  = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `inventory_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showInvToast(`Exported ${prods.length} products.`, true);
+}
+document.getElementById('export-csv-btn')?.addEventListener('click', exportInventoryCSV);
+document.getElementById('export-csv-btn2')?.addEventListener('click', exportInventoryCSV);
+
+/* ── Toast ──────────────────────────────────────────────────── */
+function showInvToast(msg, ok) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+    padding:12px 24px;border-radius:999px;opacity:0;
+    background:${ok ? '#006970' : '#b71c1c'};color:#fff;font-weight:700;font-size:0.88rem;
+    z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:opacity 0.3s,transform 0.3s;`;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 350); }, 2500);
+}
+
+/* ── Header: load logged-in user ────────────────────────────── */
+(async function() {
+  try {
+    const res  = await fetch('/api/me');
+    if (!res.ok) return;
+    const data = await res.json();
+    const user = data.user || data;
+    const nameEl   = document.getElementById('hdr-name');
+    const roleEl   = document.getElementById('hdr-role');
+    const avatarEl = document.getElementById('hdr-avatar');
+    if (nameEl) nameEl.textContent = user.name || user.email || 'Admin';
+    if (roleEl) roleEl.textContent = (user.role || 'admin').toUpperCase();
+    if (avatarEl && user.avatar_url) {
+      avatarEl.innerHTML = `<img class="w-full h-full object-cover" src="${user.avatar_url}" alt="${user.name||''}"/>`;
+    }
+  } catch {}
+})();
 </script>
 
 <script src="dashboard-components.js"></script>
@@ -914,6 +1023,7 @@
       const res  = await fetch('/api/products');
       const data = await res.json();
       allProds   = data.products || [];
+      window._allInvProds = allProds;
       updateStats(allProds);
       updateChart(allProds);
       currentPage = 1;
