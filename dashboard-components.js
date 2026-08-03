@@ -526,36 +526,7 @@
       });
     });
 
-    // Add New Item
-    const addBtn = document.querySelector('[data-action="add-item"]');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => {
-        createModal('inv-add-modal', `
-          <h3 class="text-lg font-bold text-on-surface mb-6">Add New Item</h3>
-          <div class="space-y-4">
-            <div><label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Item Name</label>
-              <input type="text" placeholder="e.g. Sony FX9 Cinema Camera" class="w-full bg-obsidian-base/60 border border-glass-stroke rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-container text-on-surface"></div>
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">SKU</label>
-                <input type="text" placeholder="CAM-XX-00" class="w-full bg-obsidian-base/60 border border-glass-stroke rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-container text-on-surface font-mono"></div>
-              <div><label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Category</label>
-                <select class="w-full bg-obsidian-base/60 border border-glass-stroke rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-container text-on-surface">
-                  <option>Cameras</option><option>Lenses</option><option>Lighting</option><option>Audio</option>
-                </select></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Stock Qty</label>
-                <input type="number" placeholder="0" class="w-full bg-obsidian-base/60 border border-glass-stroke rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-container text-on-surface"></div>
-              <div><label class="text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Unit Price ($)</label>
-                <input type="text" placeholder="0.00" class="w-full bg-obsidian-base/60 border border-glass-stroke rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-container text-on-surface"></div>
-            </div>
-          </div>
-          <div class="flex gap-3 mt-6 justify-end">
-            <button onclick="document.getElementById('inv-add-modal').style.display='none'" class="px-4 py-2 rounded-lg border border-glass-stroke text-on-surface-variant hover:text-on-surface transition-colors text-sm font-bold">Cancel</button>
-            <button onclick="document.getElementById('inv-add-modal').style.display='none';showToast('Item added to inventory','success')" class="px-4 py-2 rounded-lg bg-primary-container/20 text-primary-container border border-primary-container/30 hover:bg-primary-container/30 transition-colors text-sm font-bold">Add Item</button>
-          </div>`);
-      });
-    }
+    // Add New Item — handled by inventory.html's own neumorphism modal
 
     // FAB also triggers add
     const fab = document.querySelector('[data-fab="add-item"]');
