@@ -547,78 +547,93 @@
   <!-- ═══════════════════════════════════════
        FEATURED PRODUCT SPOTLIGHT
   ═══════════════════════════════════════ -->
-  <section class="py-stack-xl relative overflow-hidden">
+  <section class="py-stack-xl relative overflow-hidden" id="featured-spotlight">
     <!-- Ambient glow behind section -->
     <div class="absolute inset-0 pointer-events-none">
       <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary-container/6 blur-[120px]"></div>
       <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-secondary-container/6 blur-[100px]"></div>
     </div>
 
-    <div class="max-w-[1440px] mx-auto md:px-margin-desktop relative">
-      <div class="grid grid-cols-1 md:grid-cols-2 bg-charcoal-surface rounded-3xl overflow-hidden border border-glass-stroke shadow-2xl">
-
-        <!-- Image side -->
-        <div class="relative h-[480px] md:h-auto overflow-hidden">
-          <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
-               style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3bdHBph9rAAvlnWiCWbixLPo6maBiB9klEWvikdX5cxzWhSC5GfTpNRWtxRnTjO_R7M5SoWHJTkoXhPDG5CVD3lj5cmKyJZgroNxVnJTEfZu0icrvAeU52qViYGAfGB2qHecNPQUUMLBS-wls7WfckP6uOltIoH88Q0nsej4qMUChayA8z8H1ijW4uVsBQpi2vZW8GJNmMsCg8rN6-EbkFiqWFvmzutjJkqh8PINqobocoaU0eD4C')">
-          </div>
-          <div class="absolute inset-0 bg-gradient-to-r from-charcoal-surface/60 via-transparent to-transparent"></div>
-          <!-- Floating tag -->
-          <div class="absolute top-8 left-8 badge-sale border font-label-caps text-[11px] tracking-widest px-3 py-1.5 rounded-full uppercase backdrop-blur-sm">
-            Limited Availability
-          </div>
-        </div>
-
-        <!-- Content side -->
-        <div class="p-8 md:p-16 flex flex-col justify-center relative">
-          <!-- Decorative top line -->
-          <div class="spotlight-line w-24 mb-8"></div>
-
-          <span class="font-label-caps text-label-caps text-primary-container mb-3 tracking-widest uppercase">Editor's Pick — 85mm Prime</span>
-          <h2 class="font-display-lg text-display-lg-mobile md:text-[52px] text-on-surface font-black mb-6 leading-tight" style="letter-spacing:-0.02em">
-            The Ultimate<br/>
-            <span class="gradient-text">Prime Setup.</span>
-          </h2>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-            We stock industry-leading optics. Grab an 85mm f/1.4 lens, step into the studio, and dial in at f/1.6, ISO 100, and 1/200s for flawless commercial portraits. Precision is guaranteed.
-          </p>
-
-          <!-- Feature list -->
-          <div class="space-y-3 mb-10">
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">check</span>
-              </span>
-              <span class="font-body-md text-body-md text-on-surface">Weather-sealed Magnesium Alloy</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">check</span>
-              </span>
-              <span class="font-body-md text-body-md text-on-surface">Ultra-fast Linear Motor AF</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-primary-container text-xs" style="font-variation-settings:'FILL' 1">check</span>
-              </span>
-              <span class="font-body-md text-body-md text-on-surface">Nano Crystal Coating</span>
-            </div>
-          </div>
-
-          <!-- Price + CTA -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <button class="shimmer-btn bg-primary-container text-on-primary-fixed font-label-caps text-label-caps px-10 py-4 rounded-full hover:scale-105 transition-transform active:scale-95">
-              View Specs &amp; Pricing
-            </button>
-            <div class="text-center sm:text-left">
-              <div class="font-label-caps text-label-caps text-on-surface-variant">Starting at</div>
-              <div class="font-display-lg text-[32px] font-black gradient-text leading-tight">$1,899</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="max-w-[1440px] mx-auto md:px-margin-desktop relative" id="featured-inner">
+      <!-- Populated dynamically from /api/products -->
     </div>
   </section>
+
+  <script>
+  /* ── Featured Product Spotlight — loads top product from admin ── */
+  (function () {
+    fetch('/api/products')
+      .then(r => r.json())
+      .then(data => {
+        const products = data.products || [];
+        if (!products.length) {
+          document.getElementById('featured-spotlight').style.display = 'none';
+          return;
+        }
+        // Pick the highest-priced product as featured
+        const p = [...products].sort((a, b) => b.price - a.price)[0];
+        const price = parseFloat(p.price) || 0;
+        const imgStyle = p.image_url
+          ? `background-image:url('${p.image_url}')`
+          : 'background:linear-gradient(135deg,#161618,#1f2937)';
+        const badge = p.badge || 'Editor\'s Pick';
+        const desc  = p.description || `Premium ${p.category || 'gear'} for professional creators. Added to our catalogue and available for immediate purchase.`;
+
+        document.getElementById('featured-inner').innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 bg-charcoal-surface rounded-3xl overflow-hidden border border-glass-stroke shadow-2xl">
+            <!-- Image side -->
+            <div class="relative h-[480px] md:h-auto overflow-hidden">
+              <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105" style="${imgStyle}"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-charcoal-surface/60 via-transparent to-transparent"></div>
+              <div class="absolute top-8 left-8 badge-sale border font-label-caps text-[11px] tracking-widest px-3 py-1.5 rounded-full uppercase backdrop-blur-sm">
+                ${p.stock <= 3 ? 'Low Stock' : 'Featured'}
+              </div>
+            </div>
+            <!-- Content side -->
+            <div class="p-8 md:p-16 flex flex-col justify-center relative">
+              <div class="spotlight-line w-24 mb-8"></div>
+              <span class="font-label-caps text-label-caps text-primary-container mb-3 tracking-widest uppercase">${badge} — ${p.category || 'Equipment'}</span>
+              <h2 class="font-display-lg text-display-lg-mobile md:text-[44px] text-on-surface font-black mb-6 leading-tight" style="letter-spacing:-0.02em">
+                ${p.name}
+              </h2>
+              <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">${desc}</p>
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <button data-cart-btn data-pid="${p.id}" class="shimmer-btn bg-primary-container text-on-primary-fixed font-label-caps text-label-caps px-10 py-4 rounded-full hover:scale-105 transition-transform active:scale-95 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Cart
+                </button>
+                <div class="text-center sm:text-left">
+                  <div class="font-label-caps text-label-caps text-on-surface-variant">${p.sku ? 'SKU: ' + p.sku : 'In stock'}</div>
+                  <div class="font-display-lg text-[32px] font-black gradient-text leading-tight">$${price.toLocaleString('en-US', {minimumFractionDigits: 0})}</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+
+        // Wire up Add to Cart for the featured product
+        const btn = document.getElementById('featured-inner').querySelector('[data-cart-btn]');
+        if (btn) {
+          btn.addEventListener('click', async function () {
+            const productId = parseInt(this.dataset.pid);
+            const origHtml  = this.innerHTML;
+            this.disabled   = true;
+            this.innerHTML  = '<span class="material-symbols-outlined text-sm">progress_activity</span> Adding…';
+            try {
+              const res  = await fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ product_id: productId, quantity: 1 }) });
+              if (res.status === 401) { window.location.href = 'signin.html'; return; }
+              const d = await res.json();
+              if (d.ok) {
+                this.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Added';
+                setTimeout(() => { this.innerHTML = origHtml; this.disabled = false; }, 1500);
+              } else {
+                this.innerHTML = origHtml; this.disabled = false;
+              }
+            } catch { this.innerHTML = origHtml; this.disabled = false; }
+          });
+        }
+      })
+      .catch(() => { document.getElementById('featured-spotlight').style.display = 'none'; });
+  })();
+  </script>
 
   <!-- ═══════════════════════════════════════
        PROFESSIONAL GUARANTEE
@@ -726,20 +741,28 @@
     });
   });
 
-  /* ── Ticker tape ─────────────────────────── */
-  const items = [
-    '🎯 Sony Alpha a7 IV — $2,499',
-    '🔴 RED Komodo 6K — $5,995',
-    '💡 Aputure 600d Pro — $1,890',
-    '🎙️ Shure SM7B — $399',
-    '📸 Canon RF 50mm f/1.2 — $2,299',
-    '💾 SanDisk 2TB Extreme Pro — $249',
-    '🎧 Orbit Peak Design Strap — $85',
-    '🖥️ Pro Studio Desk v2 — $1,250',
-  ];
-  const html = items.map(i => `<span class="inline-block mx-8 font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">${i}</span>`).join('');
-  document.getElementById('ticker-src').innerHTML   = html;
-  document.getElementById('ticker-clone').innerHTML = html;
+  /* ── Ticker tape — loads from live product catalogue ── */
+  const catEmoji = { Cameras:'📸', Lenses:'🔭', Lighting:'💡', Audio:'🎙️', Storage:'💾', Accessories:'🎧', Other:'🛒' };
+  fetch('/api/products')
+    .then(r => r.json())
+    .then(data => {
+      const products = data.products || [];
+      const items = products.length
+        ? products.map(p => {
+            const price = parseFloat(p.price) || 0;
+            const emoji = catEmoji[p.category] || '🎯';
+            return `${emoji} ${p.name} — $${price.toLocaleString('en-US', {minimumFractionDigits: 0})}`;
+          })
+        : ['🎯 No products yet — check back soon'];
+      const html = items.map(i => `<span class="inline-block mx-8 font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">${i}</span>`).join('');
+      document.getElementById('ticker-src').innerHTML   = html;
+      document.getElementById('ticker-clone').innerHTML = html;
+    })
+    .catch(() => {
+      const fallback = '<span class="inline-block mx-8 font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">🎯 Browse our catalogue below</span>';
+      document.getElementById('ticker-src').innerHTML   = fallback;
+      document.getElementById('ticker-clone').innerHTML = fallback;
+    });
 
   /* ── Nav scroll blur ─────────────────────── */
   window.addEventListener('scroll', () => {
