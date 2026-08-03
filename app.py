@@ -377,10 +377,120 @@ def init_rental_tables():
             )
         """)
 
+def init_professional_tables():
+    """Create professional_requests, professional_jobs, vault_folders, vault_files tables."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS professional_requests (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                client_name     TEXT NOT NULL,
+                client_email    TEXT,
+                service         TEXT NOT NULL,
+                booking_date    TEXT NOT NULL,
+                amount          REAL NOT NULL DEFAULT 0,
+                note            TEXT,
+                status          TEXT NOT NULL DEFAULT 'pending',
+                created_at      TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS professional_jobs (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                client          TEXT NOT NULL,
+                service         TEXT NOT NULL,
+                booking_date    TEXT NOT NULL,
+                amount          REAL NOT NULL DEFAULT 0,
+                status          TEXT NOT NULL DEFAULT 'pending',
+                notes           TEXT,
+                created_at      TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS vault_folders (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                name            TEXT NOT NULL,
+                color           TEXT DEFAULT '#00dbe9',
+                created_at      TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS vault_files (
+                id              SERIAL PRIMARY KEY,
+                professional_id INTEGER NOT NULL,
+                folder_id       INTEGER,
+                name            TEXT NOT NULL,
+                file_type       TEXT NOT NULL DEFAULT 'other',
+                file_size       BIGINT NOT NULL DEFAULT 0,
+                file_url        TEXT,
+                share_id        TEXT UNIQUE,
+                created_at      TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (professional_id) REFERENCES users(id)
+            )
+        """)
+
+
+def seed_professional_data(uid):
+    """Populate sample requests/jobs/vault for a professional that has none yet."""
+    with get_db() as conn:
+        if conn.execute(
+            "SELECT COUNT(*) AS c FROM professional_requests WHERE professional_id=%s", (uid,)
+        ).fetchone()['c']:
+            return  # already seeded
+        # Seed requests
+        for client, email, service, date, amount, note, status in [
+            ('Sarah Johnson', 'sarah@example.com',  'Wedding Videography',          '2026-08-15', 2800, 'Full day coverage, church + reception',       'pending'),
+            ('Bright Agency', 'agency@brightco.com','Corporate Video — Q3 Launch',  '2026-08-22', 3500, 'Half-day shoot, 3 testimonials + b-roll',     'pending'),
+            ('Marcus Lee',    'marcus@example.com', 'Portrait Photography',         '2026-07-30',  450, 'Outdoor session, 2 outfits',                  'confirmed'),
+            ('TechConf 2026', 'events@techconf.com','Event Photography',            '2026-07-28', 1200, 'Full day conference coverage',                'completed'),
+        ]:
+            conn.execute(
+                "INSERT INTO professional_requests (professional_id,client_name,client_email,service,booking_date,amount,note,status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+                (uid, client, email, service, date, amount, note, status)
+            )
+        # Seed jobs
+        for client, service, date, amount, status, notes in [
+            ('Marcus Lee',    'Portrait Photography',     '2026-07-30',  450, 'confirmed', 'Outdoor session'),
+            ('TechConf 2026', 'Event Photography',        '2026-07-28', 1200, 'completed', 'Full day conference'),
+            ('Nova Films',    'Cinematic Brand Video',    '2026-08-10', 5000, 'active',    '3-day shoot, downtown LA'),
+        ]:
+            conn.execute(
+                "INSERT INTO professional_jobs (professional_id,client,service,booking_date,amount,status,notes) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                (uid, client, service, date, amount, status, notes)
+            )
+        # Seed vault folders
+        f1 = conn.execute(
+            "INSERT INTO vault_folders (professional_id,name,color) VALUES (%s,%s,%s) RETURNING id",
+            (uid, 'Wedding – Smith 2026', '#00dbe9')
+        ).fetchone()['id']
+        f2 = conn.execute(
+            "INSERT INTO vault_folders (professional_id,name,color) VALUES (%s,%s,%s) RETURNING id",
+            (uid, 'TechConf 2026', '#ebb2ff')
+        ).fetchone()['id']
+        # Seed vault files
+        for name, ftype, size, folder_id in [
+            ('smith_wedding_highlight.mp4', 'video', 284000000, f1),
+            ('smith_wedding_photos.zip',    'zip',   912000000, f1),
+            ('techconf_gallery.zip',        'zip',   450000000, f2),
+            ('contract_nova_films.pdf',     'pdf',      540000, None),
+        ]:
+            share_id = 'shr_' + secrets.token_hex(4)
+            conn.execute(
+                "INSERT INTO vault_files (professional_id,folder_id,name,file_type,file_size,share_id) VALUES (%s,%s,%s,%s,%s,%s)",
+                (uid, folder_id, name, ftype, size, share_id)
+            )
+
+
 init_db()
 init_cart_table()
 init_rental_tables()
 init_admin_tables()
+init_professional_tables()
 
 # ---------------------------------------------------------------------------
 # Public portfolio sharing
@@ -738,11 +848,18 @@ def reset_password():
 def me():
     if "user_id" not in session:
         return jsonify({"ok": False, "error": "Not authenticated."}), 401
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT email, role, display_name FROM users WHERE id=%s",
+            (session["user_id"],)
+        ).fetchone()
     return jsonify({
         "ok": True,
         "user": {
-            "email": session["email"],
-            "role":  session["role"],
+            "id":           session["user_id"],
+            "email":        session["email"],
+            "role":         session["role"],
+            "display_name": row["display_name"] if row else None,
         }
     })
 
@@ -1681,6 +1798,340 @@ def pro_update_rental_order(order_id):
             (order_id,)
         ).fetchone()
     return jsonify({"ok": True, "order": dict(row)})
+
+
+# ---------------------------------------------------------------------------
+# Professional Dashboard — Requests, Jobs, Vault, Overview, Earnings
+# ---------------------------------------------------------------------------
+
+@app.route("/api/professional/seed", methods=["POST"])
+def professional_seed():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    seed_professional_data(uid)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/professional/overview", methods=["GET"])
+def professional_overview():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        pending_requests = conn.execute(
+            "SELECT COUNT(*) AS c FROM professional_requests WHERE professional_id=%s AND status='pending'", (uid,)
+        ).fetchone()['c']
+        active_jobs = conn.execute(
+            "SELECT COUNT(*) AS c FROM professional_jobs WHERE professional_id=%s AND status IN ('active','confirmed')", (uid,)
+        ).fetchone()['c']
+        total_earnings = conn.execute(
+            "SELECT COALESCE(SUM(amount),0) AS s FROM professional_jobs WHERE professional_id=%s AND status='completed'", (uid,)
+        ).fetchone()['s']
+        vault_files_count = conn.execute(
+            "SELECT COUNT(*) AS c FROM vault_files WHERE professional_id=%s", (uid,)
+        ).fetchone()['c']
+        recent_requests = conn.execute(
+            "SELECT * FROM professional_requests WHERE professional_id=%s ORDER BY created_at DESC LIMIT 5", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "overview": {
+        "pending_requests": pending_requests,
+        "active_jobs":      active_jobs,
+        "total_earnings":   float(total_earnings),
+        "vault_files":      vault_files_count,
+        "recent_requests":  [dict(r) for r in recent_requests],
+    }})
+
+
+# ── Requests ──────────────────────────────────────────────────────────────
+
+@app.route("/api/professional/requests", methods=["GET"])
+def pro_list_requests():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM professional_requests WHERE professional_id=%s ORDER BY created_at DESC", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "requests": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/requests", methods=["POST"])
+def pro_create_request():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data         = request.get_json(force=True, silent=True) or {}
+    client_name  = (data.get("client_name")  or "").strip()
+    service      = (data.get("service")      or "").strip()
+    booking_date = (data.get("booking_date") or "").strip()
+    if not client_name or not service or not booking_date:
+        return jsonify({"ok": False, "error": "client_name, service, and booking_date are required."}), 400
+    client_email = (data.get("client_email") or "").strip() or None
+    amount       = float(data.get("amount") or 0)
+    note         = (data.get("note") or "").strip() or None
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO professional_requests
+               (professional_id,client_name,client_email,service,booking_date,amount,note,status)
+               VALUES (%s,%s,%s,%s,%s,%s,%s,'pending') RETURNING *""",
+            (uid, client_name, client_email, service, booking_date, amount, note)
+        ).fetchone()
+    return jsonify({"ok": True, "request": dict(row)}), 201
+
+
+@app.route("/api/professional/requests/<int:req_id>", methods=["PATCH"])
+def pro_update_request(req_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data       = request.get_json(force=True, silent=True) or {}
+    new_status = (data.get("status") or "").strip()
+    allowed    = ("pending", "confirmed", "declined", "completed")
+    if new_status not in allowed:
+        return jsonify({"ok": False, "error": f"status must be one of {allowed}"}), 400
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT * FROM professional_requests WHERE id=%s AND professional_id=%s", (req_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("UPDATE professional_requests SET status=%s WHERE id=%s", (new_status, req_id))
+        row = conn.execute("SELECT * FROM professional_requests WHERE id=%s", (req_id,)).fetchone()
+    return jsonify({"ok": True, "request": dict(row)})
+
+
+# ── Jobs ──────────────────────────────────────────────────────────────────
+
+@app.route("/api/professional/jobs", methods=["GET"])
+def pro_list_jobs():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM professional_jobs WHERE professional_id=%s ORDER BY created_at DESC", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "jobs": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/jobs", methods=["POST"])
+def pro_create_job():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data         = request.get_json(force=True, silent=True) or {}
+    client       = (data.get("client")       or "").strip()
+    service      = (data.get("service")      or "").strip()
+    booking_date = (data.get("booking_date") or data.get("date") or "").strip()
+    if not client or not service or not booking_date:
+        return jsonify({"ok": False, "error": "client, service, and booking_date are required."}), 400
+    amount = float(data.get("amount") or 0)
+    status = (data.get("status") or "pending").strip()
+    notes  = (data.get("notes") or "").strip() or None
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO professional_jobs
+               (professional_id,client,service,booking_date,amount,status,notes)
+               VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+            (uid, client, service, booking_date, amount, status, notes)
+        ).fetchone()
+    return jsonify({"ok": True, "job": dict(row)}), 201
+
+
+@app.route("/api/professional/jobs/<int:job_id>", methods=["PATCH"])
+def pro_update_job(job_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT * FROM professional_jobs WHERE id=%s AND professional_id=%s", (job_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        allowed_statuses = ("pending", "confirmed", "active", "completed", "cancelled")
+        new_status = (data.get("status") or existing["status"]).strip()
+        if new_status not in allowed_statuses:
+            return jsonify({"ok": False, "error": f"status must be one of {allowed_statuses}"}), 400
+        conn.execute("UPDATE professional_jobs SET status=%s WHERE id=%s", (new_status, job_id))
+        row = conn.execute("SELECT * FROM professional_jobs WHERE id=%s", (job_id,)).fetchone()
+    return jsonify({"ok": True, "job": dict(row)})
+
+
+@app.route("/api/professional/jobs/<int:job_id>", methods=["DELETE"])
+def pro_delete_job(job_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        existing = conn.execute(
+            "SELECT id FROM professional_jobs WHERE id=%s AND professional_id=%s", (job_id, uid)
+        ).fetchone()
+        if not existing:
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM professional_jobs WHERE id=%s", (job_id,))
+    return jsonify({"ok": True})
+
+
+# ── Vault Folders ─────────────────────────────────────────────────────────
+
+@app.route("/api/professional/vault/folders", methods=["GET"])
+def pro_list_vault_folders():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        rows = conn.execute(
+            "SELECT * FROM vault_folders WHERE professional_id=%s ORDER BY created_at ASC", (uid,)
+        ).fetchall()
+    return jsonify({"ok": True, "folders": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/vault/folders", methods=["POST"])
+def pro_create_vault_folder():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data  = request.get_json(force=True, silent=True) or {}
+    name  = (data.get("name") or "").strip()
+    color = (data.get("color") or "#00dbe9").strip()
+    if not name:
+        return jsonify({"ok": False, "error": "Folder name is required."}), 400
+    with get_db() as conn:
+        row = conn.execute(
+            "INSERT INTO vault_folders (professional_id,name,color) VALUES (%s,%s,%s) RETURNING *",
+            (uid, name, color)
+        ).fetchone()
+    return jsonify({"ok": True, "folder": dict(row)}), 201
+
+
+@app.route("/api/professional/vault/folders/<int:folder_id>", methods=["DELETE"])
+def pro_delete_vault_folder(folder_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        if not conn.execute(
+            "SELECT id FROM vault_folders WHERE id=%s AND professional_id=%s", (folder_id, uid)
+        ).fetchone():
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM vault_files WHERE folder_id=%s AND professional_id=%s", (folder_id, uid))
+        conn.execute("DELETE FROM vault_folders WHERE id=%s", (folder_id,))
+    return jsonify({"ok": True})
+
+
+# ── Vault Files ──────────────────────────────────────────────────────────
+
+@app.route("/api/professional/vault/files", methods=["GET"])
+def pro_list_vault_files():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    folder_id = request.args.get("folder_id")
+    with get_db() as conn:
+        if folder_id:
+            rows = conn.execute(
+                "SELECT * FROM vault_files WHERE professional_id=%s AND folder_id=%s ORDER BY created_at DESC",
+                (uid, int(folder_id))
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM vault_files WHERE professional_id=%s ORDER BY created_at DESC", (uid,)
+            ).fetchall()
+    return jsonify({"ok": True, "files": [dict(r) for r in rows]})
+
+
+@app.route("/api/professional/vault/files", methods=["POST"])
+def pro_add_vault_file():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data      = request.get_json(force=True, silent=True) or {}
+    name      = (data.get("name") or "").strip()
+    file_type = (data.get("file_type") or "other").strip()
+    file_size = int(data.get("file_size") or 0)
+    folder_id = data.get("folder_id")
+    file_url  = (data.get("file_url") or "").strip() or None
+    if not name:
+        return jsonify({"ok": False, "error": "File name is required."}), 400
+    if folder_id:
+        with get_db() as conn:
+            if not conn.execute(
+                "SELECT id FROM vault_folders WHERE id=%s AND professional_id=%s", (folder_id, uid)
+            ).fetchone():
+                return jsonify({"ok": False, "error": "Folder not found."}), 404
+    share_id = 'shr_' + secrets.token_hex(6)
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO vault_files (professional_id,folder_id,name,file_type,file_size,file_url,share_id)
+               VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+            (uid, folder_id, name, file_type, file_size, file_url, share_id)
+        ).fetchone()
+    return jsonify({"ok": True, "file": dict(row)}), 201
+
+
+@app.route("/api/professional/vault/files/<int:file_id>", methods=["DELETE"])
+def pro_delete_vault_file(file_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        if not conn.execute(
+            "SELECT id FROM vault_files WHERE id=%s AND professional_id=%s", (file_id, uid)
+        ).fetchone():
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("DELETE FROM vault_files WHERE id=%s", (file_id,))
+    return jsonify({"ok": True})
+
+
+@app.route("/api/professional/vault/files/<int:file_id>/move", methods=["PATCH"])
+def pro_move_vault_file(file_id):
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    data      = request.get_json(force=True, silent=True) or {}
+    folder_id = data.get("folder_id")  # None = root
+    with get_db() as conn:
+        if not conn.execute(
+            "SELECT id FROM vault_files WHERE id=%s AND professional_id=%s", (file_id, uid)
+        ).fetchone():
+            return jsonify({"ok": False, "error": "Not found."}), 404
+        conn.execute("UPDATE vault_files SET folder_id=%s WHERE id=%s", (folder_id, file_id))
+        row = conn.execute("SELECT * FROM vault_files WHERE id=%s", (file_id,)).fetchone()
+    return jsonify({"ok": True, "file": dict(row)})
+
+
+# ── Earnings ─────────────────────────────────────────────────────────────
+
+@app.route("/api/professional/earnings", methods=["GET"])
+def professional_earnings():
+    uid = _require_professional()
+    if not uid:
+        return jsonify({"ok": False, "error": "Professional account required."}), 401
+    with get_db() as conn:
+        jobs = conn.execute(
+            "SELECT * FROM professional_jobs WHERE professional_id=%s ORDER BY booking_date DESC", (uid,)
+        ).fetchall()
+    jobs_list  = [dict(j) for j in jobs]
+    completed  = [j for j in jobs_list if j['status'] == 'completed']
+    pending_js = [j for j in jobs_list if j['status'] in ('active', 'confirmed')]
+    total      = sum(float(j['amount'] or 0) for j in completed)
+    pending    = sum(float(j['amount'] or 0) for j in pending_js)
+    from datetime import date as _date
+    today = _date.today()
+    month = sum(
+        float(j['amount'] or 0) for j in completed
+        if j.get('booking_date') and j['booking_date'][:7] == today.strftime('%Y-%m')
+    )
+    return jsonify({"ok": True, "earnings": {
+        "total":   total,
+        "pending": pending,
+        "month":   month,
+        "jobs":    jobs_list,
+    }})
 
 
 # ---------------------------------------------------------------------------
