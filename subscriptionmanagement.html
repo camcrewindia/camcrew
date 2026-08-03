@@ -259,7 +259,7 @@
           <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;background:rgba(46,125,50,0.1);padding:2px 8px;border-radius:6px;">+12.4%</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Monthly Recurring Revenue</p>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">$142,850</div>
+        <div id="stat-mrr" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
         <div class="mt-3 h-1 w-full rounded-full" style="background:linear-gradient(to right,#006970,transparent);opacity:0.4;"></div>
       </div>
 
@@ -270,7 +270,7 @@
           <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;background:rgba(46,125,50,0.1);padding:2px 8px;border-radius:6px;">-0.8%</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Net Churn Rate</p>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">1.24%</div>
+        <div id="stat-churn" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
         <div class="mt-3 h-1 w-full rounded-full" style="background:linear-gradient(to right,#7b1fa2,transparent);opacity:0.4;"></div>
       </div>
 
@@ -280,7 +280,7 @@
           <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;">groups</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Active Subscriptions</p>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">3,942</div>
+        <div id="stat-active-subs" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
       </div>
 
       <!-- Enterprise -->
@@ -289,7 +289,7 @@
           <span class="neu-icon-badge material-symbols-outlined" style="color:#7b1fa2;">domain</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Studio Enterprise Seats</p>
-        <div style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">28</div>
+        <div id="stat-enterprise" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
       </div>
 
     </section>
@@ -324,115 +324,10 @@
                 <th class="px-6 py-4 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Row 1 -->
-              <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn" style="font-size:0.8rem;font-weight:800;color:#006970;">NP</div>
-                    <div>
-                      <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Neon Pulse Studios</div>
-                      <div style="font-size:0.8rem;color:#475569;margin-top:1px;">billing@neonpulse.io</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-5">
-                  <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">Studio Enterprise</span>
-                </td>
-                <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 12, 2023</td>
-                <td class="px-6 py-5" style="font-size:0.92rem;font-weight:600;color:#0f172a;">Oct 12, 2024</td>
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-                    <span style="font-size:0.85rem;font-weight:700;color:#1b5e20;text-transform:uppercase;letter-spacing:0.06em;">Active</span>
-                  </div>
-                </td>
-                <td class="px-6 py-5 text-right">
-                  <button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#475569;">more_vert</button>
-                </td>
-              </tr>
-              <!-- Row 2 -->
-              <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
-                      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoQyQuUIIl_jcLCJIuKha65DD6Gl3ptqFfuw-Sjq9O9rGXE7WGqvaH7yeYVnnjsqBW_PNTnxoVe9dSfDvVPkYryjQlWtnUvOwU4QyMme2zN2_EgY9egy6oka0bPibQLf9uO-Yd9LNnEaMb1vo0L6vwY8FegfjbA4dVXOx1cjWzTsQ3swoUxd2F7BJsIK51MVhn5_82MK-WImIlTwqPAqucQ-U3j8uR2mUt0BNM7TARN4D3hlOmDGqn"/>
-                    </div>
-                    <div>
-                      <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Elena Rodriguez</div>
-                      <div style="font-size:0.8rem;color:#475569;margin-top:1px;">elena.creative@gmail.com</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-5">
-                  <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">Elite</span>
-                </td>
-                <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Jan 05, 2024</td>
-                <td class="px-6 py-5" style="font-size:0.92rem;font-weight:600;color:#0f172a;">Feb 05, 2024</td>
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-                    <span style="font-size:0.85rem;font-weight:700;color:#1b5e20;text-transform:uppercase;letter-spacing:0.06em;">Active</span>
-                  </div>
-                </td>
-                <td class="px-6 py-5 text-right">
-                  <button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#475569;">more_vert</button>
-                </td>
-              </tr>
-              <!-- Row 3 -->
-              <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn">
-                      <span class="material-symbols-outlined" style="color:#475569;">person</span>
-                    </div>
-                    <div>
-                      <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Marcus Thorne</div>
-                      <div style="font-size:0.8rem;color:#475569;margin-top:1px;">m.thorne@vfxpro.net</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-5">
-                  <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,0,0,0.07);color:#334155;">Professional</span>
-                </td>
-                <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Nov 22, 2023</td>
-                <td class="px-6 py-5" style="font-size:0.92rem;font-weight:600;color:#0f172a;">—</td>
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full" style="background:#b71c1c;"></div>
-                    <span style="font-size:0.85rem;font-weight:700;color:#b71c1c;text-transform:uppercase;letter-spacing:0.06em;">Cancelled</span>
-                  </div>
-                </td>
-                <td class="px-6 py-5 text-right">
-                  <button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#475569;">more_vert</button>
-                </td>
-              </tr>
-              <!-- Row 4 -->
-              <tr class="neu-row transition-colors">
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
-                      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXyjffPL844_lLCTK2kg46DOT9mOnatK-UImbrJktf793HJEInkaSpNxDgqTkewHz3Nrv3rVBo5HJZsXiHeMc0dbo5pYMcl4FLdShmIOa31B4Mv6SKChbR1tu4-OVbOYyLhdh17p2EBSmPJUcN6TG9_ZOmFRODwKma3kNIdC4PsXBPlQvCtPnvbpLN7JLqF349uaeoQOzFunwDUeh5mDL_MfWUY3fjCgxqSXc94kT_1CD0aDeM2M78"/>
-                    </div>
-                    <div>
-                      <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">Void Arc Design</div>
-                      <div style="font-size:0.8rem;color:#475569;margin-top:1px;">admin@voidarc.design</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-5">
-                  <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">Studio Enterprise</span>
-                </td>
-                <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Dec 30, 2023</td>
-                <td class="px-6 py-5" style="font-size:0.92rem;font-weight:600;color:#0f172a;">Feb 01, 2024</td>
-                <td class="px-6 py-5">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full animate-pulse" style="background:#c62828;"></div>
-                    <span style="font-size:0.85rem;font-weight:700;color:#b71c1c;text-transform:uppercase;letter-spacing:0.06em;">Past Due</span>
-                  </div>
-                </td>
-                <td class="px-6 py-5 text-right">
-                  <button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#b71c1c;">warning</button>
+            <tbody id="sub-tbody">
+              <tr>
+                <td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;font-size:0.9rem;">
+                  <span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span> Loading users…
                 </td>
               </tr>
             </tbody>
@@ -440,7 +335,7 @@
         </div>
         <!-- Pagination -->
         <div class="px-6 py-4 flex justify-between items-center" style="border-top:1px solid rgba(0,0,0,0.08);">
-          <span style="font-size:0.88rem;color:#334155;">Showing <strong style="color:#0f172a;">1–10</strong> of 3,942 entries</span>
+          <span id="sub-showing" style="font-size:0.88rem;color:#334155;">Loading…</span>
           <div class="flex gap-2">
             <button class="page-btn" disabled>Previous</button>
             <button class="page-btn-active">1</button>
@@ -489,6 +384,99 @@
   } else {
     initTheme();
   }
+})();
+</script>
+
+<script>
+/* ── Subscription Management — Live Data ── */
+(function(){
+  const tbody   = document.getElementById('sub-tbody');
+  const showing = document.getElementById('sub-showing');
+  let currentPage=1, total=0;
+
+  const ROLE_TIER = { studio:'Studio Enterprise', professional:'Elite Pro', customer:'Professional', admin:'Admin' };
+  const TIER_STYLE = {
+    'Studio Enterprise': 'background:rgba(123,31,162,0.12);color:#6a1070;',
+    'Elite Pro':         'background:rgba(0,133,143,0.12);color:#005662;',
+    'Professional':      'background:rgba(0,0,0,0.07);color:#334155;',
+    'Admin':             'background:rgba(183,28,28,0.1);color:#b71c1c;',
+  };
+
+  function initials(n){ return (n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+  function fmtDate(s){ return s ? new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+  async function loadStats(){
+    try {
+      const res  = await fetch('/api/admin/stats');
+      if (!res.ok) return;
+      const { stats } = await res.json();
+      const totalPaid = stats.professionals + stats.studios;
+      const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+      set('stat-mrr',         '$' + (totalPaid * 29).toLocaleString());
+      set('stat-churn',       '—');
+      set('stat-active-subs', (stats.total_users - stats.customers).toLocaleString());
+      set('stat-enterprise',  stats.studios.toLocaleString());
+    } catch(e){}
+  }
+
+  async function loadUsers(page){
+    currentPage=page;
+    const roleEl   = document.querySelector('[data-role-filter]');
+    const searchEl = document.querySelector('input[placeholder="Search subscribers..."]');
+    const role     = roleEl ? roleEl.value.toLowerCase() : '';
+    const q        = searchEl ? searchEl.value.trim() : '';
+    tbody.innerHTML=`<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;"><span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span></td></tr>`;
+    try {
+      const params = new URLSearchParams({page, ...(role&&role!=='all'&&{role}), ...(q&&{q})});
+      const res    = await fetch('/api/admin/users?' + params);
+      if (!res.ok){ tbody.innerHTML=`<tr><td colspan="6" style="padding:24px;text-align:center;color:#7a8599;">Admin access required.</td></tr>`; return; }
+      const data = await res.json();
+      total = data.total||0;
+      const users = data.users||[];
+      const start=(page-1)*20+1, end=Math.min(page*20,total);
+      if (showing) showing.innerHTML = total
+        ? `Showing <strong style="color:var(--neu-text)">${start}–${end}</strong> of ${total} users`
+        : 'No users found';
+
+      if (!users.length){ tbody.innerHTML=`<tr><td colspan="6" style="padding:24px;text-align:center;color:#7a8599;">No users found.</td></tr>`; return; }
+
+      tbody.innerHTML = users.map((u,i,arr) => {
+        const tier  = ROLE_TIER[u.role]||u.role;
+        const style = TIER_STYLE[tier]||'background:rgba(0,0,0,0.07);color:#334155;';
+        const ini   = initials(u.display_name||u.email);
+        return `<tr class="neu-row transition-colors" style="${i<arr.length-1?'border-bottom:1px solid rgba(0,0,0,0.06);':''}">
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center neu-btn" style="font-size:0.8rem;font-weight:800;color:#006970;">${ini}</div>
+              <div>
+                <div style="font-size:0.95rem;font-weight:800;color:#0f172a;">${u.display_name||u.email}</div>
+                <div style="font-size:0.8rem;color:#475569;margin-top:1px;">${u.email}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-5"><span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;${style}">${tier}</span></td>
+          <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">${fmtDate(u.created_at)}</td>
+          <td class="px-6 py-5" style="font-size:0.92rem;font-weight:600;color:#0f172a;">—</td>
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-emerald-600"></div>
+              <span style="font-size:0.85rem;font-weight:700;color:#1b5e20;text-transform:uppercase;letter-spacing:0.06em;">Active</span>
+            </div>
+          </td>
+          <td class="px-6 py-5 text-right"><button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#475569;">more_vert</button></td>
+        </tr>`;
+      }).join('');
+    } catch(e){
+      tbody.innerHTML=`<tr><td colspan="6" style="padding:24px;text-align:center;color:#b71c1c;">Failed to load users.</td></tr>`;
+    }
+  }
+
+  document.querySelector('[data-role-filter]')?.addEventListener('change', ()=>loadUsers(1));
+  document.querySelector('input[placeholder="Search subscribers..."]')?.addEventListener('input', ()=>setTimeout(()=>loadUsers(1),400));
+
+  loadStats();
+  loadUsers(1);
+  window.loadUsers=loadUsers;
 })();
 </script>
 </body></html>

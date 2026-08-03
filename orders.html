@@ -304,93 +304,18 @@
             <th class="px-6 py-4 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Row 1 -->
-          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92841</td>
-            <td class="px-6 py-5">
-              <div class="flex items-center gap-3">
-                <div class="avatar-bubble">AL</div>
-                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Aether Labs</span>
-              </div>
+        <tbody id="orders-tbody">
+          <tr>
+            <td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;font-size:0.9rem;">
+              <span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;margin-right:8px;">progress_activity</span>Loading orders…
             </td>
-            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 24, 2023</td>
-            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$12,450.00</td>
-            <td class="px-6 py-5">
-              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">Delivered</span>
-            </td>
-            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
-          </tr>
-          <!-- Row 2 -->
-          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92842</td>
-            <td class="px-6 py-5">
-              <div class="flex items-center gap-3">
-                <div class="avatar-bubble">NV</div>
-                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Nova Visuals</span>
-              </div>
-            </td>
-            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 25, 2023</td>
-            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$4,120.50</td>
-            <td class="px-6 py-5">
-              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">Processing</span>
-            </td>
-            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
-          </tr>
-          <!-- Row 3 -->
-          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92843</td>
-            <td class="px-6 py-5">
-              <div class="flex items-center gap-3">
-                <div class="avatar-bubble">SM</div>
-                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Solar Media</span>
-              </div>
-            </td>
-            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 25, 2023</td>
-            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$2,800.00</td>
-            <td class="px-6 py-5">
-              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(180,83,9,0.12);color:#92400e;">Pending</span>
-            </td>
-            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
-          </tr>
-          <!-- Row 4 -->
-          <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92844</td>
-            <td class="px-6 py-5">
-              <div class="flex items-center gap-3">
-                <div class="avatar-bubble">CH</div>
-                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">CineHype</span>
-              </div>
-            </td>
-            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 26, 2023</td>
-            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$8,900.00</td>
-            <td class="px-6 py-5">
-              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(29,78,216,0.1);color:#1e40af;">Shipped</span>
-            </td>
-            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
-          </tr>
-          <!-- Row 5 -->
-          <tr class="neu-row transition-colors">
-            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">#OO-92845</td>
-            <td class="px-6 py-5">
-              <div class="flex items-center gap-3">
-                <div class="avatar-bubble">OX</div>
-                <span style="font-size:0.95rem;font-weight:700;color:#0f172a;">Onyx Studio</span>
-              </div>
-            </td>
-            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">Oct 26, 2023</td>
-            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">$1,200.00</td>
-            <td class="px-6 py-5">
-              <span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">Delivered</span>
-            </td>
-            <td class="px-6 py-5 text-right"><button class="details-btn">View Details</button></td>
           </tr>
         </tbody>
       </table>
 
       <!-- Pagination -->
       <div class="px-6 py-4 flex justify-between items-center" style="border-top:1px solid rgba(0,0,0,0.08);">
-        <span style="font-size:0.88rem;color:#334155;">Showing <strong style="color:#0f172a;">1 to 5</strong> of 142 orders</span>
+        <span style="font-size:0.88rem;color:#334155;" id="orders-showing">Loading…</span>
         <div class="flex gap-2">
           <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1rem;">chevron_left</span></button>
           <button class="page-btn-active">1</button>
@@ -406,6 +331,7 @@
 </main>
 <script src="dashboard-components.js"></script>
 <script>
+  /* ── Theme Toggle ── */
   (function(){
     const root = document.documentElement;
     const saved = localStorage.getItem('cc-theme') || 'dark';
@@ -424,6 +350,125 @@
       localStorage.setItem('cc-theme', cur);
       updateIcon(cur);
     };
+  })();
+
+  /* ── Orders — Live Data ── */
+  (function(){
+    const tbody    = document.getElementById('orders-tbody');
+    const showing  = document.getElementById('orders-showing');
+    let currentPage = 1, totalOrders = 0;
+
+    const STATUS_STYLES = {
+      delivered:  'background:rgba(0,133,143,0.12);color:#005662;',
+      processing: 'background:rgba(123,31,162,0.12);color:#6a1070;',
+      pending:    'background:rgba(180,83,9,0.12);color:#92400e;',
+      confirmed:  'background:rgba(180,83,9,0.12);color:#92400e;',
+      shipped:    'background:rgba(29,78,216,0.1);color:#1e40af;',
+      cancelled:  'background:rgba(183,28,28,0.1);color:#b71c1c;',
+    };
+
+    function statusBadge(s){
+      const style = STATUS_STYLES[s] || 'background:rgba(0,0,0,0.07);color:#334155;';
+      return `<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;${style}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+    }
+
+    function initials(name){ return (name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+    function fmtDate(s){ return s ? new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+    function fmtAmt(n){ return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+    async function updateOrderStatus(id, current){
+      const next = prompt(`Change status for order #${id}.\nCurrent: ${current}\nEnter new status (pending / processing / confirmed / shipped / delivered / cancelled):`);
+      if (!next || next === current) return;
+      const res = await fetch(`/api/admin/orders/${id}`, {
+        method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:next.trim()})
+      });
+      const data = await res.json();
+      if (data.ok) loadOrders(currentPage); else alert(data.error||'Failed to update.');
+    }
+
+    async function loadOrders(page){
+      currentPage = page;
+      const statusEl = document.querySelector('[data-status-filter]');
+      const searchEl = document.querySelector('input[placeholder="Search orders..."]');
+      const status   = statusEl ? statusEl.value : '';
+      const q        = searchEl ? searchEl.value.trim() : '';
+
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;">
+        <span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span> Loading…
+      </td></tr>`;
+
+      try {
+        const params = new URLSearchParams({page, ...(status&&status!=='All Statuses'&&{status:status.toLowerCase()}), ...(q&&{q})});
+        const res  = await fetch('/api/admin/orders?' + params);
+        const data = await res.json();
+
+        if (res.status === 403) {
+          tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;">Admin access required.</td></tr>`;
+          return;
+        }
+
+        totalOrders = data.total || 0;
+        const orders = data.orders || [];
+
+        if (!orders.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#7a8599;">No orders found.</td></tr>`;
+          showing.innerHTML = `Showing <strong>0</strong> of 0 orders`;
+          return;
+        }
+
+        const start = (page-1)*20+1, end = Math.min(page*20, totalOrders);
+        showing.innerHTML = `Showing <strong style="color:var(--neu-text)">${start}–${end}</strong> of ${totalOrders} orders`;
+
+        tbody.innerHTML = orders.map((o,i) => `
+          <tr class="neu-row transition-colors" style="${i<orders.length-1?'border-bottom:1px solid rgba(0,0,0,0.06);':''}">
+            <td class="px-6 py-5" style="font-size:0.92rem;font-weight:800;color:#006970;font-family:monospace;">${o.order_ref}</td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar-bubble">${initials(o.customer_name)}</div>
+                <div>
+                  <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">${o.customer_name}</div>
+                  <div style="font-size:0.78rem;color:#475569;">${o.customer_email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-5" style="font-size:0.92rem;color:#475569;">${fmtDate(o.created_at)}</td>
+            <td class="px-6 py-5" style="font-size:0.95rem;font-weight:800;color:#0f172a;">${fmtAmt(o.total_amount)}</td>
+            <td class="px-6 py-5">${statusBadge(o.status)}</td>
+            <td class="px-6 py-5 text-right">
+              <button class="details-btn" onclick="updateOrderStatus(${o.id},'${o.status}')">Update Status</button>
+            </td>
+          </tr>`).join('');
+
+        window.updateOrderStatus = updateOrderStatus;
+        renderPagination();
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center" style="color:#b71c1c;">Failed to load orders.</td></tr>`;
+      }
+    }
+
+    function renderPagination(){
+      const totalPages = Math.ceil(totalOrders/20);
+      const pag = document.querySelector('.glass-panel .flex.gap-2');
+      if (!pag || totalPages <= 1) return;
+      pag.innerHTML = `
+        <button class="page-btn" onclick="loadOrders(${currentPage-1})" ${currentPage===1?'disabled':''}>
+          <span class="material-symbols-outlined" style="font-size:1rem;">chevron_left</span>
+        </button>
+        ${Array.from({length:Math.min(5,totalPages)},(_,i)=>{
+          const p=i+1;
+          return `<button class="${p===currentPage?'page-btn-active':'page-btn'}" onclick="loadOrders(${p})">${p}</button>`;
+        }).join('')}
+        <button class="page-btn" onclick="loadOrders(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>
+          <span class="material-symbols-outlined" style="font-size:1rem;">chevron_right</span>
+        </button>`;
+    }
+
+    // Live filter/search
+    document.querySelector('[data-status-filter]')?.addEventListener('change', ()=>loadOrders(1));
+    document.querySelector('input[placeholder="Search orders..."]')?.addEventListener('input', ()=>setTimeout(()=>loadOrders(1),400));
+
+    loadOrders(1);
+    window.loadOrders = loadOrders;
   })();
 </script>
 </body></html>

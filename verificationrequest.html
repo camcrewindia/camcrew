@@ -271,11 +271,11 @@
       </div>
       <div class="flex gap-4">
         <div class="stat-pill">
-          <div style="font-size:1.8rem;font-weight:800;color:#006970;line-height:1.1;">24</div>
+          <div id="stat-pending" style="font-size:1.8rem;font-weight:800;color:#006970;line-height:1.1;">—</div>
           <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;color:#475569;text-transform:uppercase;margin-top:4px;">Pending Approval</div>
         </div>
         <div class="stat-pill">
-          <div style="font-size:1.8rem;font-weight:800;color:#7b1fa2;line-height:1.1;">158</div>
+          <div id="stat-verified" style="font-size:1.8rem;font-weight:800;color:#7b1fa2;line-height:1.1;">—</div>
           <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;color:#475569;text-transform:uppercase;margin-top:4px;">Verified Partners</div>
         </div>
       </div>
@@ -294,145 +294,10 @@
               <th class="px-8 py-5 text-right" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;text-transform:uppercase;">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Row 1 -->
-            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl overflow-hidden" style="box-shadow:3px 3px 7px var(--neu-shadow-dark),-3px -3px 7px var(--neu-shadow-light);">
-                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJLRYn54Sb26D3ykdd4iN4SsqhK5T_teq5d4CjTjwK0E7o-p7tEswDXW6oYlvvEcy_rwZL6q3eVJ1IpYfWo10h1D6BfEUFqUdfsAjKAV368BVEua_co-DVOpvG5dRJd7PyJfB3Y_0Fx5s2WkPQwFSZsqyN2LXFv5dpkV-1491jrTjwAS4vRCHBEg-STn9yvCNdPJZyP6Lc0gz9MNUWoWVf8TN0dzNxHsLUBG9ioSkzHPjlgeqMZ68N"/>
-                  </div>
-                  <div>
-                    <div style="font-size:0.98rem;font-weight:800;color:#0f172a;">Neon Horizon Studios</div>
-                    <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Production &amp; VFX</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">Marcus Thorne</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Head of Operations</div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:600;color:#0f172a;">Oct 12, 2023</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">14:20 PM</div>
-              </td>
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-2" style="font-size:0.95rem;font-weight:600;color:#0f172a;">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#006970;">location_on</span>
-                  Vancouver, CA
-                </div>
-              </td>
-              <td class="px-8 py-6 text-right">
-                <div class="flex items-center justify-end gap-3">
-                  <a class="view-profile-link" href="#">View Profile</a>
-                  <button class="action-btn-approve">Approve</button>
-                  <button class="action-btn-deny">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <!-- Row 2 -->
-            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl overflow-hidden" style="box-shadow:3px 3px 7px var(--neu-shadow-dark),-3px -3px 7px var(--neu-shadow-light);">
-                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr5u6Hp-dEa2lr_w9eEUWqW2yhUtW-foVI3xg-XydGCN8Deosrx5kxe4sAkTItt8r3kGtuPxhoLlGIy6_rUuY5wvZqAHpzqqOImxfz-ZH9pL5St_EKLhv-Hx0KyHzk5SSsWUAWC9LC32rPwzw8xmVkRTeeu1WjUWl8rDR-D9pJ3Z77RFLz2SWdcaGI0zlyuJ7tC4aQ2Sju2giEsiz5BvPWphhB8u_vlaCqpU9N83LQs3EdFzgRHcLb"/>
-                  </div>
-                  <div>
-                    <div style="font-size:0.98rem;font-weight:800;color:#0f172a;">Aetheric Frames</div>
-                    <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Cinematography Collective</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">Elena Rodriguez</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Studio Director</div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:600;color:#0f172a;">Oct 14, 2023</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">09:15 AM</div>
-              </td>
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-2" style="font-size:0.95rem;font-weight:600;color:#0f172a;">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#006970;">location_on</span>
-                  Madrid, ES
-                </div>
-              </td>
-              <td class="px-8 py-6 text-right">
-                <div class="flex items-center justify-end gap-3">
-                  <a class="view-profile-link" href="#">View Profile</a>
-                  <button class="action-btn-approve">Approve</button>
-                  <button class="action-btn-deny">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <!-- Row 3 -->
-            <tr class="neu-row transition-colors" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl overflow-hidden" style="box-shadow:3px 3px 7px var(--neu-shadow-dark),-3px -3px 7px var(--neu-shadow-light);">
-                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcWNQ7MTHlMx73eJqi00qOFzJCOxnKvibjO80UxuKxXI93RLCYHjp8xxW_gaCC3K5riF2I5i5yc_SFMqbOEEigtYt9s6uDydsllHhLrEeK7ykZH9qothOm-UyrPER0MU2Gfj9seQi0MIVudXhCZyNw1SbWdhnY_lbnwQBihQtihCAapeULQftoAPOYLAojr-QEfDcUqz4xTPDNOwG2hXB35pbnr7wj0frnWriPxjDuq1MvcY7HpQsM"/>
-                  </div>
-                  <div>
-                    <div style="font-size:0.98rem;font-weight:800;color:#0f172a;">Obsidian Core Media</div>
-                    <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Post-Production House</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">Satoshi Nakamoto</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Creative Lead</div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:600;color:#0f172a;">Oct 15, 2023</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">18:45 PM</div>
-              </td>
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-2" style="font-size:0.95rem;font-weight:600;color:#0f172a;">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#006970;">location_on</span>
-                  Tokyo, JP
-                </div>
-              </td>
-              <td class="px-8 py-6 text-right">
-                <div class="flex items-center justify-end gap-3">
-                  <a class="view-profile-link" href="#">View Profile</a>
-                  <button class="action-btn-approve">Approve</button>
-                  <button class="action-btn-deny">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <!-- Row 4 -->
-            <tr class="neu-row transition-colors">
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl overflow-hidden" style="box-shadow:3px 3px 7px var(--neu-shadow-dark),-3px -3px 7px var(--neu-shadow-light);">
-                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZaeaZ4qJL6wybpS9uanXqFB2CQrDnK6WeozqeHFWJl088nZtbfodVCJ-L4FI7vwlGiPHDBLhAXCaly7jNzXISNmfRkZuOvATYpYScH5eaKYhVaZpshWu4Hz5B9V5TLQGIZ_W8HNNx-3dHLbwv7DE3ugzVlP5YYB2xiWYC_Uma78qZXIo60lg09L8awuTFdcesTDFQMc0iYdwS7LiGG_4O_IWor_zzAFaJJisNPner6DUrQ6x7XRI2"/>
-                  </div>
-                  <div>
-                    <div style="font-size:0.98rem;font-weight:800;color:#0f172a;">Lunar Scape Films</div>
-                    <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Documentary Studio</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">Clara Oswald</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">Operations Manager</div>
-              </td>
-              <td class="px-8 py-6">
-                <div style="font-size:0.95rem;font-weight:600;color:#0f172a;">Oct 16, 2023</div>
-                <div style="font-size:0.82rem;color:#475569;margin-top:2px;">11:30 AM</div>
-              </td>
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-2" style="font-size:0.95rem;font-weight:600;color:#0f172a;">
-                  <span class="material-symbols-outlined" style="font-size:1rem;color:#006970;">location_on</span>
-                  London, UK
-                </div>
-              </td>
-              <td class="px-8 py-6 text-right">
-                <div class="flex items-center justify-end gap-3">
-                  <a class="view-profile-link" href="#">View Profile</a>
-                  <button class="action-btn-approve">Approve</button>
-                  <button class="action-btn-deny">Reject</button>
-                </div>
+          <tbody id="verif-tbody">
+            <tr>
+              <td colspan="5" class="px-8 py-10 text-center" style="color:#7a8599;font-size:0.9rem;">
+                <span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span> Loading requests…
               </td>
             </tr>
           </tbody>
@@ -441,7 +306,7 @@
       <!-- Pagination -->
       <div class="px-8 py-5 flex justify-between items-center" style="border-top:1px solid rgba(0,0,0,0.08);">
         <div style="font-size:0.88rem;color:#334155;">
-          Showing <span style="font-weight:700;color:#0f172a;">1–4 of 24</span> pending requests
+          <span id="verif-showing">Loading…</span>
         </div>
         <div class="flex items-center gap-2">
           <button class="page-btn-nav" disabled><span class="material-symbols-outlined" style="font-size:1.1rem;">chevron_left</span></button>
@@ -494,5 +359,103 @@
       updateIcon(cur);
     };
   })();
+</script>
+
+<script>
+/* ── Verification Requests — Live Data ── */
+(function(){
+  const tbody   = document.getElementById('verif-tbody');
+  const showing = document.getElementById('verif-showing');
+  let currentPage=1, total=0;
+
+  function fmtDate(s){ return s ? new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+  function renderRows(reqs){
+    if (!reqs.length){
+      tbody.innerHTML=`<tr><td colspan="5" class="px-8 py-10 text-center" style="color:#7a8599;">No requests found.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = reqs.map((r,i,arr) => `
+      <tr class="neu-row transition-colors" style="${i<arr.length-1?'border-bottom:1px solid rgba(0,0,0,0.06);':''}">
+        <td class="px-8 py-6">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center neu-btn">
+              <span class="material-symbols-outlined" style="color:#006970;">movie</span>
+            </div>
+            <div>
+              <div style="font-size:0.98rem;font-weight:800;color:#0f172a;">${r.studio_name}</div>
+              <div style="font-size:0.82rem;color:#475569;margin-top:2px;">${r.studio_type||'Studio'}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-8 py-6">
+          <div style="font-size:0.95rem;font-weight:700;color:#0f172a;">${r.rep_name}</div>
+          <div style="font-size:0.82rem;color:#475569;margin-top:2px;">${r.rep_title||''}</div>
+        </td>
+        <td class="px-8 py-6">
+          <div style="font-size:0.95rem;font-weight:600;color:#0f172a;">${fmtDate(r.created_at)}</div>
+          <div style="font-size:0.82rem;color:#475569;margin-top:2px;text-transform:capitalize;">${r.status}</div>
+        </td>
+        <td class="px-8 py-6">
+          <div class="flex items-center gap-2" style="font-size:0.95rem;font-weight:600;color:#0f172a;">
+            <span class="material-symbols-outlined" style="font-size:1rem;color:#006970;">location_on</span>
+            ${r.location||'—'}
+          </div>
+        </td>
+        <td class="px-8 py-6 text-right">
+          <div class="flex items-center justify-end gap-3">
+            ${r.status==='pending' ? `
+              <button class="action-btn-approve" onclick="reviewReq(${r.id},'approved',this)">Approve</button>
+              <button class="action-btn-deny"    onclick="reviewReq(${r.id},'rejected',this)">Reject</button>
+            ` : `<span style="font-size:0.85rem;font-weight:700;color:#475569;text-transform:capitalize;">${r.status}</span>`}
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function loadReqs(page){
+    currentPage=page;
+    const statusSel = document.querySelector('[data-verif-filter]');
+    const status    = statusSel ? statusSel.value : 'pending';
+    tbody.innerHTML=`<tr><td colspan="5" class="px-8 py-10 text-center" style="color:#7a8599;"><span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span></td></tr>`;
+    try {
+      const res  = await fetch(`/api/admin/verification-requests?status=${status}&page=${page}`);
+      if (!res.ok){ tbody.innerHTML=`<tr><td colspan="5" style="padding:24px;text-align:center;color:#7a8599;">Admin access required.</td></tr>`; return; }
+      const data = await res.json();
+      total = data.total||0;
+
+      // also load totals for stat pills
+      const [pRes, aRes] = await Promise.all([
+        fetch('/api/admin/verification-requests?status=pending&page=1'),
+        fetch('/api/admin/verification-requests?status=approved&page=1'),
+      ]);
+      const pData = await pRes.json(), aData = await aRes.json();
+      const pendEl = document.getElementById('stat-pending');
+      const apprEl = document.getElementById('stat-verified');
+      if (pendEl) pendEl.textContent = (pData.total||0).toLocaleString();
+      if (apprEl) apprEl.textContent = (aData.total||0).toLocaleString();
+
+      const start=(page-1)*20+1, end=Math.min(page*20,total);
+      if (showing) showing.innerHTML = total
+        ? `Showing <span style="font-weight:700;color:var(--neu-text)">${start}–${end}</span> of ${total} requests`
+        : 'No requests found';
+      renderRows(data.requests||[]);
+    } catch(e){
+      tbody.innerHTML=`<tr><td colspan="5" style="padding:24px;text-align:center;color:#b71c1c;">Failed to load.</td></tr>`;
+    }
+  }
+
+  window.reviewReq = async function(id, action, btn){
+    btn.disabled=true;
+    const res  = await fetch(`/api/admin/verification-requests/${id}`,{
+      method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:action})
+    });
+    if ((await res.json()).ok) loadReqs(currentPage); else btn.disabled=false;
+  };
+
+  document.querySelector('[data-verif-filter]')?.addEventListener('change', ()=>loadReqs(1));
+  loadReqs(1);
+  window.loadReqs=loadReqs;
+})();
 </script>
 </body></html>

@@ -317,6 +317,29 @@ def init_cart_table():
         """)
 
 
+def init_admin_tables():
+    """Create admin-specific tables if they don't exist."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS verification_requests (
+                id           SERIAL PRIMARY KEY,
+                user_id      INTEGER,
+                studio_name  TEXT    NOT NULL,
+                rep_name     TEXT    NOT NULL,
+                rep_title    TEXT,
+                studio_type  TEXT,
+                location     TEXT,
+                website      TEXT,
+                notes        TEXT,
+                status       TEXT    NOT NULL DEFAULT 'pending',
+                reviewed_by  INTEGER,
+                reviewed_at  TEXT,
+                created_at   TEXT    DEFAULT TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'),
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+            )
+        """)
+
+
 def init_rental_tables():
     """Create rental_equipment and rental_orders tables if they don't exist."""
     with get_db() as conn:
@@ -357,6 +380,7 @@ def init_rental_tables():
 init_db()
 init_cart_table()
 init_rental_tables()
+init_admin_tables()
 
 # ---------------------------------------------------------------------------
 # Public portfolio sharing
@@ -1657,6 +1681,230 @@ def pro_update_rental_order(order_id):
             (order_id,)
         ).fetchone()
     return jsonify({"ok": True, "order": dict(row)})
+
+
+# ---------------------------------------------------------------------------
+# Admin API
+# ---------------------------------------------------------------------------
+
+def require_admin():
+    """Return user_id if session user is admin, else None."""
+    uid = session.get("user_id")
+    if not uid:
+        return None
+    with get_db() as conn:
+        row = conn.execute("SELECT role FROM users WHERE id=%s", (uid,)).fetchone()
+    if row and row["role"] == "admin":
+        return uid
+    return None
+
+
+@app.route("/api/admin/stats", methods=["GET"])
+def admin_stats():
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    with get_db() as conn:
+        total_users       = conn.execute("SELECT COUNT(*) AS c FROM users").fetchone()["c"]
+        customers         = conn.execute("SELECT COUNT(*) AS c FROM users WHERE role='customer'").fetchone()["c"]
+        professionals     = conn.execute("SELECT COUNT(*) AS c FROM users WHERE role='professional'").fetchone()["c"]
+        studios           = conn.execute("SELECT COUNT(*) AS c FROM users WHERE role='studio'").fetchone()["c"]
+        total_orders      = conn.execute("SELECT COUNT(*) AS c FROM orders").fetchone()["c"]
+        total_revenue     = conn.execute("SELECT COALESCE(SUM(total_amount),0) AS s FROM orders WHERE status!='cancelled'").fetchone()["s"]
+        pending_verif     = conn.execute("SELECT COUNT(*) AS c FROM verification_requests WHERE status='pending'").fetchone()["c"]
+        approved_verif    = conn.execute("SELECT COUNT(*) AS c FROM verification_requests WHERE status='approved'").fetchone()["c"]
+        total_products    = conn.execute("SELECT COUNT(*) AS c FROM products").fetchone()["c"]
+        low_stock         = conn.execute("SELECT COUNT(*) AS c FROM products WHERE stock <= 3").fetchone()["c"]
+    return jsonify({"ok": True, "stats": {
+        "total_users": total_users,
+        "customers": customers,
+        "professionals": professionals,
+        "studios": studios,
+        "total_orders": total_orders,
+        "total_revenue": round(float(total_revenue), 2),
+        "pending_verifications": pending_verif,
+        "approved_verifications": approved_verif,
+        "total_products": total_products,
+        "low_stock_products": low_stock,
+    }})
+
+
+@app.route("/api/admin/orders", methods=["GET"])
+def admin_list_orders():
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    status_filter = request.args.get("status", "").strip()
+    search        = request.args.get("q", "").strip()
+    page          = max(1, int(request.args.get("page", 1)))
+    per_page      = 20
+    offset        = (page - 1) * per_page
+
+    with get_db() as conn:
+        base_sql = """
+            SELECT o.*, u.email AS customer_email, u.display_name AS customer_name
+            FROM orders o
+            JOIN users u ON u.id = o.user_id
+        """
+        wheres, params = [], []
+        if status_filter:
+            wheres.append("o.status = %s"); params.append(status_filter)
+        if search:
+            wheres.append("(u.email ILIKE %s OR o.order_ref ILIKE %s)")
+            params += [f"%{search}%", f"%{search}%"]
+        where_clause = ("WHERE " + " AND ".join(wheres)) if wheres else ""
+
+        count_sql = f"SELECT COUNT(*) AS c FROM orders o JOIN users u ON u.id=o.user_id {where_clause}"
+        total = conn.execute(count_sql, params).fetchone()["c"]
+
+        rows = conn.execute(
+            f"{base_sql} {where_clause} ORDER BY o.created_at DESC LIMIT %s OFFSET %s",
+            params + [per_page, offset]
+        ).fetchall()
+
+    orders = []
+    for r in rows:
+        orders.append({
+            "id": r["id"], "order_ref": r["order_ref"], "status": r["status"],
+            "items": _json.loads(r["items_json"]), "total_amount": r["total_amount"],
+            "tracking_number": r["tracking_number"], "tracking_status": r["tracking_status"],
+            "created_at": r["created_at"],
+            "customer_email": r["customer_email"],
+            "customer_name": r["customer_name"] or r["customer_email"],
+        })
+    return jsonify({"ok": True, "orders": orders, "total": total, "page": page, "per_page": per_page})
+
+
+@app.route("/api/admin/orders/<int:order_id>", methods=["PATCH"])
+def admin_update_order(order_id):
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    data       = request.get_json(force=True, silent=True) or {}
+    new_status = (data.get("status") or "").strip()
+    allowed    = ("pending", "processing", "confirmed", "shipped", "delivered", "cancelled")
+    if new_status not in allowed:
+        return jsonify({"ok": False, "error": f"status must be one of {allowed}"}), 400
+    tracking_number = data.get("tracking_number")
+    tracking_status = data.get("tracking_status")
+    with get_db() as conn:
+        row = conn.execute("SELECT id FROM orders WHERE id=%s", (order_id,)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Order not found."}), 404
+        sets, vals = ["status=%s"], [new_status]
+        if tracking_number is not None:
+            sets.append("tracking_number=%s"); vals.append(tracking_number)
+        if tracking_status is not None:
+            sets.append("tracking_status=%s"); vals.append(tracking_status)
+        vals.append(order_id)
+        conn.execute(f"UPDATE orders SET {', '.join(sets)} WHERE id=%s", vals)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/admin/verification-requests", methods=["GET"])
+def admin_list_verifications():
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    status_filter = request.args.get("status", "pending").strip()
+    page     = max(1, int(request.args.get("page", 1)))
+    per_page = 20
+    offset   = (page - 1) * per_page
+
+    with get_db() as conn:
+        if status_filter == "all":
+            total = conn.execute("SELECT COUNT(*) AS c FROM verification_requests").fetchone()["c"]
+            rows  = conn.execute(
+                "SELECT * FROM verification_requests ORDER BY created_at DESC LIMIT %s OFFSET %s",
+                (per_page, offset)
+            ).fetchall()
+        else:
+            total = conn.execute(
+                "SELECT COUNT(*) AS c FROM verification_requests WHERE status=%s", (status_filter,)
+            ).fetchone()["c"]
+            rows  = conn.execute(
+                "SELECT * FROM verification_requests WHERE status=%s ORDER BY created_at DESC LIMIT %s OFFSET %s",
+                (status_filter, per_page, offset)
+            ).fetchall()
+
+    return jsonify({"ok": True, "requests": [dict(r) for r in rows], "total": total, "page": page, "per_page": per_page})
+
+
+@app.route("/api/admin/verification-requests", methods=["POST"])
+def admin_submit_verification():
+    """Anyone (or admin) can submit a studio verification request."""
+    data        = request.get_json(force=True, silent=True) or {}
+    studio_name = (data.get("studio_name") or "").strip()
+    rep_name    = (data.get("rep_name")    or "").strip()
+    if not studio_name or not rep_name:
+        return jsonify({"ok": False, "error": "studio_name and rep_name are required."}), 400
+    uid = require_auth()
+    with get_db() as conn:
+        row = conn.execute(
+            """INSERT INTO verification_requests
+               (user_id, studio_name, rep_name, rep_title, studio_type, location, website, notes)
+               VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+            (uid,
+             studio_name, rep_name,
+             (data.get("rep_title")  or "").strip() or None,
+             (data.get("studio_type")or "").strip() or None,
+             (data.get("location")   or "").strip() or None,
+             (data.get("website")    or "").strip() or None,
+             (data.get("notes")      or "").strip() or None,
+            )
+        ).fetchone()
+    return jsonify({"ok": True, "id": row["id"]}), 201
+
+
+@app.route("/api/admin/verification-requests/<int:req_id>", methods=["PATCH"])
+def admin_review_verification(req_id):
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    data   = request.get_json(force=True, silent=True) or {}
+    action = (data.get("status") or "").strip()
+    if action not in ("approved", "rejected"):
+        return jsonify({"ok": False, "error": "status must be 'approved' or 'rejected'."}), 400
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM verification_requests WHERE id=%s", (req_id,)).fetchone()
+        if not row:
+            return jsonify({"ok": False, "error": "Request not found."}), 404
+        conn.execute(
+            "UPDATE verification_requests SET status=%s, reviewed_by=%s, reviewed_at=TO_CHAR(NOW(),'YYYY-MM-DD HH24:MI:SS') WHERE id=%s",
+            (action, uid, req_id)
+        )
+        # If approved and linked to a user, upgrade their role to 'studio'
+        if action == "approved" and row["user_id"]:
+            conn.execute("UPDATE users SET role='studio' WHERE id=%s AND role='customer'", (row["user_id"],))
+    return jsonify({"ok": True, "status": action})
+
+
+@app.route("/api/admin/users", methods=["GET"])
+def admin_list_users():
+    uid = require_admin()
+    if not uid:
+        return jsonify({"ok": False, "error": "Admin only."}), 403
+    role_filter = request.args.get("role", "").strip()
+    search      = request.args.get("q", "").strip()
+    page        = max(1, int(request.args.get("page", 1)))
+    per_page    = 20
+    offset      = (page - 1) * per_page
+
+    wheres, params = [], []
+    if role_filter:
+        wheres.append("role=%s"); params.append(role_filter)
+    if search:
+        wheres.append("(email ILIKE %s OR display_name ILIKE %s)")
+        params += [f"%{search}%", f"%{search}%"]
+    where_clause = ("WHERE " + " AND ".join(wheres)) if wheres else ""
+
+    with get_db() as conn:
+        total = conn.execute(f"SELECT COUNT(*) AS c FROM users {where_clause}", params).fetchone()["c"]
+        rows  = conn.execute(
+            f"SELECT id,email,role,display_name,created_at FROM users {where_clause} ORDER BY created_at DESC LIMIT %s OFFSET %s",
+            params + [per_page, offset]
+        ).fetchall()
+    return jsonify({"ok": True, "users": [dict(r) for r in rows], "total": total, "page": page, "per_page": per_page})
 
 
 if __name__ == "__main__":

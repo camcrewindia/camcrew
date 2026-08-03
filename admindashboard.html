@@ -543,7 +543,7 @@
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+12%</span>
 </div>
 <p class="label-caps-text mt-1">TOTAL CUSTOMERS</p>
-<h4 class="stat-number mt-2">12,842</h4>
+<h4 class="stat-number mt-2" id="stat-customers">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary-container w-[70%] rounded-full"></div>
 </div>
@@ -555,7 +555,7 @@
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+8%</span>
 </div>
 <p class="label-caps-text mt-1">ACTIVE PROFESSIONALS</p>
-<h4 class="stat-number mt-2">3,120</h4>
+<h4 class="stat-number mt-2" id="stat-professionals">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-secondary w-[45%] rounded-full"></div>
 </div>
@@ -567,7 +567,7 @@
 <span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+24%</span>
 </div>
 <p class="label-caps-text mt-1">VERIFIED STUDIOS</p>
-<h4 class="stat-number mt-2">456</h4>
+<h4 class="stat-number mt-2" id="stat-studios">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
 <div class="h-full bg-primary-fixed-dim w-[90%] rounded-full"></div>
 </div>
@@ -722,60 +722,12 @@
 <div class="space-y-stack-md">
 <div class="flex items-center justify-between">
 <h3 style="font-size:1.35rem;font-weight:800;color:#0f172a;">Verification Queue</h3>
-<span data-pending-badge class="px-3 py-1 rounded-full" style="font-size:0.78rem;font-weight:700;letter-spacing:0.06em;background:rgba(183,28,28,0.1);color:#b71c1c;">5 PENDING</span>
+<span id="verif-pending-badge" class="px-3 py-1 rounded-full" style="font-size:0.78rem;font-weight:700;letter-spacing:0.06em;background:rgba(183,28,28,0.1);color:#b71c1c;">— PENDING</span>
 </div>
-<div class="space-y-4">
-<!-- Request Card 1 -->
-<div data-studio-card="Nebula Cine-Labs" class="glass-panel p-5 rounded-2xl flex items-center justify-between group transition-all">
-<div class="flex items-center gap-4">
-<div class="neu-btn w-12 h-12 rounded-xl flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary">movie</span>
-</div>
-<div>
-<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Nebula Cine-Labs</h6>
-<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Sarah Jenkins • Oct 24, 2024</p>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button data-action="approve" class="action-btn-approve">Approve</button>
-<button data-action="deny" class="action-btn-deny">Deny</button>
-</div>
-</div>
-<!-- Request Card 2 -->
-<div data-studio-card="Velvet Frame Productions" class="glass-panel p-5 rounded-2xl flex items-center justify-between group transition-all">
-<div class="flex items-center gap-4">
-<div class="neu-btn w-12 h-12 rounded-xl flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary">camera_roll</span>
-</div>
-<div>
-<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Velvet Frame Productions</h6>
-<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Marcus Thorne • Oct 23, 2024</p>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button data-action="approve" class="action-btn-approve">Approve</button>
-<button data-action="deny" class="action-btn-deny">Deny</button>
-</div>
-</div>
-<!-- Request Card 3 -->
-<div data-studio-card="Oasis Media House" class="glass-panel p-5 rounded-2xl flex items-center justify-between group transition-all">
-<div class="flex items-center gap-4">
-<div class="neu-btn w-12 h-12 rounded-xl flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary">video_stable</span>
-</div>
-<div>
-<h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">Oasis Media House</h6>
-<p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: Elena Rodriguez • Oct 22, 2024</p>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button data-action="approve" class="action-btn-approve">Approve</button>
-<button data-action="deny" class="action-btn-deny">Deny</button>
-</div>
-</div>
-<button data-link="verificationrequest" class="neu-dashed-btn w-full py-4 cursor-pointer">
-                            VIEW ALL PENDING REQUESTS
-                        </button>
+<div class="space-y-4" id="verif-queue-list">
+  <div class="glass-panel p-5 rounded-2xl flex items-center gap-3" style="color:#7a8599;font-size:0.9rem;">
+    <span class="material-symbols-outlined" style="font-size:1.2rem;color:#1a8aff;">progress_activity</span>Loading queue…
+  </div>
 </div>
 </div>
 </section>
@@ -803,63 +755,11 @@
 <th class="px-8 py-5 text-right uppercase tracking-widest" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#334155;">Actions</th>
 </tr>
 </thead>
-<tbody>
-<tr class="neu-row transition-colors" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-<td class="px-8 py-6">
-<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">Lumina Motion Graphics</p>
-<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-89021</p>
-</td>
-<td class="px-8 py-6">
-<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">STUDIO ENTERPRISE</span>
-</td>
-<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Dec 15, 2025</td>
-<td class="px-8 py-6">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-<span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span>
-</div>
-</td>
-<td class="px-8 py-6 text-right">
-<button class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant">more_vert</button>
-</td>
-</tr>
-<tr class="neu-row transition-colors" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-<td class="px-8 py-6">
-<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">David Chen</p>
-<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-77342</p>
-</td>
-<td class="px-8 py-6">
-<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(123,31,162,0.12);color:#6a1070;">ELITE PROFESSIONAL</span>
-</td>
-<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Jan 02, 2025</td>
-<td class="px-8 py-6">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
-<span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span>
-</div>
-</td>
-<td class="px-8 py-6 text-right">
-<button class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant">more_vert</button>
-</td>
-</tr>
-<tr class="neu-row transition-colors">
-<td class="px-8 py-6">
-<p style="font-size:0.95rem;font-weight:800;color:#0f172a;">Shadowplay Studios</p>
-<p style="font-size:0.78rem;color:#475569;margin-top:2px;">ID: SUB-12903</p>
-</td>
-<td class="px-8 py-6">
-<span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;background:rgba(0,133,143,0.12);color:#005662;">STUDIO ENTERPRISE</span>
-</td>
-<td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">Nov 28, 2024</td>
-<td class="px-8 py-6">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full" style="background:#b71c1c;"></div>
-<span style="font-size:0.88rem;font-weight:600;color:#b71c1c;">Expiring Soon</span>
-</div>
-</td>
-<td class="px-8 py-6 text-right">
-<button class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant">more_vert</button>
-</td>
+<tbody id="dash-sub-tbody">
+<tr>
+  <td colspan="5" class="px-8 py-8 text-center" style="color:#7a8599;font-size:0.9rem;">
+    <span class="material-symbols-outlined" style="font-size:1.5rem;vertical-align:middle;">progress_activity</span> Loading…
+  </td>
 </tr>
 </tbody>
 </table>
@@ -1053,6 +953,111 @@
   } else {
     initTheme();
   }
+})();
+</script>
+
+<script>
+/* ── Admin Dashboard — Live Stats + Verification Queue ── */
+(function(){
+  const ROLE_TIER = { studio:'Studio Enterprise', professional:'Elite Pro', customer:'Professional', admin:'Admin' };
+  const TIER_STYLE = {
+    'Studio Enterprise': 'background:rgba(0,133,143,0.12);color:#005662;',
+    'Elite Pro':         'background:rgba(123,31,162,0.12);color:#6a1070;',
+    'Professional':      'background:rgba(0,0,0,0.07);color:#334155;',
+    'Admin':             'background:rgba(183,28,28,0.1);color:#b71c1c;',
+  };
+
+  function initials(n){ return (n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+  function fmtDate(s){ return s ? new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+  async function loadStats(){
+    try {
+      const res  = await fetch('/api/admin/stats');
+      if (!res.ok) return;
+      const { stats } = await res.json();
+      const set = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=Number(v).toLocaleString(); };
+      set('stat-customers',     stats.customers);
+      set('stat-professionals', stats.professionals);
+      set('stat-studios',       stats.studios);
+    } catch(e){}
+  }
+
+  async function loadVerifQueue(){
+    const list  = document.getElementById('verif-queue-list');
+    const badge = document.getElementById('verif-pending-badge');
+    try {
+      const res  = await fetch('/api/admin/verification-requests?status=pending&page=1');
+      const data = await res.json();
+      if (!res.ok) { list.innerHTML='<p style="color:#7a8599;padding:16px;">Admin access required.</p>'; return; }
+
+      const reqs = data.requests || [];
+      if (badge) badge.textContent = `${data.total || 0} PENDING`;
+
+      if (!reqs.length){
+        list.innerHTML = `<div class="glass-panel p-5 rounded-2xl" style="color:#7a8599;font-size:0.9rem;">No pending requests.</div>`;
+        return;
+      }
+
+      const icons = ['movie','camera_roll','video_stable','theaters','videocam'];
+      list.innerHTML = reqs.slice(0,3).map((r,i) => `
+        <div class="glass-panel p-5 rounded-2xl flex items-center justify-between group transition-all">
+          <div class="flex items-center gap-4">
+            <div class="neu-btn w-12 h-12 rounded-xl flex items-center justify-center">
+              <span class="material-symbols-outlined text-secondary">${icons[i%icons.length]}</span>
+            </div>
+            <div>
+              <h6 style="font-size:0.98rem;font-weight:800;color:#0f172a;">${r.studio_name}</h6>
+              <p style="font-size:0.82rem;color:#475569;margin-top:2px;">Rep: ${r.rep_name} • ${fmtDate(r.created_at)}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="action-btn-approve" onclick="reviewVerif(${r.id},'approved',this)">Approve</button>
+            <button class="action-btn-deny"    onclick="reviewVerif(${r.id},'rejected',this)">Deny</button>
+          </div>
+        </div>`).join('') +
+        `<button onclick="window.location='verificationrequest.html'" class="neu-dashed-btn w-full py-4 cursor-pointer">
+          VIEW ALL PENDING REQUESTS
+        </button>`;
+    } catch(e){
+      list.innerHTML='<div style="color:#b71c1c;padding:16px;">Failed to load queue.</div>';
+    }
+  }
+
+  window.reviewVerif = async function(id, action, btn){
+    btn.disabled=true;
+    const res  = await fetch(`/api/admin/verification-requests/${id}`, {
+      method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:action})
+    });
+    if ((await res.json()).ok) loadVerifQueue(); else btn.disabled=false;
+  };
+
+  async function loadDashSubs(){
+    const tbody = document.getElementById('dash-sub-tbody');
+    try {
+      const res  = await fetch('/api/admin/users?page=1');
+      if (!res.ok){ tbody.innerHTML='<tr><td colspan="5" style="padding:24px;text-align:center;color:#7a8599;">Admin access required.</td></tr>'; return; }
+      const { users } = await res.json();
+      if (!users||!users.length){ tbody.innerHTML='<tr><td colspan="5" style="padding:24px;text-align:center;color:#7a8599;">No users yet.</td></tr>'; return; }
+      tbody.innerHTML = users.slice(0,5).map((u,i,arr) => {
+        const tier  = ROLE_TIER[u.role] || u.role;
+        const style = TIER_STYLE[tier]  || 'background:rgba(0,0,0,0.07);color:#334155;';
+        return `<tr class="neu-row transition-colors" style="${i<arr.length-1?'border-bottom:1px solid rgba(0,0,0,0.06);':''}">
+          <td class="px-8 py-6">
+            <p style="font-size:0.95rem;font-weight:800;color:#0f172a;">${u.display_name||u.email}</p>
+            <p style="font-size:0.78rem;color:#475569;margin-top:2px;">${u.email}</p>
+          </td>
+          <td class="px-8 py-6"><span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;${style}">${tier.toUpperCase()}</span></td>
+          <td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">${fmtDate(u.created_at)}</td>
+          <td class="px-8 py-6"><div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-600"></div><span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span></div></td>
+          <td class="px-8 py-6 text-right"><button class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant">more_vert</button></td>
+        </tr>`;
+      }).join('');
+    } catch(e){}
+  }
+
+  loadStats();
+  loadVerifQueue();
+  loadDashSubs();
 })();
 </script>
 </body></html>
