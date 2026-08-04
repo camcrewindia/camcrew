@@ -543,10 +543,9 @@
     submitIco.textContent = 'progress_activity';
 
     try {
-      const res  = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password }) });
+      const res  = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password }) });
       const data = await res.json();
       if (!data.ok) { showError(data.error || 'Login failed. Please check your credentials.'); resetBtn(); return; }
-      if (data.user.role !== 'admin') { showError('Access denied. Admin accounts only.'); await fetch('/api/logout',{method:'POST'}); resetBtn(); return; }
       const badge = document.getElementById('admin-user-badge');
       document.getElementById('admin-user-email').textContent = data.user.email;
       badge.style.display = 'flex';

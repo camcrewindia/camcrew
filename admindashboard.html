@@ -503,22 +503,46 @@
 <span class="neu-inset rounded-full live-pill px-3 py-1">Live Metrics</span>
 </div>
 <div class="flex items-center gap-4">
-<div class="relative w-64 neu-inset rounded-full transition-all">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="bg-transparent border-none focus:ring-0 w-full pl-10 pr-4 py-2" style="font-size:0.92rem;" placeholder="Search platform..." type="text"/>
+<div class="relative w-64 transition-all" id="admin-search-container">
+<div class="neu-inset rounded-full relative z-20 flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant pointer-events-none">search</span>
+<input id="admin-search-input" class="bg-transparent border-none focus:ring-0 w-full pl-10 pr-4 py-2 text-[0.92rem]" placeholder="Search platform..." type="text" autocomplete="off" onfocus="document.getElementById('search-dropdown').classList.remove('hidden')" onblur="setTimeout(()=>document.getElementById('search-dropdown').classList.add('hidden'), 200)"/>
+</div>
+<div id="search-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 glass-panel rounded-2xl overflow-hidden z-10 shadow-xl opacity-0 transition-opacity duration-200" style="opacity: 1;">
+  <div class="p-2 text-xs font-bold text-gray-400 uppercase tracking-wider px-4 pt-3">Quick Links</div>
+  <a href="inventory.html" class="block px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Manage Inventory</a>
+  <a href="subscriptionmanagement.html" class="block px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Manage Subscriptions</a>
+  <a href="verificationrequest.html" class="block px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Verification Queue</a>
+</div>
 </div>
 <!-- Theme Toggle -->
 <button id="theme-toggle" onclick="toggleTheme()" title="Switch to Light Mode">
   <span class="material-symbols-outlined t-icon" style="font-size:1.15rem;">light_mode</span>
 </button>
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);">
-<img class="w-full h-full object-cover" data-alt="A professional studio director headshot in a cinematic lighting setup with deep shadows and sharp blue highlights, wearing a modern black turtleneck against a blurred high-tech studio background. The style is consistent with high-end tech branding, emphasizing authority and professional precision in the film industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
-</div>
-<div class="hidden md:block">
-<p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
-</div>
+<div class="relative">
+  <button id="profile-menu-btn" onclick="document.getElementById('profile-dropdown').classList.toggle('hidden')" class="flex items-center gap-3 text-left focus:outline-none group bg-transparent border-none p-0 cursor-pointer">
+    <div class="w-10 h-10 rounded-full overflow-hidden transition-transform group-hover:scale-105" style="box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);">
+      <img class="w-full h-full object-cover" data-alt="A professional studio director headshot in a cinematic lighting setup with deep shadows and sharp blue highlights, wearing a modern black turtleneck against a blurred high-tech studio background. The style is consistent with high-end tech branding, emphasizing authority and professional precision in the film industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+    </div>
+    <div class="hidden md:block">
+      <p style="font-size:0.95rem;font-weight:800;color:#006970;margin:0;">Alex Mercer</p>
+      <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;margin:0;">SYSTEM ADMIN</p>
+    </div>
+  </button>
+  <div id="profile-dropdown" class="hidden absolute right-0 mt-3 w-48 glass-panel rounded-2xl overflow-hidden z-50 shadow-2xl origin-top-right border border-black/5 dark:border-white/5">
+    <div class="p-2">
+      <a href="profile.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">person</span> My Profile
+      </a>
+      <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">settings</span> Settings
+      </a>
+      <div class="h-px bg-black/10 dark:bg-white/10 my-1 mx-2"></div>
+      <a href="/api/logout" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors font-semibold text-sm no-underline">
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">logout</span> Sign Out
+      </a>
+    </div>
+  </div>
 </div>
 </div>
 </header>
@@ -532,8 +556,8 @@
 <p style="font-size:0.95rem;color:#334155;margin-top:2px;">Real-time growth and ecosystem distribution.</p>
 </div>
 <div class="flex gap-2">
-<button class="neu-btn p-2 rounded-lg"><span class="material-symbols-outlined">refresh</span></button>
-<button class="neu-btn p-2 rounded-lg"><span class="material-symbols-outlined">download</span></button>
+<button id="btn-refresh-stats" onclick="refreshDashboard(this)" class="neu-btn p-2 rounded-lg transition-transform hover:scale-105 active:scale-95"><span class="material-symbols-outlined pointer-events-none">refresh</span></button>
+<button id="btn-download-csv" onclick="downloadCSV()" class="neu-btn p-2 rounded-lg transition-transform hover:scale-105 active:scale-95"><span class="material-symbols-outlined pointer-events-none">download</span></button>
 </div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
@@ -541,87 +565,100 @@
 <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group transition-all duration-500">
 <div class="flex justify-between items-start mb-4">
 <span class="neu-icon-badge material-symbols-outlined text-primary-container">groups</span>
-<span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+12%</span>
+<span id="stat-customers-pct" class="text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(0,105,112,0.08);color:#006970;">—</span>
 </div>
 <p class="label-caps-text mt-1">TOTAL CUSTOMERS</p>
 <h4 class="stat-number mt-2" id="stat-customers">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
-<div class="h-full bg-primary-container w-[70%] rounded-full"></div>
+<div id="bar-customers" class="h-full bg-primary-container rounded-full transition-all duration-700" style="width:0%"></div>
 </div>
 </div>
 <!-- Stat Card 2 -->
 <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group transition-all duration-500">
 <div class="flex justify-between items-start mb-4">
 <span class="neu-icon-badge material-symbols-outlined text-secondary">camera_outdoor</span>
-<span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+8%</span>
+<span id="stat-professionals-pct" class="text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(123,31,162,0.08);color:#7b1fa2;">—</span>
 </div>
 <p class="label-caps-text mt-1">ACTIVE PROFESSIONALS</p>
 <h4 class="stat-number mt-2" id="stat-professionals">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[45%] rounded-full"></div>
+<div id="bar-professionals" class="h-full bg-secondary rounded-full transition-all duration-700" style="width:0%"></div>
 </div>
 </div>
 <!-- Stat Card 3 -->
 <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group transition-all duration-500">
 <div class="flex justify-between items-start mb-4">
 <span class="neu-icon-badge material-symbols-outlined text-primary-fixed-dim">apartment</span>
-<span class="text-emerald-700 text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(46,125,50,0.1);">+24%</span>
+<span id="stat-studios-pct" class="text-xs font-bold px-2 py-1 rounded-md" style="background:rgba(0,105,112,0.08);color:#006970;">—</span>
 </div>
 <p class="label-caps-text mt-1">VERIFIED STUDIOS</p>
 <h4 class="stat-number mt-2" id="stat-studios">—</h4>
 <div class="mt-4 h-2 w-full neu-track rounded-full overflow-hidden">
-<div class="h-full bg-primary-fixed-dim w-[90%] rounded-full"></div>
+<div id="bar-studios" class="h-full bg-primary-fixed-dim rounded-full transition-all duration-700" style="width:0%"></div>
 </div>
 </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-<!-- Growth Chart (Visual Representation) -->
-<div class="lg:col-span-2 glass-panel p-8 rounded-3xl h-[400px] flex flex-col">
-<div class="flex justify-between items-center mb-8">
-<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;">User Acquisition Trend</h5>
-<div class="flex gap-4" style="font-size:0.78rem;font-weight:700;letter-spacing:0.07em;color:#475569;">
-<span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary-container"></div> Professionals</span>
-<span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-secondary"></div> Studios</span>
+<!-- Platform Overview Stats -->
+<div class="lg:col-span-2 glass-panel p-8 rounded-3xl flex flex-col">
+<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;margin-bottom:1.5rem;">Platform Overview</h5>
+<div class="grid grid-cols-2 gap-4 flex-1">
+  <div class="neu-btn rounded-2xl p-5 flex flex-col gap-1">
+    <span class="material-symbols-outlined text-primary-container" style="font-size:1.5rem;">shopping_bag</span>
+    <p class="label-caps-text mt-1">TOTAL ORDERS</p>
+    <h4 class="stat-number" id="stat-orders">—</h4>
+  </div>
+  <div class="neu-btn rounded-2xl p-5 flex flex-col gap-1">
+    <span class="material-symbols-outlined text-secondary" style="font-size:1.5rem;">payments</span>
+    <p class="label-caps-text mt-1">TOTAL REVENUE</p>
+    <h4 class="stat-number" id="stat-revenue">—</h4>
+  </div>
+  <div class="neu-btn rounded-2xl p-5 flex flex-col gap-1">
+    <span class="material-symbols-outlined" style="font-size:1.5rem;color:#f59e0b;">verified_user</span>
+    <p class="label-caps-text mt-1">VERIFICATIONS PENDING</p>
+    <h4 class="stat-number" id="stat-verif-pending">—</h4>
+  </div>
+  <div class="neu-btn rounded-2xl p-5 flex flex-col gap-1">
+    <span class="material-symbols-outlined" style="font-size:1.5rem;color:#ef4444;">inventory_2</span>
+    <p class="label-caps-text mt-1">LOW STOCK PRODUCTS</p>
+    <h4 class="stat-number" id="stat-low-stock">—</h4>
+  </div>
 </div>
 </div>
-<div class="flex-1 relative">
-<!-- Visual Chart Placeholder -->
-</div>
-</div>
-<!-- Subscription Tier Breakdown -->
+<!-- User Role Breakdown (live data) -->
 <div class="glass-panel p-8 rounded-3xl flex flex-col">
-<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;margin-bottom:1.5rem;">Tier Distribution</h5>
-<div class="space-y-6 flex-1">
-<div class="space-y-2">
-<div class="flex justify-between" style="font-size:0.95rem;">
-<span style="color:#0f172a;font-weight:600;">Pro Tier</span>
-<span style="color:#006970;font-weight:800;">58%</span>
-</div>
-<div class="h-2 neu-track rounded-full overflow-hidden">
-<div class="h-full bg-primary-container w-[58%] rounded-full"></div>
-</div>
-</div>
-<div class="space-y-2">
-<div class="flex justify-between" style="font-size:0.95rem;">
-<span style="color:#0f172a;font-weight:600;">Elite Professional</span>
-<span style="color:#7b1fa2;font-weight:800;">32%</span>
-</div>
-<div class="h-2 neu-track rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[32%] rounded-full"></div>
-</div>
-</div>
-<div class="space-y-2">
-<div class="flex justify-between" style="font-size:0.95rem;">
-<span style="color:#0f172a;font-weight:600;">Studio Enterprise</span>
-<span style="color:#006970;font-weight:800;">10%</span>
-</div>
-<div class="h-2 neu-track rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[10%] rounded-full"></div>
-</div>
-</div>
+<h5 style="font-size:1.05rem;font-weight:800;color:#0f172a;margin-bottom:1.5rem;">User Role Breakdown</h5>
+<div class="space-y-6 flex-1" id="role-breakdown">
+  <div class="space-y-2">
+    <div class="flex justify-between" style="font-size:0.95rem;">
+      <span style="color:#0f172a;font-weight:600;">Customers</span>
+      <span id="role-pct-customers" style="color:#006970;font-weight:800;">—</span>
+    </div>
+    <div class="h-2 neu-track rounded-full overflow-hidden">
+      <div id="role-bar-customers" class="h-full bg-primary-container rounded-full transition-all duration-700" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="space-y-2">
+    <div class="flex justify-between" style="font-size:0.95rem;">
+      <span style="color:#0f172a;font-weight:600;">Professionals</span>
+      <span id="role-pct-professionals" style="color:#7b1fa2;font-weight:800;">—</span>
+    </div>
+    <div class="h-2 neu-track rounded-full overflow-hidden">
+      <div id="role-bar-professionals" class="h-full bg-secondary rounded-full transition-all duration-700" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="space-y-2">
+    <div class="flex justify-between" style="font-size:0.95rem;">
+      <span style="color:#0f172a;font-weight:600;">Studios</span>
+      <span id="role-pct-studios" style="color:#006970;font-weight:800;">—</span>
+    </div>
+    <div class="h-2 neu-track rounded-full overflow-hidden">
+      <div id="role-bar-studios" class="h-full bg-primary rounded-full transition-all duration-700" style="width:0%"></div>
+    </div>
+  </div>
 </div>
 <div class="mt-auto pt-6" style="border-top: 1px solid rgba(0,0,0,0.08);">
-<button data-link="subscriptionmanagement" class="neu-btn w-full text-center text-xs font-label-caps py-2 rounded-lg cursor-pointer">VIEW REVENUE REPORT</button>
+  <p id="stat-total-users-label" style="font-size:0.78rem;color:#475569;text-align:center;">— total registered users</p>
 </div>
 </div>
 </div>
@@ -908,9 +945,24 @@ function pfResetBadgeChips(val) {
 <div id="footer-container"></div>
 </main>
 <!-- Floating Action Button (Admin Helper) -->
-<button class="fixed bottom-10 right-10 w-14 h-14 rounded-full flex items-center justify-center z-50 shimmer-effect neu-fab" style="color:#006970;">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
-</button>
+<div class="fixed bottom-10 right-10 z-50">
+  <button onclick="document.getElementById('fab-menu').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center shimmer-effect neu-fab focus:outline-none border-none" style="color:#006970;">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+  </button>
+  <div id="fab-menu" class="hidden absolute bottom-16 right-0 mb-4 w-56 glass-panel rounded-2xl overflow-hidden shadow-2xl border border-black/5 dark:border-white/5 transition-opacity">
+    <div class="p-2 flex flex-col gap-1">
+      <button onclick="openProductModal(); document.getElementById('fab-menu').classList.add('hidden')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm font-semibold text-left border-none bg-transparent w-full cursor-pointer" style="color:var(--neu-text)">
+        <span class="material-symbols-outlined text-primary-container">inventory_2</span> New Product
+      </button>
+      <button onclick="window.location='subscriptionmanagement.html'" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm font-semibold text-left border-none bg-transparent w-full cursor-pointer" style="color:var(--neu-text)">
+        <span class="material-symbols-outlined text-secondary">card_membership</span> Manage Users
+      </button>
+      <button onclick="downloadCSV(); document.getElementById('fab-menu').classList.add('hidden')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm font-semibold text-left border-none bg-transparent w-full cursor-pointer" style="color:var(--neu-text)">
+        <span class="material-symbols-outlined" style="color:#059669">assessment</span> Export Report
+      </button>
+    </div>
+  </div>
+</div>
 <script src="dashboard-components.js"></script>
 <script>
 /* ── Commerce Hub: Live product management ──────────────────── */
@@ -1222,7 +1274,20 @@ function pfResetBadgeChips(val) {
           <td class="px-8 py-6"><span class="px-3 py-1 rounded-full" style="font-size:0.75rem;font-weight:700;${style}">${tier.toUpperCase()}</span></td>
           <td class="px-8 py-6" style="font-size:0.95rem;color:#0f172a;font-weight:500;">${fmtDate(u.created_at)}</td>
           <td class="px-8 py-6"><div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-600"></div><span style="font-size:0.88rem;font-weight:600;color:#0f172a;">Active</span></div></td>
-          <td class="px-8 py-6 text-right"><button class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant">more_vert</button></td>
+          <td class="px-8 py-6 text-right relative">
+            <button onclick="document.getElementById('sub-menu-${u.id}').classList.toggle('hidden')" class="neu-btn p-1 rounded-lg material-symbols-outlined text-on-surface-variant focus:outline-none border-none cursor-pointer">more_vert</button>
+            <div id="sub-menu-${u.id}" class="hidden absolute right-8 top-12 mt-1 w-48 glass-panel rounded-2xl overflow-hidden z-50 shadow-2xl origin-top-right border border-black/5 dark:border-white/5 text-left">
+              <div class="p-2 flex flex-col gap-1">
+                <button onclick="window.location='subscriptionmanagement.html'" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm border-none bg-transparent w-full cursor-pointer text-inherit">
+                  <span class="material-symbols-outlined" style="font-size:1.2rem;">edit</span> Edit Role
+                </button>
+                <div class="h-px bg-black/10 dark:bg-white/10 my-1 mx-2"></div>
+                <button onclick="alert('Account suspended (Demo)'); document.getElementById('sub-menu-${u.id}').classList.add('hidden')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors font-semibold text-sm border-none bg-transparent w-full cursor-pointer">
+                  <span class="material-symbols-outlined" style="font-size:1.2rem;">block</span> Suspend User
+                </button>
+              </div>
+            </div>
+          </td>
         </tr>`;
       }).join('');
     } catch(e){}
@@ -1231,6 +1296,41 @@ function pfResetBadgeChips(val) {
   loadStats();
   loadVerifQueue();
   loadDashSubs();
+  
+  // Close dropdowns on outside click
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#profile-menu-btn') && !e.target.closest('#profile-dropdown')) {
+      document.getElementById('profile-dropdown')?.classList.add('hidden');
+    }
+    if (!e.target.closest('.neu-fab') && !e.target.closest('#fab-menu')) {
+      document.getElementById('fab-menu')?.classList.add('hidden');
+    }
+    if (!e.target.closest('td.relative')) {
+      document.querySelectorAll('[id^="sub-menu-"]').forEach(menu => menu.classList.add('hidden'));
+    }
+  });
+
+  window.refreshDashboard = async function(btn) {
+    const icon = btn.querySelector('span');
+    icon.classList.add('animate-spin');
+    await Promise.all([loadStats(), loadVerifQueue(), loadDashSubs(), window.loadProducts && window.loadProducts()]);
+    setTimeout(() => icon.classList.remove('animate-spin'), 500);
+  };
+  
+  window.downloadCSV = function() {
+    const data = "Report Date,Customers,Professionals,Studios\n" + 
+                 new Date().toLocaleDateString() + "," +
+                 document.getElementById('stat-customers').textContent + "," +
+                 document.getElementById('stat-professionals').textContent + "," +
+                 document.getElementById('stat-studios').textContent;
+    const blob = new Blob([data], {type: 'text/csv'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "platform_report.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 })();
 </script>
 </body></html>

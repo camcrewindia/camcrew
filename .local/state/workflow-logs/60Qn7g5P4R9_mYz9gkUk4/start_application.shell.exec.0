@@ -1,0 +1,31 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.24.0.2:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [04/Aug/2026 04:36:43] "[36mGET / HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:43] "[36mGET /styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:43] "[36mGET /tailwind-config.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:43] "[36mGET /header-loader.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:43] "[36mGET /footer-loader.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[36mGET /header.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[36mGET /footer.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[36mGET /attached_assets/camcrew_studio_logo_cop_1785515916927.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[36mGET /attached_assets/camcrew_studio_logo_cop_y_1785515916927.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:36:44] "[31m[1mGET /api/cart HTTP/1.1[0m" 401 -
+127.0.0.1 - - [04/Aug/2026 04:39:18] "[36mGET / HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:18] "[36mGET /styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:18] "[36mGET /tailwind-config.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:18] "[36mGET /header-loader.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:18] "[36mGET /footer-loader.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[36mGET /footer.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[36mGET /header.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[36mGET /attached_assets/camcrew_studio_logo_cop_y_1785515916927.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[36mGET /attached_assets/camcrew_studio_logo_cop_1785515916927.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [04/Aug/2026 04:39:20] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [04/Aug/2026 04:39:21] "[31m[1mGET /api/cart HTTP/1.1[0m" 401 -

@@ -279,15 +279,13 @@
       <div class="filter-card flex flex-col gap-2">
         <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Total Volume</label>
         <div class="flex items-baseline gap-2">
-          <span style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">$248.3k</span>
-          <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;">+12.5%</span>
+          <span id="stat-total-volume" style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">—</span>
         </div>
       </div>
       <div class="filter-card flex flex-col gap-2">
         <label style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Active Orders</label>
         <div class="flex items-baseline gap-2">
-          <span style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">1,402</span>
-          <span style="font-size:0.78rem;font-weight:700;color:#b71c1c;">High Priority</span>
+          <span id="stat-active-orders" style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.1;">—</span>
         </div>
       </div>
     </div>
@@ -318,11 +316,8 @@
       <div class="px-6 py-4 flex justify-between items-center" style="border-top:1px solid rgba(0,0,0,0.08);">
         <span style="font-size:0.88rem;color:#334155;" id="orders-showing">Loading…</span>
         <div class="flex gap-2">
-          <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1rem;">chevron_left</span></button>
-          <button class="page-btn-active">1</button>
-          <button class="page-btn">2</button>
-          <button class="page-btn">3</button>
-          <button class="page-btn"><span class="material-symbols-outlined" style="font-size:1rem;">chevron_right</span></button>
+          <button class="page-btn" disabled><span class="material-symbols-outlined" style="font-size:1rem;">chevron_left</span></button>
+          <button class="page-btn" disabled><span class="material-symbols-outlined" style="font-size:1rem;">chevron_right</span></button>
         </div>
       </div>
     </div>

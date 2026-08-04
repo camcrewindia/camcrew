@@ -370,7 +370,9 @@ input:not(:placeholder-shown) ~ .floating-label {
     overflow: hidden;
     transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
     text-decoration: none;
-}
+
+      position: relative;
+      overflow: hidden;}
 .cc-btn-primary::after {
     content: '';
     position: absolute;
@@ -448,4 +450,26 @@ input:not(:placeholder-shown) ~ .floating-label {
     width: 100%; height: 100%;
     z-index: -1;
     pointer-events: none;
+}
+
+/* "?"? Ambient animations (Shared) "?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"?"? */
+@keyframes float-slow  { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-24px)} }
+@keyframes float-mid   { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-16px)} }
+@keyframes pulse-glow  { 0%,100%{opacity:.3} 50%{opacity:.6} }
+@keyframes scan-line   { 0%{transform:translateY(-100%)} 100%{transform:translateY(100vh)} }
+
+.orb-1 { animation: float-slow 9s ease-in-out infinite, pulse-glow 5s ease-in-out infinite; }
+.orb-2 { animation: float-mid  7s ease-in-out infinite 1.5s, pulse-glow 7s ease-in-out infinite 2s; }
+.orb-3 { animation: float-slow 11s ease-in-out infinite 3s, pulse-glow 6s ease-in-out infinite 1s; }
+.scan-line {
+  position:absolute; inset-x:0; height:2px;
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,.15), transparent);
+  animation: scan-line 9s linear infinite;
+  pointer-events:none;
+}
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.04) 1px, transparent 1px);
+  background-size: 52px 52px;
 }

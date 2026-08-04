@@ -138,14 +138,20 @@
 
   /* ── Form inputs ── */
   .fi {
-    width:100%; background-color:var(--nb) !important; border:none;
-    border-radius:0.6rem; padding:0.75rem 1rem; color:#dce4e5 !important;
-    font-size:0.9rem; outline:none;
-    box-shadow: var(--ni-s);
+    width:100%; background-color:var(--nb) !important; border:none !important;
+    border-radius:0.75rem !important; padding:0.75rem 1.2rem !important; color:#dce4e5 !important;
+    font-size:0.9rem !important; outline:none !important;
+    box-shadow: var(--ni-s) !important;
     transition:box-shadow 0.2s;
     font-family:'Plus Jakarta Sans',sans-serif;
     color-scheme: dark;
     -webkit-text-fill-color: #dce4e5;
+  }
+  .fi::placeholder {
+    font-size: 0.8rem;
+    opacity: 0.5;
+    color: #849495;
+    -webkit-text-fill-color: #849495;
   }
   .fi:focus {
     box-shadow: inset 3px 3px 8px var(--ns), inset -3px -3px 8px var(--nl),
@@ -412,6 +418,12 @@
     -webkit-text-fill-color:#1a2a2b !important;
     color-scheme:light !important;
   }
+  html.light .fi::placeholder {
+    color: #5a7475 !important;
+    -webkit-text-fill-color: #5a7475 !important;
+    opacity: 0.6;
+    font-size: 0.8rem;
+  }
   html.light .fi:-webkit-autofill,
   html.light .fi:-webkit-autofill:hover,
   html.light .fi:-webkit-autofill:focus {
@@ -643,7 +655,7 @@
             <span class="material-symbols-outlined theme-icon-mobile" style="font-size:1rem;">light_mode</span>
           </button>
           <button id="close-btn" class="btn-sm btn-sm-ghost" title="Close"
-            onclick="history.length > 1 ? history.back() : window.location.href='index.html'">
+            onclick="window.location.href = sessionStorage.getItem('cc_return_url') || 'index.html'">
             <span class="material-symbols-outlined" style="font-size:1rem;">close</span>
           </button>
         </div>
@@ -759,26 +771,87 @@
 
       <!-- ═══ ACCOUNT ═════════════════════════════════════════════ -->
       <div id="sec-account" class="hidden">
-        <p class="sec-sub">Update your name and manage account security.</p>
-        <div class="data-card max-w-lg space-y-5">
-          <div>
-            <label class="fi-label">Display Name</label>
-            <input id="ac-name" class="fi" type="text" placeholder="Your display name"/>
-          </div>
-          <div>
-            <label class="fi-label">Email Address</label>
-            <input id="ac-email" class="fi opacity-60 cursor-not-allowed" type="email" readonly/>
-          </div>
-          <div>
-            <label class="fi-label">Role</label>
-            <input id="ac-role" class="fi opacity-60 cursor-not-allowed" type="text" readonly/>
-          </div>
-          <div id="ac-msg" class="hidden text-sm"></div>
-          <div class="flex gap-3 flex-wrap">
-            <button onclick="saveAccount()" class="cc-btn-primary" id="ac-save" style="width:auto;padding:0.7rem 1.8rem">Save Changes</button>
-            <a href="forgot-password.html" class="btn-sm btn-sm-ghost" style="padding:0.7rem 1.2rem;text-decoration:none;">
-              <span class="material-symbols-outlined" style="font-size:1rem;">lock_reset</span> Change Password
+        <div class="flex justify-between items-center mb-6">
+          <p class="sec-sub m-0">Update your profile details and manage account security.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Left Column: Avatar & Quick Info -->
+          <div class="col-span-1 space-y-5">
+            <div class="data-card text-center flex flex-col items-center justify-center p-6">
+              <div class="avatar-ring mb-4" style="width:100px; height:100px;">
+                <div class="avatar-inner flex items-center justify-center" style="font-size:2.5rem; font-weight:900; color:var(--ac);">
+                  <span id="ac-initial">?</span>
+                </div>
+              </div>
+              <h4 id="ac-display-title" style="font-size:1.1rem; font-weight:800; color:#dce4e5; margin-bottom:0.2rem;">Your Name</h4>
+              <p id="ac-role-badge" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ac); font-weight:700;">CUSTOMER</p>
+              
+              <div class="mt-6 w-full pt-4" style="border-top:1px solid var(--ns); text-align:left;">
+                <div class="flex justify-between items-center mb-2">
+                  <span style="font-size:0.75rem; color:#849495;">Member Since</span>
+                  <span style="font-size:0.8rem; font-weight:600;">Aug 2026</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span style="font-size:0.75rem; color:#849495;">Status</span>
+                  <span style="padding:0.2rem 0.5rem; font-size:0.7rem; font-weight:700; border-radius:999px; background:rgba(74,222,128,0.1); color:#4ade80; border:1px solid rgba(74,222,128,0.2);">Active</span>
+                </div>
+              </div>
+            </div>
+            
+            <a href="forgot-password.html" class="data-card flex items-center justify-between" style="text-decoration:none; padding:1.25rem; cursor:pointer; transition:all 0.2s;">
+              <div class="flex items-center gap-3">
+                <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--ac);">
+                  <span class="material-symbols-outlined" style="font-size:1.25rem;">lock_reset</span>
+                </div>
+                <div>
+                  <h5 style="font-weight:700; font-size:0.9rem; color:#dce4e5; margin:0; line-height:1.2;">Security</h5>
+                  <p style="font-size:0.75rem; color:#849495; margin:0; margin-top:0.2rem;">Change your password</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined" style="color:#849495; font-size:1.2rem;">chevron_right</span>
             </a>
+          </div>
+
+          <!-- Right Column: Form Fields -->
+          <div class="col-span-1 md:col-span-2">
+            <div class="data-card">
+              <h3 style="font-size:1.1rem; font-weight:800; color:#dce4e5; margin-bottom:1.5rem;">Personal Information</h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="col-span-1 sm:col-span-2">
+                  <label class="fi-label">Display Name</label>
+                  <input id="ac-name" class="fi" type="text" placeholder="Your display name"/>
+                </div>
+                
+                <div>
+                  <label class="fi-label" style="display:flex; align-items:center; gap:0.4rem;">
+                    Email Address
+                    <span style="color:#4ade80; font-size:0.7rem; font-weight:800; display:flex; align-items:center; gap:0.1rem; background:rgba(74,222,128,0.1); padding:0.1rem 0.4rem; border-radius:999px;">
+                      <span class="material-symbols-outlined" style="font-size:0.8rem;">verified</span> Verified
+                    </span>
+                  </label>
+                  <input id="ac-email" class="fi opacity-60 cursor-not-allowed" type="email" readonly/>
+                </div>
+
+                <div>
+                  <label class="fi-label">Phone Number</label>
+                  <input id="ac-phone" class="fi" type="tel" placeholder="+91 00000 00000"/>
+                </div>
+
+                <div class="col-span-1 sm:col-span-2">
+                  <label class="fi-label">Account Role</label>
+                  <input id="ac-role" class="fi opacity-60 cursor-not-allowed" type="text" readonly/>
+                </div>
+              </div>
+
+              <div id="ac-msg" class="hidden text-sm" style="margin-top:1rem;"></div>
+              
+              <div class="flex justify-end gap-3 mt-8 pt-6" style="border-top:1px solid var(--ns);">
+                <button type="button" class="btn-sm btn-sm-ghost" onclick="loadAccount()" style="padding:0.75rem 1.5rem; border-radius:0.75rem;">Discard</button>
+                <button onclick="saveAccount()" class="btn-sm btn-sm-cyan" id="ac-save" style="padding:0.75rem 1.5rem; border-radius:0.75rem; background:rgba(0,219,233,0.1); border:1px solid rgba(0,219,233,0.3);">Save Changes</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -837,38 +910,168 @@
         </div>
       </div>
       <div id="addr-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
-      <button type="submit" class="cc-btn-primary" id="addr-submit">Save Address</button>
+      <div style="margin-top:2rem;"></div>
+      <div class="flex justify-end gap-3">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeModal('modal-address')" style="padding:0.75rem 1.5rem; border-radius:0.75rem;">Cancel</button>
+        <button type="submit" class="btn-sm btn-sm-cyan" id="addr-submit" style="padding:0.75rem 1.5rem; border-radius:0.75rem; background:rgba(0,219,233,0.1); border:1px solid rgba(0,219,233,0.3);">Save Address</button>
+      </div>
     </form>
   </div>
 </div>
 
 <!-- Add Payment Method Modal -->
+<style>
+  .pm-type-selector { display:flex; gap:0.5rem; margin-bottom:1.5rem; overflow-x:auto; padding-bottom:0.25rem; scrollbar-width:none; }
+  .pm-type-selector::-webkit-scrollbar { display:none; }
+  .pm-type-btn { 
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:0.4rem; 
+    padding:0.75rem 0.5rem; border-radius:0.75rem; 
+    background:rgba(255,255,255,0.05); border:1px solid var(--ns); 
+    color:#dce4e5; opacity:0.6; cursor:pointer; font-size:0.75rem; font-weight:700; transition:all 0.2s; white-space:nowrap;
+  }
+  html.light .pm-type-btn { background:rgba(0,0,0,0.04); color:#0f172a; opacity:0.6; border-color:rgba(0,0,0,0.1); }
+  .pm-type-btn:hover { opacity:0.8; }
+  .pm-type-btn.active { 
+    background:rgba(0,219,233,0.1); border-color:#00dbe9; color:#00dbe9; opacity:1;
+    box-shadow:inset 0 0 10px rgba(0,219,233,0.1);
+  }
+  .pm-type-btn .material-symbols-outlined { font-size:1.5rem; }
+  .pm-section { display:none; animation:fadeIn 0.3s ease; }
+  .pm-section.active { display:block; }
+  
+  /* Card visual */
+  .pm-card-visual {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-radius: 1rem; padding: 1.25rem; color: #fff;
+    margin-bottom: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    position: relative; overflow: hidden;
+  }
+  .pm-card-visual::after {
+    content:''; position:absolute; top:-50%; right:-20%;
+    width:200px; height:200px; background:radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius:50%; pointer-events:none;
+  }
+
+
+</style>
 <div id="modal-payment" class="modal-overlay" onclick="closeModal('modal-payment',event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:450px;">
     <div class="flex items-center justify-between mb-5">
-      <h3 style="color:#dce4e5;font-weight:700;font-size:1.1rem;">Add Payment Method</h3>
+      <h3 style="color:#dce4e5;font-weight:800;font-size:1.2rem;">Add New Payment</h3>
       <button onclick="closeModal('modal-payment')" class="modal-close-btn"><span class="material-symbols-outlined">close</span></button>
     </div>
-    <form id="pay-form" onsubmit="submitPayment(event)" class="space-y-4">
-      <div>
-        <label class="fi-label">Type</label>
-        <select id="pay-type" class="fi" onchange="updatePayFields()">
-          <option value="card">Credit / Debit Card</option>
-          <option value="upi">UPI</option>
-          <option value="wallet">Wallet</option>
-          <option value="netbanking">Net Banking</option>
-        </select>
+    
+    <div class="pm-type-selector">
+      <div class="pm-type-btn active" id="btn-pm-card" onclick="setPaymentType('card')">
+        <span class="material-symbols-outlined">credit_card</span> Card
       </div>
-      <div>
-        <label class="fi-label" id="pay-label-lbl">Card Label</label>
-        <input id="pay-label" class="fi" type="text" required placeholder="e.g. HDFC Visa"/>
+      <div class="pm-type-btn" id="btn-pm-upi" onclick="setPaymentType('upi')">
+        <span class="material-symbols-outlined">account_balance</span> UPI
       </div>
-      <div id="pay-last4-wrap">
-        <label class="fi-label">Last 4 Digits</label>
-        <input id="pay-last4" class="fi" type="text" maxlength="4" placeholder="4242" inputmode="numeric"/>
+      <div class="pm-type-btn" id="btn-pm-netbanking" onclick="setPaymentType('netbanking')">
+        <span class="material-symbols-outlined">museum</span> Net Banking
       </div>
-      <div id="pay-err" class="hidden text-sm" style="color:#ffb4ab;"></div>
-      <button type="submit" class="cc-btn-primary">Add Method</button>
+      <div class="pm-type-btn" id="btn-pm-wallet" onclick="setPaymentType('wallet')">
+        <span class="material-symbols-outlined">account_balance_wallet</span> Wallet
+      </div>
+    </div>
+
+    <form id="pay-form" onsubmit="submitPayment(event)">
+      <input type="hidden" id="pay-type" value="card">
+
+      <!-- CARD SECTION -->
+      <div id="sec-card" class="pm-section active space-y-4">
+        <div class="pm-card-visual">
+          <div class="flex justify-between items-start mb-6">
+            <span class="material-symbols-outlined">contactless</span>
+            <div style="font-style:italic;font-weight:800;opacity:0.9;">VISA</div>
+          </div>
+          <div id="card-preview-num" style="font-family:monospace;font-size:1.25rem;letter-spacing:0.15em;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,0.5);">•••• •••• •••• ••••</div>
+          <div class="flex justify-between">
+            <div>
+              <div style="font-size:0.55rem;text-transform:uppercase;opacity:0.7;letter-spacing:0.1em;margin-bottom:0.2rem;">Cardholder Name</div>
+              <div id="card-preview-name" style="font-size:0.85rem;font-weight:600;text-transform:uppercase;">YOUR NAME</div>
+            </div>
+            <div>
+              <div style="font-size:0.55rem;text-transform:uppercase;opacity:0.7;letter-spacing:0.1em;margin-bottom:0.2rem;">Expires</div>
+              <div id="card-preview-exp" style="font-size:0.85rem;font-weight:600;">MM/YY</div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <label class="fi-label">Cardholder Name *</label>
+          <input id="pay-card-name" class="fi" type="text" placeholder="e.g. John Doe" oninput="document.getElementById('card-preview-name').textContent = this.value || 'YOUR NAME';"/>
+        </div>
+        <div>
+          <label class="fi-label">Card Number *</label>
+          <input id="pay-card-num" class="fi" type="text" maxlength="19" placeholder="0000 0000 0000 0000" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g,'').replace(/(.{4})/g, '$1 ').trim(); document.getElementById('card-preview-num').textContent = this.value || '•••• •••• •••• ••••';"/>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="fi-label">Expiry Date *</label>
+            <input id="pay-card-exp" class="fi" type="text" maxlength="5" placeholder="MM/YY" inputmode="numeric" oninput="this.value = this.value.replace(/^(\d{2})(\d{1,2})/, '$1/$2'); document.getElementById('card-preview-exp').textContent = this.value || 'MM/YY';"/>
+          </div>
+          <div>
+            <label class="fi-label">CVV *</label>
+            <input id="pay-card-cvv" class="fi" type="password" maxlength="4" placeholder="123" inputmode="numeric"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPI SECTION -->
+      <div id="sec-upi" class="pm-section space-y-4">
+        <div>
+          <label class="fi-label">UPI ID / VPA *</label>
+          <div style="display:flex;gap:0.5rem;">
+            <input id="pay-upi-id" class="fi" type="text" placeholder="e.g. yourname@okicici" style="flex:1;"/>
+            <button type="button" class="btn-sm btn-sm-cyan" onclick="verifyUPI()">Verify</button>
+          </div>
+          <div id="upi-verify-msg" style="font-size:0.75rem;margin-top:0.5rem;color:#4ade80;display:none;font-weight:700;">✓ Verified Successfully</div>
+        </div>
+      </div>
+
+      <!-- NET BANKING SECTION -->
+      <div id="sec-netbanking" class="pm-section space-y-4">
+        <div>
+          <label class="fi-label">Select Bank *</label>
+          <select id="pay-nb-bank" class="fi">
+            <option value="">-- Choose your bank --</option>
+            <option value="HDFC Bank">HDFC Bank</option>
+            <option value="SBI">State Bank of India (SBI)</option>
+            <option value="ICICI Bank">ICICI Bank</option>
+            <option value="Axis Bank">Axis Bank</option>
+            <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+            <option value="Other Bank">Other Bank...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- WALLET SECTION -->
+      <div id="sec-wallet" class="pm-section space-y-4">
+        <div>
+          <label class="fi-label">Select Wallet *</label>
+          <select id="pay-wallet-name" class="fi">
+            <option value="">-- Choose wallet --</option>
+            <option value="Paytm">Paytm</option>
+            <option value="Amazon Pay">Amazon Pay</option>
+            <option value="PhonePe">PhonePe Wallet</option>
+            <option value="Mobikwik">Mobikwik</option>
+            <option value="Freecharge">Freecharge</option>
+          </select>
+        </div>
+        <div>
+          <label class="fi-label">Linked Mobile Number *</label>
+          <input id="pay-wallet-num" class="fi" type="text" maxlength="10" placeholder="10-digit mobile number" inputmode="numeric"/>
+        </div>
+      </div>
+
+      <div id="pay-err" class="hidden text-sm" style="color:#ffb4ab;margin-top:1rem;"></div>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeModal('modal-payment')" style="padding:0.7rem 1.5rem;">Cancel</button>
+        <button type="submit" class="btn-sm btn-sm-cyan" style="padding:0.7rem 1.5rem;">Save Payment</button>
+      </div>
     </form>
   </div>
 </div>
@@ -913,8 +1116,6 @@
   <span id="toast-icon" class="material-symbols-outlined" style="font-size:1.1rem;color:var(--ac);">check_circle</span>
   <span id="toast-msg" class="text-sm font-semibold" style="color:var(--ac);"></span>
 </div>
-
-<div id="site-footer"></div>
 
 <script>
 // ════════════════════════════════════════════════════════════════════
@@ -1403,25 +1604,59 @@ async function loadPayments() {
 function openAddPaymentModal() {
   document.getElementById('pay-form').reset();
   document.getElementById('pay-err').classList.add('hidden');
-  updatePayFields();
+  document.getElementById('card-preview-name').textContent = 'YOUR NAME';
+  document.getElementById('card-preview-num').textContent = '•••• •••• •••• ••••';
+  document.getElementById('card-preview-exp').textContent = 'MM/YY';
+  document.getElementById('upi-verify-msg').style.display = 'none';
+  setPaymentType('card');
   document.getElementById('modal-payment').classList.add('open');
 }
 
-function updatePayFields() {
-  const type = document.getElementById('pay-type').value;
-  const last4Wrap = document.getElementById('pay-last4-wrap');
-  const labelLbl  = document.getElementById('pay-label-lbl');
-  const placeholders = { card:'e.g. HDFC Visa', upi:'e.g. yourname@upi', wallet:'e.g. Paytm Wallet', netbanking:'e.g. SBI Net Banking' };
-  document.getElementById('pay-label').placeholder = placeholders[type] || '';
-  labelLbl.textContent = type === 'upi' ? 'UPI ID' : type === 'wallet' ? 'Wallet Name' : type === 'netbanking' ? 'Bank Name' : 'Card Label';
-  last4Wrap.style.display = type === 'card' ? '' : 'none';
+function setPaymentType(type) {
+  document.getElementById('pay-type').value = type;
+  document.querySelectorAll('.pm-type-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-pm-' + type).classList.add('active');
+  
+  document.querySelectorAll('.pm-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + type).classList.add('active');
+}
+
+function verifyUPI() {
+  const upi = document.getElementById('pay-upi-id').value.trim();
+  if (!upi) return showToast('Enter UPI ID first', true);
+  document.getElementById('upi-verify-msg').style.display = 'block';
+  document.getElementById('upi-verify-msg').textContent = '✓ Verified ' + upi;
 }
 
 async function submitPayment(e) {
   e.preventDefault();
   const type  = document.getElementById('pay-type').value;
-  const label = document.getElementById('pay-label').value.trim();
-  const last4 = document.getElementById('pay-last4').value.trim();
+  let label = '';
+  let last4 = '';
+
+  if (type === 'card') {
+    const cName = document.getElementById('pay-card-name').value.trim();
+    const cNum = document.getElementById('pay-card-num').value.replace(/\D/g, '');
+    const cExp = document.getElementById('pay-card-exp').value.trim();
+    const cCvv = document.getElementById('pay-card-cvv').value.trim();
+    if (!cName || cNum.length < 15 || !cExp || !cCvv) return showToast('Please fill all card details', true);
+    label = cName + ' Card';
+    last4 = cNum.slice(-4);
+  } else if (type === 'upi') {
+    const upi = document.getElementById('pay-upi-id').value.trim();
+    if (!upi) return showToast('Please enter UPI ID', true);
+    label = upi;
+  } else if (type === 'netbanking') {
+    const nb = document.getElementById('pay-nb-bank').value;
+    if (!nb) return showToast('Please select a bank', true);
+    label = nb;
+  } else if (type === 'wallet') {
+    const wn = document.getElementById('pay-wallet-name').value;
+    const wnum = document.getElementById('pay-wallet-num').value.trim();
+    if (!wn || !wnum) return showToast('Please fill wallet details', true);
+    label = wn;
+  }
+
   const errEl = document.getElementById('pay-err');
   errEl.classList.add('hidden');
   const res  = await fetch('/api/customer/payment-methods', {
@@ -1633,6 +1868,15 @@ function loadAccount() {
   document.getElementById('ac-name').value  = S.profile.display_name || '';
   document.getElementById('ac-email').value = S.profile.email;
   document.getElementById('ac-role').value  = S.profile.role.charAt(0).toUpperCase() + S.profile.role.slice(1);
+  
+  // Hydrate visual elements
+  const displayName = S.profile.display_name || S.profile.email.split('@')[0];
+  document.getElementById('ac-display-title').textContent = displayName;
+  document.getElementById('ac-initial').textContent = displayName.charAt(0).toUpperCase();
+  document.getElementById('ac-role-badge').textContent = S.profile.role.toUpperCase();
+  
+  // Reset message
+  document.getElementById('ac-msg').classList.add('hidden');
 }
 
 async function saveAccount() {
@@ -1649,6 +1893,8 @@ async function saveAccount() {
   btn.disabled = false; btn.style.opacity='1';
   if (data.ok) {
     S.profile.display_name = name;
+    document.getElementById('ac-display-title').textContent = name;
+    document.getElementById('ac-initial').textContent = name.charAt(0).toUpperCase();
     populateSidebar();
     showToast('Profile saved!');
   } else {
@@ -1708,7 +1954,6 @@ async function init() {
 
 init();
 </script>
-<script src="footer-loader.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════════════
 // Theme Toggle — matches professional-profile pattern

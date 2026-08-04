@@ -1,0 +1,19 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.24.0.2:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [03/Aug/2026 15:39:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:42] "GET /styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:42] "GET /tailwind-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:42] "GET /header-loader.js HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:42] "GET /footer-loader.js HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "GET /header.html HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "GET /footer.html HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "GET /attached_assets/camcrew_studio_logo_cop_1785515916927.png HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "GET /attached_assets/camcrew_studio_logo_cop_y_1785515916927.png HTTP/1.1" 200 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+127.0.0.1 - - [03/Aug/2026 15:39:44] "[31m[1mGET /api/cart HTTP/1.1[0m" 401 -

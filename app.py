@@ -256,34 +256,8 @@ def seed_demo_data(user_id):
     with get_db() as conn:
         if conn.execute("SELECT COUNT(*) AS c FROM orders WHERE user_id=%s", (user_id,)).fetchone()['c']:
             return  # already seeded
-        rnd = lambda n: ''.join(random.choices(_string.digits, k=n))
-        orders = [
-            (f"CC-{rnd(6)}", "delivered", json.dumps([
-                {"name": "Canon EOS R5 Body", "qty": 1, "price": 12999},
-                {"name": "EF 24-70mm f/2.8L Lens", "qty": 1, "price": 8499},
-            ]), 21498, f"CCTK{rnd(8)}", "delivered"),
-            (f"CC-{rnd(6)}", "processing", json.dumps([
-                {"name": "DJI Ronin-S Gimbal", "qty": 1, "price": 15999},
-            ]), 15999, f"CCTK{rnd(8)}", "in_transit"),
-            (f"CC-{rnd(6)}", "cancelled", json.dumps([
-                {"name": "LED Studio Light Kit", "qty": 2, "price": 3999},
-            ]), 7998, None, None),
-        ]
-        for ref, status, items, total, trk_num, trk_status in orders:
-            conn.execute(
-                "INSERT INTO orders (user_id,order_ref,status,items_json,total_amount,tracking_number,tracking_status) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                (user_id, ref, status, items, total, trk_num, trk_status),
-            )
-        bookings = [
-            ("Arjun Mehta", "Wedding Photography", "2026-08-15", "confirmed", 25000, "Looking forward to your big day!"),
-            ("Studio Lumina", "Corporate Video Production", "2026-09-01", "pending", 45000, "Need a 2-minute brand film."),
-            ("Priya Sharma", "Portrait Session", "2026-07-10", "completed", 8000, None),
-        ]
-        for prof, svc, date, status, amt, note in bookings:
-            conn.execute(
-                "INSERT INTO bookings (user_id,professional_name,service,booking_date,status,amount,note) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                (user_id, prof, svc, date, status, amt, note),
-            )
+
+
         conn.execute(
             "INSERT INTO rewards (user_id,points,tier) VALUES (%s,1250,'Silver') ON CONFLICT (user_id) DO NOTHING",
             (user_id,)
@@ -788,6 +762,34 @@ def login():
 
     if not row or not check_password_hash(row["password"], password):
         return jsonify({"ok": False, "error": "Invalid email or password."}), 401
+        
+    if row["role"] == "admin":
+        return jsonify({"ok": False, "error": "Admins must log in through the admin portal."}), 403
+
+    session["user_id"] = row["id"]
+    session["email"]   = row["email"]
+    session["role"]    = row["role"]
+
+    return jsonify({"ok": True, "user": {"email": row["email"], "role": row["role"]}})
+
+
+@app.route("/api/admin/login", methods=["POST"])
+def admin_login():
+    data = request.get_json(force=True)
+    email    = (data.get("email")    or "").strip().lower()
+    password = (data.get("password") or "").strip()
+
+    if not email or not password:
+        return jsonify({"ok": False, "error": "Email and password are required."}), 400
+
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM users WHERE email = %s", (email,)).fetchone()
+
+    if not row or not check_password_hash(row["password"], password):
+        return jsonify({"ok": False, "error": "Invalid email or password."}), 401
+
+    if row["role"] != "admin":
+        return jsonify({"ok": False, "error": "Access denied. Admin accounts only."}), 403
 
     session["user_id"] = row["id"]
     session["email"]   = row["email"]

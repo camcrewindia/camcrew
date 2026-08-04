@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en" data-theme="dark">
+<html class="dark" lang="en">
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="styles.css">
 <style>
   /* ── Tesla Cybertruck Theme System ──────────────────────────── */
-  :root, [data-theme="dark"] {
+  :root, 
     --pe-bg:     #16161e;
     --pe-dark:   #0d0d16;
     --pe-light:  #1f1f2c;
@@ -20,7 +20,7 @@
     --pe-border: rgba(255,255,255,0.1);
     --pe-card:   rgba(22,22,30,0.8);
   }
-  [data-theme="light"] {
+  
     --pe-bg:     #eef1f8;
     --pe-dark:   #c5cad8;
     --pe-light:  #ffffff;
@@ -31,96 +31,73 @@
     --pe-border: rgba(0,0,0,0.1);
     --pe-card:   rgba(238,241,248,0.9);
   }
-  [data-theme="light"] body { background-color: var(--pe-bg) !important; color: var(--pe-text) !important; }
-  [data-theme="light"] .edit-section { background: var(--pe-card); border-color: var(--pe-border); }
-  [data-theme="light"] .section-title { color: #1a1a2e; }
-  [data-theme="light"] .section-subtitle { color: var(--pe-muted); }
-  [data-theme="light"] .cc-label { color: var(--pe-muted); }
-  [data-theme="light"] .cc-input { color: var(--pe-text) !important; border-bottom-color: rgba(0,0,0,0.15) !important; }
-  [data-theme="light"] .cc-input:focus { border-bottom-color: var(--pe-accent) !important; }
-  [data-theme="light"] .cc-input::placeholder { color: rgba(90,104,128,0.5) !important; }
-  [data-theme="light"] .cc-textarea { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.12); color: var(--pe-text); }
-  [data-theme="light"] .cc-textarea:focus { border-color: var(--pe-accent); }
-  [data-theme="light"] .cat-chip { border-color: rgba(0,0,0,0.15); color: var(--pe-muted); }
-  [data-theme="light"] .cat-chip.selected { background: rgba(0,96,204,0.1); border-color: var(--pe-accent); color: var(--pe-accent); }
-  [data-theme="light"] .service-item { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); }
-  [data-theme="light"] .service-item:hover { border-color: rgba(0,96,204,0.3); }
-  [data-theme="light"] .loc-tag { background: rgba(0,96,204,0.08); border-color: rgba(0,96,204,0.25); color: var(--pe-accent); }
-  [data-theme="light"] .social-row { border-bottom-color: rgba(0,0,0,0.1); }
-  [data-theme="light"] .social-icon-wrap { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
-  [data-theme="light"] #save-bar { background: rgba(238,241,248,0.95); border-color: rgba(0,96,204,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
-  [data-theme="light"] #save-bar-text { color: var(--pe-muted); }
-  [data-theme="light"] #save-bar-text.dirty { color: var(--pe-text); }
-  [data-theme="light"] .media-thumb { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
-  [data-theme="light"] .section-divider-icon { background: rgba(0,96,204,0.08); border-color: rgba(0,96,204,0.2); }
-  [data-theme="light"] #avatar-ring { border-color: rgba(0,96,204,0.4); background: rgba(0,96,204,0.04); }
-  [data-theme="light"] #avatar-ring:hover { border-color: var(--pe-accent); box-shadow: 0 0 0 6px rgba(0,96,204,0.1); }
-  [data-theme="light"] .fixed.inset-0 div[style*="rgba(0,219,233"] { opacity: 0.08; }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   /* ── Dark mode accent update ── */
-  [data-theme="dark"] .cc-input { color: var(--pe-text) !important; }
-  [data-theme="dark"] .cc-input:focus { border-bottom-color: var(--pe-accent) !important; }
-  [data-theme="dark"] .drag-over { border-color: var(--pe-accent) !important; }
-  [data-theme="dark"] .cat-chip.selected { background: rgba(26,138,255,0.1); border-color: var(--pe-accent); color: var(--pe-accent); }
-  [data-theme="dark"] .loc-tag { background: rgba(26,138,255,0.08); border-color: rgba(26,138,255,0.25); color: var(--pe-accent); }
-  [data-theme="dark"] .loc-tag button:hover { color: #ff5252; }
-  [data-theme="dark"] #save-bar { border-color: rgba(26,138,255,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(26,138,255,0.1); }
-  [data-theme="dark"] #avatar-ring { border-color: rgba(26,138,255,0.4); background: rgba(26,138,255,0.04); }
-  [data-theme="dark"] #avatar-ring:hover { border-color: var(--pe-accent); box-shadow: 0 0 0 6px rgba(26,138,255,0.1); }
-  [data-theme="dark"] .section-divider-icon { background: rgba(26,138,255,0.08); border-color: rgba(26,138,255,0.2); }
-  [data-theme="dark"] .service-item:hover { border-color: rgba(26,138,255,0.25); }
-  [data-theme="dark"] p[style*="color:#849495"] { color: var(--pe-muted) !important; }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   /* ── Theme-aware logo switching ── */
   .cc-logo-dark  { display: block; }
   .cc-logo-light { display: none;  }
-  [data-theme="light"] .cc-logo-dark  { display: none;  }
-  [data-theme="light"] .cc-logo-light { display: block; }
+  
+  
 
-  /* ── Theme toggle button ── */
-  #theme-toggle {
-    position: fixed; top: 1.1rem; right: 4.5rem; z-index: 600;
-    width: 2.4rem; height: 2.4rem; border-radius: 50%;
-    border: none; cursor: pointer;
-    background: rgba(22,22,30,0.92);
-    box-shadow: 3px 3px 8px #0d0d16, -3px -3px 8px #1f1f2c;
-    color: #1a8aff;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s ease; backdrop-filter: blur(8px);
-  }
-  [data-theme="light"] #theme-toggle {
-    background: rgba(238,241,248,0.92);
-    box-shadow: 3px 3px 8px #c5cad8, -3px -3px 8px #ffffff;
-    color: #0060cc;
-  }
-  #theme-toggle:hover { transform: scale(1.1); box-shadow: 4px 4px 12px var(--pe-dark), -4px -4px 12px var(--pe-light), 0 0 14px var(--pe-accent-glow); }
-  #theme-toggle:active { transform: scale(1.0); }
-
-  /* ── Background blobs in light mode ── */
-  [data-theme="light"] .fixed.inset-0 { opacity: 0.4; }
-
-  /* ── Inputs ───────────────────────────────────────────────────── */
+  /* Cleaned */
+/* ── Inputs ───────────────────────────────────────────────────── */
   .cc-input {
     width: 100%;
-    background: transparent !important;
-    background-color: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.12) !important;
-    border-radius: 0 !important;
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 0.75rem !important;
     box-shadow: none !important;
     color: #dce4e5 !important;
-    padding: 0.75rem 0;
+    padding: 0.75rem 1rem;
     font-size: 1rem;
     font-family: 'Plus Jakarta Sans', sans-serif;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
     -webkit-appearance: none;
   }
   .cc-input:focus {
-    border-bottom-color: #00dbe9 !important;
-    box-shadow: none !important;
+    border-color: #00dbe9 !important;
+    background: rgba(0,219,233,0.02) !important;
+    box-shadow: 0 0 0 2px rgba(0,219,233,0.1) !important;
     outline: none !important;
-    background: transparent !important;
   }
   .cc-input::placeholder { color: rgba(185,202,203,0.35) !important; }
   .cc-input:read-only   { opacity: 0.5; cursor: not-allowed; }
@@ -148,13 +125,7 @@
   .cc-textarea::placeholder { color: rgba(255,255,255,0.2); }
 
   /* ── Section card ─────────────────────────────────────────────── */
-  .edit-section {
-    background: rgba(22,22,24,0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 1.5rem;
-    padding: 2rem;
-  }
+  .edit-section { background: rgba(22, 22, 24, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 1.5rem; padding: 2rem; }
   .section-title {
     font-size: 1rem; font-weight: 800; color: #dce4e5;
     margin-bottom: 0.25rem;
@@ -268,19 +239,7 @@
   .char-count.warn { color: #ffb4ab; }
 
   /* ── Floating save bar ────────────────────────────────────────── */
-  #save-bar {
-    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-    z-index: 100;
-    background: rgba(14,14,16,0.92);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0,219,233,0.25);
-    border-radius: 999px;
-    padding: 0.65rem 0.65rem 0.65rem 1.4rem;
-    display: flex; align-items: center; gap: 1rem;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,219,233,0.1);
-    transition: opacity 0.3s, transform 0.3s;
-    white-space: nowrap;
-  }
+  #save-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 100; background: rgba(22, 22, 24, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0,219,233,0.3); border-radius: 999px; padding: 0.65rem 0.65rem 0.65rem 1.4rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,219,233,0.1); transition: opacity 0.3s, transform 0.3s; white-space: nowrap; }
   #save-bar.hidden-bar {
     opacity: 0; pointer-events: none;
     transform: translateX(-50%) translateY(1rem);
@@ -304,14 +263,13 @@
   }
 </style>
 </head>
-<body class="font-body-md antialiased min-h-screen flex flex-col">
+<body class="font-body-md antialiased min-h-screen flex flex-col" style="background-color: #0A0A0B;">
 
 <!-- Background -->
-<div class="fixed inset-0 z-[-1] overflow-hidden">
-  <div class="absolute inset-0 opacity-30">
-    <div class="absolute -top-[20%] -left-[10%] w-[55%] h-[55%] rounded-full blur-[160px]" style="background:rgba(0,219,233,0.12);"></div>
-    <div class="absolute -bottom-[20%] -right-[10%] w-[45%] h-[45%] rounded-full blur-[140px]" style="background:rgba(188,19,254,0.1);"></div>
-  </div>
+<div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+  <div class="hero-grid absolute inset-0 opacity-15"></div>
+  <div class="orb-1"></div>
+  <div class="orb-2"></div>
 </div>
 
 <!-- Header -->
@@ -373,13 +331,13 @@
         <!-- Full Name -->
         <div class="mb-6">
           <label class="cc-label" for="inp-name">Full Name</label>
-          <input class="cc-input" id="inp-name" type="text" placeholder="e.g. Jordan Rivera" maxlength="60" autocomplete="name" oninput="markDirty()">
+          <input class="cc-input w-full" id="inp-name" type="text" placeholder="e.g. Jordan Rivera" maxlength="60" autocomplete="name" oninput="markDirty()">
         </div>
 
         <!-- Title -->
         <div class="mb-6">
           <label class="cc-label" for="inp-title">Professional Title</label>
-          <input class="cc-input" id="inp-title" type="text" placeholder="e.g. Cinematic Videographer · Director of Photography" maxlength="80" oninput="markDirty()">
+          <input class="cc-input w-full" id="inp-title" type="text" placeholder="e.g. Cinematic Videographer · Director of Photography" maxlength="80" oninput="markDirty()">
           <p style="font-size:0.75rem;color:#849495;margin-top:0.35rem;">Shown under your name on your public profile.</p>
         </div>
 
@@ -403,7 +361,7 @@
         <!-- Bio -->
         <div>
           <label class="cc-label" for="inp-bio">Bio</label>
-          <textarea class="cc-textarea" id="inp-bio" rows="4"
+          <textarea class="cc-textarea w-full" id="inp-bio" rows="4"
             placeholder="Tell clients about your style, experience, and what makes your work unique…"
             maxlength="300" oninput="updateCharCount(this,'bio-count',300);markDirty()"></textarea>
           <p class="char-count mt-1" id="bio-count">0 / 300</p>
@@ -430,8 +388,8 @@
               <span style="margin-left:0.5rem;font-size:0.65rem;padding:0.15rem 0.5rem;background:rgba(0,219,233,0.1);color:#00dbe9;border-radius:999px;letter-spacing:0.05em;text-transform:none;font-weight:700;">Verified</span>
             </label>
             <div style="position:relative;">
-              <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">alternate_email</span>
-              <input class="cc-input" style="padding-left:1.75rem;" id="inp-email" type="email" readonly>
+              <span class="material-symbols-outlined" style="position:absolute;left: 0.75rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">alternate_email</span>
+              <input class="cc-input w-full" style="padding-left: 2.25rem !important;" id="inp-email" type="email" readonly>
             </div>
           </div>
 
@@ -439,8 +397,8 @@
           <div>
             <label class="cc-label" for="inp-phone">Mobile Number</label>
             <div style="position:relative;">
-              <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">phone_iphone</span>
-              <input class="cc-input" style="padding-left:1.75rem;" id="inp-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel" oninput="markDirty()">
+              <span class="material-symbols-outlined" style="position:absolute;left: 0.75rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">phone_iphone</span>
+              <input class="cc-input w-full" style="padding-left: 2.25rem !important;" id="inp-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel" oninput="markDirty()">
             </div>
           </div>
 
@@ -448,8 +406,8 @@
           <div>
             <label class="cc-label" for="inp-website">Website / Portfolio URL</label>
             <div style="position:relative;">
-              <span class="material-symbols-outlined" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">link</span>
-              <input class="cc-input" style="padding-left:1.75rem;" id="inp-website" type="url" placeholder="https://yourportfolio.com" oninput="markDirty()">
+              <span class="material-symbols-outlined" style="position:absolute;left: 0.75rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">link</span>
+              <input class="cc-input w-full" style="padding-left: 2.25rem !important;" id="inp-website" type="url" placeholder="https://yourportfolio.com" oninput="markDirty()">
             </div>
           </div>
 
@@ -461,19 +419,19 @@
                 <div class="social-icon-wrap">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#E1306C"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8zm4.65-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z" fill="#fff"/></svg>
                 </div>
-                <input class="cc-input" id="inp-instagram" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="instagram.com/yourhandle" oninput="markDirty()">
+                <input class="cc-input w-full" id="inp-instagram" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="instagram.com/yourhandle" oninput="markDirty()">
               </div>
               <div class="social-row">
                 <div class="social-icon-wrap">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="#fff"/></svg>
                 </div>
-                <input class="cc-input" id="inp-facebook" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="facebook.com/yourpage" oninput="markDirty()">
+                <input class="cc-input w-full" id="inp-facebook" style="border-bottom-color:rgba(255,255,255,0.08);" type="text" placeholder="facebook.com/yourpage" oninput="markDirty()">
               </div>
               <div class="social-row" style="border-bottom:none;">
                 <div class="social-icon-wrap">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
                 </div>
-                <input class="cc-input" id="inp-tiktok" style="border-bottom:none;" type="text" placeholder="tiktok.com/@yourhandle" oninput="markDirty()">
+                <input class="cc-input w-full" id="inp-tiktok" style="border-bottom:none;" type="text" placeholder="tiktok.com/@yourhandle" oninput="markDirty()">
               </div>
             </div>
           </div>
@@ -531,13 +489,13 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
             <div class="sm:col-span-2">
               <label class="cc-label" for="svc-name">Service Name</label>
-              <input class="cc-input" id="svc-name" type="text" placeholder="e.g. Full-Day Video Shoot" maxlength="60">
+              <input class="cc-input w-full" id="svc-name" type="text" placeholder="e.g. Full-Day Video Shoot" maxlength="60">
             </div>
             <div>
               <label class="cc-label" for="svc-price">Rate</label>
               <div style="position:relative;">
-                <span style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#849495;font-weight:700;">$</span>
-                <input class="cc-input" style="padding-left:1rem;" id="svc-price" type="number" min="0" placeholder="0">
+                <span style="position:absolute;left: 0.75rem;top:50%;transform:translateY(-50%);color:#849495;font-weight:700;">$</span>
+                <input class="cc-input w-full" style="padding-left: 1.5rem !important;" id="svc-price" type="number" min="0" placeholder="0">
               </div>
             </div>
           </div>
@@ -568,7 +526,7 @@
           </div>
           <div class="mb-4">
             <label class="cc-label" for="svc-desc">Short Description <span style="text-transform:none;letter-spacing:0;font-weight:400;color:#849495;">(optional)</span></label>
-            <input class="cc-input" id="svc-desc" type="text" placeholder="What's included in this service…" maxlength="120">
+            <input class="cc-input w-full" id="svc-desc" type="text" placeholder="What's included in this service…" maxlength="120">
           </div>
           <button onclick="addService()" style="
             display:inline-flex;align-items:center;gap:0.4rem;
@@ -600,12 +558,12 @@
         <div class="mt-5">
           <!-- Search input -->
           <div style="position:relative;margin-bottom:1rem;">
-            <span class="material-symbols-outlined" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">location_on</span>
-            <input id="loc-input" class="cc-input"
-              style="border:1px solid rgba(255,255,255,0.1) !important;border-radius:0.75rem !important;padding:0.85rem 1rem 0.85rem 2.75rem !important;background:rgba(255,255,255,0.03) !important;"
+            <span class="material-symbols-outlined" style="position:absolute;left: 0.75rem;top:50%;transform:translateY(-50%);color:#849495;font-size:1.1rem;">location_on</span>
+            <input id="loc-input" class="cc-input w-full"
+              style="border:1px solid rgba(255,255,255,0.1) !important;border-radius:0.75rem !important;padding: 0.75rem 1rem 0.75rem 2.5rem !important;background:rgba(255,255,255,0.03) !important;"
               type="text" placeholder="Type a city or region and press Enter…"
               onkeydown="if(event.key==='Enter'){event.preventDefault();addLocation();}">
-            <div id="loc-suggestions" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;background:#161618;border:1px solid rgba(255,255,255,0.12);border-radius:0.75rem;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);"></div>
+            <div id="loc-suggestions" style="display:none;position:absolute;top:calc(100% + 4px);left: 0.75rem;right:0;z-index:20;background:#161618;border:1px solid rgba(255,255,255,0.12);border-radius:0.75rem;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);"></div>
           </div>
 
           <!-- Quick-add -->
@@ -1150,33 +1108,8 @@ boot();
 <script src="header-loader.js"></script>
 <script src="footer-loader.js"></script>
 <script>
-/* ── Tesla Cybertruck Theme Toggle ─────────────────────────── */
-(function () {
-  function initTheme() {
-    var t = localStorage.getItem('cc-theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', t);
-    updateBtn(t);
-  }
-  function updateBtn(t) {
-    document.querySelectorAll('.t-icon').forEach(function(ic) {
-      ic.textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
-    });
-    var btn = document.getElementById('theme-toggle');
-    if (btn) btn.title = t === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-  }
-  window.toggleTheme = function () {
-    var current = document.documentElement.getAttribute('data-theme');
-    var next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('cc-theme', next);
-    updateBtn(next);
-  };
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTheme);
-  } else {
-    initTheme();
-  }
-})();
 </script>
 </body>
 </html>
+
+

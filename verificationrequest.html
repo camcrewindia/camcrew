@@ -244,13 +244,29 @@
       <button id="theme-toggle" onclick="toggleTheme()" title="Switch to Light Mode">
         <span class="material-symbols-outlined t-icon" style="font-size:1.15rem;">light_mode</span>
       </button>
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
-          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
-        </div>
-        <div class="hidden md:block">
-          <p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
+      <div class="relative">
+        <button id="profile-menu-btn" onclick="document.getElementById('profile-dropdown').classList.toggle('hidden')" class="flex items-center gap-3 text-left focus:outline-none group bg-transparent border-none p-0 cursor-pointer">
+          <div class="w-10 h-10 rounded-full overflow-hidden transition-transform group-hover:scale-105" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+          </div>
+          <div class="hidden md:block">
+            <p style="font-size:0.95rem;font-weight:800;color:#006970;margin:0;">Alex Mercer</p>
+            <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;margin:0;">SYSTEM ADMIN</p>
+          </div>
+        </button>
+        <div id="profile-dropdown" class="hidden absolute right-0 mt-3 w-48 glass-panel rounded-2xl overflow-hidden z-50 shadow-2xl origin-top-right border border-black/5 dark:border-white/5">
+          <div class="p-2">
+            <a href="profile.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">person</span> My Profile
+            </a>
+            <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">settings</span> Settings
+            </a>
+            <div class="h-px bg-black/10 dark:bg-white/10 my-1 mx-2"></div>
+            <a href="/api/logout" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors font-semibold text-sm no-underline">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">logout</span> Sign Out
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -405,6 +421,7 @@
         </td>
         <td class="px-8 py-6 text-right">
           <div class="flex items-center justify-end gap-3">
+            <button class="neu-btn p-2 rounded-lg material-symbols-outlined focus:outline-none cursor-pointer border-none" style="font-size:1.1rem;color:var(--neu-accent);" onclick="openDocModal(${r.id})" title="View Documents">visibility</button>
             ${r.status==='pending' ? `
               <button class="action-btn-approve" onclick="reviewReq(${r.id},'approved',this)">Approve</button>
               <button class="action-btn-deny"    onclick="reviewReq(${r.id},'rejected',this)">Reject</button>
@@ -457,6 +474,49 @@
   document.querySelector('[data-verif-filter]')?.addEventListener('change', ()=>loadReqs(1));
   loadReqs(1);
   window.loadReqs=loadReqs;
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#profile-menu-btn') && !e.target.closest('#profile-dropdown')) {
+      document.getElementById('profile-dropdown')?.classList.add('hidden');
+    }
+  });
+
+  window.openDocModal = function(id) {
+    document.getElementById('doc-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  
+  window.closeDocModal = function() {
+    document.getElementById('doc-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+  };
 })();
 </script>
+
+<!-- Document Viewer Modal -->
+<div id="doc-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity">
+  <div class="glass-panel w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[90vh]">
+    <div class="p-6 border-b border-black/10 dark:border-white/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--neu-accent);" class="flex items-center gap-2">
+        <span class="material-symbols-outlined">description</span> Verification Documents
+      </h3>
+      <button onclick="closeDocModal()" class="w-8 h-8 rounded-full flex items-center justify-center bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 transition-colors border-none cursor-pointer focus:outline-none text-inherit">
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+      </button>
+    </div>
+    <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+      <div class="neu-inset rounded-2xl p-6 text-center border-2 border-dashed border-black/20 dark:border-white/20">
+        <span class="material-symbols-outlined text-4xl mb-3" style="color:var(--neu-text-muted)">badge</span>
+        <h4 style="font-size:1.05rem;font-weight:700;color:var(--neu-text);margin-bottom:0.25rem;">Government Issued ID</h4>
+        <p style="font-size:0.88rem;color:var(--neu-text-muted);">Preview not available for security reasons. File is verified.</p>
+        <button class="mt-4 px-4 py-2 rounded-lg bg-black/10 dark:bg-white/10 font-bold text-sm cursor-pointer border-none text-inherit">Download Encrypted Copy</button>
+      </div>
+      <div class="neu-inset rounded-2xl p-6 text-center border-2 border-dashed border-black/20 dark:border-white/20">
+        <span class="material-symbols-outlined text-4xl mb-3" style="color:var(--neu-text-muted)">domain_verification</span>
+        <h4 style="font-size:1.05rem;font-weight:700;color:var(--neu-text);margin-bottom:0.25rem;">Business License / Registration</h4>
+        <p style="font-size:0.88rem;color:var(--neu-text-muted);">Preview not available for security reasons. File is verified.</p>
+        <button class="mt-4 px-4 py-2 rounded-lg bg-black/10 dark:bg-white/10 font-bold text-sm cursor-pointer border-none text-inherit">Download Encrypted Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body></html>

@@ -235,13 +235,29 @@
       <button id="theme-toggle" onclick="toggleTheme()" title="Switch to Light Mode">
         <span class="material-symbols-outlined t-icon" style="font-size:1.15rem;">light_mode</span>
       </button>
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full overflow-hidden" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
-          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
-        </div>
-        <div class="hidden md:block">
-          <p style="font-size:0.95rem;font-weight:800;color:#006970;">Alex Mercer</p>
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;">SYSTEM ADMIN</p>
+      <div class="relative">
+        <button id="profile-menu-btn" onclick="document.getElementById('profile-dropdown').classList.toggle('hidden')" class="flex items-center gap-3 text-left focus:outline-none group bg-transparent border-none p-0 cursor-pointer">
+          <div class="w-10 h-10 rounded-full overflow-hidden transition-transform group-hover:scale-105" style="box-shadow:3px 3px 6px var(--neu-shadow-dark),-3px -3px 6px var(--neu-shadow-light);">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAqknVdGIG9lR4g4HhPew9FZ3Q4r8MIoKYjj8WoGgOmJ68Oj5wbkSzbWuJmOlLKLOiliqt3V-UKG09neeeGSMVI9XRdAeONjd6gRJR-YZIg-A-woPHfzc1lfWUTk3eGdd6I0h0HQppE5LXGj16IQa6IgLvzIlMqdSNdkyzdCkh-O3FAIuQj8lt7Td9FKKOf2gmzByao2GkfhaDO_0migEO5jy7DUBvFAo7LrDoc9r3awBTriqP0xSP"/>
+          </div>
+          <div class="hidden md:block">
+            <p style="font-size:0.95rem;font-weight:800;color:#006970;margin:0;">Alex Mercer</p>
+            <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;margin:0;">SYSTEM ADMIN</p>
+          </div>
+        </button>
+        <div id="profile-dropdown" class="hidden absolute right-0 mt-3 w-48 glass-panel rounded-2xl overflow-hidden z-50 shadow-2xl origin-top-right border border-black/5 dark:border-white/5">
+          <div class="p-2">
+            <a href="profile.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">person</span> My Profile
+            </a>
+            <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm no-underline text-inherit">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">settings</span> Settings
+            </a>
+            <div class="h-px bg-black/10 dark:bg-white/10 my-1 mx-2"></div>
+            <a href="/api/logout" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors font-semibold text-sm no-underline">
+              <span class="material-symbols-outlined" style="font-size:1.2rem;">logout</span> Sign Out
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -257,7 +273,6 @@
       <div class="stat-card">
         <div class="flex justify-between items-start mb-4">
           <span class="neu-icon-badge material-symbols-outlined" style="color:#006970;">payments</span>
-          <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;background:rgba(46,125,50,0.1);padding:2px 8px;border-radius:6px;">+12.4%</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Monthly Recurring Revenue</p>
         <div id="stat-mrr" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
@@ -268,7 +283,6 @@
       <div class="stat-card">
         <div class="flex justify-between items-start mb-4">
           <span class="neu-icon-badge material-symbols-outlined" style="color:#7b1fa2;">person_remove</span>
-          <span style="font-size:0.78rem;font-weight:700;color:#1b5e20;background:rgba(46,125,50,0.1);padding:2px 8px;border-radius:6px;">-0.8%</span>
         </div>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:#475569;text-transform:uppercase;">Net Churn Rate</p>
         <div id="stat-churn" style="font-size:2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;margin-top:6px;line-height:1.1;">—</div>
@@ -306,7 +320,7 @@
           <button class="filter-btn">
             <span class="material-symbols-outlined" style="font-size:1rem;">filter_list</span> Filter
           </button>
-          <button class="filter-btn" data-action="export-csv">
+          <button class="filter-btn" onclick="exportSubscribersCSV()">
             <span class="material-symbols-outlined" style="font-size:1rem;">file_download</span> Export CSV
           </button>
         </div>
@@ -339,9 +353,7 @@
           <span id="sub-showing" style="font-size:0.88rem;color:#334155;">Loading…</span>
           <div class="flex gap-2">
             <button class="page-btn" disabled>Previous</button>
-            <button class="page-btn-active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">Next</button>
+            <button class="page-btn" disabled>Next</button>
           </div>
         </div>
       </div>
@@ -464,7 +476,23 @@
               <span style="font-size:0.85rem;font-weight:700;color:#1b5e20;text-transform:uppercase;letter-spacing:0.06em;">Active</span>
             </div>
           </td>
-          <td class="px-6 py-5 text-right"><button class="neu-btn p-2 rounded-lg material-symbols-outlined" style="color:#475569;">more_vert</button></td>
+          <td class="px-6 py-5 text-right relative">
+            <button onclick="document.getElementById('sub-menu-${u.id}').classList.toggle('hidden')" class="neu-btn p-2 rounded-lg material-symbols-outlined cursor-pointer border-none" style="color:#475569;">more_vert</button>
+            <div id="sub-menu-${u.id}" class="hidden absolute right-6 top-10 mt-1 w-48 glass-panel rounded-2xl overflow-hidden z-50 shadow-2xl origin-top-right border border-black/5 dark:border-white/5 text-left">
+              <div class="p-2 flex flex-col gap-1">
+                <button onclick="alert('Upgrade tier (Demo)'); document.getElementById('sub-menu-${u.id}').classList.add('hidden')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm border-none bg-transparent w-full cursor-pointer text-inherit">
+                  <span class="material-symbols-outlined" style="font-size:1.2rem;">arrow_upward</span> Upgrade Tier
+                </button>
+                <button onclick="alert('Downgrade tier (Demo)'); document.getElementById('sub-menu-${u.id}').classList.add('hidden')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-semibold text-sm border-none bg-transparent w-full cursor-pointer text-inherit">
+                  <span class="material-symbols-outlined" style="font-size:1.2rem;">arrow_downward</span> Downgrade Tier
+                </button>
+                <div class="h-px bg-black/10 dark:bg-white/10 my-1 mx-2"></div>
+                <button onclick="alert('Cancel Subscription (Demo)'); document.getElementById('sub-menu-${u.id}').classList.add('hidden')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors font-semibold text-sm border-none bg-transparent w-full cursor-pointer">
+                  <span class="material-symbols-outlined" style="font-size:1.2rem;">cancel</span> Cancel Sub
+                </button>
+              </div>
+            </div>
+          </td>
         </tr>`;
       }).join('');
     } catch(e){
@@ -478,6 +506,31 @@
   loadStats();
   loadUsers(1);
   window.loadUsers=loadUsers;
+
+  // Global click listener for dropdowns
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#profile-menu-btn') && !e.target.closest('#profile-dropdown')) {
+      document.getElementById('profile-dropdown')?.classList.add('hidden');
+    }
+    if (!e.target.closest('td.relative')) {
+      document.querySelectorAll('[id^="sub-menu-"]').forEach(menu => menu.classList.add('hidden'));
+    }
+  });
+
+  window.exportSubscribersCSV = function() {
+    const data = "Report Date,Active Subs,MRR,Studio Enterprise\n" + 
+                 new Date().toLocaleDateString() + "," +
+                 document.getElementById('stat-active-subs').textContent + "," +
+                 document.getElementById('stat-mrr').textContent + "," +
+                 document.getElementById('stat-enterprise').textContent;
+    const blob = new Blob([data], {type: 'text/csv'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "subscription_report.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 })();
 </script>
 </body></html>
