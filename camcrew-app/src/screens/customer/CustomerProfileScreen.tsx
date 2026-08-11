@@ -91,6 +91,7 @@ export const CustomerProfileScreen: React.FC<{ navigation: any }> = ({ navigatio
                   setToastMessage(`Payment of ₹${b.totalAmount.toLocaleString('en-IN')} complete! Locked in Escrow Protection.`);
                   bookingApi.getCustomerBookings().then(res => setBookings(Array.isArray(res) ? res : []));
                 }}
+                onChat={() => navigation.navigate('Chat', { creatorId: b.professionalId, creatorName: b.professionalName, isPaidUnlocked: true })}
                 onReleaseMilestone={async (mId) => {
                   await bookingApi.releaseMilestone(b.id, mId);
                   setToastMessage('Milestone escrow funds released to creator!');

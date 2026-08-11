@@ -168,8 +168,8 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
           setToastMessage('Please enter a valid 12-digit Aadhar number.');
           return;
         }
-        if (!aadharFrontUri || !aadharBackUri) {
-          setToastMessage('Please upload both Front and Back Aadhar card images.');
+        if (!kycResult && (!aadharFrontUri || !aadharBackUri)) {
+          setToastMessage('Please verify your Aadhaar via Instant Govt KYC or upload card images.');
           return;
         }
       }

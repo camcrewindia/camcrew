@@ -56,6 +56,21 @@ export const BookingScreen: React.FC<{ navigation: any; route: any }> = ({ navig
     });
   }, [proId]);
 
+  useEffect(() => {
+    try {
+      const p1 = startDate.split('/');
+      const p2 = endDate.split('/');
+      if (p1.length === 3 && p2.length === 3) {
+        const d1 = new Date(parseInt(p1[2]), parseInt(p1[1]) - 1, parseInt(p1[0]));
+        const d2 = new Date(parseInt(p2[2]), parseInt(p2[1]) - 1, parseInt(p2[0]));
+        const diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        setDaysCount(diffDays > 0 ? diffDays : 1);
+      }
+    } catch (e) {
+      setDaysCount(1);
+    }
+  }, [startDate, endDate]);
+
   if (!profile) return null;
 
   const calculateTotal = () => {
@@ -151,9 +166,21 @@ export const BookingScreen: React.FC<{ navigation: any; route: any }> = ({ navig
             </Text>
           </View>
 
-          <Text style={{ fontSize: 12, fontWeight: '700', color: colors.textFaint }}>
-            Redirecting to your Profile Bookings in 2 seconds...
-          </Text>
+          <Button
+            title="Open Chat with Creator 💬"
+            variant="primary"
+            size="lg"
+            onPress={() => navigation.navigate('Chat', { creatorId: profile.id, creatorName: profile.name, isPaidUnlocked: true })}
+            style={{ width: '100%', backgroundColor: '#fc8019', marginTop: 12 }}
+          />
+
+          <Button
+            title="View My Bookings"
+            variant="ghost"
+            size="md"
+            onPress={() => navigation.navigate('ProfileTab')}
+            style={{ marginTop: 8 }}
+          />
         </Card>
       </View>
     );

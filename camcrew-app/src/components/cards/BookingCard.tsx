@@ -14,6 +14,7 @@ interface BookingCardProps {
   onAccept?: () => void;
   onDecline?: () => void;
   onPay?: () => void;
+  onChat?: () => void;
   onReleaseMilestone?: (milestoneId: string) => void;
   isProfessionalMode?: boolean;
 }
@@ -24,6 +25,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({
   onAccept,
   onDecline,
   onPay,
+  onChat,
   onReleaseMilestone,
   isProfessionalMode = false,
 }) => {
@@ -173,6 +175,17 @@ export const BookingCard: React.FC<BookingCardProps> = ({
               style={{ backgroundColor: '#fc8019', marginTop: 8 }}
             />
           </View>
+        )}
+
+        {/* Direct Chat Button (When Booking is Confirmed/Escrow Held) */}
+        {onChat && (booking.status === 'escrow_held' || booking.status === 'confirmed' || booking.status === 'completed') && (
+          <Button
+            title="Chat with Creator 💬"
+            variant="outline"
+            size="md"
+            onPress={onChat}
+            style={{ marginTop: 10 }}
+          />
         )}
       </TouchableOpacity>
     </Card>
