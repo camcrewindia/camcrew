@@ -15,20 +15,10 @@ interface AuthStoreState {
   loadAuth: () => Promise<void>;
 }
 
-const DEMO_USER: User = {
-  id: 'usr_demo_123',
-  name: 'Thaha Hussain',
-  email: 'thaha@camcrew.in',
-  phone: '+91 9876543210',
-  role: 'customer',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400',
-  createdAt: '2024-01-01',
-};
-
 export const useAuthStore = create<AuthStoreState>((set, get) => ({
-  user: DEMO_USER,
-  token: 'mock_jwt_token_camcrew',
-  isAuthenticated: true,
+  user: null,
+  token: null,
+  isAuthenticated: false,
   isLoading: false,
   activeRole: 'customer',
 
@@ -64,9 +54,11 @@ export const useAuthStore = create<AuthStoreState>((set, get) => ({
       if (token && userStr) {
         const user = JSON.parse(userStr);
         set({ token, user, isAuthenticated: true, activeRole: user.role });
+      } else {
+        set({ user: null, token: null, isAuthenticated: false });
       }
     } catch (e) {
-      console.warn('Failed to load auth session');
+      set({ user: null, token: null, isAuthenticated: false });
     }
   },
 }));
