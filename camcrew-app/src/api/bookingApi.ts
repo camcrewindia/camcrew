@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from './client';
 import { Booking, BookingStatus } from '../types/booking';
 import { MOCK_BOOKINGS } from './mockData';
+import { notificationService } from '../services/notificationService';
 
 const ASYNC_BOOKINGS_KEY = '@camcrew_user_bookings';
 
@@ -76,6 +77,9 @@ export const bookingApi = {
 
     // Unshift into live memory MOCK_BOOKINGS so it instantly reflects in memory
     MOCK_BOOKINGS.unshift(newBooking);
+
+    // Trigger instant Expo push notification alert to creator
+    notificationService.triggerBookingRequestNotification(data.professionalName, data.serviceTitle, data.totalAmount);
 
     // Save to persistent AsyncStorage
     const currentStored = await getStoredBookings();

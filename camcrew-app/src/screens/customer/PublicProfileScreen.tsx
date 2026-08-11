@@ -108,21 +108,20 @@ export const PublicProfileScreen: React.FC<{ navigation: any; route: any }> = ({
           {/* CTA Bar */}
           <View style={styles.ctaRow}>
             <Button
-              title="Edit Studio"
+              title="Message 💬"
               variant="secondary"
               size="lg"
-              icon={<Edit3 size={16} color={colors.textPrimary} style={{ marginRight: 4 }} />}
-              onPress={() => navigation.navigate('ProfessionalEdit')}
-              style={{ flex: 1, marginRight: 10 }}
+              onPress={() => navigation.navigate('Chat', { creatorId: profile.id, creatorName: profile.name, isPaidUnlocked: false })}
+              style={{ flex: 1, marginRight: 8 }}
             />
 
             <Button
-              title={`Book Now • ₹${(profile.ratePerDay || 15000).toLocaleString('en-IN')}/day`}
+              title={`Book Now • ₹${(profile.ratePerDay || 15000).toLocaleString('en-IN')}`}
               variant="primary"
               size="lg"
-              icon={<Zap size={18} color="#ffffff" style={{ marginRight: 4 }} />}
+              icon={<Zap size={16} color="#ffffff" style={{ marginRight: 4 }} />}
               onPress={() => navigation.navigate('Booking', { proId: profile.id })}
-              style={{ flex: 1.5, backgroundColor: '#fc8019' }}
+              style={{ flex: 1.6, backgroundColor: '#fc8019' }}
             />
           </View>
         </View>

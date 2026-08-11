@@ -18,8 +18,10 @@ import { SettingsScreen } from '../screens/customer/SettingsScreen';
 import { NotificationsScreen } from '../screens/shared/NotificationsScreen';
 import { AboutScreen } from '../screens/shared/AboutScreen';
 import { ContactScreen } from '../screens/shared/ContactScreen';
+import { ChatScreen } from '../screens/shared/ChatScreen';
+import { ChatListScreen } from '../screens/shared/ChatListScreen';
 
-import { Home, LayoutGrid, ShoppingBag, User } from 'lucide-react-native';
+import { Home, LayoutGrid, ShoppingBag, User, MessageSquare } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -30,6 +32,8 @@ function HomeStack() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="PublicProfile" component={PublicProfileScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ChatList" component={ChatListScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
@@ -44,6 +48,7 @@ function ExploreStack() {
       <Stack.Screen name="ServicesScreen" component={ServicesScreen} />
       <Stack.Screen name="PublicProfile" component={PublicProfileScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
   );
 }
@@ -55,6 +60,16 @@ function MarketplaceStack() {
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function ChatStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="Booking" component={BookingScreen} />
     </Stack.Navigator>
   );
 }
@@ -120,6 +135,14 @@ export const CustomerTabs: React.FC = () => {
         options={{
           tabBarLabel: 'Categories',
           tabBarIcon: ({ color }) => <LayoutGrid color={color} size={20} />,
+        }}
+      />
+      <Tab.Screen
+        name="ChatTab"
+        component={ChatStack}
+        options={{
+          tabBarLabel: 'Messages',
+          tabBarIcon: ({ color }) => <MessageSquare color={color} size={20} />,
         }}
       />
       <Tab.Screen

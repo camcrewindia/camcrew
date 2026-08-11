@@ -10,8 +10,10 @@ import { EarningsScreen } from '../screens/professional/EarningsScreen';
 import { PublicProfileScreen } from '../screens/customer/PublicProfileScreen';
 import { SettingsScreen } from '../screens/customer/SettingsScreen';
 import { NotificationsScreen } from '../screens/shared/NotificationsScreen';
+import { ChatScreen } from '../screens/shared/ChatScreen';
+import { ChatListScreen } from '../screens/shared/ChatListScreen';
 
-import { LayoutDashboard, Calendar, DollarSign, UserCheck, Settings } from 'lucide-react-native';
+import { LayoutDashboard, Calendar, DollarSign, UserCheck, Settings, MessageSquare } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -21,6 +23,8 @@ function ProDashboardStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ProDashboard" component={ProfessionalDashboardScreen} />
       <Stack.Screen name="ProfessionalEdit" component={ProfessionalEditScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ChatList" component={ChatListScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
     </Stack.Navigator>
   );
@@ -31,6 +35,7 @@ function ProProfileStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ProPublicView" component={PublicProfileScreen} />
       <Stack.Screen name="ProfessionalEdit" component={ProfessionalEditScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
   );
 }

@@ -7,6 +7,7 @@ import { orderApi } from '../../api/orderApi';
 import { cloudStorageApi } from '../../api/cloudStorageApi';
 import { razorpayService } from '../../services/razorpayService';
 import { escrowService } from '../../services/escrowService';
+import { notificationService } from '../../services/notificationService';
 import { StepperProgress } from '../../components/ui/StepperProgress';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -200,6 +201,12 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
       if (hasRentals) {
         await escrowService.holdDeposit(order.id, 5000);
       }
+
+      // Trigger Push Notification for Out For Delivery dispatch
+      notificationService.triggerOrderOutForDeliveryNotification(
+        order.id,
+        checkoutItems[0]?.product?.name || 'Sony FX3 Cinema Camera'
+      );
 
       // Remove checked out items from Cart store
       checkoutItems.forEach(i => removeItem(i.product.id));
