@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../../hooks/useTheme';
 import { useCartStore } from '../../store/cartStore';
 import { orderApi } from '../../api/orderApi';
+import { cloudStorageApi } from '../../api/cloudStorageApi';
 import { StepperProgress } from '../../components/ui/StepperProgress';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -101,21 +102,27 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
       });
 
       if (!res.canceled && res.assets && res.assets.length > 0) {
-        const uri = res.assets[0].uri;
+        const localUri = res.assets[0].uri;
+        setToastMessage('Uploading Aadhaar image to Cloud Storage... ☁️');
+        
+        // Upload to Cloud API
+        const uploadResult = await cloudStorageApi.uploadImage(localUri, 'aadhaar');
+        const cloudUrl = uploadResult.url;
+
         if (side === 'front') {
-          setAadharFrontUri(uri);
-          if (aadharBackUri || uri) {
-            runAadharOCR(uri, aadharBackUri);
+          setAadharFrontUri(cloudUrl);
+          if (aadharBackUri || cloudUrl) {
+            runAadharOCR(cloudUrl, aadharBackUri);
           }
         } else {
-          setAadharBackUri(uri);
-          if (aadharFrontUri || uri) {
-            runAadharOCR(aadharFrontUri, uri);
+          setAadharBackUri(cloudUrl);
+          if (aadharFrontUri || cloudUrl) {
+            runAadharOCR(aadharFrontUri, cloudUrl);
           }
         }
       }
     } catch (e) {
-      setToastMessage('Failed to pick image.');
+      setToastMessage('Failed to upload image.');
     }
   };
 
