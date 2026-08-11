@@ -29,6 +29,11 @@
     "scheme": "camcrew",
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "25fbddc6-d8ce-484d-b7d8-9aae9f68dff1"
+      }
+    }
   }
 }
