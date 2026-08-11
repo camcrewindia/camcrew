@@ -8,6 +8,7 @@ import { cloudStorageApi } from '../../api/cloudStorageApi';
 import { razorpayService } from '../../services/razorpayService';
 import { escrowService } from '../../services/escrowService';
 import { notificationService } from '../../services/notificationService';
+import { kycService, AadhaarVerificationResult } from '../../services/kycService';
 import { StepperProgress } from '../../components/ui/StepperProgress';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -126,6 +127,27 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
       }
     } catch (e) {
       setToastMessage('Failed to upload image.');
+    }
+  };
+
+  const [kycResult, setKycResult] = useState<AadhaarVerificationResult | null>(null);
+  const [verifyingKyc, setVerifyingKyc] = useState(false);
+
+  const handleVerifyAadhaarGovt = async () => {
+    if (!aadharNumber || aadharNumber.length < 12) {
+      setToastMessage('Please enter a valid 12-digit Aadhaar number.');
+      return;
+    }
+    setVerifyingKyc(true);
+    try {
+      const res = await kycService.verifyAadhaarNumber(aadharNumber, fullName);
+      setKycResult(res);
+      setOcrSuccess(true);
+      setToastMessage('✓ Cashfree Govt KYC Verified!');
+    } catch (e: any) {
+      setToastMessage(e.message || 'KYC verification failed.');
+    } finally {
+      setVerifyingKyc(false);
     }
   };
 
@@ -400,6 +422,24 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
               keyboardType="numeric"
               maxLength={12}
             />
+
+            <Button
+              title="Instant Cashfree / Govt KYC Check"
+              variant="outline"
+              size="md"
+              loading={verifyingKyc}
+              onPress={handleVerifyAadhaarGovt}
+              style={{ marginBottom: 14 }}
+            />
+
+            {kycResult && (
+              <View style={[styles.ocrSuccessBox, { borderColor: colors.success, marginBottom: 14 }]}>
+                <CheckCircle size={18} color={colors.success} style={{ marginRight: 8 }} />
+                <Text style={{ color: colors.success, fontWeight: '800', fontSize: 11 }}>
+                  {kycResult.badgeLabel} • TX: {kycResult.verificationTxId}
+                </Text>
+              </View>
+            )}
 
             <Text style={[styles.uploadLabel, { color: colors.textSecondary }]}>Aadhar Card (Front Side)</Text>
             <TouchableOpacity

@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Linking } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { escrowService, EscrowDepositRecord } from '../../services/escrowService';
-import { Package, Download, ShieldCheck, RefreshCw, CheckCircle2, Clock } from 'lucide-react-native';
+import { trackingService, LiveDeliveryTracking } from '../../services/trackingService';
+import { Package, Download, ShieldCheck, RefreshCw, CheckCircle2, Clock, Truck, Phone, Navigation, ExternalLink } from 'lucide-react-native';
 
 export const OrderDetailScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
   const { colors } = useTheme();
   const orderId = route?.params?.orderId || route?.params?.id || 'ORD-8921';
 
   const [escrow, setEscrow] = useState<EscrowDepositRecord | null>(null);
+  const [tracking, setTracking] = useState<LiveDeliveryTracking | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadEscrowStatus();
+    loadData();
   }, []);
 
-  const loadEscrowStatus = async () => {
+  const loadData = async () => {
     const records = await escrowService.getEscrowRecords();
     const found = records.find(r => r.orderId === orderId);
     if (found) {
       setEscrow(found);
     } else {
-      // Default deposit record for preview
       setEscrow({
         orderId,
         depositAmount: 5000,
@@ -32,6 +33,9 @@ export const OrderDetailScreen: React.FC<{ navigation: any; route: any }> = ({ n
         heldAt: new Date().toISOString(),
       });
     }
+
+    const track = await trackingService.getLiveTracking(orderId);
+    setTracking(track);
   };
 
   const handleReturnEquipment = async () => {
@@ -66,21 +70,82 @@ export const OrderDetailScreen: React.FC<{ navigation: any; route: any }> = ({ n
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.textPrimary }]}>Order & Escrow Details</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>Order & Delivery Tracking</Text>
         <Text style={[styles.orderId, { color: colors.accent }]}>{orderId}</Text>
       </View>
 
-      {/* Shipment Status Card */}
-      <Card style={styles.card}>
-        <View style={styles.statusRow}>
-          <Package size={24} color={colors.accent} />
-          <View style={styles.statusMeta}>
-            <Text style={[styles.statusTitle, { color: colors.textPrimary }]}>Order Status: Confirmed</Text>
-            <Text style={[styles.statusSub, { color: colors.textFaint }]}>Delivery via Camcrew Logistics Express</Text>
+      {/* Live Delivery Tracking Timeline (Shiprocket / Dunzo) */}
+      {tracking && (
+        <Card style={styles.card}>
+          <View style={styles.courierHeader}>
+            <Truck size={22} color={colors.accent} />
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text style={[styles.courierTitle, { color: colors.textPrimary }]}>
+                {tracking.courierPartner} Live Tracking
+              </Text>
+              <Text style={[styles.awbText, { color: colors.textFaint }]}>AWB #: {tracking.awbNumber}</Text>
+            </View>
+            <Badge label="Out For Delivery" variant="success" />
           </View>
-          <Badge label="Active Order" variant="info" />
-        </View>
-      </Card>
+
+          <View style={[styles.etaBox, { backgroundColor: colors.surfaceElevated }]}>
+            <Clock size={16} color={colors.accent} />
+            <Text style={[styles.etaText, { color: colors.textPrimary }]}>
+              Estimated Delivery: <Text style={{ color: colors.accent, fontWeight: '800' }}>{tracking.estimatedArrival}</Text>
+            </Text>
+          </View>
+
+          {/* Rider Details & Call */}
+          <View style={styles.riderRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.riderName, { color: colors.textPrimary }]}>Rider: {tracking.riderName}</Text>
+              <Text style={[styles.riderVehicle, { color: colors.textFaint }]}>{tracking.riderVehicle}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.callBtn, { backgroundColor: colors.accent }]}
+              onPress={() => Alert.alert('Calling Rider', `Dialing ${tracking.riderPhone}...`)}
+            >
+              <Phone size={16} color="#000000" />
+              <Text style={styles.callBtnText}>Call Rider</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* 4-Step Timeline */}
+          <View style={styles.timelineBox}>
+            {tracking.timeline.map((step, idx) => (
+              <View key={idx} style={styles.stepItem}>
+                <View style={styles.stepDotColumn}>
+                  <View
+                    style={[
+                      styles.stepDot,
+                      step.completed ? { backgroundColor: colors.accent } : { backgroundColor: colors.border },
+                    ]}
+                  >
+                    {step.completed && <CheckCircle2 size={12} color="#000000" />}
+                  </View>
+                  {idx < tracking.timeline.length - 1 && (
+                    <View
+                      style={[
+                        styles.stepLine,
+                        step.completed ? { backgroundColor: colors.accent } : { backgroundColor: colors.border },
+                      ]}
+                    />
+                  )}
+                </View>
+
+                <View style={styles.stepContent}>
+                  <Text style={[styles.stepTitle, { color: colors.textPrimary, fontWeight: step.current ? '800' : '600' }]}>
+                    {step.title}
+                  </Text>
+                  <Text style={[styles.stepSub, { color: colors.textFaint }]}>{step.subtitle}</Text>
+                  <Text style={[styles.stepTime, { color: colors.textSecondary }]}>{step.timestamp}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </Card>
+      )}
 
       {/* Security Deposit Escrow Tracker */}
       {escrow && (
@@ -141,9 +206,9 @@ export const OrderDetailScreen: React.FC<{ navigation: any; route: any }> = ({ n
         </Card>
       )}
 
-      {/* Shipping Address */}
+      {/* Shipping Contact */}
       <Card style={styles.card}>
-        <Text style={[styles.sectionHeading, { color: colors.textPrimary }]}>Shipping & Rental Contact</Text>
+        <Text style={[styles.sectionHeading, { color: colors.textPrimary }]}>Delivery Address</Text>
         <Text style={[styles.addrText, { color: colors.textSecondary }]}>Thaha Hussain</Text>
         <Text style={[styles.addrText, { color: colors.textSecondary }]}>Flat 402, Sunset Towers, Bandra West</Text>
         <Text style={[styles.addrText, { color: colors.textSecondary }]}>Mumbai, Maharashtra - 400050</Text>
@@ -187,20 +252,96 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
   },
-  statusRow: {
+  courierHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 12,
   },
-  statusMeta: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  statusTitle: {
+  courierTitle: {
     fontSize: 15,
+    fontWeight: '800',
+  },
+  awbText: {
+    fontSize: 11,
+  },
+  etaBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  etaText: {
+    fontSize: 13,
+    marginLeft: 8,
+  },
+  riderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#333333',
+    marginBottom: 14,
+  },
+  riderName: {
+    fontSize: 14,
     fontWeight: '700',
   },
-  statusSub: {
+  riderVehicle: {
     fontSize: 12,
+    marginTop: 2,
+  },
+  callBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  callBtnText: {
+    color: '#000000',
+    fontWeight: '800',
+    fontSize: 12,
+    marginLeft: 6,
+  },
+  timelineBox: {
+    marginTop: 4,
+  },
+  stepItem: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  stepDotColumn: {
+    alignItems: 'center',
+    marginRight: 12,
+    width: 20,
+  },
+  stepDot: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepLine: {
+    width: 2,
+    flex: 1,
+    marginTop: 4,
+  },
+  stepContent: {
+    flex: 1,
+  },
+  stepTitle: {
+    fontSize: 13,
+  },
+  stepSub: {
+    fontSize: 11,
+    marginTop: 1,
+  },
+  stepTime: {
+    fontSize: 10,
     marginTop: 2,
   },
   escrowHeader: {
