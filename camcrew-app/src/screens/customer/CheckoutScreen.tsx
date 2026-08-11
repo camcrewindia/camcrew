@@ -5,6 +5,8 @@ import { useTheme } from '../../hooks/useTheme';
 import { useCartStore } from '../../store/cartStore';
 import { orderApi } from '../../api/orderApi';
 import { cloudStorageApi } from '../../api/cloudStorageApi';
+import { razorpayService } from '../../services/razorpayService';
+import { escrowService } from '../../services/escrowService';
 import { StepperProgress } from '../../components/ui/StepperProgress';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -165,9 +167,19 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
     setPaymentProcessing(true);
     setLoading(true);
     try {
-      // Simulate Razorpay payment gateway delay
-      await new Promise(resolve => setTimeout(resolve, 2200));
+      // 1. Open Live Razorpay Gateway
+      const paymentResult = await razorpayService.openCheckout({
+        amount: total,
+        description: hasRentals ? 'Camcrew Equipment Rental Escrow' : 'Camcrew Gear Purchase',
+        prefill: {
+          name: fullName,
+          contact: phone,
+          email: 'thaha@camcrew.in',
+          method: selectedMethod === 'netbank' ? 'netbanking' : (selectedMethod || 'upi'),
+        },
+      });
 
+      // 2. Create Order
       const order = await orderApi.createOrder(
         checkoutItems,
         { 
@@ -178,24 +190,28 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
           district, 
           city, 
           pincode,
-          aadharNumber: hasRentals ? aadharNumber : undefined,
-          aadharFront: hasRentals ? aadharFrontUri : undefined,
-          aadharBack: hasRentals ? aadharBackUri : undefined
         },
         subtotal,
         tax,
         total
       );
-      
-      // Clear only checked out items
-      checkoutItems.forEach(item => removeItem(item.product.id));
 
-      setToastMessage('🎉 Payment Received & Order Placed!');
+      // 3. If rental order, hold ₹5,000 Security Deposit in Escrow
+      if (hasRentals) {
+        await escrowService.holdDeposit(order.id, 5000);
+      }
+
+      // Remove checked out items from Cart store
+      checkoutItems.forEach(i => removeItem(i.product.id));
+
+      setToastMessage(`Payment Success! Tx ID: ${paymentResult.razorpay_payment_id}`);
+      
       setTimeout(() => {
-        navigation.navigate('CustomerProfile');
+        navigation.replace('OrderDetail', { orderId: order.id });
       }, 1500);
-    } catch (e) {
-      setToastMessage('Payment transaction failed.');
+
+    } catch (e: any) {
+      setToastMessage(e.message || 'Payment failed. Please try again.');
     } finally {
       setPaymentProcessing(false);
       setLoading(false);
