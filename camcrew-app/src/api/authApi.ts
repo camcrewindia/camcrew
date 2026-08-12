@@ -1,40 +1,77 @@
 import { apiClient } from './client';
 import { User, UserRole } from '../types/auth';
+import axios from 'axios';
+
+// Fast2SMS Configuration
+const FAST2SMS_API_KEY = 'YOUR_FAST2SMS_API_KEY'; // Replace with your Fast2SMS API Key from https://www.fast2sms.com/dashboard/dev-api
+const FAST2SMS_OTP_ID = 'YOUR_OTP_TEMPLATE_ID';   // Replace with your Fast2SMS OTP Template ID
 
 export const authApi = {
   sendOTP: async (phone: string): Promise<{ success: boolean; message: string }> => {
+    const cleanedPhone = phone.replace(/\D/g, '').slice(-10);
+
     try {
-      const res = await apiClient.post('/auth/send-otp', { phone });
+      // 1. Try sending real SMS OTP via Fast2SMS API
+      if (FAST2SMS_API_KEY !== 'YOUR_FAST2SMS_API_KEY') {
+        const response = await axios.post(
+          'https://www.fast2sms.com/dev/otp/send',
+          {
+            mobile: cleanedPhone,
+            otp_id: FAST2SMS_OTP_ID,
+            otp_expiry: 15,
+            otp_length: 6,
+          },
+          {
+            headers: {
+              authorization: FAST2SMS_API_KEY,
+              accept: 'application/json',
+              'content-type': 'application/json',
+            },
+          }
+        );
+
+        if (response.data && response.data.return) {
+          return {
+            success: true,
+            message: `Real 6-Digit SMS OTP sent via Fast2SMS to +91 ${cleanedPhone}.`,
+          };
+        }
+      }
+
+      // 2. Or try backend server endpoint
+      const res = await apiClient.post('/auth/send-otp', { phone: cleanedPhone });
       return res.data;
-    } catch (e) {
-      // Robust simulation response with standard demo OTP code 123456
+    } catch (e: any) {
+      // Demo / Offline fallback response
       return {
         success: true,
-        message: `6-Digit OTP sent successfully to +91 ${phone}. (Demo OTP: 123456)`,
+        message: `6-Digit OTP sent successfully to +91 ${cleanedPhone}. (Demo OTP: 123456)`,
       };
     }
   },
 
   verifyOTP: async (phone: string, otp: string): Promise<{ token: string; user: User }> => {
+    const cleanedPhone = phone.replace(/\D/g, '').slice(-10);
+
     try {
-      const res = await apiClient.post('/auth/verify-otp', { phone, otp });
+      const res = await apiClient.post('/auth/verify-otp', { phone: cleanedPhone, otp });
       return res.data;
     } catch (e) {
       if (otp !== '123456' && otp.length !== 6) {
         throw new Error('Invalid OTP code. Please enter 123456');
       }
 
-      const isPro = phone.endsWith('9') || phone.endsWith('8');
-      const isAdmin = phone === '9999999999';
+      const isPro = cleanedPhone.endsWith('9') || cleanedPhone.endsWith('8');
+      const isAdmin = cleanedPhone === '9999999999';
       const role: UserRole = isAdmin ? 'admin' : isPro ? 'professional' : 'customer';
 
       return {
         token: 'token_otp_' + Date.now(),
         user: {
-          id: 'usr_phone_' + phone,
+          id: 'usr_phone_' + cleanedPhone,
           name: isPro ? 'Thaha (Pro Director)' : isAdmin ? 'Camcrew Admin' : 'Creative Renter',
-          email: `${phone}@camcrew.in`,
-          phone: `+91 ${phone}`,
+          email: `${cleanedPhone}@camcrew.in`,
+          phone: `+91 ${cleanedPhone}`,
           role,
           avatar: isPro
             ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400'
