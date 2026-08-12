@@ -37,6 +37,7 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [bio, setBio] = useState('');
+  const [gstin, setGstin] = useState('');
   const [experienceYears, setExperienceYears] = useState('5');
   const [categories, setCategories] = useState<string[]>(['Photographers']);
   const [state, setState] = useState('Maharashtra');
@@ -47,6 +48,11 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
   const [certifications, setCertifications] = useState<string[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [iCalUrl, setICalUrl] = useState('');
+  const [internationalTravel, setInternationalTravel] = useState(true);
+  const [instagram, setInstagram] = useState('');
+  const [website, setWebsite] = useState('');
+  const [youtube, setYoutube] = useState('');
+  const [facebook, setFacebook] = useState('');
 
   // Image Upload State
   const [avatar, setAvatar] = useState('');
@@ -141,6 +147,7 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
         name,
         title,
         bio,
+        gstin,
         avatar,
         bannerImage,
         portfolio,
@@ -154,6 +161,8 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
         certifications,
         services,
         iCalUrl,
+        internationalTravel,
+        socials: { instagram, website, youtube, facebook },
       });
       setToastMessage('Profile updated successfully!');
       setTimeout(() => {
@@ -256,8 +265,15 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
           <View style={styles.accordionBody}>
             <Input label="Full Name" value={name} onChangeText={setName} />
             <Input label="Professional Title" value={title} onChangeText={setTitle} />
+            <Input label="GSTIN Registration Number (Optional)" placeholder="e.g. 27AAAAA0000A1Z5" value={gstin} onChangeText={setGstin} />
             <Input label="Bio / Executive Summary (500 char max)" value={bio} onChangeText={setBio} multiline numberOfLines={4} style={{ height: 90 }} />
             <Input label="Years of Experience" value={experienceYears} onChangeText={setExperienceYears} keyboardType="numeric" />
+
+            <Text style={[styles.subHeading, { color: colors.textPrimary, marginTop: 14 }]}>Social Profiles & Portfolio Links</Text>
+            <Input label="Website / Portfolio URL" placeholder="https://yourportfolio.com" value={website} onChangeText={setWebsite} />
+            <Input label="Instagram Handle" placeholder="instagram.com/yourhandle" value={instagram} onChangeText={setInstagram} />
+            <Input label="YouTube Channel URL" placeholder="youtube.com/@yourchannel" value={youtube} onChangeText={setYoutube} />
+            <Input label="Facebook Page URL" placeholder="facebook.com/yourpage" value={facebook} onChangeText={setFacebook} />
           </View>
         )}
       </Card>
@@ -362,6 +378,50 @@ export const ProfessionalEditScreen: React.FC<{ navigation: any }> = ({ navigati
               onAdd={item => setEquipment([...equipment, item])}
               onRemove={index => setEquipment(equipment.filter((_, i) => i !== index))}
             />
+          </View>
+        )}
+      </Card>
+
+      {/* 7. Skills & Certifications Accordion */}
+      <Card style={styles.accordionCard}>
+        <TouchableOpacity style={styles.accordionHeader} onPress={() => toggleSection('skills')}>
+          <Text style={[styles.sectionHeading, { color: colors.textPrimary }]}>7. Skills & Industry Badges</Text>
+          {openSections.skills ? <ChevronUp size={20} color="#fc8019" /> : <ChevronDown size={20} color={colors.textSecondary} />}
+        </TouchableOpacity>
+
+        {openSections.skills && (
+          <View style={styles.accordionBody}>
+            <ChipInput
+              label="Add Certifications (e.g., DGCA Drone Pilot, RED Operator)"
+              items={certifications}
+              onAdd={item => setCertifications([...certifications, item])}
+              onRemove={index => setCertifications(certifications.filter((_, i) => i !== index))}
+            />
+
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', marginTop: 14 }}
+              onPress={() => setInternationalTravel(!internationalTravel)}
+              activeOpacity={0.8}
+            >
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 6,
+                  borderWidth: 2,
+                  borderColor: internationalTravel ? '#fc8019' : colors.textFaint,
+                  backgroundColor: internationalTravel ? '#fc8019' : 'transparent',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 10,
+                }}
+              >
+                {internationalTravel && <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: 12 }}>✓</Text>}
+              </View>
+              <Text style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '700' }}>
+                Willing to travel internationally for shoots ✈️
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </Card>

@@ -31,11 +31,16 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
   // Shipping Form State
   const [fullName, setFullName] = useState('Thaha Hussain');
   const [phone, setPhone] = useState('+91 9876543210');
-  const [addressLine1, setAddressLine1] = useState('Flat 402, Sunset Towers, Bandra West');
+  const [addressLine1, setAddressLine1] = useState('');
+  const [addressLine2, setAddressLine2] = useState('');
   const [state, setState] = useState('Maharashtra');
   const [district, setDistrict] = useState('Mumbai Suburban');
   const [city, setCity] = useState('Mumbai');
   const [pincode, setPincode] = useState('400050');
+  const [fulfillmentMode, setFulfillmentMode] = useState<'courier' | 'hub'>('courier');
+  const [pickupHub, setPickupHub] = useState('Mumbai Central Hub (Andheri East)');
+  const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
 
   // Sales-only Delivery option
   const [deliveryOption, setDeliveryOption] = useState<'express' | 'standard'>('express');
@@ -267,7 +272,8 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
             </Text>
             <Input label="Full Name" value={fullName} onChangeText={setFullName} />
             <Input label="Phone Number" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
-            <Input label="Flat / Street Address" value={addressLine1} onChangeText={setAddressLine1} />
+            <Input label="Street Address / Building (Line 1)" value={addressLine1} onChangeText={setAddressLine1} />
+            <Input label="Apartment / Suite / Floor (Line 2 - Optional)" value={addressLine2} onChangeText={setAddressLine2} />
             <LocationCascader
               selectedState={state}
               selectedDistrict={district}
@@ -279,6 +285,50 @@ export const CheckoutScreen: React.FC<{ navigation: any; route?: any }> = ({ nav
               }}
             />
             <Input label="Pincode" value={pincode} onChangeText={setPincode} keyboardType="numeric" />
+
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary, marginTop: 14, fontSize: 14 }]}>
+              Fulfillment Method
+            </Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginVertical: 8 }}>
+              <TouchableOpacity
+                onPress={() => setFulfillmentMode('courier')}
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  borderRadius: 12,
+                  backgroundColor: fulfillmentMode === 'courier' ? 'rgba(252,128,25,0.1)' : colors.chipBg,
+                  borderWidth: 1.5,
+                  borderColor: fulfillmentMode === 'courier' ? '#fc8019' : colors.border,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 13 }}>🚚 Doorstep Courier</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setFulfillmentMode('hub')}
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  borderRadius: 12,
+                  backgroundColor: fulfillmentMode === 'hub' ? 'rgba(252,128,25,0.1)' : colors.chipBg,
+                  borderWidth: 1.5,
+                  borderColor: fulfillmentMode === 'hub' ? '#fc8019' : colors.border,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 13 }}>🏢 Camcrew Hub Pickup</Text>
+              </TouchableOpacity>
+            </View>
+
+            {fulfillmentMode === 'hub' && (
+              <View style={{ marginTop: 6, padding: 10, borderRadius: 10, backgroundColor: colors.chipBg }}>
+                <Text style={{ color: colors.textFaint, fontSize: 11, fontWeight: '700' }}>SELECT CAMCREW HUB</Text>
+                <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 13, marginTop: 2 }}>
+                  📍 {pickupHub}
+                </Text>
+              </View>
+            )}
           </View>
         )}
 

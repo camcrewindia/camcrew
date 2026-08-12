@@ -19,7 +19,7 @@ export const CustomerProfileScreen: React.FC<{ navigation: any }> = ({ navigatio
   const { colors } = useTheme();
   const { user, logout } = useAuthStore();
 
-  const [activeTab, setActiveTab] = useState<'bookings' | 'orders'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'orders' | 'payments' | 'rewards'>('bookings');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [toastMessage, setToastMessage] = useState('');
@@ -68,12 +68,20 @@ export const CustomerProfileScreen: React.FC<{ navigation: any }> = ({ navigatio
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === 'orders' && { backgroundColor: colors.accent }]}
-          onPress={() => setActiveTab('orders')}
+          style={[styles.tabBtn, activeTab === 'payments' && { backgroundColor: colors.accent }]}
+          onPress={() => setActiveTab('payments')}
         >
-          <ShoppingBag size={16} color={activeTab === 'orders' ? '#000000' : colors.textSecondary} style={{ marginRight: 6 }} />
-          <Text style={[styles.tabText, { color: activeTab === 'orders' ? '#000000' : colors.textSecondary }]}>
-            Gear Orders ({safeOrders.length})
+          <Text style={[styles.tabText, { color: activeTab === 'payments' ? '#000000' : colors.textSecondary }]}>
+            Payments 💳
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tabBtn, activeTab === 'rewards' && { backgroundColor: colors.accent }]}
+          onPress={() => setActiveTab('rewards')}
+        >
+          <Text style={[styles.tabText, { color: activeTab === 'rewards' ? '#000000' : colors.textSecondary }]}>
+            Rewards 🎁
           </Text>
         </TouchableOpacity>
       </View>
@@ -102,16 +110,48 @@ export const CustomerProfileScreen: React.FC<{ navigation: any }> = ({ navigatio
           ) : (
             <Text style={[styles.emptyText, { color: colors.textFaint }]}>No bookings placed yet.</Text>
           )
-        ) : safeOrders.length > 0 ? (
-          safeOrders.map(o => (
-            <OrderCard
-              key={o.id}
-              order={o}
-              onPress={() => navigation.navigate('OrderDetail', { id: o.id })}
-            />
-          ))
+        ) : activeTab === 'orders' ? (
+          safeOrders.length > 0 ? (
+            safeOrders.map(o => (
+              <OrderCard
+                key={o.id}
+                order={o}
+                onPress={() => navigation.navigate('OrderDetail', { id: o.id })}
+              />
+            ))
+          ) : (
+            <Text style={[styles.emptyText, { color: colors.textFaint }]}>No gear orders placed yet.</Text>
+          )
+        ) : activeTab === 'payments' ? (
+          <View style={{ padding: 14, borderRadius: 16, backgroundColor: colors.surfaceCard }}>
+            <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 16, marginBottom: 10 }}>Saved Payment Methods</Text>
+            <View style={{ padding: 12, borderRadius: 12, backgroundColor: colors.chipBg, marginBottom: 8 }}>
+              <Text style={{ color: colors.textPrimary, fontWeight: '700' }}>💳 HDFC Bank Credit Card (•••• 4892)</Text>
+              <Text style={{ color: colors.textFaint, fontSize: 11, marginTop: 2 }}>Expires 08/29 • Primary Saved Card</Text>
+            </View>
+            <View style={{ padding: 12, borderRadius: 12, backgroundColor: colors.chipBg }}>
+              <Text style={{ color: colors.textPrimary, fontWeight: '700' }}>⚡ UPI VPA: thaha@okicici</Text>
+              <Text style={{ color: '#16a34a', fontSize: 11, fontWeight: '800', marginTop: 2 }}>✓ Verified Fast Checkout</Text>
+            </View>
+          </View>
         ) : (
-          <Text style={[styles.emptyText, { color: colors.textFaint }]}>No gear orders placed yet.</Text>
+          <View style={{ padding: 14, borderRadius: 16, backgroundColor: colors.surfaceCard }}>
+            <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 16 }}>Loyalty Rewards & Coupons 🎁</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 12 }}>
+              <View>
+                <Text style={{ color: colors.textFaint, fontSize: 11, fontWeight: '700' }}>LOYALTY POINTS</Text>
+                <Text style={{ color: '#fc8019', fontWeight: '900', fontSize: 24 }}>450 Points</Text>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={{ color: colors.textFaint, fontSize: 11, fontWeight: '700' }}>TIER</Text>
+                <Text style={{ color: colors.textPrimary, fontWeight: '800', fontSize: 15 }}>🥈 Silver Tier (75%)</Text>
+              </View>
+            </View>
+            <View style={{ padding: 12, borderRadius: 12, backgroundColor: 'rgba(252,128,25,0.08)', borderWidth: 1, borderColor: '#fc8019' }}>
+              <Text style={{ color: '#fc8019', fontWeight: '900', fontSize: 14 }}>Coupon: CREATOR20</Text>
+              <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>Get 20% OFF on your first camera gear rental!</Text>
+            </View>
+          </View>
         )}
       </View>
 

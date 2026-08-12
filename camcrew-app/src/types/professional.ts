@@ -29,6 +29,7 @@ export interface ProfessionalProfile {
   experienceYears: number;
   ratePerDay: number;
   bio: string;
+  gstin?: string;
   state: string;
   district: string;
   city: string;
@@ -41,11 +42,15 @@ export interface ProfessionalProfile {
   reviews: ReviewItem[];
   weeklyAvailability: { [day: string]: boolean };
   blockedDates: string[];
+  internationalTravel?: boolean;
   iCalUrl?: string;
+  iCalExportUrl?: string;
+  iCalImportUrl?: string;
   socials?: {
     instagram?: string;
     website?: string;
     youtube?: string;
+    facebook?: string;
   };
   views?: number;
   totalEarnings?: number;

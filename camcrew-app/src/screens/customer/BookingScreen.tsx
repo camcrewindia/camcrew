@@ -37,6 +37,7 @@ export const BookingScreen: React.FC<{ navigation: any; route: any }> = ({ navig
   const [endTime, setEndTime] = useState('06:00 PM');
   const [daysCount, setDaysCount] = useState(1);
   const [location, setLocation] = useState('Bandra Studio 4, Mumbai');
+  const [eventType, setEventType] = useState('Wedding');
   const [notes, setNotes] = useState('');
 
   // Contract Signature State
@@ -305,6 +306,32 @@ export const BookingScreen: React.FC<{ navigation: any; route: any }> = ({ navig
               leftIcon={<MapPin size={18} color={colors.textSecondary} />}
               style={{ marginTop: 12 }}
             />
+
+            <Text style={[styles.inputLabel, { color: colors.textSecondary, marginTop: 12 }]}>Event / Project Type</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 12 }}>
+              {['Wedding', 'Corporate', 'Birthday/Party', 'Product Launch', 'Short Film', 'Drone Shoot', 'Podcast'].map(ev => {
+                const isSel = eventType === ev;
+                return (
+                  <TouchableOpacity
+                    key={ev}
+                    onPress={() => setEventType(ev)}
+                    style={{
+                      paddingHorizontal: 14,
+                      paddingVertical: 8,
+                      borderRadius: 20,
+                      backgroundColor: isSel ? '#fc8019' : colors.surfaceCard,
+                      borderWidth: 1,
+                      borderColor: isSel ? '#fc8019' : colors.border,
+                      marginRight: 8,
+                    }}
+                  >
+                    <Text style={{ color: isSel ? '#ffffff' : colors.textPrimary, fontSize: 12, fontWeight: '800' }}>
+                      {ev}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
             <Input
               label="Special Notes / Instructions"
               value={notes}
