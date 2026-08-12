@@ -2,8 +2,8 @@ import { apiClient } from './client';
 import { User, UserRole } from '../types/auth';
 import axios from 'axios';
 
-// Fast2SMS API Key from your dashboard (Click 'API Key' tab in Fast2SMS Dashboard to copy full key)
-const FAST2SMS_API_KEY = 'YOUR_FAST2SMS_API_KEY';
+// Fast2SMS API Key from your Fast2SMS Dashboard Dev API Key tab
+const FAST2SMS_API_KEY: string = 'bRBLEn8NhraXoz5K3m61iZfJOv9sWVecqTSQxgyAU7Ywd0GDltemv6sFD9K7uxodwZgijrq2h0SzQclJ';
 
 // In-memory active OTP store mapping phone number -> generated OTP code
 const ACTIVE_OTP_STORE: Record<string, string> = {};
@@ -17,7 +17,7 @@ export const authApi = {
     ACTIVE_OTP_STORE[cleanedPhone] = generatedOtp;
 
     try {
-      if (FAST2SMS_API_KEY !== 'YOUR_FAST2SMS_API_KEY') {
+      if (FAST2SMS_API_KEY && FAST2SMS_API_KEY !== 'YOUR_FAST2SMS_API_KEY') {
         // Fast2SMS Instant OTP Route (No DLT registration needed)
         const response = await axios.post(
           'https://www.fast2sms.com/dev/bulkV2',
@@ -46,7 +46,7 @@ export const authApi = {
       const res = await apiClient.post('/auth/send-otp', { phone: cleanedPhone, otp: generatedOtp });
       return res.data;
     } catch (e: any) {
-      // Demo / Offline fallback response with the active generated code or 123456
+      // Offline fallback response with active generated code
       return {
         success: true,
         message: `6-Digit OTP sent to +91 ${cleanedPhone}. (Code: ${generatedOtp})`,
